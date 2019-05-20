@@ -10,10 +10,19 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #################################################
 
 #################################################
+# GASP common
+#################################################
+add_library(gaspcommon SHARED "")
+add_subdirectory(common)
+set_target_properties(gaspcommon PROPERTIES LINKER_LANGUAGE CXX)
+
+
+#################################################
 # GASP main executable
 #################################################
 add_executable(gasp "")
 add_subdirectory(compiler)
+target_link_libraries(gasp gaspcommon)
 
 #################################################
 # GASP core library

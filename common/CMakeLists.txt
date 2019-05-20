@@ -1,0 +1,3 @@
+target_include_directories(gaspcommon PUBLIC include)
+
+add_subdirectory(include)
