@@ -1,4 +1,1 @@
-target_sources(gaspcommon
-    PUBLIC
-        tokenizer.hpp
-)
+add_subdirectory(common)

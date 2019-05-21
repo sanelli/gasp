@@ -1,6 +1,4 @@
-#include <gasp/tokenizer.hpp>
+#include <gasp/common/tokenizer.hpp>
 #include <string>
 
 using namespace gasp::common;
-
-template class tokenizer<int>;
