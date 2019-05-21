@@ -10,9 +10,8 @@ int gasp::common::ltrim(std::string &s)
 {
    auto itBegin = s.begin();
    auto itEnd = std::find_if(s.begin(), s.end(), [](int ch) {
-              return !std::isspace(ch);
-           });
-   auto length = itEnd - itBegin; 
+      return !std::isspace(ch);
+   });
    s.erase(itBegin, itEnd);
-   return length;
+   return itEnd - itBegin;
 }

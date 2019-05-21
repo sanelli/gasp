@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include <exception>
+#include <iostream>
 
 #include <gasp/common/string.hpp>
 
@@ -19,7 +20,7 @@ class token
    std::string _value;
 
 public:
-   token() : _token(0), _value("") {}
+   token() : _token(static_cast<TToken>(0)), _value("") {}
    token(TToken token) : _token(token), _value("") {}
    token(TToken token, std::string value) : _token(token), _value(value) {}
    token(const token<TToken> &other) : _token(other._token), _value(other._value) {}
@@ -86,12 +87,14 @@ public:
       _rules.emplace_back(token, rule, keep_value);
    }
 
-   void parse(int line_number, const std::string &input, std::vector<token<TToken>> &tokens)
+   void parse(int line_number, const std::string &input, std::vector<token<TToken>> &tokens) const
    {
       auto line = input;
       int column = 0;
       if (_ignore_spaces)
          column += gasp::common::ltrim(line);
+      if (line.length() == 0)
+         return; // Skip empty lines
       while (line.length() > 0)
       {
          auto found_rule = false;
@@ -103,12 +106,12 @@ public:
                found_rule = true;
                tokens.push_back(token);
                line = line.substr(substring.length());
+               column += substring.length();
                if (_ignore_spaces)
                   column += gasp::common::ltrim(line);
                break;
             }
          }
-         // TODO: Find the correct column position when displaying the error
          if (!found_rule)
             throw tokenizer_error(line_number, column, "Invalid character sequence");
       }

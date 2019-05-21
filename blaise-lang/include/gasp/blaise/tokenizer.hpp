@@ -15,7 +15,7 @@ class blaise_tokenizer
 
 public:
    blaise_tokenizer();
-   void parse(std::istream &input, std::vector<gasp::blaise::blaise_token>& tokens) const;
+   void parse(std::istream &input, std::vector<gasp::common::token<gasp::blaise::blaise_token>>& tokens) const;
 };
 
 } // namespace gasp::blaise
