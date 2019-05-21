@@ -12,42 +12,23 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #################################################
 # GASP common
 #################################################
-add_library(gaspcommon SHARED "")
+add_library(gasp-common SHARED "")
 add_subdirectory(common)
-set_target_properties(gaspcommon PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(gasp-common PROPERTIES LINKER_LANGUAGE CXX)
 
+#################################################
+# GASP common
+#################################################
+add_library(gasp-blaise-lang SHARED "")
+add_subdirectory(blaise-lang)
+set_target_properties(gasp-blaise-lang PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang gasp-common)
 
 #################################################
 # GASP main executable
 #################################################
 add_executable(gasp "")
 add_subdirectory(compiler)
-target_link_libraries(gasp gaspcommon)
+target_link_libraries(gasp gasp-common)
+target_link_libraries(gasp gasp-blaise-lang)
 
-#################################################
-# GASP core library
-#################################################
-
-#################################################
-# GASP front-end(s)
-#################################################
-
-#################################################
-# GASP intermediate language
-#################################################
-
-#################################################
-# GASP back-end(s)
-#################################################
-
-#################################################
-# GASP intermediate language optimizer(s)
-#################################################
-
-#################################################
-# GASP intermediate language analysis
-#################################################
-
-#################################################
-# GASP enviroment(s)
-#################################################

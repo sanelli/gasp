@@ -1,4 +1,4 @@
-target_sources(gaspcommon
+target_sources(gasp-common
     PUBLIC
         tokenizer.hpp
         string.hpp
