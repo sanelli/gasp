@@ -47,7 +47,7 @@ class token_rule
 public:
    token_rule(TToken token, std::string regular_expression, bool keep_value) : _token(token), _keep_value(keep_value)
    {
-      _regexp.assign("^(" + regular_expression + ")", std::regex_constants::ECMAScript);
+      _regexp.assign("^(?:(?:" + regular_expression + ")(?:\\b|\\s*$))", std::regex_constants::ECMAScript);
    }
 
    std::tuple<bool, token<TToken>, std::string> match(std::string input)

@@ -20,14 +20,22 @@ int main(int argc, char *argv[])
 
    stringstream program;
    program << R"program(
-      program Hello_World;
-      begin
-      end.
+      program Hello_World   ;  
+      begin    
+      end .  
    )program";
 
-   tokenizer.parse(program, tokens);
+   try
+   {
+      tokenizer.parse(program, tokens);
+      cout << tokens << endl;
+      return EXIT_SUCCESS;
+   }
+   catch (gasp::common::tokenizer_error &error)
+   {
+      cerr << "ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+      cerr << tokens << endl;
 
-   cout << tokens << endl;
-
-   return EXIT_SUCCESS;
+      return EXIT_FAILURE;
+   }
 }
