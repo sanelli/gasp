@@ -17,8 +17,9 @@ blaise_tokenizer::blaise_tokenizer()
       auto token = *it;
       auto rule = blaise_token_provider::rule(token);
       auto keep_value = blaise_token_provider::keep_value(token);
+      auto keep_token = blaise_token_provider::keep_token(token);
 
-      _tokenizer.add(token, rule, keep_value);
+      _tokenizer.add(token, rule, keep_value, keep_token);
    }
 }
 
