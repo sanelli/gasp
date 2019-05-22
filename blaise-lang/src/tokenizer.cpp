@@ -12,20 +12,14 @@ using namespace std;
 blaise_tokenizer::blaise_tokenizer()
 {
    // Set up the tokenizer
-   _tokenizer.set_token_rule_provider(get_token_rule);
+   for (auto it = blaise_token_provider::cbegin(); it != blaise_token_provider::cend(); ++it)
+   {
+      auto token = *it;
+      auto rule = blaise_token_provider::rule(token);
+      auto keep_value = blaise_token_provider::keep_value(token);
 
-   // KEYWORDS
-   _tokenizer.add(blaise_token::PROGRAM);
-   _tokenizer.add(blaise_token::BEGIN);
-   _tokenizer.add(blaise_token::END);
-
-   // PUNCTUATION
-   _tokenizer.add(blaise_token::SEMICOLON);
-   _tokenizer.add(blaise_token::PERIOD);
-   _tokenizer.add(blaise_token::COLON);
-
-   // OTHERS
-   _tokenizer.add(blaise_token::IDENTIFIER, true);
+      _tokenizer.add(token, rule, keep_value);
+   }
 }
 
 void blaise_tokenizer::parse(std::istream &input, std::vector<gasp::common::token<gasp::blaise::blaise_token>> &tokens) const

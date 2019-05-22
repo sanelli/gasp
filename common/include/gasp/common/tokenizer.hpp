@@ -7,6 +7,7 @@
 #include <vector>
 #include <exception>
 #include <iostream>
+#include <map>
 
 #include <gasp/common/string.hpp>
 
@@ -79,26 +80,15 @@ class tokenizer
    bool _ignore_spaces;
    std::vector<token_rule<TToken>> _rules;
 
-   std::function<const std::string(TToken)> _get_token_rule;
-
 public:
    tokenizer(bool ingore_spaces = true) : _ignore_spaces(ingore_spaces) {}
 
    void set_ignore_spaces(bool ignore_spaces) { _ignore_spaces = ignore_spaces; }
    void ignore_spaces() { return _ignore_spaces; }
 
-   void set_token_rule_provider(std::function<const std::string(TToken)> get_token_rule){
-      _get_token_rule = get_token_rule;
-   }
-
    void add(TToken token, const std::string &rule, bool keep_value = false)
    {
       _rules.emplace_back(token, rule, keep_value);
-   }
-
-   void add(TToken token, bool keep_value = false)
-   {
-      _rules.emplace_back(token, get_token_rule(token), keep_value);
    }
 
    void parse(int line_number, const std::string &input, std::vector<token<TToken>> &tokens) const
@@ -131,4 +121,29 @@ public:
       }
    }
 };
+
+template <typename TToken>
+class token_provider_constructor
+{
+protected:
+   std::map<TToken, std::tuple<std::string, std::string, bool>> _token_values;
+   std::vector<TToken> _tokens;
+
+   void add_token(TToken token, std::string rule, std::string name, bool keep_value = false)
+   {
+      _tokens.push_back(token);
+      _token_values.insert(std::make_pair<>(token, std::make_tuple<>(rule, name, keep_value)));
+   }
+
+public:
+   token_provider_constructor() {}
+
+   typename std::vector<TToken>::const_iterator cbegin() const { return _tokens.cbegin(); }
+   typename std::vector<TToken>::const_iterator cend() const { return _tokens.cend(); }
+
+   std::string rule(TToken token) const { return std::get<0>(_token_values.at(token)); }
+   std::string name(TToken token) const { return std::get<1>(_token_values.at(token)); }
+   bool keep_value(TToken token) const { return std::get<2>(_token_values.at(token)); }
+};
+
 } // namespace gasp::common

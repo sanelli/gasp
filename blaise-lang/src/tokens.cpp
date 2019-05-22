@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <gasp/common/internal_error.hpp>
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/blaise/tokens.hpp>
@@ -5,58 +7,35 @@
 using namespace gasp::blaise;
 using namespace gasp::common;
 
-const char *gasp::blaise::get_token_rule(blaise_token token)
+blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {
-   switch (token)
-   {
-   case blaise_token::PROGRAM:
-      return "program";
-   case blaise_token::BEGIN:
-      return "begin";
-   case blaise_token::END:
-      return "end";
-   case blaise_token::VAR:
-      return "var";
-   case blaise_token::SEMICOLON:
-      return ";";
-   case blaise_token::PERIOD:
-      return "\\.";
-   case blaise_token::COLON:
-      return "\\:";
-   case blaise_token::IDENTIFIER:
-      return "[a-zA-Z][a-zA-Z0-9_]*";
-   default:
-      throw gasp_internal_error("Unexpected token - cannot convert token into rule");
-   }
+   // KEYWORDS
+   add_token(blaise_token::PROGRAM, "program", "PROGRAM");
+   add_token(blaise_token::BEGIN, "begin", "BEGIN");
+   add_token(blaise_token::END, "end", "END");
+   add_token(blaise_token::VAR, "var", "VAR");
+
+   // TYPES
+   //add_token(blaise_token::PROGRAM, "program", "program");
+
+   // PUNCTUATION
+   add_token(blaise_token::SEMICOLON, ";", "SEMICOLON");
+   add_token(blaise_token::PERIOD, "\\.", "PERIOD");
+   add_token(blaise_token::COLON, "\\:", "COLON");
+
+   // OTHERS
+   add_token(blaise_token::IDENTIFIER, "[a-zA-Z][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
 
-const char *gasp::blaise::get_token_name(blaise_token token)
-{
-   switch (token)
-   {
-   case blaise_token::PROGRAM:
-      return "PROGRAM";
-   case blaise_token::BEGIN:
-      return "BEGIN";
-   case blaise_token::END:
-      return "END";
-   case blaise_token::VAR:
-      return "VAR";
-   case blaise_token::SEMICOLON:
-      return "SEMICOLON";
-   case blaise_token::PERIOD:
-      return "PERIOD";
-   case blaise_token::COLON:
-      return "COLON";
-   case blaise_token::IDENTIFIER:
-      return "IDENTIFIER";
-   default:
-      throw gasp_internal_error("Unexpected token - cannot convert token into string");
-   }
-}
+blaise_token_provider::blaise_token_provider_constructor blaise_token_provider::_private;
+std::vector<blaise_token>::const_iterator blaise_token_provider::cbegin() { return _private.cbegin(); }
+std::vector<blaise_token>::const_iterator blaise_token_provider::cend() { return _private.cend(); }
 
-std::ostream &gasp::blaise::operator<<(std::ostream &os, const blaise_token &tok)
+std::string blaise_token_provider::rule(blaise_token token) { return _private.rule(token); }
+std::string blaise_token_provider::name(blaise_token token) { return _private.name(token); }
+bool blaise_token_provider::keep_value(blaise_token token) { return _private.keep_value(token); }
+
+std::ostream &gasp::blaise::operator<<(std::ostream &os, const blaise_token &token)
 {
-   os << std::string(get_token_name(tok));
-   return os;
+   return os << std::string(blaise_token_provider::name(token));
 }

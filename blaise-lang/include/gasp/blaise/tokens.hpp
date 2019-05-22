@@ -1,6 +1,10 @@
 #pragma once
 
 #include <ostream>
+#include <map>
+#include <string>
+
+#include <gasp/common/tokenizer.hpp>
 
 namespace gasp::blaise
 {
@@ -38,8 +42,25 @@ enum class blaise_token : unsigned long
    FLOATING_POINT_CONSTANT = 404
 };
 
-const char *get_token_rule(blaise_token token);
-const char *get_token_name(blaise_token token);
+class blaise_token_provider
+{
+   class blaise_token_provider_constructor : public gasp::common::token_provider_constructor<blaise_token>
+   {
+   public:
+      blaise_token_provider_constructor();
+   };
+
+   static blaise_token_provider_constructor _private;
+
+public:
+   static typename std::vector<blaise_token>::const_iterator cbegin();
+   static typename std::vector<blaise_token>::const_iterator cend();
+
+   static std::string rule(blaise_token token);
+   static std::string name(blaise_token token);
+   static bool keep_value(blaise_token token);
+};
+
 std::ostream &operator<<(std::ostream &os, const blaise_token &tok);
 
 } // namespace gasp::blaise
