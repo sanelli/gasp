@@ -11,17 +11,21 @@ using namespace std;
 
 blaise_tokenizer::blaise_tokenizer()
 {
+   // Set up the tokenizer
+   _tokenizer.set_token_rule_provider(get_token_rule);
+
    // KEYWORDS
-   _tokenizer.add(blaise_token::PROGRAM, get_token_rule(blaise_token::PROGRAM), false);
-   _tokenizer.add(blaise_token::BEGIN, get_token_rule(blaise_token::BEGIN), false);
-   _tokenizer.add(blaise_token::END, get_token_rule(blaise_token::END), false);
+   _tokenizer.add(blaise_token::PROGRAM);
+   _tokenizer.add(blaise_token::BEGIN);
+   _tokenizer.add(blaise_token::END);
 
    // PUNCTUATION
-   _tokenizer.add(blaise_token::SEMICOLON, get_token_rule(blaise_token::SEMICOLON), false);
-   _tokenizer.add(blaise_token::PERIOD, get_token_rule(blaise_token::PERIOD), false);
+   _tokenizer.add(blaise_token::SEMICOLON);
+   _tokenizer.add(blaise_token::PERIOD);
+   _tokenizer.add(blaise_token::COLON);
 
    // OTHERS
-   _tokenizer.add(blaise_token::IDENTIFIER, get_token_rule(blaise_token::IDENTIFIER), true);
+   _tokenizer.add(blaise_token::IDENTIFIER, true);
 }
 
 void blaise_tokenizer::parse(std::istream &input, std::vector<gasp::common::token<gasp::blaise::blaise_token>> &tokens) const

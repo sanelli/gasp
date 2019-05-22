@@ -79,12 +79,26 @@ class tokenizer
    bool _ignore_spaces;
    std::vector<token_rule<TToken>> _rules;
 
+   std::function<const std::string(TToken)> _get_token_rule;
+
 public:
    tokenizer(bool ingore_spaces = true) : _ignore_spaces(ingore_spaces) {}
 
-   void add(TToken token, const std::string &rule, bool keep_value)
+   void set_ignore_spaces(bool ignore_spaces) { _ignore_spaces = ignore_spaces; }
+   void ignore_spaces() { return _ignore_spaces; }
+
+   void set_token_rule_provider(std::function<const std::string(TToken)> get_token_rule){
+      _get_token_rule = get_token_rule;
+   }
+
+   void add(TToken token, const std::string &rule, bool keep_value = false)
    {
       _rules.emplace_back(token, rule, keep_value);
+   }
+
+   void add(TToken token, bool keep_value = false)
+   {
+      _rules.emplace_back(token, get_token_rule(token), keep_value);
    }
 
    void parse(int line_number, const std::string &input, std::vector<token<TToken>> &tokens) const

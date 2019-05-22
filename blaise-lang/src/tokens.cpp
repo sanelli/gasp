@@ -15,10 +15,14 @@ const char *gasp::blaise::get_token_rule(blaise_token token)
       return "begin";
    case blaise_token::END:
       return "end";
+   case blaise_token::VAR:
+      return "var";
    case blaise_token::SEMICOLON:
       return ";";
    case blaise_token::PERIOD:
       return "\\.";
+   case blaise_token::COLON:
+      return "\\:";
    case blaise_token::IDENTIFIER:
       return "[a-zA-Z][a-zA-Z0-9_]*";
    default:
@@ -36,10 +40,14 @@ const char *gasp::blaise::get_token_name(blaise_token token)
       return "BEGIN";
    case blaise_token::END:
       return "END";
+   case blaise_token::VAR:
+      return "VAR";
    case blaise_token::SEMICOLON:
       return "SEMICOLON";
    case blaise_token::PERIOD:
       return "PERIOD";
+   case blaise_token::COLON:
+      return "COLON";
    case blaise_token::IDENTIFIER:
       return "IDENTIFIER";
    default:
