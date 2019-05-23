@@ -21,23 +21,29 @@ class token
 {
    TToken _token;
    std::string _value;
+   unsigned int _line;
+   unsigned int _column;
 
 public:
-   token() : _token(static_cast<TToken>(0)), _value("") {}
-   token(TToken token) : _token(token), _value("") {}
-   token(TToken token, std::string value) : _token(token), _value(value) {}
-   token(const token<TToken> &other) : _token(other._token), _value(other._value) {}
-   token(token<TToken> &&other) : _token(std::move(other._token)), _value(std::move(other._value)) {}
+   token() : _token(static_cast<TToken>(0)), _value(""), _line(0), _column(0)  {}
+   token(TToken token, int line, int column) : _token(token), _value(""), _line(line), _column(column) {}
+   token(TToken token, std::string value, int line, int column) : _token(token), _value(value),  _line(line), _column(column) {}
+   token(const token<TToken> &other) : _token(other._token), _value(other._value), _line(other._line), _column(other._column) {}
+   token(token<TToken> &&other) : _token(std::move(other._token)), _value(std::move(other._value)), _line(std::move(other._line)), _column(std::move(other._column)) {}
 
    TToken tok() const { return _token; }
    std::string value() const { return _value; }
+   unsigned int line() const { return _line; }
+   unsigned int column() const { return _column; }
 };
 
 template <typename TToken>
 std::ostream &operator<<(std::ostream &os, const token<TToken> &tok)
 {
-   os << std::string("[") << tok.tok() << std::string(",") << tok.value() << std::string("]");
-   return os;
+   return os << std::string("[")
+      << tok.tok() << std::string(",") << tok.value() << std::string(",")
+      << std::string("(") << tok.line() << std::string(",") << tok.column() << std::string(")") 
+      << std::string("]");
 }
 
 template <typename TToken>
@@ -54,12 +60,12 @@ public:
       _regexp.assign("^(?:(?:" + regular_expression + ")(?:\\b|\\s*$))", std::regex_constants::ECMAScript);
    }
 
-   std::tuple<bool, token<TToken>, std::string, bool> match(std::string input) const
+   std::tuple<bool, token<TToken>, std::string, bool> match(std::string input, int line, int column) const
    {
       std::smatch match;
       bool found = std::regex_search(input, match, _regexp);
       if (found)
-         return std::make_tuple<>(true, token(_token, _keep_value ? match[0] : std::string("")), match[0], _keep_token);
+         return std::make_tuple<>(true, token(_token, _keep_value ? match[0] : std::string(""), line, column), match[0], _keep_token);
       return std::make_tuple<>(false, token<TToken>(), "", _keep_token);
    }
 };
@@ -109,7 +115,7 @@ public:
          auto found_rule = false;
          for (auto rule : _rules)
          {
-            auto [match, token, substring, keep_token] = rule.match(line);
+            auto [match, token, substring, keep_token] = rule.match(line, line_number, column);
             if (match)
             {
                found_rule = true;
