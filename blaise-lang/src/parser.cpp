@@ -9,32 +9,36 @@ using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::common;
 
-void blaise_parser::parse(const vector<token<blaise_token>> &tokens) const
+void blaise_parser::parse(blaise_parser_context &context) const
 {
    unsigned int index = 0;
-   if (is_token(blaise_token::PROGRAM, index, tokens))
-      parse_program(index, tokens);
+   if (is_token(context, blaise_token::PROGRAM))
+      parse_program(context);
    else
-      throw parser_error(tokens[index].line(), tokens[index].column(), "only programs are supported.");
+      throw parser_error("only programs are supported.");
+
+   // If more tokens are available at this stage then the code is malformed
+   if (context.has_more_tokens())
+      throw parser_error("too many tokens at the end of the program");
 }
 
-void blaise_parser::parse_program(unsigned int &index, const vector<token<blaise_token>> &tokens)
+void blaise_parser::parse_program(blaise_parser_context &context)
 {
-   match_token(blaise_token::PROGRAM, index, tokens);
-   auto program_name = match_token(blaise_token::IDENTIFIER, index, tokens);
-   match_token(blaise_token::SEMICOLON, index, tokens);
+   match_token(context, blaise_token::PROGRAM);
+   auto program_name = match_token(context, blaise_token::IDENTIFIER);
+   match_token(context, blaise_token::SEMICOLON);
 
    // TODO: match uses
    // TODO: match functions and procedures
    // TODO: match constants
    // TODO: match variables
 
-   match_token(blaise_token::BEGIN, index, tokens);
+   match_token(context, blaise_token::BEGIN);
 
-   while (!is_token(blaise_token::END, index, tokens))
+   while (!is_token(context, blaise_token::END))
    {
       // TODO: match statements
    }
-   match_token(blaise_token::END, index, tokens);
-   match_token(blaise_token::PERIOD, index, tokens);
+   match_token(context, blaise_token::END);
+   match_token(context, blaise_token::PERIOD);
 }

@@ -9,12 +9,18 @@
 namespace gasp::blaise
 {
 
+class blaise_parser_context : public gasp::common::parser_context<blaise_token>
+{
+};
+
 class blaise_parser : public gasp::common::parser<blaise_token>
 {
-   static void parse_program(unsigned int& index, const std::vector<gasp::common::token<gasp::blaise::blaise_token>> &tokens);
-   static void parse_variables(unsigned int& index, const std::vector<gasp::common::token<gasp::blaise::blaise_token>> &tokens);
+   static void parse_program(blaise_parser_context& context);
+   static void parse_variables(blaise_parser_context& context);
+   
 public:
-   void parse(const std::vector<gasp::common::token<gasp::blaise::blaise_token>> &tokens) const;
+   void parse(blaise_parser_context& context) const;
 };
+
 
 } // namespace gasp::blaise
