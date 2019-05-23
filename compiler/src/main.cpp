@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
    try
    {
-      tokenizer.parse(program, context);
+      tokenizer.tokenize(program, context);
       cout << context << endl;
       parser.parse(context);
       return EXIT_SUCCESS;

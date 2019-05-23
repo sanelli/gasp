@@ -104,7 +104,7 @@ public:
    }
 
    template <typename TTokenContainer>
-   void parse(const std::string &input, int line_number, TTokenContainer &tokens) const
+   void tokenize(const std::string &input, int line_number, TTokenContainer &tokens) const
    {
       auto line = input;
       int column = 0;
@@ -136,14 +136,14 @@ public:
    }
 
    template <typename TTokenContainer>
-   void parse(std::istream &input, TTokenContainer &tokens) const
+   void tokenize(std::istream &input, TTokenContainer &tokens) const
    {
       auto line_number = 1;
       while (!input.eof())
       {
          std::string line;
          std::getline(input, line, '\n');
-         parse(line, line_number, tokens);
+         tokenize(line, line_number, tokens);
          ++line_number;
       }
    }
