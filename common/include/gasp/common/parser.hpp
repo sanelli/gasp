@@ -20,31 +20,31 @@ public:
    int column() { return _column; }
 };
 
-template <typename TToken>
+template <typename TTokenType>
 class parser_context
 {
-   std::vector<gasp::common::token<TToken>> _tokens;
+   std::vector<gasp::common::token<TTokenType>> _tokens;
    unsigned int _index;
 
 public:
-   void add_token(TToken token, std::string value, int line, int column) { return _tokens.emplace(token, value, line, column); }
-   gasp::common::token<TToken> token(unsigned int index) { return _tokens.at(index); }
-   gasp::common::token<TToken> peek() { return _tokens.at(_index); }
+   void add_token(TTokenType token, std::string value, int line, int column) { return _tokens.emplace(token, value, line, column); }
+   gasp::common::token<TTokenType> token(unsigned int index) { return _tokens.at(index); }
+   gasp::common::token<TTokenType> peek() { return _tokens.at(_index); }
    unsigned int index() { return _index; }
    unsigned int next() { return ++_index; }
 };
 
-template <typename TToken>
+template <typename TTokenType>
 class parser
 {
 protected:
-   static bool is_token(TToken token_type, unsigned int &index, const std::vector<gasp::common::token<TToken>> &tokens)
+   static bool is_token(TTokenType token_type, unsigned int &index, const std::vector<gasp::common::token<TTokenType>> &tokens)
    {
       auto token = tokens.at(index);
       return token.type() == token_type;
    }
 
-   static std::string match_token(TToken token_type, unsigned int &index, const std::vector<gasp::common::token<TToken>> &tokens)
+   static std::string match_token(TTokenType token_type, unsigned int &index, const std::vector<gasp::common::token<TTokenType>> &tokens)
    {
       if (is_token(token_type, index, tokens))
       {
