@@ -9,6 +9,7 @@
 #include <iostream>
 #include <map>
 #include <stdexcept>
+#include <istream>
 
 #include <gasp/common/string.hpp>
 #include <gasp/common/exception.hpp>
@@ -25,9 +26,9 @@ class token
    unsigned int _column;
 
 public:
-   token() : _token(static_cast<TToken>(0)), _value(""), _line(0), _column(0)  {}
+   token() : _token(static_cast<TToken>(0)), _value(""), _line(0), _column(0) {}
    token(TToken token, int line, int column) : _token(token), _value(""), _line(line), _column(column) {}
-   token(TToken token, std::string value, int line, int column) : _token(token), _value(value),  _line(line), _column(column) {}
+   token(TToken token, std::string value, int line, int column) : _token(token), _value(value), _line(line), _column(column) {}
    token(const token<TToken> &other) : _token(other._token), _value(other._value), _line(other._line), _column(other._column) {}
    token(token<TToken> &&other) : _token(std::move(other._token)), _value(std::move(other._value)), _line(std::move(other._line)), _column(std::move(other._column)) {}
 
@@ -41,9 +42,9 @@ template <typename TToken>
 std::ostream &operator<<(std::ostream &os, const token<TToken> &tok)
 {
    return os << std::string("[")
-      << tok.tok() << std::string(",") << tok.value() << std::string(",")
-      << std::string("(") << tok.line() << std::string(",") << tok.column() << std::string(")") 
-      << std::string("]");
+             << tok.tok() << std::string(",") << tok.value() << std::string(",")
+             << std::string("(") << tok.line() << std::string(",") << tok.column() << std::string(")")
+             << std::string("]");
 }
 
 template <typename TToken>
@@ -102,7 +103,7 @@ public:
       _rules.emplace_back(token, rule, keep_value, keep_token);
    }
 
-   void parse(int line_number, const std::string &input, std::vector<token<TToken>> &tokens) const
+   void parse(const std::string &input, int line_number, std::vector<token<TToken>> &tokens) const
    {
       auto line = input;
       int column = 0;
@@ -130,6 +131,18 @@ public:
          }
          if (!found_rule)
             throw tokenizer_error(line_number, column, "Invalid character sequence");
+      }
+   }
+
+   void parse(std::istream &input, std::vector<gasp::common::token<TToken>> &tokens) const
+   {
+      auto line_number = 1;
+      while (!input.eof())
+      {
+         std::string line;
+         std::getline(input, line, '\n');
+         parse(line, line_number, tokens);
+         ++line_number;
       }
    }
 };
