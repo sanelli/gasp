@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <istream>
 
+#include <gasp/common/debug.hpp>
 #include <gasp/common/string.hpp>
 #include <gasp/common/exception.hpp>
 
@@ -54,17 +55,24 @@ class token_rule
    std::regex _regexp;
    bool _keep_value;
    bool _keep_token;
+   std::string _plain_regexp;
 
 public:
-   token_rule(TTokenType token, std::string regular_expression, bool keep_value, bool keep_token) : _token(token), _keep_value(keep_value), _keep_token(keep_token)
+   token_rule(TTokenType token, std::string regular_expression, bool keep_value, bool keep_token) 
+   : _token(token), _keep_value(keep_value), _keep_token(keep_token), _plain_regexp(regular_expression)
    {
-      _regexp.assign("^(?:(?:" + regular_expression + ")(?:\\b|\\s*$))", std::regex_constants::ECMAScript);
+      _regexp.assign("^(?:(?:" + regular_expression + ")(?:\\b|\\s*$|\\s*))", std::regex_constants::ECMAScript);
    }
 
    std::tuple<bool, token<TTokenType>, std::string, bool> match(std::string input, int line, int column) const
    {
+      GASP_DEBUG(std::string("\t MATCHING WITH: '") << _plain_regexp << std::string("' : "))
+
       std::smatch match;
       bool found = std::regex_search(input, match, _regexp);
+
+      GASP_DEBUG((found ? std::string("YES") : std::string("NO")) << std::endl);
+
       if (found)
          return std::make_tuple<>(true, token(_token, _keep_value ? match[0] : std::string(""), line, column), match[0], _keep_token);
       return std::make_tuple<>(false, token<TTokenType>(), "", _keep_token);
@@ -115,6 +123,8 @@ public:
       while (line.length() > 0)
       {
          auto found_rule = false;
+         GASP_DEBUG(std::string("--------------------------") << std::endl);
+         GASP_DEBUG(std::string("LINE: '") << line << std::string("'") << std::endl)
          for (auto rule : _rules)
          {
             auto [match, token, substring, keep_token] = rule.match(line, line_number, column);
