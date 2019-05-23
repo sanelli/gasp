@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/debug.hpp>
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
@@ -49,7 +50,8 @@ void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
    if (!is_token(context, blaise_token::VAR))
       return; // No such variables
    match_token(context, blaise_token::VAR);
-   while (is_token(context, blaise_token::IDENTIFIER) && is_token(context, blaise_token::COLON, 1))
+   while (is_token(context, blaise_token::IDENTIFIER) && 
+      (is_token(context, blaise_token::COLON, 1) || is_token(context, blaise_token::COMMA, 1)))
    {
       parse_variable_declaration(context);
    }
@@ -58,6 +60,7 @@ void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
 void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
 {
    std::vector<std::string> variable_names;
+   parse_variable_names_list(context, variable_names);
    match_token(context, blaise_token::COLON);
    parse_variable_type(context);
    match_token(context, blaise_token::SEMICOLON);
