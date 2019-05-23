@@ -28,16 +28,21 @@ class parser_context
    std::vector<gasp::common::token<TTokenType>> _tokens;
    unsigned int _index;
 
-   template<typename T>
+   template <typename T>
    friend std::ostream &operator<<(std::ostream &os, const parser_context<T> &token);
 
 public:
    void push_back(gasp::common::token<TTokenType> token) { return _tokens.push_back(token); }
-   gasp::common::token<TTokenType> token(unsigned int index) { return _tokens.at(index); }
-   gasp::common::token<TTokenType> peek_token() { return _tokens.at(_index); }
-   unsigned int index() { return _index; }
-   unsigned int move_next_token() { return ++_index; }
-   bool has_more_tokens() { return _index < _tokens.size(); }
+   gasp::common::token<TTokenType> inline token(unsigned int index) const { return _tokens.at(index); }
+   gasp::common::token<TTokenType> inline peek_token() const
+   {
+      if (_index >= _tokens.size())
+         throw parser_error("No more tokens to parse");
+      return _tokens.at(_index);
+   }
+   unsigned int inline index() const { return _index; }
+   unsigned int inline move_next_token() { return ++_index; }
+   bool inline has_more_tokens(unsigned int lookahead = 0) const { return (_index + lookahead) < _tokens.size(); }
 };
 
 template <typename TTokenType>
@@ -50,10 +55,22 @@ template <typename TTokenType>
 class parser
 {
 protected:
-   static bool is_token(parser_context<TTokenType> &context, TTokenType token_type)
+   static bool is_token(parser_context<TTokenType> &context, TTokenType token_type, unsigned long lookahead = 0)
    {
-      auto token = context.peek_token();
+      if (!context.has_more_tokens(lookahead))
+         return false;
+      auto token = context.token(context.index() + lookahead);
       return token.type() == token_type;
+   }
+
+   static bool is_token_and_match(parser_context<TTokenType> &context, TTokenType token_type)
+   {
+      if (is_token(context, token_type))
+      {
+         match_token(context, token_type);
+         return true;
+      }
+      return false;
    }
 
    static std::string match_token(parser_context<TTokenType> &context, TTokenType token_type)

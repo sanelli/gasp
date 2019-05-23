@@ -21,11 +21,15 @@ int main(int argc, char *argv[])
    blaise_parser_context context;
 
    stringstream program;
-   program << R"program(
-      program Hello_World;  
+   program << R"GASP(
+      program Hello_World;
+      var
+         foo, another_foo: integer;
+         bar: boolean;
+         foobar: string;
       begin
       end.
-   )program";
+   )GASP";
 
    try
    {

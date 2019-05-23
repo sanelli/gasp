@@ -98,7 +98,6 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token::TYPE_FLOAT, "float", "TYPE_FLOAT");
    add_token(blaise_token::TYPE_DOUBLE, "double", "TYPE_DOUBLE");
    add_token(blaise_token::TYPE_BOOLEAN, "boolean", "TYPE_BOOLEAN");
-   add_token(blaise_token::TYPE_COMPLEX, "complex", "TYPE_COMPLEX");
    add_token(blaise_token::TYPE_ARRAY, "array", "TYPE_ARRAY");
    add_token(blaise_token::OF, "of", "OF");
    add_token(blaise_token::CONST_TRUE, "true", "CONST_TRUE");
@@ -118,6 +117,7 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token::RANGE, "\\.\\.", "RANGE");
    add_token(blaise_token::PERIOD, "\\.", "PERIOD");
    add_token(blaise_token::COLON, "\\:", "COLON");
+   add_token(blaise_token::COMMA, "\\,", "COMMA");
    add_token(blaise_token::LEFT_BRAKET, "\\(", "LEFT_BRAKET");
    add_token(blaise_token::RIGHT_BRAKET, "\\)", "RIGHT_BRAKET");
    add_token(blaise_token::LEFT_SQUARE_BRAKET, "\\[", "LEFT_SQUARE_BRAKET");
@@ -154,6 +154,37 @@ std::string blaise_token_provider::rule(blaise_token token) { return _private.ru
 std::string blaise_token_provider::name(blaise_token token) { return _private.name(token); }
 bool blaise_token_provider::keep_value(blaise_token token) { return _private.keep_value(token); }
 bool blaise_token_provider::keep_token(blaise_token token) { return _private.keep_token(token); }
+
+bool blaise_token_utility::is_type(blaise_token token)
+{
+   switch (token)
+   {
+   case blaise_token::TYPE_BYTE:
+   case blaise_token::TYPE_INTEGER:
+   case blaise_token::TYPE_LONG:
+   case blaise_token::TYPE_CHAR:
+   case blaise_token::TYPE_STRING:
+   case blaise_token::TYPE_FLOAT:
+   case blaise_token::TYPE_DOUBLE:
+   case blaise_token::TYPE_BOOLEAN:
+      return true;
+   default:
+      return false;
+   };
+}
+
+bool blaise_token_utility::is_unsigned_type(blaise_token token)
+{
+   switch (token)
+   {
+   case blaise_token::TYPE_BYTE:
+   case blaise_token::TYPE_INTEGER:
+   case blaise_token::TYPE_LONG:
+      return true;
+   default:
+      return false;
+   };
+}
 
 std::ostream &gasp::blaise::operator<<(std::ostream &os, const blaise_token &token)
 {

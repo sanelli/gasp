@@ -102,7 +102,6 @@ enum class blaise_token : unsigned long
    TYPE_FLOAT,
    TYPE_DOUBLE,
    TYPE_BOOLEAN,
-   TYPE_COMPLEX,
    TYPE_ARRAY,
    OF,
    CONST_TRUE,
@@ -116,6 +115,7 @@ enum class blaise_token : unsigned long
    SEMICOLON,
    PERIOD,
    COLON,
+   COMMA,
    LEFT_BRAKET,
    RIGHT_BRAKET,
    LEFT_SQUARE_BRAKET,
@@ -164,6 +164,14 @@ public:
    static bool keep_token(blaise_token token);
 };
 
-std::ostream &operator<<(std::ostream &os, const blaise_token &tok);
+class blaise_token_utility
+{
+public:
+   static bool is_type(blaise_token token);
+   static bool is_unsigned_type(blaise_token token);
+};
+
+std::ostream &
+operator<<(std::ostream &os, const blaise_token &tok);
 
 } // namespace gasp::blaise
