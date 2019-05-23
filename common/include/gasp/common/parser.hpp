@@ -27,7 +27,7 @@ class parser_context
    unsigned int _index;
 
 public:
-   void add_token(TTokenType token, std::string value, int line, int column) { return _tokens.emplace(token, value, line, column); }
+   void push_back(gasp::common::token<TTokenType> token) { return _tokens.push_back(token); }
    gasp::common::token<TTokenType> token(unsigned int index) { return _tokens.at(index); }
    gasp::common::token<TTokenType> peek() { return _tokens.at(_index); }
    unsigned int index() { return _index; }

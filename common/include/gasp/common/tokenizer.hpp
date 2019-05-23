@@ -103,7 +103,8 @@ public:
       _rules.emplace_back(token, rule, keep_value, keep_token);
    }
 
-   void parse(const std::string &input, int line_number, std::vector<token<TTokenType>> &tokens) const
+   template <typename TTokenContainer>
+   void parse(const std::string &input, int line_number, TTokenContainer &tokens) const
    {
       auto line = input;
       int column = 0;
@@ -134,7 +135,8 @@ public:
       }
    }
 
-   void parse(std::istream &input, std::vector<gasp::common::token<TTokenType>> &tokens) const
+   template <typename TTokenContainer>
+   void parse(std::istream &input, TTokenContainer &tokens) const
    {
       auto line_number = 1;
       while (!input.eof())
