@@ -5,4 +5,5 @@ target_sources(gasp-common
         output.hpp
         internal_error.hpp
         exception.hpp
+        parser.hpp
 )

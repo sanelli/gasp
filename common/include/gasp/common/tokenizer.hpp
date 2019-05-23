@@ -32,7 +32,7 @@ public:
    token(const token<TToken> &other) : _token(other._token), _value(other._value), _line(other._line), _column(other._column) {}
    token(token<TToken> &&other) : _token(std::move(other._token)), _value(std::move(other._value)), _line(std::move(other._line)), _column(std::move(other._column)) {}
 
-   TToken tok() const { return _token; }
+   TToken token_value() const { return _token; }
    std::string value() const { return _value; }
    unsigned int line() const { return _line; }
    unsigned int column() const { return _column; }
@@ -42,7 +42,7 @@ template <typename TToken>
 std::ostream &operator<<(std::ostream &os, const token<TToken> &tok)
 {
    return os << std::string("[")
-             << tok.tok() << std::string(",") << tok.value() << std::string(",")
+             << tok.token_value() << std::string(",") << tok.value() << std::string(",")
              << std::string("(") << tok.line() << std::string(",") << tok.column() << std::string(")")
              << std::string("]");
 }
