@@ -21,6 +21,20 @@ public:
 };
 
 template <typename TToken>
+class parser_context
+{
+   std::vector<gasp::common::token<TToken>> _tokens;
+   unsigned int _index;
+
+public:
+   void add_token(TToken token, std::string value, int line, int column) { return _tokens.emplace(token, value, line, column); }
+   gasp::common::token<TToken> token(unsigned int index) { return _tokens.at(index); }
+   gasp::common::token<TToken> peek() { return _tokens.at(_index); }
+   unsigned int index() { return _index; }
+   unsigned int next() { return ++_index; }
+};
+
+template <typename TToken>
 class parser
 {
 protected:
@@ -38,7 +52,7 @@ protected:
          ++index;
          return value;
       }
-      
+
       throw parser_error(tokens.at(index).line(), tokens.at(index).column(), "Unexpected token");
    }
 };
