@@ -38,15 +38,15 @@ template <typename TToken>
 class parser
 {
 protected:
-   static bool is_token(TToken match_token, unsigned int &index, const std::vector<gasp::common::token<TToken>> &tokens)
+   static bool is_token(TToken token_type, unsigned int &index, const std::vector<gasp::common::token<TToken>> &tokens)
    {
       auto token = tokens.at(index);
-      return token.token_value() == match_token;
+      return token.type() == token_type;
    }
 
-   static std::string match_token(TToken match_token, unsigned int &index, const std::vector<gasp::common::token<TToken>> &tokens)
+   static std::string match_token(TToken token_type, unsigned int &index, const std::vector<gasp::common::token<TToken>> &tokens)
    {
-      if (is_token(match_token, index, tokens))
+      if (is_token(token_type, index, tokens))
       {
          auto value = tokens.at(index).value();
          ++index;

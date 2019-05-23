@@ -20,30 +20,30 @@ namespace gasp::common
 template <typename TToken>
 class token
 {
-   TToken _token;
+   TToken _type;
    std::string _value;
    unsigned int _line;
    unsigned int _column;
 
 public:
-   token() : _token(static_cast<TToken>(0)), _value(""), _line(0), _column(0) {}
-   token(TToken token, int line, int column) : _token(token), _value(""), _line(line), _column(column) {}
-   token(TToken token, std::string value, int line, int column) : _token(token), _value(value), _line(line), _column(column) {}
-   token(const token<TToken> &other) : _token(other._token), _value(other._value), _line(other._line), _column(other._column) {}
-   token(token<TToken> &&other) : _token(std::move(other._token)), _value(std::move(other._value)), _line(std::move(other._line)), _column(std::move(other._column)) {}
+   token() : _type(static_cast<TToken>(0)), _value(""), _line(0), _column(0) {}
+   token(TToken token, unsigned int line, unsigned int column) : _type(token), _value(""), _line(line), _column(column) {}
+   token(TToken token, std::string value, unsigned int line, unsigned int column) : _type(token), _value(value), _line(line), _column(column) {}
+   token(const token<TToken> &other) : _type(other._type), _value(other._value), _line(other._line), _column(other._column) {}
+   token(token<TToken> &&other) : _type(std::move(other._type)), _value(std::move(other._value)), _line(std::move(other._line)), _column(std::move(other._column)) {}
 
-   TToken token_value() const { return _token; }
+   TToken type() const { return _type; }
    std::string value() const { return _value; }
    unsigned int line() const { return _line; }
    unsigned int column() const { return _column; }
 };
 
 template <typename TToken>
-std::ostream &operator<<(std::ostream &os, const token<TToken> &tok)
+std::ostream &operator<<(std::ostream &os, const token<TToken> &token)
 {
    return os << std::string("[")
-             << tok.token_value() << std::string(",") << tok.value() << std::string(",")
-             << std::string("(") << tok.line() << std::string(",") << tok.column() << std::string(")")
+             << token.type() << std::string(",") << token.value() << std::string(",")
+             << std::string("(") << token.line() << std::string(",") << token.column() << std::string(")")
              << std::string("]");
 }
 
