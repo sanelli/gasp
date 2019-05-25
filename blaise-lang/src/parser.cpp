@@ -127,7 +127,7 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
    default:
       throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
-   match_token(context, blaise_token::COMMA);
+   match_token(context, blaise_token::SEMICOLON);
 }
 
 void blaise_parser::parse_compound_statement(blaise_parser_context &context)
@@ -171,8 +171,6 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
             throw parser_error(token.line(), token.column(), "expected ')' or ','.");
 
       } while (token_type != blaise_token::RIGHT_PARENTHESES);
-
-   match_token(context, blaise_token::RIGHT_PARENTHESES);
 }
 
 void blaise_parser::parse_expression(blaise_parser_context &context)
