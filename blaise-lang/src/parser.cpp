@@ -33,15 +33,10 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    // TODO: match uses
    // TODO: match functions and procedures
    // TODO: match constants
+
    parse_variables_declaration(context);
+   parse_compound_statement(context);
 
-   match_token(context, blaise_token::BEGIN);
-
-   while (!is_token(context, blaise_token::END))
-   {
-      // TODO: match statements
-   }
-   match_token(context, blaise_token::END);
    match_token(context, blaise_token::PERIOD);
 }
 
@@ -50,8 +45,8 @@ void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
    if (!is_token(context, blaise_token::VAR))
       return; // No such variables
    match_token(context, blaise_token::VAR);
-   while (is_token(context, blaise_token::IDENTIFIER) && 
-      (is_token(context, blaise_token::COLON, 1) || is_token(context, blaise_token::COMMA, 1)))
+   while (is_token(context, blaise_token::IDENTIFIER) &&
+          (is_token(context, blaise_token::COLON, 1) || is_token(context, blaise_token::COMMA, 1)))
    {
       parse_variable_declaration(context);
    }
@@ -77,9 +72,9 @@ void blaise_parser::parse_variable_names_list(blaise_parser_context &context, st
 
 void blaise_parser::parse_variable_type(blaise_parser_context &context)
 {
-   bool is_unsigned = is_token_and_match(context, blaise_token::UNSIGNED);
-   auto token = context.peek_token();
-   auto token_type = token.type();
+   const auto is_unsigned = is_token_and_match(context, blaise_token::UNSIGNED);
+   const auto token = context.peek_token();
+   const auto token_type = token.type();
    if (is_unsigned && !blaise_token_utility::is_unsigned_type(token_type))
       throw parser_error("unexpected type after UNSIGNED keyword");
    else if (!blaise_token_utility::is_type(token_type))
@@ -88,3 +83,81 @@ void blaise_parser::parse_variable_type(blaise_parser_context &context)
 
    // TODO: Return the type definition
 }
+
+void blaise_parser::parse_statement(blaise_parser_context &context)
+{
+   const auto token = context.peek_token();
+   const auto token_type = token.type();
+
+   switch (token_type)
+   {
+   case blaise_token::IDENTIFIER:
+   {
+      const auto lookahead = context.token(1);
+      const auto lookahead_type = lookahead.type();
+      switch (lookahead_type)
+      {
+      case blaise_token::LEFT_PARENTHESES:
+         break;
+      // TODO: Add support for assignemt;
+      default:
+         throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found after indetifier."));
+      }
+   }
+   break;
+   case blaise_token::BEGIN:
+      parse_compound_statement(context);
+      break;
+      // TODO: Add support for other kind of statement
+   default:
+      throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
+   }
+   match_token(context, blaise_token::COMMA);
+}
+
+void blaise_parser::parse_compound_statement(blaise_parser_context &context)
+{
+   match_token(context, blaise_token::BEGIN);
+   while (!is_token(context, blaise_token::END))
+   {
+      parse_statement(context);
+   }
+   match_token(context, blaise_token::END);
+}
+
+void blaise_parser::parse_function_call_statement(blaise_parser_context &context)
+{
+   auto function_name = match_token(context, blaise_token::IDENTIFIER);
+   match_token(context, blaise_token::LEFT_PARENTHESES);
+   parse_function_call_parameters(context);
+   match_token(context, blaise_token::RIGHT_PARENTHESES);
+}
+
+void blaise_parser::parse_function_call_parameters(blaise_parser_context &context)
+{
+   // TODO: Save the parameters information and output them
+   while(!is_token(context, blaise_token::RIGHT_PARENTHESES)){
+      parse_expression(context);
+      is_token_and_match(context, blaise_token::RIGHT_PARENTHESES);
+   }
+}
+
+void blaise_parser::parse_expression(blaise_parser_context &context){
+
+   const auto token = context.peek_token();
+   const auto token_type = token.type();
+
+   switch(token_type){
+      case blaise_token::IDENTIFIER:
+         // TODO: What to do with the identifier?
+         {
+            const auto identifier = match_token(context, blaise_token::IDENTIFIER);
+         }
+         break;
+         // TODO: Add support for all other kind of expression
+      default:
+            throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
+   }
+
+}
+

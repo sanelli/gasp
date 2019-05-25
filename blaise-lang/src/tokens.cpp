@@ -34,6 +34,8 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token::PERIOD, "\\.", "PERIOD");
    add_token(blaise_token::COLON, "\\:", "COLON");
    add_token(blaise_token::COMMA, "\\,", "COMMA");
+   add_token(blaise_token::LEFT_PARENTHESES, "\\(", "LEFT_PARENTHESES");
+   add_token(blaise_token::RIGHT_PARENTHESES, "\\)", "RIGHT_PARENTHESES");
 
    // OTHERS
    add_token(blaise_token::IDENTIFIER, "[a-zA-Z][a-zA-Z0-9_]*", "IDENTIFIER", true);

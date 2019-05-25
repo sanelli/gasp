@@ -35,6 +35,8 @@ enum class blaise_token : unsigned long
    PERIOD,
    COLON,
    COMMA,
+   LEFT_PARENTHESES,
+   RIGHT_PARENTHESES,
   
    // OTHERS
    IDENTIFIER

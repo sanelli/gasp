@@ -28,6 +28,10 @@ int main(int argc, char *argv[])
          bar: boolean;
          foobar: string;
       begin
+         readline(foo, bar);
+         begin
+            writeline(foobar);
+         end;
       end.
    )GASP";
 
