@@ -7,6 +7,7 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
 #include <gasp/common/output.hpp>
+#include <gasp/common/debug.hpp>
 
 using namespace std;
 using namespace gasp::common;
@@ -14,6 +15,9 @@ using namespace gasp::blaise;
 
 int main(int argc, char *argv[])
 {
+   GASP_INSTALL_DEBUGGER("blaise-parser");
+   GASP_INSTALL_DEBUGGER("common-tokenizer");
+
    cout << "GASP - by Stefano Anelli." << endl;
 
    blaise_tokenizer tokenizer;
