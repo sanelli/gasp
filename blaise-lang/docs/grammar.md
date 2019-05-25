@@ -3,7 +3,7 @@
 ```javascript
 ENTRY_POINT => PROGRAM | MODULE
 
-PROGRAM => 'program' IDENTIFIER ';' USES_CLAUSES? VARIABLES_CLAUSES? 'begin' STATEMENT* 'end' '.'
+PROGRAM => 'program' IDENTIFIER ';' VARIABLES_CLAUSES? 'begin' STATEMENT* 'end' '.'
 IDENTIFIER => /[a-zA-z][a-zA-z0-9_]*/
 
 VARIABLES_CLAUSES => 'var' VARIABLE_CLAUSE*

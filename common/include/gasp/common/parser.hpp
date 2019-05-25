@@ -4,6 +4,9 @@
 #include <vector>
 #include <stdexcept>
 
+#include <gasp/common/string.hpp>
+#include <gasp/common/debug.hpp>
+
 namespace gasp::common
 {
 
@@ -30,6 +33,9 @@ class parser_context
 
    template <typename T>
    friend std::ostream &operator<<(std::ostream &os, const parser_context<T> &token);
+
+protected:
+   parser_context() { _index = 0; }
 
 public:
    void push_back(gasp::common::token<TTokenType> token) { return _tokens.push_back(token); }
@@ -58,8 +64,16 @@ protected:
    static bool is_token(parser_context<TTokenType> &context, TTokenType token_type, unsigned long lookahead = 0)
    {
       if (!context.has_more_tokens(lookahead))
+      {
+         GASP_DEBUG("CAZZO" << std::endl);
          return false;
+      }
       auto token = context.token(context.index() + lookahead);
+      GASP_DEBUG(context.index() << std::endl);
+      GASP_DEBUG(lookahead << std::endl);
+      GASP_DEBUG(token_type << std::endl);
+      GASP_DEBUG(token.type() << std::endl);
+
       return token.type() == token_type;
    }
 
@@ -85,7 +99,7 @@ protected:
          context.move_next_token();
          return value;
       }
-      throw parser_error(token.line(), token.column(), "Unexpected token");
+      throw parser_error(token.line(), token.column(), gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'."));
    }
 };
 } // namespace gasp::common
