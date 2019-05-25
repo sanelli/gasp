@@ -40,11 +40,11 @@ protected:
 public:
    void push_back(gasp::common::token<TTokenType> token) { return _tokens.push_back(token); }
    gasp::common::token<TTokenType> inline token(unsigned int index) const { return _tokens.at(index); }
-   gasp::common::token<TTokenType> inline peek_token() const
+   gasp::common::token<TTokenType> inline peek_token(unsigned int lookahead = 0) const
    {
-      if (_index >= _tokens.size())
+      if (!has_more_tokens(lookahead))
          throw parser_error("No more tokens to parse");
-      return _tokens.at(_index);
+      return _tokens.at(_index + lookahead);
    }
    unsigned int inline index() const { return _index; }
    unsigned int inline move_next_token() { return ++_index; }
