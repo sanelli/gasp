@@ -65,15 +65,9 @@ protected:
    {
       if (!context.has_more_tokens(lookahead))
       {
-         GASP_DEBUG("CAZZO" << std::endl);
          return false;
       }
       auto token = context.token(context.index() + lookahead);
-      GASP_DEBUG(context.index() << std::endl);
-      GASP_DEBUG(lookahead << std::endl);
-      GASP_DEBUG(token_type << std::endl);
-      GASP_DEBUG(token.type() << std::endl);
-
       return token.type() == token_type;
    }
 

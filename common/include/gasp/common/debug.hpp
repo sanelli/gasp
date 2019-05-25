@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#undef GASP_DEBUG_ENABLED
+#define GASP_DEBUG_ENABLED
 #ifdef GASP_DEBUG_ENABLED
    #define GASP_DEBUG(x) std::cout << x;
 #else

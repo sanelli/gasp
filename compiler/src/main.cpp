@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
    blaise_parser_context context;
 
    stringstream program;
-   program << R"GASP(
+   program << R"___(
       program Hello_World;
       var
          foo, another_foo: integer;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
             writeline(foobar);
          end;
       end.
-   )GASP";
+   )___";
 
    try
    {
