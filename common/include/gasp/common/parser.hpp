@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <sstream>
+#include <algorithm>
 
 #include <gasp/common/string.hpp>
 #include <gasp/common/debug.hpp>
@@ -49,6 +51,15 @@ public:
    unsigned int inline index() const { return _index; }
    unsigned int inline move_next_token() { return ++_index; }
    bool inline has_more_tokens(unsigned int lookahead = 0) const { return (_index + lookahead) < _tokens.size(); }
+
+   std::string context_token_to_string(unsigned int length = 0, signed int first = -1) const {
+      std::stringstream stream;
+      auto start = first == -1 ? _index : (unsigned) first;
+      auto last = length == 0 ? _tokens.size() : std::min(start + length + 1, (unsigned int)_tokens.size());
+      for(unsigned int index = start; index < length; ++index)
+         stream << index << ":" << token(index) << (index == length-1 ? "" : ", ");
+      return stream.str();
+   }
 };
 
 template <typename TTokenType>
@@ -89,13 +100,26 @@ protected:
       auto token = context.peek_token();
       if (is_token(context, token_type))
       {
-         GASP_DEBUG("common-parser", make_string("common_patser::match_token<", token_type,">") << std::endl);
+         GASP_DEBUG("common-parser", make_string("common_parser::match_token<", token_type,">") << std::endl);
 
          auto value = token.value();
          context.move_next_token();
          return value;
       }
-      throw parser_error(token.line(), token.column(), gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'."));
+      auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
+      throw_parse_error_with_details(context, token.line(), token.column(), message);
+   }
+
+   [[noreturn]]
+   static inline void throw_parse_error_with_details(const parser_context<TTokenType> &context, const unsigned int line, const unsigned int column, const std::string& message, unsigned int display_token = 5){
+      GASP_DEBUG("common-parser", make_string("common_parser::parser_error<", context.context_token_to_string(display_token), ">") << std::endl);
+      throw parser_error(line, column, message);
+   }
+
+   [[noreturn]]
+   static inline void throw_parse_error_with_details(const parser_context<TTokenType> &context, const std::string& message, unsigned int display_token = 5){
+      GASP_DEBUG("common-parser", make_string("common_parser::parser_error<", context.context_token_to_string(display_token), ">") << std::endl);
+      throw parser_error(0,0,message);
    }
 };
 } // namespace gasp::common

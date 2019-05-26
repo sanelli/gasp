@@ -17,11 +17,11 @@ void blaise_parser::parse(blaise_parser_context &context) const
    if (is_token(context, blaise_token::PROGRAM))
       parse_program(context);
    else
-      throw parser_error("only programs are supported.");
+      throw_parse_error_with_details(context, "only programs are supported.");
 
    // If more tokens are available at this stage then the code is malformed
    if (context.has_more_tokens())
-      throw parser_error("too many tokens at the end of the program");
+      throw_parse_error_with_details(context, "too many tokens at the end of the program");
 }
 
 void blaise_parser::parse_program(blaise_parser_context &context)
@@ -125,7 +125,7 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
          parse_assignamet_statement(context);
          break;
       default:
-         throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found after indetifier."));
+         throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found after indetifier."));
       }
    }
    break;
@@ -134,7 +134,7 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
       break;
       // TODO: Add support for other kind of statement
    default:
-      throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
+      throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
    match_token(context, blaise_token::SEMICOLON);
 
@@ -183,7 +183,7 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
          if (is_token_and_match(context, blaise_token::COMMA))
             continue;
          else if (!is_token(context, blaise_token::RIGHT_PARENTHESES))
-            throw parser_error(token.line(), token.column(), "expected ')' or ','.");
+            throw_parse_error_with_details(context, token.line(), token.column(), "expected ')' or ','.");
 
       } while (token_type != blaise_token::RIGHT_PARENTHESES);
 
@@ -216,7 +216,7 @@ void blaise_parser::parse_expression(blaise_parser_context &context)
       break;
       // TODO: Add support for all other kind of expression
    default:
-      throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
+      throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression" << std::endl);
