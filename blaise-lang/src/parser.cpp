@@ -235,28 +235,46 @@ void blaise_parser::parse_expression_helper(blaise_parser_context &context, /* c
 void blaise_parser::parse_expression_term(blaise_parser_context &context)
 {
    // TODO: Need to return the result of the expression term
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression_term" << std::endl);
-
    const auto token = context.peek_token();
    const auto token_type = token.type();
 
+  GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
+
    switch (token_type)
    {
-   case blaise_token::IDENTIFIER:
-      // TODO: What to do with the identifier?
+   case blaise_token::IDENTIFIER: // Identifier could be either a variable or a function call
       {
+         // TODO: What to do with the identifier?
          const auto identifier = match_token(context, blaise_token::IDENTIFIER);
+         const auto lookahead = context.peek_token().type();
+         if(is_token_and_match(context, blaise_token::LEFT_PARENTHESES)){
+            parse_function_call_parameters(context);
+            match_token(context, blaise_token::RIGHT_PARENTHESES);
+         }
       }
       break;
-   case blaise_token::MINUS:
+   case blaise_token::MINUS: // it is a negated sub expression
       {
          match_token(context, blaise_token::MINUS);
          /* result = */ parse_expression(context);
       }
       break;
-   case blaise_token::NUMBER:
+   case blaise_token::NOT: // it is a negated sub expression
+      {
+         match_token(context, blaise_token::NOT);
+         /* result = */ parse_expression(context);
+      }
+      break;
+   case blaise_token::NUMBER: // It is a number
       {
          const auto numer_as_string = match_token(context, blaise_token::NUMBER);
+      }
+      break;
+   case blaise_token::LEFT_PARENTHESES: // sub expression between parenthesis
+      {
+         match_token(context, blaise_token::MINUS);
+         /* result = */ parse_expression(context);
+         match_token(context, blaise_token::RIGHT_PARENTHESES);
       }
       break;
       // TODO: Add support for all other kind of expression
@@ -264,5 +282,5 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term" << std::endl);
+  GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
 }
