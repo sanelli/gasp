@@ -33,6 +33,23 @@ public:
    token(const token<TTokenType> &other) : _type(other._type), _value(other._value), _line(other._line), _column(other._column) {}
    token(token<TTokenType> &&other) : _type(std::move(other._type)), _value(std::move(other._value)), _line(std::move(other._line)), _column(std::move(other._column)) {}
 
+   token<TTokenType>& operator=(const token<TTokenType>& other) {
+      _type = other._type;
+      _value = other._value;
+      _line = other._line;
+      _column = other._column;
+      return *this;
+   }
+
+   token<TTokenType>& operator=(token<TTokenType>&& other) {
+      _type = std::move(other._type);
+      _value = std::move(other._value);
+      _line = std::move(other._line);
+      _column = std::move(other._column);
+      return *this;
+   }
+
+
    TTokenType type() const { return _type; }
    std::string value() const { return _value; }
    unsigned int line() const { return _line; }

@@ -199,9 +199,43 @@ void blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
 }
 
-void blaise_parser::parse_expression(blaise_parser_context &context)
-{
+// Algorihtm for expression management is taked from
+// https://en.wikipedia.org/wiki/Operator-precedence_parser
+void blaise_parser::parse_expression(blaise_parser_context &context){
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression" << std::endl);
+
+   /* const auto lhs = */ parse_expression_term(context);
+   parse_expression_helper(context, /* lhs, */ 0);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression" << std::endl);
+}
+
+void blaise_parser::parse_expression_helper(blaise_parser_context &context, /* const auto& lhs, */ unsigned int min_precedence){
+
+   GASP_DEBUG("blaise-parser", make_string("[ENTER] blaise_parser::parse_expression<",min_precedence,">") << std::endl);
+
+   token<blaise_token> lookahead_token = context.peek_token();
+   while(blaise_token_utility::is_operator(lookahead_token.type()) 
+            && blaise_token_utility::get_operator_precedence(lookahead_token.type()) >= min_precedence){
+      auto op = lookahead_token.type();
+      match_token(context, op);
+      /* auto rhs = */ parse_expression_term(context);
+      lookahead_token = std::move(context.peek_token());
+      while(blaise_token_utility::is_operator(lookahead_token.type())
+            && blaise_token_utility::get_operator_precedence(lookahead_token.type()) > blaise_token_utility::get_operator_precedence(op) ){
+               /* rhs = */ parse_expression_helper (context, /* rhs, */ blaise_token_utility::get_operator_precedence(lookahead_token.type()));
+               lookahead_token = std::move(context.peek_token());
+            }
+      /* lhs = lhs op rhs */
+   } 
+   GASP_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<",min_precedence,">") << std::endl);
+   /* return lhs */
+}
+
+
+void blaise_parser::parse_expression_term(blaise_parser_context &context)
+{
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression_term" << std::endl);
 
    const auto token = context.peek_token();
    const auto token_type = token.type();
@@ -214,11 +248,16 @@ void blaise_parser::parse_expression(blaise_parser_context &context)
          const auto identifier = match_token(context, blaise_token::IDENTIFIER);
       }
       break;
+   case blaise_token::NUMBER:
+      {
+         const auto numer_as_string = match_token(context, blaise_token::NUMBER);
+      }
+      break;
       // TODO: Add support for all other kind of expression
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression" << std::endl);
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term" << std::endl);
 
 }

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
          foobar: string;
       begin
          readline(foo, bar);
-         another_foo := foo;
+         another_foo := foo + bar * 2;
          begin
             writeline(foo);
             writeline(bar);

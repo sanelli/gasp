@@ -17,6 +17,11 @@ public:
 
 class blaise_parser : public gasp::common::parser<blaise_token>
 {
+   // TODO: Create a match identifier so that in the future I can 
+   //       handle identifiers followed by array definition
+
+   // TODO: Create a match number so I can handle multiple bases case
+
    static void parse_program(blaise_parser_context &context);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);
@@ -27,7 +32,9 @@ class blaise_parser : public gasp::common::parser<blaise_token>
    static void parse_function_call_statement(blaise_parser_context &context);
    static void parse_function_call_parameters(blaise_parser_context &context);
    static void parse_assignamet_statement(blaise_parser_context &context);
-   static void parse_expression(blaise_parser_context &context);
+   static inline void parse_expression(blaise_parser_context &context);
+   static void parse_expression_helper(blaise_parser_context &context, unsigned int min_precedence);
+   static void parse_expression_term(blaise_parser_context &context);
 
 public:
    void parse(blaise_parser_context &context) const;

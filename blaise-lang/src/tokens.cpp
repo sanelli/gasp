@@ -9,6 +9,7 @@ using namespace gasp::common;
 
 blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {
+   add_token(blaise_token::NUMBER, "[0-9]+(?:\\.[0-9]+)", "NUMBER", true);
 
    // KEYWORDS
    add_token(blaise_token::PROGRAM, "program", "PROGRAM");

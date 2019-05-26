@@ -49,7 +49,8 @@ enum class blaise_token : unsigned char
    MULTIPLY, DIVIDE, REMAINDER,
   
    // OTHERS
-   IDENTIFIER
+   IDENTIFIER,
+   NUMBER
 };
 
 class blaise_token_provider
