@@ -266,8 +266,11 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
       }
       break;
    case blaise_token_type::NUMBER: // It is a number
+   case blaise_token_type::INTEGER_BASE_TWO: 
+   case blaise_token_type::INTEGER_BASE_EIGHT: // It is a number
+   case blaise_token_type::INTEGER_BASE_SIXTEEN: // It is a number
       {
-         const auto numer_as_string = match_token(context, blaise_token_type::NUMBER);
+         const auto numer_as_string = match_token(context, token_type);
       }
       break;
    case blaise_token_type::LEFT_PARENTHESES: // sub expression between parenthesis
@@ -284,3 +287,17 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
 
   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
 }
+
+void blaise_parser::parse_number(blaise_parser_context& context){
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_number" << std::endl);
+
+   auto token = context.peek_token();
+   auto token_type = token.type();
+   if(!blaise_token_utility::is_number(token_type))
+      throw_parse_error_with_details(context, token.line(), token.column(), make_string("A number was expected but found '", token_type, "'"));
+
+   auto number_as_string = match_token(context, token_type);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_number" << std::endl);
+}
+

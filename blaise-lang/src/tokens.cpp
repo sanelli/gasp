@@ -9,6 +9,9 @@ using namespace gasp::common;
 
 blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {
+   add_token(blaise_token_type::INTEGER_BASE_TWO, "0b[0-1]+", "INTEGER_BASE_TWO", true);
+   add_token(blaise_token_type::INTEGER_BASE_TWO, "0o[0-7]+", "INTEGER_BASE_TWO", true);
+   add_token(blaise_token_type::INTEGER_BASE_TWO, "0x[0-9A-Fa-f]+", "INTEGER_BASE_TWO", true);
    add_token(blaise_token_type::NUMBER, "[0-9]+(?:\\.[0-9]+)?", "NUMBER", true);
 
    // KEYWORDS
@@ -145,6 +148,18 @@ bool blaise_token_utility::get_operator_precedence(blaise_token_type token_type)
          return 40;
       default:
          throw gasp::common::tokenizer_error(0,0,"unexpected token type - it is not an operator");
+   }
+}
+
+bool blaise_token_utility::is_number(blaise_token_type token_type){
+   switch(token_type){
+      case blaise_token_type::NUMBER:
+      case blaise_token_type::INTEGER_BASE_TWO:
+      case blaise_token_type::INTEGER_BASE_EIGHT:
+      case blaise_token_type::INTEGER_BASE_SIXTEEN:
+         return true;
+      default:
+         return false;
    }
 }
 

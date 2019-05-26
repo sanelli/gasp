@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ostream>
-#include <map>
 #include <string>
 
 #include <gasp/common/tokenizer.hpp>
@@ -49,7 +48,10 @@ enum class blaise_token_type : unsigned char
   
    // OTHERS
    IDENTIFIER,
-   NUMBER
+   NUMBER,
+   INTEGER_BASE_TWO,
+   INTEGER_BASE_EIGHT,
+   INTEGER_BASE_SIXTEEN
 };
 
 class blaise_token_provider
@@ -79,6 +81,7 @@ public:
    static bool is_unsigned_type(blaise_token_type token_type);
    static bool is_operator(blaise_token_type token_type);
    static bool get_operator_precedence(blaise_token_type token_type);
+   static bool is_number(blaise_token_type token_type);
 };
 
 std::ostream &
