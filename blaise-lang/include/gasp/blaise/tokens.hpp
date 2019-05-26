@@ -8,9 +8,10 @@
 
 namespace gasp::blaise
 {
-enum class blaise_token : unsigned long
-{
 
+// TODO: rename blaise_token into blaise_token_type
+enum class blaise_token : unsigned char
+{
    // KEYWORDS
    PROGRAM,
    MODULE,
@@ -18,10 +19,10 @@ enum class blaise_token : unsigned long
    BEGIN,
    END,
    VAR,
-   AND,
-   OR,
-   NOT,
-   EAGER,
+   LOGICAL_AND,
+   LOGICAL_OR,
+   LOGICAL_NOT,
+   LOGICAL_EAGER,
 
    // TYPES
    TYPE_BYTE,
@@ -42,8 +43,8 @@ enum class blaise_token : unsigned long
    COMMA,
    LEFT_PARENTHESES,
    RIGHT_PARENTHESES,
-   GREAT_THAN, LESS_THAN, GREAT_OR_EQUAL_THAN, LESS_OR_EQUAL_THAN,
-   EQUALITY, INEQUALITY,
+   GREAT_THAN, LESS_THAN, GREAT_THAN_OR_EQUAL_TO, LESS_THAN_OR_EQUAL_TO,
+   EQUAL_TO, NOT_EQUAL_TO,
    PLUS, MINUS,
    MULTIPLY, DIVIDE, REMAINDER,
   
@@ -65,20 +66,22 @@ public:
    static typename std::vector<blaise_token>::const_iterator cbegin();
    static typename std::vector<blaise_token>::const_iterator cend();
 
-   static std::string rule(blaise_token token);
-   static std::string name(blaise_token token);
-   static bool keep_value(blaise_token token);
-   static bool keep_token(blaise_token token);
+   static std::string rule(blaise_token token_type);
+   static std::string name(blaise_token token_type);
+   static bool keep_value(blaise_token token_type);
+   static bool keep_token(blaise_token token_type);
 };
 
 class blaise_token_utility
 {
 public:
-   static bool is_type(blaise_token token);
-   static bool is_unsigned_type(blaise_token token);
+   static bool is_type(blaise_token token_type);
+   static bool is_unsigned_type(blaise_token token_type);
+   static bool is_operator(blaise_token token_type);
+   static bool get_operator_precedence(blaise_token token_type);
 };
 
 std::ostream &
-operator<<(std::ostream &os, const blaise_token &tok);
+operator<<(std::ostream &os, const blaise_token &token_type);
 
 } // namespace gasp::blaise
