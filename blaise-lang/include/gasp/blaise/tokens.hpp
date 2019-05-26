@@ -9,8 +9,7 @@
 namespace gasp::blaise
 {
 
-// TODO: rename blaise_token into blaise_token_type
-enum class blaise_token : unsigned char
+enum class blaise_token_type : unsigned char
 {
    // KEYWORDS
    PROGRAM,
@@ -55,7 +54,7 @@ enum class blaise_token : unsigned char
 
 class blaise_token_provider
 {
-   class blaise_token_provider_constructor : public gasp::common::token_provider_constructor<blaise_token>
+   class blaise_token_provider_constructor : public gasp::common::token_provider_constructor<blaise_token_type>
    {
    public:
       blaise_token_provider_constructor();
@@ -64,25 +63,25 @@ class blaise_token_provider
    static blaise_token_provider_constructor _private;
 
 public:
-   static typename std::vector<blaise_token>::const_iterator cbegin();
-   static typename std::vector<blaise_token>::const_iterator cend();
+   static typename std::vector<blaise_token_type>::const_iterator cbegin();
+   static typename std::vector<blaise_token_type>::const_iterator cend();
 
-   static std::string rule(blaise_token token_type);
-   static std::string name(blaise_token token_type);
-   static bool keep_value(blaise_token token_type);
-   static bool keep_token(blaise_token token_type);
+   static std::string rule(blaise_token_type token_type);
+   static std::string name(blaise_token_type token_type);
+   static bool keep_value(blaise_token_type token_type);
+   static bool keep_token(blaise_token_type token_type);
 };
 
 class blaise_token_utility
 {
 public:
-   static bool is_type(blaise_token token_type);
-   static bool is_unsigned_type(blaise_token token_type);
-   static bool is_operator(blaise_token token_type);
-   static bool get_operator_precedence(blaise_token token_type);
+   static bool is_type(blaise_token_type token_type);
+   static bool is_unsigned_type(blaise_token_type token_type);
+   static bool is_operator(blaise_token_type token_type);
+   static bool get_operator_precedence(blaise_token_type token_type);
 };
 
 std::ostream &
-operator<<(std::ostream &os, const blaise_token &token_type);
+operator<<(std::ostream &os, const blaise_token_type &token_type);
 
 } // namespace gasp::blaise

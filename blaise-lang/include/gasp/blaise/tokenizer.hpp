@@ -9,7 +9,7 @@
 namespace gasp::blaise
 {
 
-class blaise_tokenizer : public gasp::common::tokenizer<gasp::blaise::blaise_token> 
+class blaise_tokenizer : public gasp::common::tokenizer<gasp::blaise::blaise_token_type> 
 {
 
 public:

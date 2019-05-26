@@ -9,13 +9,13 @@
 namespace gasp::blaise
 {
 
-class blaise_parser_context : public gasp::common::parser_context<blaise_token>
+class blaise_parser_context : public gasp::common::parser_context<blaise_token_type>
 {
 public:
-   blaise_parser_context() : gasp::common::parser_context<blaise_token>(){};
+   blaise_parser_context() : gasp::common::parser_context<blaise_token_type>(){};
 };
 
-class blaise_parser : public gasp::common::parser<blaise_token>
+class blaise_parser : public gasp::common::parser<blaise_token_type>
 {
    // TODO: Create a match identifier so that in the future I can 
    //       handle identifiers followed by array definition
