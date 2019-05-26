@@ -270,7 +270,7 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
    case blaise_token_type::INTEGER_BASE_EIGHT: // It is a number
    case blaise_token_type::INTEGER_BASE_SIXTEEN: // It is a number
       {
-         const auto numer_as_string = match_token(context, token_type);
+         parse_number(context);
       }
       break;
    case blaise_token_type::LEFT_PARENTHESES: // sub expression between parenthesis
@@ -280,7 +280,16 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
          match_token(context, blaise_token_type::RIGHT_PARENTHESES);
       }
       break;
-      // TODO: Add support for all other kind of expression
+   case blaise_token_type::STRING_LITERAL:
+      {
+         const auto string_literal = match_token(context, blaise_token_type::STRING_LITERAL);
+      }
+      break;
+   case blaise_token_type::CHAR_LITERAL:
+      {
+         const auto char_literal = match_token(context, blaise_token_type::CHAR_LITERAL);
+      }
+      break;
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }

@@ -9,11 +9,6 @@ using namespace gasp::common;
 
 blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {
-   add_token(blaise_token_type::INTEGER_BASE_TWO, "0b[0-1]+", "INTEGER_BASE_TWO", true);
-   add_token(blaise_token_type::INTEGER_BASE_TWO, "0o[0-7]+", "INTEGER_BASE_TWO", true);
-   add_token(blaise_token_type::INTEGER_BASE_TWO, "0x[0-9A-Fa-f]+", "INTEGER_BASE_TWO", true);
-   add_token(blaise_token_type::NUMBER, "[0-9]+(?:\\.[0-9]+)?", "NUMBER", true);
-
    // KEYWORDS
    add_token(blaise_token_type::PROGRAM, "program", "PROGRAM");
    add_token(blaise_token_type::MODULE, "module", "MODULE");
@@ -57,7 +52,13 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::DIVIDE, "\\/", "DIVIDE");
    add_token(blaise_token_type::REMAINDER, "\\%", "REMAINDER");
 
-   // OTHERS
+   // LITERALS
+   add_token(blaise_token_type::INTEGER_BASE_TWO, "0b[0-1]+", "INTEGER_BASE_TWO", true);
+   add_token(blaise_token_type::INTEGER_BASE_EIGHT, "0o[0-7]+", "INTEGER_BASE_EIGHT", true);
+   add_token(blaise_token_type::INTEGER_BASE_SIXTEEN, "0x[0-9A-Fa-f]+", "INTEGER_BASE_SIXTEEN", true);
+   add_token(blaise_token_type::NUMBER, "[0-9]+(?:\\.[0-9]+)?", "NUMBER", true);
+   add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.)*\"", "STIRNG_LITERAL", true);
+   add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.)'", "CHAR_LITERAL", true);
    add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
 

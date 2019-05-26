@@ -51,7 +51,9 @@ enum class blaise_token_type : unsigned char
    NUMBER,
    INTEGER_BASE_TWO,
    INTEGER_BASE_EIGHT,
-   INTEGER_BASE_SIXTEEN
+   INTEGER_BASE_SIXTEEN,
+   STRING_LITERAL,
+   CHAR_LITERAL
 };
 
 class blaise_token_provider
