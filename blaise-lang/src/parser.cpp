@@ -26,7 +26,7 @@ void blaise_parser::parse(blaise_parser_context &context) const
 
 void blaise_parser::parse_program(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_program" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_program" << std::endl);
 
    match_token(context, blaise_token::PROGRAM);
    auto program_name = match_token(context, blaise_token::IDENTIFIER);
@@ -40,12 +40,13 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    parse_compound_statement(context);
 
    match_token(context, blaise_token::PERIOD);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_program" << std::endl);
 }
 
 void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
 {
-
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_variables_declaration" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variables_declaration" << std::endl);
 
    if (!is_token(context, blaise_token::VAR))
       return; // No such variables
@@ -55,33 +56,38 @@ void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
    {
       parse_variable_declaration(context);
    }
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variables_declaration" << std::endl);
 }
 
 void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_variable_declaration" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_declaration" << std::endl);
 
    std::vector<std::string> variable_names;
    parse_variable_names_list(context, variable_names);
    match_token(context, blaise_token::COLON);
    parse_variable_type(context);
    match_token(context, blaise_token::SEMICOLON);
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_declaration" << std::endl);
 }
 
 void blaise_parser::parse_variable_names_list(blaise_parser_context &context, std::vector<std::string> &variable_names)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_variable_names_list" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_names_list" << std::endl);
 
    // TODO: Possible generate a new variable definition, not just the name
    do
    {
       variable_names.push_back(match_token(context, blaise_token::IDENTIFIER));
    } while (is_token_and_match(context, blaise_token::COMMA));
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_names_list" << std::endl);
 }
 
 void blaise_parser::parse_variable_type(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_variable_type" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
 
    const auto is_unsigned = is_token_and_match(context, blaise_token::UNSIGNED);
    const auto token = context.peek_token();
@@ -93,11 +99,12 @@ void blaise_parser::parse_variable_type(blaise_parser_context &context)
    match_token(context, token_type);
 
    // TODO: Return the type definition
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_type" << std::endl);
 }
 
 void blaise_parser::parse_statement(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_statement" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_statement" << std::endl);
 
    const auto token = context.peek_token();
    const auto token_type = token.type();
@@ -128,11 +135,13 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
       throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
    match_token(context, blaise_token::SEMICOLON);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_statement" << std::endl);
 }
 
 void blaise_parser::parse_compound_statement(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_compound_statement" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_compound_statement" << std::endl);
 
    match_token(context, blaise_token::BEGIN);
    while (!is_token(context, blaise_token::END))
@@ -140,21 +149,25 @@ void blaise_parser::parse_compound_statement(blaise_parser_context &context)
       parse_statement(context);
    }
    match_token(context, blaise_token::END);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_compound_statement" << std::endl);
 }
 
 void blaise_parser::parse_function_call_statement(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_function_call_statement" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_call_statement" << std::endl);
 
    auto function_name = match_token(context, blaise_token::IDENTIFIER);
    match_token(context, blaise_token::LEFT_PARENTHESES);
    parse_function_call_parameters(context);
    match_token(context, blaise_token::RIGHT_PARENTHESES);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_statement" << std::endl);
 }
 
 void blaise_parser::parse_function_call_parameters(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_function_call_parameters" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_call_parameters" << std::endl);
 
    auto token_type = context.peek_token().type();
 
@@ -171,11 +184,14 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
             throw parser_error(token.line(), token.column(), "expected ')' or ','.");
 
       } while (token_type != blaise_token::RIGHT_PARENTHESES);
+
+    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_parameters" << std::endl);
+
 }
 
 void blaise_parser::parse_expression(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "blaise_parser::parse_expression" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression" << std::endl);
 
    const auto token = context.peek_token();
    const auto token_type = token.type();
@@ -192,4 +208,7 @@ void blaise_parser::parse_expression(blaise_parser_context &context)
    default:
       throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression" << std::endl);
+
 }
