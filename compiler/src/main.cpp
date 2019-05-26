@@ -15,8 +15,7 @@ using namespace gasp::blaise;
 
 int main(int argc, char *argv[])
 {
-   //GASP_INSTALL_DEBUGGER("blaise-parser");
-   //GASP_INSTALL_DEBUGGER("common-parser");
+   //GASP_INSTALL_DEBUGGER("blaise-parser"); GASP_INSTALL_DEBUGGER("common-parser");
    //GASP_INSTALL_DEBUGGER("common-tokenizer");
 
    cout << "GASP - by Stefano Anelli." << endl;
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
          foobar: string;
       begin
          readline(foo, bar);
-         another_foo := foo + bar * 2;
+         another_foo := foo + bar * 2 + -1 / foo;
          begin
             writeline(foo);
             writeline(bar);

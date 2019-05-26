@@ -232,9 +232,9 @@ void blaise_parser::parse_expression_helper(blaise_parser_context &context, /* c
    /* return lhs */
 }
 
-
 void blaise_parser::parse_expression_term(blaise_parser_context &context)
 {
+   // TODO: Need to return the result of the expression term
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression_term" << std::endl);
 
    const auto token = context.peek_token();
@@ -248,6 +248,12 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
          const auto identifier = match_token(context, blaise_token::IDENTIFIER);
       }
       break;
+   case blaise_token::MINUS:
+      {
+         match_token(context, blaise_token::MINUS);
+         /* result = */ parse_expression(context);
+      }
+      break;
    case blaise_token::NUMBER:
       {
          const auto numer_as_string = match_token(context, blaise_token::NUMBER);
@@ -259,5 +265,4 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
    }
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term" << std::endl);
-
 }
