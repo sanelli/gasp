@@ -26,6 +26,7 @@ class blaise_parser : public gasp::common::parser<blaise_token>
    static void parse_compound_statement(blaise_parser_context &context);
    static void parse_function_call_statement(blaise_parser_context &context);
    static void parse_function_call_parameters(blaise_parser_context &context);
+   static void parse_assignamet_statement(blaise_parser_context &context);
    static void parse_expression(blaise_parser_context &context);
 
 public:

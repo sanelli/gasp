@@ -31,6 +31,7 @@ enum class blaise_token : unsigned long
    TYPE_BOOLEAN,
 
    // PUNCTUATION
+   ASSIGNMENT,
    SEMICOLON,
    PERIOD,
    COLON,

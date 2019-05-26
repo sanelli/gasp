@@ -89,6 +89,8 @@ protected:
       auto token = context.peek_token();
       if (is_token(context, token_type))
       {
+         GASP_DEBUG("common-parser", make_string("common_patser::match_token<", token_type,">") << std::endl);
+
          auto value = token.value();
          context.move_next_token();
          return value;

@@ -121,7 +121,9 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
       case blaise_token::LEFT_PARENTHESES:
          parse_function_call_statement(context);
          break;
-      // TODO: Add support for assignemt;
+      case blaise_token::ASSIGNMENT:
+         parse_assignamet_statement(context);
+         break;
       default:
          throw parser_error(token.line(), token.column(), make_string("Unexpected token '", token_type, "' found after indetifier."));
       }
@@ -187,6 +189,14 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
 
     GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_parameters" << std::endl);
 
+}
+
+void blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_assignment" << std::endl);
+   auto identifier = match_token(context, blaise_token::IDENTIFIER);
+   match_token(context, blaise_token::ASSIGNMENT);
+   parse_expression(context);
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
 }
 
 void blaise_parser::parse_expression(blaise_parser_context &context)

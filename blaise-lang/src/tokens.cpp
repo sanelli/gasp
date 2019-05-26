@@ -30,6 +30,7 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token::TYPE_BOOLEAN, "boolean", "TYPE_BOOLEAN");
 
    // PUNCTUATION
+   add_token(blaise_token::ASSIGNMENT, ":=", "ASSIGNMENT");
    add_token(blaise_token::SEMICOLON, ";", "SEMICOLON");
    add_token(blaise_token::PERIOD, "\\.", "PERIOD");
    add_token(blaise_token::COLON, "\\:", "COLON");
