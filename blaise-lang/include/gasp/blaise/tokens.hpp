@@ -18,6 +18,10 @@ enum class blaise_token : unsigned long
    BEGIN,
    END,
    VAR,
+   AND,
+   OR,
+   NOT,
+   EAGER,
 
    // TYPES
    TYPE_BYTE,
@@ -38,6 +42,10 @@ enum class blaise_token : unsigned long
    COMMA,
    LEFT_PARENTHESES,
    RIGHT_PARENTHESES,
+   GREAT_THAN, LESS_THAN, GREAT_OR_EQUAL_THAN, LESS_OR_EQUAL_THAN,
+   EQUALITY, INEQUALITY,
+   PLUS, MINUS,
+   MULTIPLY, DIVIDE, REMAINDER,
   
    // OTHERS
    IDENTIFIER

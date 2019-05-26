@@ -17,6 +17,10 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token::BEGIN, "begin", "BEGIN");
    add_token(blaise_token::END, "end", "END");
    add_token(blaise_token::VAR, "var", "VAR");
+   add_token(blaise_token::AND, "and", "AND");
+   add_token(blaise_token::OR, "or", "OR");
+   add_token(blaise_token::NOT, "not", "NOT");
+   add_token(blaise_token::EAGER, "eager", "EAGER");
 
    // TYPES
    add_token(blaise_token::TYPE_BYTE, "byte", "TYPE_BYTE");
@@ -37,6 +41,17 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token::COMMA, "\\,", "COMMA");
    add_token(blaise_token::LEFT_PARENTHESES, "\\(", "LEFT_PARENTHESES");
    add_token(blaise_token::RIGHT_PARENTHESES, "\\)", "RIGHT_PARENTHESES");
+   add_token(blaise_token::INEQUALITY, "\\<\\>", "LESS_OR_EQUAL_THAN");
+   add_token(blaise_token::EQUALITY, "\\=\\=", "LESS_OR_EQUAL_THAN");
+   add_token(blaise_token::GREAT_THAN, "\\>", "GREAT_THAN");
+   add_token(blaise_token::LESS_THAN, "\\<", "GREAT_THAN");
+   add_token(blaise_token::GREAT_OR_EQUAL_THAN, "\\>\\=", "GREAT_OR_EQUAL_THAN");
+   add_token(blaise_token::LESS_OR_EQUAL_THAN, "\\<\\=", "LESS_OR_EQUAL_THAN");
+   add_token(blaise_token::PLUS, "\\+", "PLUS");
+   add_token(blaise_token::MINUS, "\\-", "MINUS");
+   add_token(blaise_token::MULTIPLY, "\\*", "MULTIPLY");
+   add_token(blaise_token::DIVIDE, "\\/", "DIVIDE");
+   add_token(blaise_token::REMAINDER, "\\%", "REMAINDER");
 
    // OTHERS
    add_token(blaise_token::IDENTIFIER, "[a-zA-Z][a-zA-Z0-9_]*", "IDENTIFIER", true);
