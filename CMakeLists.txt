@@ -18,12 +18,18 @@ add_subdirectory(common)
 set_target_properties(gasp-common PROPERTIES LINKER_LANGUAGE CXX)
 
 #################################################
-# GASP common
+# blaise lang
 #################################################
 add_library(gasp-blaise-lang SHARED "")
-add_subdirectory(blaise-lang)
 set_target_properties(gasp-blaise-lang PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(gasp-blaise-lang gasp-common)
+
+add_executable(gasp-blaise-lang-test "")
+set_target_properties(gasp-blaise-lang-test PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-test gasp-blaise-lang)
+target_link_libraries(gasp-blaise-lang-test Catch2::Catch2)
+
+add_subdirectory(blaise-lang)
 
 #################################################
 # GASP main executable
