@@ -266,7 +266,8 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
       }
       break;
    case blaise_token_type::INTEGER_LITERAL: // It is a number
-   case blaise_token_type::DECIMAL_LITERAL: 
+   case blaise_token_type::DOUBLE_LITERAL: 
+   case blaise_token_type::FLOAT_LITERAL: 
    case blaise_token_type::INTEGER_BASE_TWO_LITERAL: 
    case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
    case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:

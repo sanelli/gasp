@@ -7,10 +7,9 @@ PROGRAM := 'program' IDENTIFIER ';' VARIABLES_CLAUSES?  '.' COMPOUND_STATEMENT
 MODULE := # WORK IN PROGRESS
 
 IDENTIFIER := /[a-zA-z][a-zA-z0-9_]*/
-NUMBER := /[0-9]+(\\.[0-9]+)?/ | 0b[0-1]+ | 0o[0-7]+ | 0x[0-9A-Fa-f]+
-STRING_LITERAL := /"([^"]|\\\\.)*"/
-CHAR_LITERAL := /'([^']|\\\\.)'/
-
+NUMBER := /[0-9]+(\\.[0-9]+(f|d)?)?/ | 0b[0-1]+ | 0o[0-7]+ | 0x[0-9A-Fa-f]+
+STRING_LITERAL := /"([^"]|\\.|\\u[0-9a-fA-F]{4})*"/
+CHAR_LITERAL := /'([^']|\\.|\\u[0-9a-fA-F]{4})'/
 
 VARIABLES_CLAUSES := 'var' VARIABLE_CLAUSE*
 VARIABLE_CLAUSE :=  VARIABLE_NAME_LIST ':' VARIABLE_TYPE ';'

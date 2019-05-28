@@ -377,43 +377,91 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
       }
 
       /* *************************************************************** *
-       * DECIMAL                                                         *
+       * DOUBLE                                                         *
        * *************************************************************** */  
-      WHEN("the token is a decimal literal")
+      WHEN("the token is a double literal")
       {
-         THEN("it can match the decimal literal"){
+         THEN("it can match the double literal"){
             tokenizer.tokenize("17.13", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DECIMAL_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
             REQUIRE(tokens.at(0).value() == "17.13");
+         }
+
+         THEN("it can match the double literal with final d"){
+            tokenizer.tokenize("17.13d", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).value() == "17.13d");
          }
 
          THEN("it can match 0.0"){
             tokenizer.tokenize("0.0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DECIMAL_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
             REQUIRE(tokens.at(0).value() == "0.0");
          }
 
-         THEN("it can match the decimal literal with trailing spaces"){
+         THEN("it can match the double literal with trailing spaces"){
             tokenizer.tokenize("17.13   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DECIMAL_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
             REQUIRE(tokens.at(0).value() == "17.13");
          }
 
-         THEN("it can match the decimal literal with heading spaces"){
+         THEN("it can match the double literal with heading spaces"){
             tokenizer.tokenize("   17.13", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DECIMAL_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
             REQUIRE(tokens.at(0).value() == "17.13");
          }
 
-         THEN("it can match the decimal literal with heading and trailing spaces"){
+         THEN("it can match the double literal with heading and trailing spaces"){
             tokenizer.tokenize("   17.13    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DECIMAL_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
             REQUIRE(tokens.at(0).value() == "17.13");
+         }
+      }
+
+      /* *************************************************************** *
+       * FLOAT                                                         *
+       * *************************************************************** */  
+      WHEN("the token is a float literal")
+      {
+         THEN("it can match the float literal"){
+            tokenizer.tokenize("17.13f", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).value() == "17.13f");
+         }
+
+         THEN("it can match 0.0f"){
+            tokenizer.tokenize("0.0f", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).value() == "0.0f");
+         }
+
+         THEN("it can match the float literal with trailing spaces"){
+            tokenizer.tokenize("17.13f   ", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).value() == "17.13f");
+         }
+
+         THEN("it can match the float literal with heading spaces"){
+            tokenizer.tokenize("   17.13f", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).value() == "17.13f");
+         }
+
+         THEN("it can match the float literal with heading and trailing spaces"){
+            tokenizer.tokenize("   17.13f    ", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).value() == "17.13f");
          }
       }
 

@@ -61,7 +61,8 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::INTEGER_BASE_TWO_LITERAL, "0b[0-1]+", "INTEGER_BASE_TWO_LITERAL", true);
    add_token(blaise_token_type::INTEGER_BASE_EIGHT_LITERAL, "0o[0-7]+", "INTEGER_BASE_EIGHT_LITERAL", true);
    add_token(blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL, "0x[0-9A-Fa-f]+", "INTEGER_BASE_SIXTEEN_LITERAL", true);
-   add_token(blaise_token_type::DECIMAL_LITERAL, "[0-9]+\\.[0-9]+", "DECIMAL_LITERAL", true);
+   add_token(blaise_token_type::FLOAT_LITERAL, "[0-9]+\\.[0-9]+f", "FLOAT_LITERAL", true);
+   add_token(blaise_token_type::DOUBLE_LITERAL, "[0-9]+\\.[0-9]+d?", "DOUBLE_LITERAL", true);
    add_token(blaise_token_type::INTEGER_LITERAL, "[0-9]+", "INTEGER_LITERAL", true);
    add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.|\\\\u[0-9a-fA-f]{4})*\"", "STIRNG_LITERAL", true);
    add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.|\\\\u[0-9a-fA-f]{4})'", "CHAR_LITERAL", true);
@@ -164,7 +165,8 @@ bool blaise_token_utility::get_operator_precedence(blaise_token_type token_type)
 bool blaise_token_utility::is_number(blaise_token_type token_type){
    switch(token_type){
       case blaise_token_type::INTEGER_LITERAL:
-      case blaise_token_type::DECIMAL_LITERAL: 
+      case blaise_token_type::DOUBLE_LITERAL: 
+      case blaise_token_type::FLOAT_LITERAL: 
       case blaise_token_type::INTEGER_BASE_TWO_LITERAL: 
       case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
       case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
