@@ -1,7 +1,9 @@
 target_sources(gasp-blaise-lang
     PRIVATE
         tokenizer.cpp
-        tokens.cpp
+        blaise_token_type_provider.cpp
+        blaise_token_type_utility.cpp
+        blaise_token_type_io.cpp
         parser.cpp
         language.cpp
 )
