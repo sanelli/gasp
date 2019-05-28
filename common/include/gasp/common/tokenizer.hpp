@@ -68,20 +68,20 @@ std::ostream &operator<<(std::ostream &os, const token<TTokenType> &token)
 template <typename TTokenType>
 class token_rule
 {
-   TTokenType _token;
+   TTokenType _token_type;
    std::regex _regexp;
    bool _keep_value;
    bool _keep_token;
    std::string _plain_regexp;
 
 public:
-   token_rule(TTokenType token, std::string regular_expression, bool keep_value, bool keep_token) 
-   : _token(token), _keep_value(keep_value), _keep_token(keep_token), _plain_regexp(regular_expression)
+   token_rule(TTokenType token_type, std::string regular_expression, bool keep_value, bool keep_token) 
+   : _token_type(token_type), _keep_value(keep_value), _keep_token(keep_token), _plain_regexp(regular_expression)
    {
       _regexp.assign("^(?:(?:" + regular_expression + ")(?:\\b|\\s*$|\\s*))", std::regex_constants::ECMAScript);
    }
 
-   std::tuple<bool, token<TTokenType>, std::string, bool> match(std::string input, int line, int column) const
+   std::tuple<bool, token<TTokenType>, std::string, bool> match(std::string input, int line, int column, bool ignore_spaces) const
    {
       GASP_DEBUG("common-tokenizer", std::string("\t MATCHING WITH: '") << _plain_regexp << std::string("' : "))
 
@@ -91,7 +91,14 @@ public:
       GASP_DEBUG("common-tokenizer", (found ? std::string("YES") : std::string("NO")) << std::endl);
 
       if (found)
-         return std::make_tuple<>(true, token(_token, _keep_value ? match[0] : std::string(""), line, column), match[0], _keep_token);
+         {
+            auto value = _keep_value ? match[0] : std::string("");
+            if(ignore_spaces){
+               gasp::common::ltrim(value);
+               gasp::common::rtrim(value);
+            }
+            return std::make_tuple<>(true, token(_token_type, value, line, column), match[0], _keep_token);
+         }
       return std::make_tuple<>(false, token<TTokenType>(), "", _keep_token);
    }
 };
@@ -144,7 +151,7 @@ public:
          GASP_DEBUG("common-tokenizer", std::string("LINE: '") << line << std::string("'") << std::endl)
          for (auto rule : _rules)
          {
-            auto [match, token, substring, keep_token] = rule.match(line, line_number, column);
+            auto [match, token, substring, keep_token] = rule.match(line, line_number, column, _ignore_spaces);
             if (match)
             {
                found_rule = true;

@@ -10,6 +10,7 @@ namespace gasp::common
 {
 
 int ltrim(std::string &s);
+int rtrim(std::string &s);
 
 template <typename TArg>
 inline void __make_string(std::stringstream &stream, const TArg &arg)

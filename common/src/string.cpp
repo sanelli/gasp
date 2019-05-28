@@ -15,3 +15,11 @@ int gasp::common::ltrim(std::string &s)
    s.erase(itBegin, itEnd);
    return itEnd - itBegin;
 }
+
+int gasp::common::rtrim(std::string &s) {
+    auto initial_length = s.length();
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+    return initial_length - s.length();
+}

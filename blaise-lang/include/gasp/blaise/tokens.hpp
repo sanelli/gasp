@@ -10,8 +10,10 @@ namespace gasp::blaise
 
 enum class blaise_token_type : unsigned char
 {
+   UNKNOWN = 0,
+
    // KEYWORDS
-   PROGRAM,
+   PROGRAM = 1,
    MODULE,
    USES,
    BEGIN,
