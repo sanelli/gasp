@@ -56,7 +56,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
       /* *************************************************************** *
        * PUCTUATION                                                      *
        * *************************************************************** */
-      WHEN("the token is a pnctuation")
+      WHEN("the token is a punctuation")
       {
          THEN("it can match the punctuation"){
             tokenizer.tokenize(";", 0, tokens);
@@ -110,6 +110,14 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
             REQUIRE(tokens.at(0).value() == "\"hello \\n world\"");
          }
 
+         THEN("it can match the string if it contains an unicode escape sequence")
+         {
+            tokenizer.tokenize("\"hello \\u0A0f world\"", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).value() == "\"hello \\u0A0f world\"");
+         }
+
          THEN("it can match the string if it contains an escaped double quote (\")")
          {
             tokenizer.tokenize("\"ste \\\" fano\"", 0, tokens);
@@ -161,6 +169,14 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
             REQUIRE(tokens.size() == 1);
             REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
             REQUIRE(tokens.at(0).value() == "'\\n'");
+         }
+
+         THEN("it can match a character containig an escape sequence single character (single quote)")
+         {
+            tokenizer.tokenize("'\\''", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).value() == "'\\''");
          }
 
          THEN("it can match a character containig an escaped unicode sequence")
