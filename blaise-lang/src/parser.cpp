@@ -13,6 +13,28 @@ using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::common;
 
+gasp::blaise::blaise_parser_context::blaise_parser_context() 
+   : gasp::common::parser_context<blaise_token_type>(), 
+   _main_subroutine(nullptr), _module(nullptr), _current_subroutine(nullptr) {
+}
+void gasp::blaise::blaise_parser_context::module(std::shared_ptr<language::blaise_module> module){
+   _module = module;
+}
+std::shared_ptr<language::blaise_module> gasp::blaise::blaise_parser_context::module() const {
+   return _module;
+}
+void gasp::blaise::blaise_parser_context::main_subroutine(std::shared_ptr<language::blaise_subroutine> subroutine){
+   _main_subroutine = subroutine;
+}
+std::shared_ptr<language::blaise_subroutine> gasp::blaise::blaise_parser_context::main_subroutine() const {
+   return _main_subroutine;
+}
+void gasp::blaise::blaise_parser_context::current_subroutine(std::shared_ptr<language::blaise_subroutine> subroutine){
+   _current_subroutine = subroutine;
+}
+std::shared_ptr<language::blaise_subroutine> gasp::blaise::blaise_parser_context::current_subroutine() const {
+   return _current_subroutine;
+}
 void blaise_parser::parse(blaise_parser_context &context) const
 {
    unsigned int index = 0;
@@ -34,7 +56,10 @@ void blaise_parser::parse_program(blaise_parser_context &context)
 
    auto module = std::make_shared<language::blaise_module>(context.peek_token(), language::blaise_module_type::PROGRAM);
    module->add_subroutine(context.peek_token());
-   auto main_function = module->get_subroutine(context.peek_token());
+   auto main_subroutine = module->get_subroutine(context.peek_token());
+
+   context.module(module);
+   context.main_subroutine(main_subroutine);
 
    match_token(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::SEMICOLON);
@@ -43,6 +68,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    // TODO: match functions and procedures
    // TODO: match constants
 
+   context.current_subroutine(main_subroutine);
    parse_variables_declaration(context);
    parse_compound_statement(context);
 
