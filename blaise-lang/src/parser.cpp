@@ -281,18 +281,20 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(bla
    case blaise_token_type::LEFT_PARENTHESES: // sub expression between parenthesis
       {
          match_token(context, blaise_token_type::MINUS);
-         /* result = */ parse_expression(context);
+         /* term_expression = */ parse_expression(context);
          match_token(context, blaise_token_type::RIGHT_PARENTHESES);
       }
       break;
    case blaise_token_type::STRING_LITERAL:
       {
-         const auto string_literal = match_token(context, blaise_token_type::STRING_LITERAL);
+         term_expression = language::blaise_expression_value_factory(token);
+         match_token(context, blaise_token_type::STRING_LITERAL);
       }
       break;
    case blaise_token_type::CHAR_LITERAL:
       {
-         const auto char_literal = match_token(context, blaise_token_type::CHAR_LITERAL);
+         term_expression = language::blaise_expression_value_factory(token);
+         match_token(context, blaise_token_type::CHAR_LITERAL);
       }
       break;
    default:

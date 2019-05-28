@@ -92,6 +92,7 @@ protected:
       return false;
    }
 
+   //TODO: Remove returned value (most likely it is not really necessary)
    static std::string match_token(parser_context<TTokenType> &context, TTokenType token_type)
    {
       if (!context.has_more_tokens())
