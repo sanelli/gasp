@@ -5,7 +5,7 @@
 using namespace gasp::blaise;
 using namespace gasp::common;
 
-blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
+blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {
    // TODO: Allow CHAR_LITERAL to be like java unicode sequence '\u0F8a'
    // TODO: STRING_LITERAL not accept escape \""
@@ -64,11 +64,11 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z_][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
 
-blaise_token_provider::blaise_token_provider_constructor blaise_token_provider::_private;
-std::vector<blaise_token_type>::const_iterator blaise_token_provider::cbegin() { return _private.cbegin(); }
-std::vector<blaise_token_type>::const_iterator blaise_token_provider::cend() { return _private.cend(); }
+blaise_token_type_provider::blaise_token_provider_constructor blaise_token_type_provider::_private;
+std::vector<blaise_token_type>::const_iterator blaise_token_type_provider::cbegin() { return _private.cbegin(); }
+std::vector<blaise_token_type>::const_iterator blaise_token_type_provider::cend() { return _private.cend(); }
 
-std::string blaise_token_provider::rule(blaise_token_type token_type) { return _private.rule(token_type); }
-std::string blaise_token_provider::name(blaise_token_type token_type) { return _private.name(token_type); }
-bool blaise_token_provider::keep_value(blaise_token_type token_type) { return _private.keep_value(token_type); }
-bool blaise_token_provider::keep_token(blaise_token_type token_type) { return _private.keep_token(token_type); }
+std::string blaise_token_type_provider::rule(blaise_token_type token_type) { return _private.rule(token_type); }
+std::string blaise_token_type_provider::name(blaise_token_type token_type) { return _private.name(token_type); }
+bool blaise_token_type_provider::keep_value(blaise_token_type token_type) { return _private.keep_value(token_type); }
+bool blaise_token_type_provider::keep_token(blaise_token_type token_type) { return _private.keep_token(token_type); }

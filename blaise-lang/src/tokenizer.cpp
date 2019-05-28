@@ -12,12 +12,12 @@ using namespace std;
 blaise_tokenizer::blaise_tokenizer()
 {
    // Set up the tokenizer
-   for (auto it = blaise_token_provider::cbegin(); it != blaise_token_provider::cend(); ++it)
+   for (auto it = blaise_token_type_provider::cbegin(); it != blaise_token_type_provider::cend(); ++it)
    {
       auto token = *it;
-      auto rule = blaise_token_provider::rule(token);
-      auto keep_value = blaise_token_provider::keep_value(token);
-      auto keep_token = blaise_token_provider::keep_token(token);
+      auto rule = blaise_token_type_provider::rule(token);
+      auto keep_value = blaise_token_type_provider::keep_value(token);
+      auto keep_token = blaise_token_type_provider::keep_token(token);
 
       add(token, rule, keep_value, keep_token);
    }

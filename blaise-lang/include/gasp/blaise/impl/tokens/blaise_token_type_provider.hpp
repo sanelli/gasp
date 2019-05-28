@@ -10,8 +10,7 @@
 namespace gasp::blaise
 {
 
-// TODO: Rename into blaise_token_type_provider
-class blaise_token_provider
+class blaise_token_type_provider
 {
    class blaise_token_provider_constructor : public gasp::common::token_provider_constructor<blaise_token_type>
    {
