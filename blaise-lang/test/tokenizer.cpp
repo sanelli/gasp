@@ -402,7 +402,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
       }
 
       /* *************************************************************** *
-       * IDENTIFIER                                                         *
+       * IDENTIFIER                                                       *
        * *************************************************************** */  
       WHEN("the token is an identifier")
       {
@@ -507,6 +507,33 @@ SCENARIO("Parse multiple tokens sequences", "[blaise-lang][tokenizer][base]")
             REQUIRE(tokens.at(2).type() == blaise_token_type::SEMICOLON);
          }
       }
+
+      WHEN("the string is 'foo and bar eager and moo'")
+      {
+         tokenizer.tokenize("foo and bar eager and moo", 0, tokens);
+         THEN("it correctly mathes eager and non eager 'and' operators"){
+            REQUIRE(tokens.size() == 5);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(1).type() == blaise_token_type::LOGICAL_AND);
+            REQUIRE(tokens.at(2).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(3).type() == blaise_token_type::LOGICAL_EAGER_AND);
+            REQUIRE(tokens.at(4).type() == blaise_token_type::IDENTIFIER);
+         }
+      }
+
+      WHEN("the string is 'foo or bar eager or moo'")
+      {
+         tokenizer.tokenize("foo or bar eager or moo", 0, tokens);
+         THEN("it correctly mathes eager and non eager 'or' operators"){
+            REQUIRE(tokens.size() == 5);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(1).type() == blaise_token_type::LOGICAL_OR);
+            REQUIRE(tokens.at(2).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(3).type() == blaise_token_type::LOGICAL_EAGER_OR);
+            REQUIRE(tokens.at(4).type() == blaise_token_type::IDENTIFIER);
+         }
+      }
+
    }
 }
 
@@ -523,6 +550,60 @@ SCENARIO("Parse all keyword and punctuation tokens", "[blaise-lang][tokenizer][p
             tokenizer.tokenize("program", 0, tokens);
             REQUIRE(tokens.size() == 1);
             REQUIRE(tokens.at(0).type() == blaise_token_type::PROGRAM);
+         }
+
+         THEN("it matches the 'var' keyword"){
+            tokenizer.tokenize("var", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::VAR);
+         }
+
+         THEN("it matches the 'uses' keyword"){
+            tokenizer.tokenize("uses", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::USES);
+         }
+
+         THEN("it matches the 'begin' keyword"){
+            tokenizer.tokenize("begin", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::BEGIN);
+         }
+
+         THEN("it matches the 'end' keyword"){
+            tokenizer.tokenize("end", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::END);
+         }
+
+         THEN("it matches the 'and' keyword"){
+            tokenizer.tokenize("and", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LOGICAL_AND);
+         }
+
+         THEN("it matches the 'or' keyword"){
+            tokenizer.tokenize("or", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LOGICAL_OR);
+         }
+
+         THEN("it matches the 'not' keyword"){
+            tokenizer.tokenize("not", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LOGICAL_NOT);
+         }
+
+         THEN("it matches the 'eager and' keyword"){
+            tokenizer.tokenize("eager and", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LOGICAL_EAGER_AND);
+         }
+
+         THEN("it matches the 'eager or' keyword"){
+            tokenizer.tokenize("eager or", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LOGICAL_EAGER_OR);
          }
          // TODO: Add all the other keyword
       }

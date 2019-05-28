@@ -20,10 +20,11 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::BEGIN, "begin", "BEGIN");
    add_token(blaise_token_type::END, "end", "END");
    add_token(blaise_token_type::VAR, "var", "VAR");
-   add_token(blaise_token_type::LOGICAL_AND, "and", "AND");
-   add_token(blaise_token_type::LOGICAL_OR, "or", "OR");
-   add_token(blaise_token_type::LOGICAL_NOT, "not", "NOT");
-   add_token(blaise_token_type::LOGICAL_EAGER, "eager", "EAGER");
+   add_token(blaise_token_type::LOGICAL_AND, "and", "LOGICAL_AND");
+   add_token(blaise_token_type::LOGICAL_OR, "or", "LOGICAL_OR");
+   add_token(blaise_token_type::LOGICAL_NOT, "not", "LOGICAL_NOT");
+   add_token(blaise_token_type::LOGICAL_EAGER_AND, "eager\\s+and", "LOGICAL_EAGER_AND");
+   add_token(blaise_token_type::LOGICAL_EAGER_OR, "eager\\s+or", "LOGICAL_EAGER_OR");
 
    // TYPES
    add_token(blaise_token_type::TYPE_BYTE, "byte", "TYPE_BYTE");
@@ -122,7 +123,8 @@ bool blaise_token_utility::is_operator(blaise_token_type token_type){
       case blaise_token_type::EQUAL_TO:
       case blaise_token_type::NOT_EQUAL_TO:
       case blaise_token_type::LOGICAL_AND:
-      case blaise_token_type::LOGICAL_OR:
+      case blaise_token_type::LOGICAL_EAGER_AND:
+      case blaise_token_type::LOGICAL_EAGER_OR:
          return true;
       default:
          return false;
@@ -149,8 +151,10 @@ bool blaise_token_utility::get_operator_precedence(blaise_token_type token_type)
       case blaise_token_type::NOT_EQUAL_TO:
          return 60;
       case blaise_token_type::LOGICAL_AND:
+      case blaise_token_type::LOGICAL_EAGER_AND:
          return 50;
       case blaise_token_type::LOGICAL_OR:
+      case blaise_token_type::LOGICAL_EAGER_OR:
          return 40;
       default:
          throw gasp::common::tokenizer_error(0,0,"unexpected token type - it is not an operator");
