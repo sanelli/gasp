@@ -59,20 +59,28 @@ class blaise_variable {
       blaise_expression_type type() const;
 };
 
+class blaise_function_parameters : public blaise_variable{
+   // TODO: Add modifiers like IN/OUT/INPUT
+};
+
 //
 // SUB ROUTINES
 //
-class blaise_function {
+class blaise_subroutine {
    std::string _name;
    blaise_expression_type _return_type;
+   //TODO: Add parameters
    std::vector<std::shared_ptr<blaise_variable>> _variables;
 public:
-   blaise_function(std::string name);
-   blaise_function(std::string name, blaise_expression_type return_type);
+   blaise_subroutine(const std::string& name);
+   blaise_subroutine(const std::string& name, blaise_expression_type return_type);
+
+   std::string name() const;
+   blaise_expression_type return_type() const;
    
    // Variables management;
    void add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
-                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
+                     const gasp::common::token<gasp::blaise::blaise_token_type>& type);
    std::shared_ptr<blaise_variable> get_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
 };
 
@@ -80,18 +88,22 @@ public:
 // MODULE
 //
 class blaise_module {
-   blaise_module_type module_type;
-   std::string module_name;
-   std::vector<std::shared_ptr<blaise_function>> _subroutines;
+   blaise_module_type _type;
+   std::string _name;
+   std::vector<std::shared_ptr<blaise_subroutine>> _subroutines;
 
    public:
-   blaise_module(std::string name);
-   
-   // Variables management;
-   void add_function(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
-                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
-   std::shared_ptr<blaise_variable> get_function(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+   blaise_module(const std::string& name, blaise_module_type type);
 
+   std::string name();
+   blaise_module_type type();
+   
+   // subroutine management;
+   void add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);
+   void add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+                      const gasp::common::token<gasp::blaise::blaise_token_type>& return_type);
+
+   std::shared_ptr<blaise_subroutine> get_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
 };
 
 //

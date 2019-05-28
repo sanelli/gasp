@@ -48,15 +48,17 @@ blaise_expression_type blaise_variable::type() const { return _type; }
 //
 // SUBROUTINE
 //
-gasp::blaise::language::blaise_function::blaise_function(std::string name): _name(name), _return_type(blaise_expression_type::VOID) { }
-gasp::blaise::language::blaise_function::blaise_function(std::string name, blaise_expression_type return_type): _name(name), _return_type(return_type) { }
-   
-// Variables management;
-void gasp::blaise::language::blaise_function::add_variable(const token<blaise_token_type>& identifier, 
+gasp::blaise::language::blaise_subroutine::blaise_subroutine(const std::string& name): _name(name), _return_type(blaise_expression_type::VOID) { }
+gasp::blaise::language::blaise_subroutine::blaise_subroutine(const std::string& name, blaise_expression_type return_type): _name(name), _return_type(return_type) { }
+
+std::string gasp::blaise::language::blaise_subroutine::name() const { return _name; }
+blaise_expression_type gasp::blaise::language::blaise_subroutine::return_type() const { return _return_type; }
+
+void gasp::blaise::language::blaise_subroutine::add_variable(const token<blaise_token_type>& identifier, 
                      const token<blaise_token_type>& type){
    _variables.push_back(make_shared<blaise_variable>(identifier, type));
                      }
-std::shared_ptr<blaise_variable> gasp::blaise::language::blaise_function::get_variable(const token<blaise_token_type>& identifier) const {
+std::shared_ptr<blaise_variable> gasp::blaise::language::blaise_subroutine::get_variable(const token<blaise_token_type>& identifier) const {
    auto it = std::begin(_variables);
    auto end = std::end(_variables);
    while(it != end) {
@@ -66,6 +68,37 @@ std::shared_ptr<blaise_variable> gasp::blaise::language::blaise_function::get_va
    }
    return nullptr;
 }
+
+//
+// MODULE
+//
+gasp::blaise::language::blaise_module::blaise_module(const std::string& name, blaise_module_type type) : _name(name), _type(type) {
+
+}
+
+std::string gasp::blaise::language::blaise_module::name() { return _name; }
+blaise_module_type gasp::blaise::language::blaise_module::type() { return _type; }
+   
+void gasp::blaise::language::blaise_module::add_subroutine(const token<blaise_token_type>& identifier, 
+                      const token<blaise_token_type>& return_type){
+   _subroutines.push_back(make_shared<blaise_subroutine>(identifier.value(), get_type_from_token(return_type)));
+   }
+
+void gasp::blaise::language::blaise_module::add_subroutine(const token<blaise_token_type>& identifier){
+   _subroutines.push_back(make_shared<blaise_subroutine>(identifier.value()));
+   }
+
+shared_ptr<blaise_subroutine> gasp::blaise::language::blaise_module::get_subroutine(const token<blaise_token_type>& identifier) const {
+   auto it = std::begin(_subroutines);
+   auto end = std::end(_subroutines);
+   while(it != end) {
+      auto subroutine = *it;
+      if(subroutine->name() == identifier.value())
+         return subroutine;
+   }
+   return nullptr;
+}
+
 
 //
 // EXPRSSION
