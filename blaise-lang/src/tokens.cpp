@@ -65,7 +65,7 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::INTEGER_LITERAL, "[0-9]+", "INTEGER_LITERAL", true);
    add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.)*\"", "STIRNG_LITERAL", true);
    add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.)'", "CHAR_LITERAL", true);
-   add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z][a-zA-Z0-9_]*", "IDENTIFIER", true);
+   add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z_][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
 
 blaise_token_provider::blaise_token_provider_constructor blaise_token_provider::_private;
