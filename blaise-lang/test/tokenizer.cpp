@@ -400,6 +400,92 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
             REQUIRE(tokens.at(0).value() == "17.13");
          }
       }
+
+      /* *************************************************************** *
+       * IDENTIFIER                                                         *
+       * *************************************************************** */  
+      WHEN("the token is an identifier")
+      {
+         THEN("it can match the identifier"){
+            tokenizer.tokenize("foo", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo");
+         }
+
+         THEN("it can match the identifier starting with underscore"){
+            tokenizer.tokenize("__foo", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "__foo");
+         }
+
+         THEN("it can match the identifier containig underscores"){
+            tokenizer.tokenize("f_o_o", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "f_o_o");
+         }
+
+         THEN("it can match the identifier containig numbers"){
+            tokenizer.tokenize("foo001", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo001");
+         }
+
+         THEN("it can match the identifier containig number and underscores"){
+            tokenizer.tokenize("foo_001", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo_001");
+         }
+
+         THEN("it can match the identifier containig lowercase and uppercase (starting lowercase)"){
+            tokenizer.tokenize("fooBAR", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "fooBAR");
+         }
+
+         THEN("it can match the identifier containig lowercase and uppercase (starting uppercase)"){
+            tokenizer.tokenize("Foo", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "Foo");
+         }
+
+         THEN("it can match a identifier containig trailing spaces")
+         {
+            tokenizer.tokenize("foo     ", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo");
+         }
+
+         THEN("it can match a identifier containig heading spaces")
+         {
+            tokenizer.tokenize("    foo", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo");
+         }
+
+         THEN("it can match a string containig heading and trailing spaces")
+         {
+            tokenizer.tokenize("    foo       ", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo");
+         }
+
+         THEN("it can match the identifier"){
+            tokenizer.tokenize("foo", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "foo");
+         }
+      }
    }
 }
 
