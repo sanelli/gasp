@@ -265,10 +265,11 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
          /* result = */ parse_expression(context);
       }
       break;
-   case blaise_token_type::NUMBER: // It is a number
-   case blaise_token_type::INTEGER_BASE_TWO: 
-   case blaise_token_type::INTEGER_BASE_EIGHT: // It is a number
-   case blaise_token_type::INTEGER_BASE_SIXTEEN: // It is a number
+   case blaise_token_type::INTEGER_LITERAL: // It is a number
+   case blaise_token_type::DECIMAL_LITERAL: 
+   case blaise_token_type::INTEGER_BASE_TWO_LITERAL: 
+   case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
+   case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
       {
          parse_number(context);
       }

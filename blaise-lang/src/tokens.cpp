@@ -9,6 +9,10 @@ using namespace gasp::common;
 
 blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {
+   // TODO: Allow CHAR_LITERAL to be like java unicode sequence '\u0F8a'
+   // TODO: STRING_LITERAL not accept escape \""
+   // TODO: STRING_LITERAL value do not  \""
+
    // KEYWORDS
    add_token(blaise_token_type::PROGRAM, "program", "PROGRAM");
    add_token(blaise_token_type::MODULE, "module", "MODULE");
@@ -53,10 +57,11 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::REMAINDER, "\\%", "REMAINDER");
 
    // LITERALS
-   add_token(blaise_token_type::INTEGER_BASE_TWO, "0b[0-1]+", "INTEGER_BASE_TWO", true);
-   add_token(blaise_token_type::INTEGER_BASE_EIGHT, "0o[0-7]+", "INTEGER_BASE_EIGHT", true);
-   add_token(blaise_token_type::INTEGER_BASE_SIXTEEN, "0x[0-9A-Fa-f]+", "INTEGER_BASE_SIXTEEN", true);
-   add_token(blaise_token_type::NUMBER, "[0-9]+(?:\\.[0-9]+)?", "NUMBER", true);
+   add_token(blaise_token_type::INTEGER_BASE_TWO_LITERAL, "0b[0-1]+", "INTEGER_BASE_TWO_LITERAL", true);
+   add_token(blaise_token_type::INTEGER_BASE_EIGHT_LITERAL, "0o[0-7]+", "INTEGER_BASE_EIGHT_LITERAL", true);
+   add_token(blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL, "0x[0-9A-Fa-f]+", "INTEGER_BASE_SIXTEEN_LITERAL", true);
+   add_token(blaise_token_type::DECIMAL_LITERAL, "[0-9]+\\.[0-9]+", "DECIMAL_LITERAL", true);
+   add_token(blaise_token_type::INTEGER_LITERAL, "[0-9]+", "INTEGER_LITERAL", true);
    add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.)*\"", "STIRNG_LITERAL", true);
    add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.)'", "CHAR_LITERAL", true);
    add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z][a-zA-Z0-9_]*", "IDENTIFIER", true);
@@ -154,10 +159,11 @@ bool blaise_token_utility::get_operator_precedence(blaise_token_type token_type)
 
 bool blaise_token_utility::is_number(blaise_token_type token_type){
    switch(token_type){
-      case blaise_token_type::NUMBER:
-      case blaise_token_type::INTEGER_BASE_TWO:
-      case blaise_token_type::INTEGER_BASE_EIGHT:
-      case blaise_token_type::INTEGER_BASE_SIXTEEN:
+      case blaise_token_type::INTEGER_LITERAL:
+      case blaise_token_type::DECIMAL_LITERAL: 
+      case blaise_token_type::INTEGER_BASE_TWO_LITERAL: 
+      case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
+      case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
          return true;
       default:
          return false;
