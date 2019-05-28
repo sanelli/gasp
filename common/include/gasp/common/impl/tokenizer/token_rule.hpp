@@ -6,7 +6,7 @@
 #include <utility>
 
 #include <gasp/common/debug.hpp>
-#include <gasp/common/exception.hpp>
+#include <gasp/common/gasp_error.hpp>
 #include <gasp/common/string.hpp>
 
 #include <gasp/common/impl/tokenizer/tokenizer_error.hpp>

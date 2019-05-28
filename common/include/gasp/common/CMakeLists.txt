@@ -6,7 +6,7 @@ target_sources(gasp-common
         string.hpp
         output.hpp
         internal_error.hpp
-        exception.hpp
+        gasp_error.hpp
         parser.hpp
         debug.hpp
 )
