@@ -3,4 +3,5 @@ target_sources(gasp-blaise-lang
         tokenizer.cpp
         tokens.cpp
         parser.cpp
+        language.cpp
 )
