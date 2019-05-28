@@ -4,8 +4,7 @@
 
 namespace gasp::blaise
 {
-// TODO: Rename in blaise_token_type_utility
-class blaise_token_utility
+class blaise_token_type_utility
 {
 public:
    static bool is_type(blaise_token_type token_type);

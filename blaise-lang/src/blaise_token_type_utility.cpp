@@ -3,7 +3,7 @@
 using namespace gasp::blaise;
 using namespace gasp::common;
 
-bool blaise_token_utility::is_type(blaise_token_type token_type)
+bool blaise_token_type_utility::is_type(blaise_token_type token_type)
 {
    switch (token_type)
    {
@@ -19,7 +19,7 @@ bool blaise_token_utility::is_type(blaise_token_type token_type)
    };
 }
 
-bool blaise_token_utility::is_unsigned_type(blaise_token_type token_type)
+bool blaise_token_type_utility::is_unsigned_type(blaise_token_type token_type)
 {
    switch (token_type)
    {
@@ -30,7 +30,7 @@ bool blaise_token_utility::is_unsigned_type(blaise_token_type token_type)
    };
 }
 
-bool blaise_token_utility::is_operator(blaise_token_type token_type){
+bool blaise_token_type_utility::is_operator(blaise_token_type token_type){
    switch(token_type){
       case blaise_token_type::LOGICAL_NOT:
       case blaise_token_type::MULTIPLY:
@@ -53,7 +53,7 @@ bool blaise_token_utility::is_operator(blaise_token_type token_type){
    }
 }
 
-bool blaise_token_utility::get_operator_precedence(blaise_token_type token_type){
+bool blaise_token_type_utility::get_operator_precedence(blaise_token_type token_type){
    switch(token_type){
       case blaise_token_type::LOGICAL_NOT:
          return 100;
@@ -83,7 +83,7 @@ bool blaise_token_utility::get_operator_precedence(blaise_token_type token_type)
    }
 }
 
-bool blaise_token_utility::is_number(blaise_token_type token_type){
+bool blaise_token_type_utility::is_number(blaise_token_type token_type){
    switch(token_type){
       case blaise_token_type::INTEGER_LITERAL:
       case blaise_token_type::DOUBLE_LITERAL: 

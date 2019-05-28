@@ -124,10 +124,10 @@ void blaise_parser::parse_variable_type(blaise_parser_context &context)
 
    const auto token = context.peek_token();
    const auto token_type = token.type();
-   // if (is_unsigned && !blaise_token_utility::is_unsigned_type(token_type))
+   // if (is_unsigned && !blaise_token_type_utility::is_unsigned_type(token_type))
    //    throw parser_error("unexpected type after UNSIGNED keyword");
    // else 
-   if (!blaise_token_utility::is_type(token_type))
+   if (!blaise_token_type_utility::is_type(token_type))
       throw parser_error(token.line(), token.column(), "unexpected type");
    match_token(context, token_type);
 
@@ -248,15 +248,15 @@ void blaise_parser::parse_expression_helper(blaise_parser_context &context, /* c
    GASP_DEBUG("blaise-parser", make_string("[ENTER] blaise_parser::parse_expression<",min_precedence,">") << std::endl);
 
    token<blaise_token_type> lookahead_token = context.peek_token();
-   while(blaise_token_utility::is_operator(lookahead_token.type()) 
-            && blaise_token_utility::get_operator_precedence(lookahead_token.type()) >= min_precedence){
+   while(blaise_token_type_utility::is_operator(lookahead_token.type()) 
+            && blaise_token_type_utility::get_operator_precedence(lookahead_token.type()) >= min_precedence){
       auto op = lookahead_token.type();
       match_token(context, op);
       /* auto rhs = */ parse_expression_term(context);
       lookahead_token = std::move(context.peek_token());
-      while(blaise_token_utility::is_operator(lookahead_token.type())
-            && blaise_token_utility::get_operator_precedence(lookahead_token.type()) > blaise_token_utility::get_operator_precedence(op) ){
-               /* rhs = */ parse_expression_helper (context, /* rhs, */ blaise_token_utility::get_operator_precedence(lookahead_token.type()));
+      while(blaise_token_type_utility::is_operator(lookahead_token.type())
+            && blaise_token_type_utility::get_operator_precedence(lookahead_token.type()) > blaise_token_type_utility::get_operator_precedence(op) ){
+               /* rhs = */ parse_expression_helper (context, /* rhs, */ blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
                lookahead_token = std::move(context.peek_token());
             }
       /* lhs = lhs op rhs */
@@ -343,7 +343,7 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_number(blaise_parse
 
    auto token = context.peek_token();
    auto token_type = token.type();
-   if(!blaise_token_utility::is_number(token_type))
+   if(!blaise_token_type_utility::is_number(token_type))
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("A number was expected but found '", token_type, "'"));
 
    number_literal = language::blaise_expression_value_factory(token);
