@@ -93,7 +93,7 @@ class blaise_module {
    std::vector<std::shared_ptr<blaise_subroutine>> _subroutines;
 
    public:
-   blaise_module(const std::string& name, blaise_module_type type);
+   blaise_module(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, blaise_module_type type);
 
    std::string name();
    blaise_module_type type();

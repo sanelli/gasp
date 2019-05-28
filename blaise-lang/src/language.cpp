@@ -72,8 +72,10 @@ std::shared_ptr<blaise_variable> gasp::blaise::language::blaise_subroutine::get_
 //
 // MODULE
 //
-gasp::blaise::language::blaise_module::blaise_module(const std::string& name, blaise_module_type type) : _name(name), _type(type) {
-
+gasp::blaise::language::blaise_module::blaise_module(const token<blaise_token_type>& identifier, blaise_module_type type) 
+: _name(identifier.value()), _type(type) {
+  if(identifier.type() != blaise_token_type::IDENTIFIER)
+      throw blaise_language_error(identifier.line(), identifier.column(), make_string("A token of type '", blaise_token_type::IDENTIFIER,"' was expected but '", identifier.type(),"' was found."));
 }
 
 std::string gasp::blaise::language::blaise_module::name() { return _name; }

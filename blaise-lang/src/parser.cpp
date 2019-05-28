@@ -31,7 +31,12 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_program" << std::endl);
 
    match_token(context, blaise_token_type::PROGRAM);
-   auto program_name = match_token(context, blaise_token_type::IDENTIFIER);
+
+   auto module = std::make_shared<language::blaise_module>(context.peek_token(), language::blaise_module_type::PROGRAM);
+   module->add_subroutine(context.peek_token());
+   auto main_function = module->get_subroutine(context.peek_token());
+
+   match_token(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::SEMICOLON);
 
    // TODO: match uses
