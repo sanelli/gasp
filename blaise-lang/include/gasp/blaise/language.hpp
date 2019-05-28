@@ -9,6 +9,9 @@
 
 namespace gasp::blaise::language {
 
+//
+// EXCEPTION
+//
 class blaise_language_error : public std::runtime_error
 {
    int _line;
@@ -22,69 +25,124 @@ public:
    int column() { return _column; }
 };
 
+//
+// TYPES
+//
+enum class blaise_module_type {
+   PROGRAM,
+   MODULE
+};
 
-   enum class blaise_module_type {
-      PROGRAM,
-      MODULE
+enum class blaise_expression_type {
+   VOID,
+   INTEGER,
+   FLOAT,
+   DOUBLE,
+   CHAR,
+   STRING,
+   BOOLEAN
+};
+
+blaise_expression_type get_type_from_token(const gasp::common::token<gasp::blaise::blaise_token_type>& token);
+
+//
+// VARIABLE
+//
+class blaise_variable {
+   std::string _name;
+   blaise_expression_type _type;
+   public:
+      blaise_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
+
+      std::string name() const;
+      blaise_expression_type type() const;
+};
+
+//
+// SUB ROUTINES
+//
+class blaise_function {
+   std::string _name;
+   blaise_expression_type _return_type;
+   std::vector<std::shared_ptr<blaise_variable>> _variables;
+public:
+   blaise_function(std::string name);
+   blaise_function(std::string name, blaise_expression_type return_type);
+   
+   // Variables management;
+   void add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
+   std::shared_ptr<blaise_variable> get_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+};
+
+//
+// MODULE
+//
+class blaise_module {
+   blaise_module_type module_type;
+   std::string module_name;
+   std::vector<std::shared_ptr<blaise_function>> _subroutines;
+
+   public:
+   blaise_module(std::string name);
+   
+   // Variables management;
+   void add_function(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
+   std::shared_ptr<blaise_variable> get_function(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+
+};
+
+//
+// STATEMENTS
+//
+class blaise_statement {
+
+};
+
+//
+// EXPRESSION
+//
+
+
+class blaise_expression {
+   blaise_expression_type _type;
+   public:
+      blaise_expression(blaise_expression_type type) : _type(type){}
+      blaise_expression_type type() { return _type; }
+};
+
+template<blaise_expression_type TExpressionType, typename TValue>
+class blaise_expression_value : public blaise_expression {
+   TValue _value;
+   public:
+      blaise_expression_value(const TValue& value) : blaise_expression(TExpressionType), _value(value) {}
+
+      TValue value(){ return _value; }
+};
+
+class blaise_expression_integer_value : public blaise_expression_value<blaise_expression_type::INTEGER, int> {
+   public: 
+      blaise_expression_integer_value(int value) : blaise_expression_value(value) {}
    };
-
-   class blaise_module {
-      blaise_module_type module_type;
-      std::string module_name;
-   };
-
-   class blaise_statement {
-
-   };
-
-   //
-   // EXPRESSION
-   //
-   enum class blaise_expression_type {
-      INTEGER_LITERAL,
-      FLOAT_LITERAL,
-      DOUBLE_LITERAL,
-      CHAR_LITERAL,
-      STRING_LITERAL
-   };
-
-   class blaise_expression {
-      blaise_expression_type _type;
-      public:
-         blaise_expression(blaise_expression_type type) : _type(type){}
-         blaise_expression_type type() { return _type; }
-   };
-
-   template<blaise_expression_type TExpressionType, typename TValue>
-   class blaise_expression_value : public blaise_expression {
-      TValue _value;
-      public:
-         blaise_expression_value(const TValue& value) : blaise_expression(TExpressionType), _value(value) {}
-
-         TValue value(){ return _value; }
-   };
-
-   class blaise_expression_integer_value : public blaise_expression_value<blaise_expression_type::INTEGER_LITERAL, int> {
+class blaise_expression_float_value : public blaise_expression_value<blaise_expression_type::FLOAT, float> { 
       public: 
-         blaise_expression_integer_value(int value) : blaise_expression_value(value) {}
-    };
-   class blaise_expression_float_value : public blaise_expression_value<blaise_expression_type::FLOAT_LITERAL, float> { 
-       public: 
-         blaise_expression_float_value(float value) : blaise_expression_value(value) {}
-   };
-   class blaise_expression_double_value : public blaise_expression_value<blaise_expression_type::DOUBLE_LITERAL, double> { 
-       public: 
-         blaise_expression_double_value(double value) : blaise_expression_value(value) {}
-   };
-   class blaise_expression_char_value : public blaise_expression_value<blaise_expression_type::CHAR_LITERAL, char> { 
-       public: 
-         blaise_expression_char_value(char value) : blaise_expression_value(value) {}
-   };
-   class blaise_expression_string_value : public blaise_expression_value<blaise_expression_type::STRING_LITERAL, std::string> { 
-       public: 
-         blaise_expression_string_value(const std::string& value) : blaise_expression_value(value) {}
-   };
+      blaise_expression_float_value(float value) : blaise_expression_value(value) {}
+};
+class blaise_expression_double_value : public blaise_expression_value<blaise_expression_type::DOUBLE, double> { 
+      public: 
+      blaise_expression_double_value(double value) : blaise_expression_value(value) {}
+};
+class blaise_expression_char_value : public blaise_expression_value<blaise_expression_type::CHAR, char> { 
+      public: 
+      blaise_expression_char_value(char value) : blaise_expression_value(value) {}
+};
+class blaise_expression_string_value : public blaise_expression_value<blaise_expression_type::STRING, std::string> { 
+      public: 
+      blaise_expression_string_value(const std::string& value) : blaise_expression_value(value) {}
+};
 
-   std::shared_ptr<blaise_expression> blaise_expression_value_factory(gasp::common::token<gasp::blaise::blaise_token_type> token);
+std::shared_ptr<blaise_expression> blaise_expression_value_factory(gasp::common::token<gasp::blaise::blaise_token_type> token);
 
 }

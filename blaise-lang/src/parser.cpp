@@ -91,12 +91,12 @@ void blaise_parser::parse_variable_type(blaise_parser_context &context)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
 
-   const auto is_unsigned = is_token_and_match(context, blaise_token_type::UNSIGNED);
    const auto token = context.peek_token();
    const auto token_type = token.type();
-   if (is_unsigned && !blaise_token_utility::is_unsigned_type(token_type))
-      throw parser_error("unexpected type after UNSIGNED keyword");
-   else if (!blaise_token_utility::is_type(token_type))
+   // if (is_unsigned && !blaise_token_utility::is_unsigned_type(token_type))
+   //    throw parser_error("unexpected type after UNSIGNED keyword");
+   // else 
+   if (!blaise_token_utility::is_type(token_type))
       throw parser_error(token.line(), token.column(), "unexpected type");
    match_token(context, token_type);
 

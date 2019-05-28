@@ -27,10 +27,7 @@ blaise_token_provider::blaise_token_provider_constructor::blaise_token_provider_
    add_token(blaise_token_type::LOGICAL_EAGER_OR, "eager\\s+or", "LOGICAL_EAGER_OR");
 
    // TYPES
-   add_token(blaise_token_type::TYPE_BYTE, "byte", "TYPE_BYTE");
    add_token(blaise_token_type::TYPE_INTEGER, "integer", "TYPE_INTEGER");
-   add_token(blaise_token_type::TYPE_LONG, "long", "TYPE_LONG");
-   add_token(blaise_token_type::UNSIGNED, "unsigned", "UNSIGNED");
    add_token(blaise_token_type::TYPE_CHAR, "char", "TYPE_CHAR");
    add_token(blaise_token_type::TYPE_STRING, "string", "TYPE_STRING");
    add_token(blaise_token_type::TYPE_FLOAT, "float", "TYPE_FLOAT");
@@ -82,9 +79,7 @@ bool blaise_token_utility::is_type(blaise_token_type token_type)
 {
    switch (token_type)
    {
-   case blaise_token_type::TYPE_BYTE:
    case blaise_token_type::TYPE_INTEGER:
-   case blaise_token_type::TYPE_LONG:
    case blaise_token_type::TYPE_CHAR:
    case blaise_token_type::TYPE_STRING:
    case blaise_token_type::TYPE_FLOAT:
@@ -100,9 +95,7 @@ bool blaise_token_utility::is_unsigned_type(blaise_token_type token_type)
 {
    switch (token_type)
    {
-   case blaise_token_type::TYPE_BYTE:
    case blaise_token_type::TYPE_INTEGER:
-   case blaise_token_type::TYPE_LONG:
       return true;
    default:
       return false;
