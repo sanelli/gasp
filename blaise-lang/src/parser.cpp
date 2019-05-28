@@ -1,11 +1,13 @@
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/debug.hpp>
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
+#include <gasp/blaise/language.hpp>
 
 using namespace std;
 using namespace gasp::blaise;
@@ -232,9 +234,10 @@ void blaise_parser::parse_expression_helper(blaise_parser_context &context, /* c
    /* return lhs */
 }
 
-void blaise_parser::parse_expression_term(blaise_parser_context &context)
+shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(blaise_parser_context &context)
 {
-   // TODO: Need to return the result of the expression term
+   shared_ptr<language::blaise_expression> term_expression = nullptr;
+
    const auto token = context.peek_token();
    const auto token_type = token.type();
 
@@ -272,7 +275,7 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
    case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
    case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
       {
-         parse_number(context);
+         term_expression = parse_number(context);
       }
       break;
    case blaise_token_type::LEFT_PARENTHESES: // sub expression between parenthesis
@@ -296,19 +299,24 @@ void blaise_parser::parse_expression_term(blaise_parser_context &context)
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
 
-  GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
+   return term_expression;
 }
 
-void blaise_parser::parse_number(blaise_parser_context& context){
+shared_ptr<language::blaise_expression> blaise_parser::parse_number(blaise_parser_context& context){
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_number" << std::endl);
+
+   shared_ptr<language::blaise_expression> number_literal = nullptr;
 
    auto token = context.peek_token();
    auto token_type = token.type();
    if(!blaise_token_utility::is_number(token_type))
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("A number was expected but found '", token_type, "'"));
 
-   auto number_as_string = match_token(context, token_type);
+   number_literal = language::blaise_expression_value_factory(token);
+   match_token(context, token_type);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_number" << std::endl);
+   return number_literal;
 }
 
