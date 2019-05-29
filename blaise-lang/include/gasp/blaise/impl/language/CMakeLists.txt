@@ -1,0 +1,10 @@
+target_sources(gasp-blaise-lang
+    PUBLIC
+        blaise_language_error.hpp
+        blaise_language_module.hpp
+        blaise_language_subroutine.hpp
+        blaise_language_expression_type.hpp
+        blaise_language_variable.hpp
+        blaise_language_statement.hpp
+        blaise_language_expression.hpp
+)
