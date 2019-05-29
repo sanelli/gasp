@@ -4,6 +4,9 @@ target_sources(gasp-blaise-lang
         blaise_token_type_provider.cpp
         blaise_token_type_utility.cpp
         blaise_token_type_io.cpp
-        parser.cpp
+        blaise_parser.cpp
+        blaise_parser_context.cpp
+        blaise_parser_statement.cpp
+        blaise_parser_expression.cpp
         language.cpp
 )

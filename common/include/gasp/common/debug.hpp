@@ -3,7 +3,7 @@
 #include <iostream>
 #include <set>
 
-#undef GASP_DEBUG_ENABLED
+#define GASP_DEBUG_ENABLED
 
 #define GASP_DEBUG_GET_MACRO(_1, _2, NAME, ...) NAME
 #define GASP_DEBUG(...)                                        \
