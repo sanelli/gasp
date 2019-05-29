@@ -75,28 +75,40 @@ void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_declaration" << std::endl);
 
-   std::vector<std::string> variable_names;
-   parse_variable_names_list(context, variable_names);
+   std::vector<token<blaise_token_type>> variable_tokens;
+   parse_variable_names_list(context, variable_tokens);
    match_token(context, blaise_token_type::COLON);
-   parse_variable_type(context);
+   const auto type_token = parse_variable_type(context);
    match_token(context, blaise_token_type::SEMICOLON);
+
+   auto current_subroutine = context.current_subroutine();
+
+   GASP_DEBUG("blaise-parser", "[INSIDE] Creating " <<  variable_tokens.size() << " variable(s)." << std::endl)
+   for(auto variable_token : variable_tokens) {
+      GASP_DEBUG("blaise-parser", "[INSIDE] Creating variable '" << variable_token.value() << "' and type '" << type_token.type() << "'" << std::endl)
+      current_subroutine->add_variable(variable_token, type_token);
+      GASP_DEBUG("blaise-parser", "[INSIDE] Created variable '" << variable_token.value() << "' and type '" << type_token.type() << "'" << std::endl)
+   }
+
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_declaration" << std::endl);
 }
 
-void blaise_parser::parse_variable_names_list(blaise_parser_context &context, std::vector<std::string> &variable_names)
+void blaise_parser::parse_variable_names_list(blaise_parser_context &context, std::vector<token<blaise_token_type>> &variable_names)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_names_list" << std::endl);
 
    // TODO: Possible generate a new variable definition, not just the name
    do
    {
-      variable_names.push_back(match_token(context, blaise_token_type::IDENTIFIER));
+      auto token = context.peek_token();
+      match_token(context, blaise_token_type::IDENTIFIER);
+      variable_names.push_back(token);
    } while (is_token_and_match(context, blaise_token_type::COMMA));
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_names_list" << std::endl);
 }
 
-void blaise_parser::parse_variable_type(blaise_parser_context &context)
+token<blaise_token_type> blaise_parser::parse_variable_type(blaise_parser_context &context)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
 
@@ -109,7 +121,8 @@ void blaise_parser::parse_variable_type(blaise_parser_context &context)
       throw parser_error(token.line(), token.column(), "unexpected type");
    match_token(context, token_type);
 
-   // TODO: Return the type definition
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_type" << std::endl);
+
+   return token;
 }
 

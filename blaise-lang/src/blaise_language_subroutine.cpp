@@ -5,6 +5,7 @@
 #include <gasp/blaise/language.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/debug.hpp>
 
 using namespace gasp::blaise::language;
 using namespace gasp::blaise;
@@ -19,15 +20,27 @@ blaise_expression_type gasp::blaise::language::blaise_subroutine::return_type() 
 
 void gasp::blaise::language::blaise_subroutine::add_variable(const token<blaise_token_type>& identifier, 
                      const token<blaise_token_type>& type){
+
+   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_subroutine::add_variable - Creating variable for " <<  identifier << " with type " << type << std::endl)
+   if(get_variable(identifier) != nullptr)
+      throw blaise_language_error(identifier.line(), identifier.column(), make_string("Variable '", identifier.value() ,"' already defined."));
    _variables.push_back(make_shared<blaise_variable>(identifier, type));
-                     }
+   GASP_DEBUG("blaise-lang", "[END] blaise_subroutine::add_variable - Creating variable for " <<  identifier << " with type " << type << std::endl)
+}
+
 std::shared_ptr<blaise_variable> gasp::blaise::language::blaise_subroutine::get_variable(const token<blaise_token_type>& identifier) const {
+   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_subroutine::get_variable<" << identifier << ">." << std::endl)
    auto it = std::begin(_variables);
    auto end = std::end(_variables);
    while(it != end) {
       auto variable = *it;
       if(variable->name() == identifier.value())
+      {
+         GASP_DEBUG("blaise-lang", "[INSIDE] blaise_subroutine::get_variable<" << identifier << "> -> MATCH FOUND" << std::endl)
          return variable;
+      }
+      ++it;
    }
+   GASP_DEBUG("blaise-lang", "[END] blaise_subroutine::get_variable<" << identifier << "> -> NO MATCH" << std::endl)
    return nullptr;
 }

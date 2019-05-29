@@ -6,6 +6,7 @@
 #include <gasp/blaise/tokenizer.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
+#include <gasp/blaise/language.hpp>
 #include <gasp/common/output.hpp>
 #include <gasp/common/debug.hpp>
 
@@ -13,10 +14,14 @@ using namespace std;
 using namespace gasp::common;
 using namespace gasp::blaise;
 
+// TODO: Add error codes when I throw errors
+
 int main(int argc, char *argv[])
 {
-   //GASP_INSTALL_DEBUGGER("blaise-parser"); GASP_INSTALL_DEBUGGER("common-parser");
-   //GASP_INSTALL_DEBUGGER("common-tokenizer");
+   GASP_INSTALL_DEBUGGER("blaise-parser"); 
+   GASP_INSTALL_DEBUGGER("common-parser");
+   GASP_INSTALL_DEBUGGER("blaise-lang");
+   GASP_INSTALL_DEBUGGER("common-tokenizer");
 
    cout << "GASP - by Stefano Anelli." << endl;
 
@@ -58,6 +63,19 @@ int main(int argc, char *argv[])
    catch (gasp::common::parser_error &error)
    {
       cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+      return EXIT_FAILURE;
+   }
+   catch (gasp::blaise::language::blaise_language_error &error)
+   {
+      cerr << "BLAISE_LANGUAGE_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+      return EXIT_FAILURE;
+   }
+   catch(std::exception &error) { 
+      cerr << "GENERIC_ERROR:"  << error.what() << endl;
+      return EXIT_FAILURE;
+   }
+   catch(...) { 
+      cerr << "UNKNOWN ERROR -- TERMINATING"  << endl;
       return EXIT_FAILURE;
    }
 }
