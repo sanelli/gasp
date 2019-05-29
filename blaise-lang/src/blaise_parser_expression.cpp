@@ -57,12 +57,14 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(bla
    {
    case blaise_token_type::IDENTIFIER: // Identifier could be either a variable or a function call
       {
-         // TODO: What to do with the identifier?
-         const auto identifier = match_token(context, blaise_token_type::IDENTIFIER);
+         match_token(context, blaise_token_type::IDENTIFIER);
          const auto lookahead = context.peek_token().type();
          if(is_token_and_match(context, blaise_token_type::LEFT_PARENTHESES)){
             parse_function_call_parameters(context);
             match_token(context, blaise_token_type::RIGHT_PARENTHESES);
+            // TODO: Create an expression for the function call
+         } else {
+            term_expression = language::blaise_expression_variable_factory(context.current_subroutine(), token);
          }
       }
       break;
