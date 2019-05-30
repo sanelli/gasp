@@ -20,7 +20,7 @@ SCENARIO("Parse testing programs", "[blaise-lang][parser][base]") {
 
     GIVEN("simple_empty_program.blaise") {
        ifstream stream("simple_empty_program.blaise", std::ifstream::in);
-       tokenizer.tokenize(stream, context);
-       parser.parse(context);
+       REQUIRE_NOTHROW(tokenizer.tokenize(stream, context));
+       REQUIRE_NOTHROW(parser.parse(context));
     }
 }
