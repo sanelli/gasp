@@ -40,10 +40,10 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_helper(b
                rhs =  parse_expression_helper (context, rhs, blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
                lookahead_token = std::move(context.peek_token());
             }
-      lhs =  language::blaise_expression_binary_factory(lhs, operator_token, rhs)
+      lhs =  language::blaise_expression_binary_factory(lhs, operator_token, rhs);
    } 
    GASP_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<",min_precedence,">") << std::endl);
-   return lhs
+   return lhs;
 }
 
 shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(blaise_parser_context &context)

@@ -34,11 +34,12 @@ int main(int argc, char *argv[])
       program Hello_World;
       var
          foo, another_foo: integer;
-         bar: boolean;
-         foobar: string;
+         bar: float;
+         equals: boolean;
       begin
          readline(foo, bar);
          another_foo := foo + bar * 2 + -1 / foo;
+         equals := bar == foo;
          begin
             writeline(foo);
             writeline(bar);

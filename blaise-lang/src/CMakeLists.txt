@@ -14,5 +14,5 @@ target_sources(gasp-blaise-lang
         blaise_language_module.cpp
         blaise_language_expression.cpp
         blaise_language_utility.cpp
-        blase_language_io.cpp
+        blaise_language_io.cpp
 )

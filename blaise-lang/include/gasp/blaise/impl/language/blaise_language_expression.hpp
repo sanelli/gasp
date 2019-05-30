@@ -29,20 +29,18 @@ class blaise_expression_binary : public blaise_expression {
    std::shared_ptr<blaise_expression> _left;
    std::shared_ptr<blaise_expression> _right;
 public:
-   blaise_expression_unary(std::shared_ptr<blaise_variable> left,
-               gasp::common::token<gasp::blaise::blaise_token_type> token
-               std::shared_ptr<blaise_variable> right
+   blaise_expression_binary(std::shared_ptr<blaise_expression> left,
+               gasp::common::token<gasp::blaise::blaise_token_type> token,
+               std::shared_ptr<blaise_expression> right
    );
    std::shared_ptr<blaise_expression> left() const;
    std::shared_ptr<blaise_expression> right() const;
    gasp::blaise::blaise_token_type op() const;
 };
-std::shared_ptr<blaise_expression_binary> gasp::blaise::language::blaise_expression_binary_factory(
-               std::shared_ptr<blaise_variable> left,
-               gasp::common::token<gasp::blaise::blaise_token_type> token
-               std::shared_ptr<blaise_variable> right) {
-      return make_shared<>
-               }
+std::shared_ptr<blaise_expression_binary> blaise_expression_binary_factory(
+               std::shared_ptr<blaise_expression> left,
+               gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
+               std::shared_ptr<blaise_expression> right);
 
 //
 // UNARY EXPRESSION
@@ -51,13 +49,13 @@ class blaise_expression_unary : public blaise_expression {
    gasp::blaise::blaise_token_type _operator;
    std::shared_ptr<blaise_expression> _operand;
 public:
-   blaise_expression_unary(asp::common::token<gasp::blaise::blaise_token_type> token_operator, 
+   blaise_expression_unary(gasp::common::token<gasp::blaise::blaise_token_type> token_operator, 
       std::shared_ptr<blaise_expression> operand);
    std::shared_ptr<blaise_expression> operand() const;
    gasp::blaise::blaise_token_type op() const;
 };
-std::shared_ptr<blaise_expression_unary> blaise_expression_unary_factory(gasp::common::token<gasp::blaise::blaise_token_type> token
-                        std::shared_ptr<blaise_variable> expression);
+std::shared_ptr<blaise_expression_unary> blaise_expression_unary_factory(gasp::common::token<gasp::blaise::blaise_token_type> token,
+                        std::shared_ptr<blaise_expression> operand);
 
 //
 // EXPRESSION VARIABLE

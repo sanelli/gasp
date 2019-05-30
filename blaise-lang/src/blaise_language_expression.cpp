@@ -18,35 +18,37 @@ blaise_expression_type blaise_expression::type() { return _type; }
 //
 // BINARY EXPRESSION
 //
-blaise_expression_binary::blaise_expression_binary(shared_ptr<blaise_variable> left,
-               token<blaise_token_type> token
-               shared_ptr<blaise_variable> right
-) blaise_expression(blaise_language_utility::get_resulting_type(token_operator, left.type(), right.type())),
-    _op(token_operator.type()), _left(left), _right(right) {
+blaise_expression_binary::blaise_expression_binary(shared_ptr<blaise_expression> left,
+               token<blaise_token_type> token_operator,
+               shared_ptr<blaise_expression> right
+) : blaise_expression(blaise_language_utility::get_resulting_type(token_operator, left->type(), right->type())),
+    _operator(token_operator.type()), _left(left), _right(right) {
 
 }
-hared_ptr<blaise_expression> blaise_expression_binary::left() const { return _left; }
+shared_ptr<blaise_expression> blaise_expression_binary::left() const { return _left; }
 shared_ptr<blaise_expression> blaise_expression_binary::right() const { return _right; }
 blaise_token_type blaise_expression_binary::op() const { return _operator; }
-std::shared_ptr<blaise_expression_binary> blaise_expression_binary_factory(
-               std::shared_ptr<blaise_variable> left,
-               gasp::common::token<gasp::blaise::blaise_token_type> token
-               std::shared_ptr<blaise_variable> right);
+std::shared_ptr<blaise_expression_binary> gasp::blaise::language::blaise_expression_binary_factory(
+               std::shared_ptr<blaise_expression> left,
+               gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
+               std::shared_ptr<blaise_expression> right) {
+   return make_shared<blaise_expression_binary>(left, token_operator, right);
+   }
 
 //
 // UNARY EXPRESSION
 //
 blaise_expression_unary::blaise_expression_unary(gasp::common::token<gasp::blaise::blaise_token_type> token_operator, 
       std::shared_ptr<blaise_expression> operand)
-   : blaise_expression(blaise_language_utility::get_resulting_type(token_operator, operand.type())),
-    _op(token_operator.type()), _operand(operand) {
+   : blaise_expression(blaise_language_utility::get_resulting_type(token_operator, operand->type())),
+    _operator(token_operator.type()), _operand(operand) {
 
 }
 shared_ptr<blaise_expression> blaise_expression_unary::operand() const { return _operand; }
 blaise_token_type blaise_expression_unary::op() const { return _operator; }
-std::shared_ptr<blaise_expression_unary> gasp::blaise::language::blaise_expression_unary_factory(gasp::common::token<gasp::blaise::blaise_token_type> token_operator
-                        std::shared_ptr<blaise_variable> expression) {
-   return make_shared<blaise_expression_unary>(token_operator, expression);
+std::shared_ptr<blaise_expression_unary> gasp::blaise::language::blaise_expression_unary_factory(gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
+                        std::shared_ptr<blaise_expression> operand) {
+   return make_shared<blaise_expression_unary>(token_operator, operand);
 }
 
 // VARIABLE
