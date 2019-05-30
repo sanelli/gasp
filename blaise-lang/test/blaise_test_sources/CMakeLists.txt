@@ -1,0 +1,1 @@
+file(COPY simple_empty_program.blaise DESTINATION ${CMAKE_BINARY_DIR})
