@@ -13,12 +13,12 @@ using namespace gasp::common;
 using namespace std;
 
 gasp::blaise::language::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_module> module, const string &name)
-    : _module(module), _name(name), _return_type(blaise_expression_type::VOID) {}
-gasp::blaise::language::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_module> module, const string &name, blaise_expression_type return_type)
+    : _module(module), _name(name), _return_type(blaise_language_type::VOID) {}
+gasp::blaise::language::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_module> module, const string &name, blaise_language_type return_type)
     : _module(module), _name(name), _return_type(return_type) {}
 
 std::string gasp::blaise::language::blaise_subroutine::name() const { return _name; }
-blaise_expression_type gasp::blaise::language::blaise_subroutine::return_type() const { return _return_type; }
+blaise_language_type gasp::blaise::language::blaise_subroutine::return_type() const { return _return_type; }
 std::weak_ptr<blaise_module> gasp::blaise::language::blaise_subroutine::module() const { return _module; }
 
 void gasp::blaise::language::blaise_subroutine::add_variable(const token<blaise_token_type> &identifier,

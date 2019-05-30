@@ -5,7 +5,7 @@
 
 namespace gasp::blaise::language {
 
-enum class blaise_expression_type {
+enum class blaise_language_type {
    VOID,
    INTEGER,
    FLOAT,
@@ -15,6 +15,6 @@ enum class blaise_expression_type {
    BOOLEAN
 };
 
-blaise_expression_type get_type_from_token(const gasp::common::token<gasp::blaise::blaise_token_type>& token);
+blaise_language_type get_type_from_token(const gasp::common::token<gasp::blaise::blaise_token_type>& token);
 
 }

@@ -16,4 +16,4 @@ gasp::blaise::language::blaise_variable::blaise_variable(const token<blaise_toke
 }
 
 std::string blaise_variable::name() const { return _name; }
-blaise_expression_type blaise_variable::type() const { return _type; }
+blaise_language_type blaise_variable::type() const { return _type; }

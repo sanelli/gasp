@@ -6,18 +6,16 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 
-#include <gasp/blaise/impl/language/blaise_language_expression_type.hpp>
+#include <gasp/blaise/impl/language/blaise_language_type.hpp>
 #include <gasp/blaise/impl/language/blaise_language_subroutine.hpp>
 
 namespace gasp::blaise::language {
 
 class blaise_expression {
-   blaise_expression_type _type;
+   blaise_language_type _result_type;
    public:
-      blaise_expression(blaise_expression_type type);
-      // TODO: Rename type() into result_type()
-      // TODO: Rename blaise_expression_type into blaise_expression_result_type
-      blaise_expression_type type();
+      blaise_expression(blaise_language_type type);
+      blaise_language_type result_type();
       // TODO: Create new method for getting the expression type (BINARY, UNARY, VARIABLE, LITERAL, ...)
 };
 
@@ -71,7 +69,7 @@ std::shared_ptr<blaise_expression_variable> blaise_expression_variable_factory(c
 //
 // EXPRESSION LITERAL VALUES
 //
-template<blaise_expression_type TExpressionType, typename TValue>
+template<blaise_language_type TExpressionType, typename TValue>
 class blaise_expression_value : public blaise_expression {
    TValue _value;
    public:
@@ -80,23 +78,23 @@ class blaise_expression_value : public blaise_expression {
       TValue value(){ return _value; }
 };
 
-class blaise_expression_integer_value : public blaise_expression_value<blaise_expression_type::INTEGER, int> {
+class blaise_expression_integer_value : public blaise_expression_value<blaise_language_type::INTEGER, int> {
    public: 
       blaise_expression_integer_value(int value) : blaise_expression_value(value) {}
    };
-class blaise_expression_float_value : public blaise_expression_value<blaise_expression_type::FLOAT, float> { 
+class blaise_expression_float_value : public blaise_expression_value<blaise_language_type::FLOAT, float> { 
       public: 
       blaise_expression_float_value(float value) : blaise_expression_value(value) {}
 };
-class blaise_expression_double_value : public blaise_expression_value<blaise_expression_type::DOUBLE, double> { 
+class blaise_expression_double_value : public blaise_expression_value<blaise_language_type::DOUBLE, double> { 
       public: 
       blaise_expression_double_value(double value) : blaise_expression_value(value) {}
 };
-class blaise_expression_char_value : public blaise_expression_value<blaise_expression_type::CHAR, char> { 
+class blaise_expression_char_value : public blaise_expression_value<blaise_language_type::CHAR, char> { 
       public: 
       blaise_expression_char_value(char value) : blaise_expression_value(value) {}
 };
-class blaise_expression_string_value : public blaise_expression_value<blaise_expression_type::STRING, std::string> { 
+class blaise_expression_string_value : public blaise_expression_value<blaise_language_type::STRING, std::string> { 
       public: 
       blaise_expression_string_value(const std::string& value) : blaise_expression_value(value) {}
 };
