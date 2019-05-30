@@ -7,4 +7,6 @@ target_sources(gasp-blaise-lang
         blaise_language_variable.hpp
         blaise_language_statement.hpp
         blaise_language_expression.hpp
+        blaise_language_utility.hpp
+        blaise_language_io.hpp
 )

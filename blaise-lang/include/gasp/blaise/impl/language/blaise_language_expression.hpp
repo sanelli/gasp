@@ -15,8 +15,49 @@ class blaise_expression {
    blaise_expression_type _type;
    public:
       blaise_expression(blaise_expression_type type);
+      // TODO: Rename type() into result_type()
+      // TODO: Rename blaise_expression_type into blaise_expression_result_type
       blaise_expression_type type();
+      // TODO: Create new method for getting the expression type (BINARY, UNARY, VARIABLE, LITERAL, ...)
 };
+
+//
+// BINARY EXPRESSION
+//
+class blaise_expression_binary : public blaise_expression {
+   gasp::blaise::blaise_token_type _operator;
+   std::shared_ptr<blaise_expression> _left;
+   std::shared_ptr<blaise_expression> _right;
+public:
+   blaise_expression_unary(std::shared_ptr<blaise_variable> left,
+               gasp::common::token<gasp::blaise::blaise_token_type> token
+               std::shared_ptr<blaise_variable> right
+   );
+   std::shared_ptr<blaise_expression> left() const;
+   std::shared_ptr<blaise_expression> right() const;
+   gasp::blaise::blaise_token_type op() const;
+};
+std::shared_ptr<blaise_expression_binary> gasp::blaise::language::blaise_expression_binary_factory(
+               std::shared_ptr<blaise_variable> left,
+               gasp::common::token<gasp::blaise::blaise_token_type> token
+               std::shared_ptr<blaise_variable> right) {
+      return make_shared<>
+               }
+
+//
+// UNARY EXPRESSION
+//
+class blaise_expression_unary : public blaise_expression {
+   gasp::blaise::blaise_token_type _operator;
+   std::shared_ptr<blaise_expression> _operand;
+public:
+   blaise_expression_unary(asp::common::token<gasp::blaise::blaise_token_type> token_operator, 
+      std::shared_ptr<blaise_expression> operand);
+   std::shared_ptr<blaise_expression> operand() const;
+   gasp::blaise::blaise_token_type op() const;
+};
+std::shared_ptr<blaise_expression_unary> blaise_expression_unary_factory(gasp::common::token<gasp::blaise::blaise_token_type> token
+                        std::shared_ptr<blaise_variable> expression);
 
 //
 // EXPRESSION VARIABLE
