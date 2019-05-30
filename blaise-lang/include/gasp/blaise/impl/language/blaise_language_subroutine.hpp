@@ -8,21 +8,26 @@
 
 #include <gasp/blaise/impl/language/blaise_language_variable.hpp>
 #include <gasp/blaise/impl/language/blaise_language_expression_type.hpp>
+#include <gasp/blaise/impl/language/blaise_language_module.hpp>
 
 namespace gasp::blaise::language {
 
+class blaise_module;
+
 class blaise_subroutine {
    std::string _name;
+   std::weak_ptr<blaise_module> _module;
    blaise_expression_type _return_type;
    //TODO: Add parameters
    std::vector<std::shared_ptr<blaise_variable>> _variables;
 public:
-   blaise_subroutine(const std::string& name);
-   blaise_subroutine(const std::string& name, blaise_expression_type return_type);
+   blaise_subroutine(std::weak_ptr<blaise_module> module, const std::string& name);
+   blaise_subroutine(std::weak_ptr<blaise_module> module, const std::string& name, blaise_expression_type return_type);
 
    std::string name() const;
    blaise_expression_type return_type() const;
-   
+   std::weak_ptr<blaise_module> module() const;
+
    // Variables management;
    void add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);

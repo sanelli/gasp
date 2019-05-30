@@ -20,12 +20,14 @@ class blaise_module {
    blaise_module_type _type;
    std::string _name;
    std::vector<std::shared_ptr<blaise_subroutine>> _subroutines;
+   std::weak_ptr<blaise_module> _self;
 
    public:
    blaise_module(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, blaise_module_type type);
 
-   std::string name();
-   blaise_module_type type();
+   std::string name() const;
+   blaise_module_type type() const;
+   void self(std::weak_ptr<blaise_module> module);
    
    // subroutine management;
    void add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);

@@ -33,6 +33,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    match_token(context, blaise_token_type::PROGRAM);
 
    auto module = std::make_shared<language::blaise_module>(context.peek_token(), language::blaise_module_type::PROGRAM);
+   module->self(module);
    module->add_subroutine(context.peek_token());
    auto main_subroutine = module->get_subroutine(context.peek_token());
 

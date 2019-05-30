@@ -18,7 +18,7 @@ class blaise_parser_context : public gasp::common::parser_context<blaise_token_t
    std::shared_ptr<language::blaise_subroutine> _current_subroutine;
 public:
    blaise_parser_context();
-   void module(std::shared_ptr<language::blaise_module> subroutine);
+   void module(std::shared_ptr<language::blaise_module> module);
    std::shared_ptr<language::blaise_module> module() const;
    void main_subroutine(std::shared_ptr<language::blaise_subroutine> subroutine);
    std::shared_ptr<language::blaise_subroutine> main_subroutine() const;
