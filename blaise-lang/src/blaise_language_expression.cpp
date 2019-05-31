@@ -54,19 +54,19 @@ std::shared_ptr<blaise_expression_unary> gasp::blaise::language::blaise_expressi
 }
 
 // VARIABLE
-blaise_expression_variable::blaise_expression_variable(shared_ptr<blaise_generic_memory_location> memory_location) 
+blaise_expression_memory_location::blaise_expression_memory_location(shared_ptr<blaise_generic_memory_location> memory_location) 
    : blaise_expression(blaise_language_expression_type::MEMORY_LOCATION, memory_location->type()), _memory_location(memory_location) { 
    
 }
-std::shared_ptr<blaise_generic_memory_location> blaise_expression_variable::memory_location() const { return _memory_location; }
-std::shared_ptr<blaise_expression_variable> gasp::blaise::language::blaise_expression_variable_factory(const std::shared_ptr<blaise_subroutine>& subroutine, token<blaise_token_type> token){
+std::shared_ptr<blaise_generic_memory_location> blaise_expression_memory_location::memory_location() const { return _memory_location; }
+std::shared_ptr<blaise_expression_memory_location> gasp::blaise::language::blaise_expression_memory_location_factory(const std::shared_ptr<blaise_subroutine>& subroutine, token<blaise_token_type> token){
    switch(token.type()) {
       case blaise_token_type::IDENTIFIER:
       {
          auto variable = subroutine->get_memory_location(token);
          if(variable == nullptr)
             throw blaise_language_error(token.line(), token.column(), make_string("Undefined variable/constant/parameter '",token.value(),"'"));
-         return make_shared<blaise_expression_variable>(variable);
+         return make_shared<blaise_expression_memory_location>(variable);
       }
       default:
          throw blaise_language_error(token.line(), token.column(), "Was expecting an identifier");

@@ -63,13 +63,13 @@ std::shared_ptr<blaise_expression_unary> blaise_expression_unary_factory(gasp::c
 //
 // EXPRESSION VARIABLE
 //
-class blaise_expression_variable : public blaise_expression {
+class blaise_expression_memory_location : public blaise_expression {
    std::shared_ptr<blaise_generic_memory_location> _memory_location;
 public:
-   blaise_expression_variable(std::shared_ptr<blaise_generic_memory_location> variable);
+   blaise_expression_memory_location(std::shared_ptr<blaise_generic_memory_location> variable);
    std::shared_ptr<blaise_generic_memory_location> memory_location() const;
 };
-std::shared_ptr<blaise_expression_variable> blaise_expression_variable_factory(const std::shared_ptr<blaise_subroutine>& subroutine, gasp::common::token<gasp::blaise::blaise_token_type> token);
+std::shared_ptr<blaise_expression_memory_location> blaise_expression_memory_location_factory(const std::shared_ptr<blaise_subroutine>& subroutine, gasp::common::token<gasp::blaise::blaise_token_type> token);
 
 //
 // EXPRESSION LITERAL VALUES

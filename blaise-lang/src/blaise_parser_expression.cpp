@@ -66,7 +66,7 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(bla
             match_token(context, blaise_token_type::RIGHT_PARENTHESES);
             // TODO: Create an expression for the function call
          } else {
-            term_expression = language::blaise_expression_variable_factory(context.current_subroutine(), token);
+            term_expression = language::blaise_expression_memory_location_factory(context.current_subroutine(), token);
          }
       }
       break;
