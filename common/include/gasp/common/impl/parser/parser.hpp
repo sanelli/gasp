@@ -23,10 +23,11 @@ protected:
    static bool is_token(parser_context<TTokenType> &context, TTokenType token_type, unsigned long lookahead = 0)
    {
       if (!context.has_more_tokens(lookahead))
-      {
          return false;
-      }
+
       auto token = context.token(context.index() + lookahead);
+      GASP_DEBUG("common-parser", make_string("common_parser::is_token<expected=", token_type, ", actual=", token.type() , ", match=", (token.type() == token_type ? "yes": "no"),">") << std::endl);
+
       return token.type() == token_type;
    }
 
@@ -53,9 +54,10 @@ protected:
          auto value = token.value();
          context.move_next_token();
          return value;
+      } else {
+         auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
+         throw_parse_error_with_details(context, token.line(), token.column(), message);
       }
-      auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
-      throw_parse_error_with_details(context, token.line(), token.column(), message);
    }
 
    static void match_token(parser_context<TTokenType> &context, TTokenType token_type)
@@ -63,14 +65,15 @@ protected:
       if (!context.has_more_tokens())
          throw parser_error("No more tokens to parse.");
 
-      auto token = context.peek_token();
       if (is_token(context, token_type))
       {
          GASP_DEBUG("common-parser", make_string("common_parser::match_token<", token_type,">") << std::endl);
          context.move_next_token();
+      } else {
+         auto token = context.peek_token();
+         auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
+         throw_parse_error_with_details(context, token.line(), token.column(), message);
       }
-      auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
-      throw_parse_error_with_details(context, token.line(), token.column(), message);
    }
 
    [[noreturn]]
