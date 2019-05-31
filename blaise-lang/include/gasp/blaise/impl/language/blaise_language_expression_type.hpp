@@ -6,7 +6,7 @@ enum class blaise_language_expression_type {
    UNDEFINED,
    BINARY,
    UNARY,
-   VARIABLE,
+   MEMORY_LOCATION,
    FUNCTION_CALL,
    LITERAL_INTEGER,
    LITERAL_FLOAT,
