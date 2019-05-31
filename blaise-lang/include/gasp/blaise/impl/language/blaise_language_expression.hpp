@@ -105,7 +105,11 @@ class blaise_expression_char_value : public blaise_expression_value<blaise_langu
 };
 class blaise_expression_string_value : public blaise_expression_value<blaise_language_expression_type::LITERAL_STRING, blaise_language_type::STRING, std::string> { 
       public: 
-      blaise_expression_string_value(const std::string& value) : blaise_expression_value(value) {}
+      blaise_expression_string_value(std::string value) : blaise_expression_value(value) {}
+};
+class blaise_expression_boolean_value : public blaise_expression_value<blaise_language_expression_type::LITERAL_BOOLEAN, blaise_language_type::BOOLEAN, bool> { 
+      public: 
+      blaise_expression_boolean_value(bool value) : blaise_expression_value(value) {}
 };
 
 std::shared_ptr<blaise_expression> blaise_expression_value_factory(gasp::common::token<gasp::blaise::blaise_token_type> token);

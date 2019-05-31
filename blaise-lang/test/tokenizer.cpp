@@ -213,6 +213,48 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
       }
 
       /* *************************************************************** *
+       * BOOLEAN                                                         *
+       * *************************************************************** */  
+      WHEN("the token is a boolean literal")
+      {
+         THEN("it can match the 'true' literal"){
+            tokenizer.tokenize("true", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).value() == "true");
+         }
+
+         THEN("it can match the 'false' literal"){
+            tokenizer.tokenize("false", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).value() == "false");
+         }
+
+         THEN("it can match the boolean literal with trailing spaces"){
+            tokenizer.tokenize("true   ", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).value() == "true");
+         }
+
+         THEN("it can match the boolean literal with heading spaces"){
+            tokenizer.tokenize("   true", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).value() == "true");
+         }
+
+         THEN("it can match the boolean literal with heading and trailing spaces"){
+            tokenizer.tokenize("   true    ", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).value() == "true");
+         }
+      }
+
+
+      /* *************************************************************** *
        * INTEGER                                                         *
        * *************************************************************** */  
       WHEN("the token is a integer literal")
@@ -543,11 +585,39 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
             REQUIRE(tokens.at(0).value() == "foo");
          }
 
-         THEN("it can match the identifier"){
-            tokenizer.tokenize("foo", 0, tokens);
+         THEN("it can match the identifier containing keywords"){
+            tokenizer.tokenize("AtrueVALUE", 0, tokens);
             REQUIRE(tokens.size() == 1);
             REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
-            REQUIRE(tokens.at(0).value() == "foo");
+            REQUIRE(tokens.at(0).value() == "AtrueVALUE");
+         }
+
+         THEN("it can match the identifier containing keywords between underscores"){
+            tokenizer.tokenize("a_true_value", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "a_true_value");
+         }
+
+         THEN("it can match the identifier containing keywords between underscore and identifier end"){
+            tokenizer.tokenize("a_true", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "a_true");
+         }
+
+         THEN("it can match the identifier containing keywords but starting with underscore"){
+            tokenizer.tokenize("_true", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "_true");
+         }
+
+         THEN("it can match the identifier containing keywords but ending with underscore"){
+            tokenizer.tokenize("true_", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "true_");
          }
       }
    }

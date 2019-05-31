@@ -51,6 +51,7 @@ enum class blaise_token_type : unsigned char
    INTEGER_BASE_EIGHT_LITERAL,
    INTEGER_BASE_SIXTEEN_LITERAL,
    STRING_LITERAL,
-   CHAR_LITERAL
+   CHAR_LITERAL,
+   BOOLEAN_LITERAL,
 };
 }

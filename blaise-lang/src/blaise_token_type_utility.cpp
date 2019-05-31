@@ -96,3 +96,12 @@ bool blaise_token_type_utility::is_number(blaise_token_type token_type){
          return false;
    }
 }
+
+bool blaise_token_type_utility::is_boolean(blaise_token_type token_type){
+   switch(token_type){
+      case blaise_token_type::BOOLEAN_LITERAL:
+         return true;
+      default:
+         return false;
+   }
+}

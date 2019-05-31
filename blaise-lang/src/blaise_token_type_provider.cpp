@@ -10,6 +10,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    // TODO: Allow CHAR_LITERAL to be like java unicode sequence '\u0F8a'
    // TODO: STRING_LITERAL not accept escape \""
    // TODO: STRING_LITERAL value do not  \""
+   // TODO: IDENTIFIER is not matches for "false_" or "true_" (they are treated like a boolean + identifier)
 
    // KEYWORDS
    add_token(blaise_token_type::PROGRAM, "program", "PROGRAM");
@@ -61,6 +62,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::INTEGER_LITERAL, "[0-9]+", "INTEGER_LITERAL", true);
    add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.|\\\\u[0-9a-fA-f]{4})*\"", "STIRNG_LITERAL", true);
    add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.|\\\\u[0-9a-fA-f]{4})'", "CHAR_LITERAL", true);
+   add_token(blaise_token_type::BOOLEAN_LITERAL, "true|false", "BOOLEAN_LITERAL", true);
    add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z_][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
 

@@ -40,7 +40,7 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_helper(b
                rhs =  parse_expression_helper (context, rhs, blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
                lookahead_token = std::move(context.peek_token());
             }
-      lhs =  language::blaise_expression_binary_factory(lhs, operator_token, rhs);
+      lhs = language::blaise_expression_binary_factory(lhs, operator_token, rhs);
    } 
    GASP_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<",min_precedence,">") << std::endl);
    return lhs;
@@ -101,16 +101,16 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(bla
          match_token(context, blaise_token_type::RIGHT_PARENTHESES);
       }
       break;
-   case blaise_token_type::STRING_LITERAL:
+   case blaise_token_type::BOOLEAN_LITERAL:
       {
-         term_expression = language::blaise_expression_value_factory(token);
-         match_token(context, blaise_token_type::STRING_LITERAL);
+         term_expression = parse_boolean(context);
       }
       break;
+   case blaise_token_type::STRING_LITERAL:
    case blaise_token_type::CHAR_LITERAL:
       {
          term_expression = language::blaise_expression_value_factory(token);
-         match_token(context, blaise_token_type::CHAR_LITERAL);
+         match_token(context, token_type);
       }
       break;
    default:
@@ -136,4 +136,23 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_number(blaise_parse
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_number" << std::endl);
    return number_literal;
+}
+
+// NOTE: I have a specific parser for boolean becaus ein the future I would like to add
+//       the triboolean type (true, false, undefined)
+shared_ptr<language::blaise_expression> blaise_parser::parse_boolean(blaise_parser_context& context){
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_boolean" << std::endl);
+
+   shared_ptr<language::blaise_expression> boolean_literal = nullptr;
+
+   auto token = context.peek_token();
+   auto token_type = token.type();
+   if(!blaise_token_type_utility::is_boolean(token_type))
+      throw_parse_error_with_details(context, token.line(), token.column(), make_string("A boolean was expected but found '", token_type, "'"));
+
+   boolean_literal = language::blaise_expression_value_factory(token);
+   match_token(context, token_type);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_boolean" << std::endl);
+   return boolean_literal;
 }

@@ -129,7 +129,7 @@ blaise_language_type blaise_language_utility::get_resulting_type(const token<bla
       case blaise_token_type::LOGICAL_EAGER_OR:
       {
          if(is_boolean(left) && is_boolean(right))
-            return get_binary_numeric_result(left, right);
+            return get_binary_boolean_result(left, right);
       }
       break;
       case blaise_token_type::PLUS:

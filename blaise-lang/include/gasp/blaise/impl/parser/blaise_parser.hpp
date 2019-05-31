@@ -31,6 +31,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static std::shared_ptr<language::blaise_expression> parse_expression_helper(blaise_parser_context &context, std::shared_ptr<language::blaise_expression> lhs, unsigned int min_precedence);
    static std::shared_ptr<language::blaise_expression> parse_expression_term(blaise_parser_context &context);
    static std::shared_ptr<language::blaise_expression> parse_number(blaise_parser_context& context);
+   static std::shared_ptr<language::blaise_expression> parse_boolean(blaise_parser_context& context);
 public:
    void parse(blaise_parser_context &context) const;
 };

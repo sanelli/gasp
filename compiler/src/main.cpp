@@ -36,10 +36,12 @@ int main(int argc, char *argv[])
          foo, another_foo: integer;
          bar: float;
          equals: boolean;
+         a_value: boolean;
       begin
          readline(foo, bar);
          another_foo := foo + bar * 2 + -1 / foo;
          equals := bar == foo;
+         a_value := true and false;
          begin
             writeline(foo);
             writeline(bar);
