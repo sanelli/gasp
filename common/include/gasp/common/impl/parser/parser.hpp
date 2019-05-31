@@ -40,8 +40,25 @@ protected:
       return false;
    }
 
-   //TODO: Remove returned value (most likely it is not really necessary)
-   static std::string match_token(parser_context<TTokenType> &context, TTokenType token_type)
+   static std::string match_token_and_get_value(parser_context<TTokenType> &context, TTokenType token_type)
+   {
+      if (!context.has_more_tokens())
+         throw parser_error("No more tokens to parse.");
+
+      auto token = context.peek_token();
+      if (is_token(context, token_type))
+      {
+         GASP_DEBUG("common-parser", make_string("common_parser::match_token_and_get_value<", token_type,">") << std::endl);
+
+         auto value = token.value();
+         context.move_next_token();
+         return value;
+      }
+      auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
+      throw_parse_error_with_details(context, token.line(), token.column(), message);
+   }
+
+   static void match_token(parser_context<TTokenType> &context, TTokenType token_type)
    {
       if (!context.has_more_tokens())
          throw parser_error("No more tokens to parse.");
@@ -50,10 +67,7 @@ protected:
       if (is_token(context, token_type))
       {
          GASP_DEBUG("common-parser", make_string("common_parser::match_token<", token_type,">") << std::endl);
-
-         auto value = token.value();
          context.move_next_token();
-         return value;
       }
       auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
       throw_parse_error_with_details(context, token.line(), token.column(), message);

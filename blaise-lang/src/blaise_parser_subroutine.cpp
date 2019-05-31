@@ -35,7 +35,7 @@ void blaise_parser::parse_function_declaration(blaise_parser_context &context) {
 
    match_token(context, blaise_token_type::FUNCTION);
    bool is_native = is_token_and_match(context, blaise_token_type::NATIVE);
-   auto function_name = match_token(context, blaise_token_type::IDENTIFIER);
+   auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    parse_subroutine_parameters(context);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
@@ -56,7 +56,7 @@ void blaise_parser::parse_procedure_declaration(blaise_parser_context &context) 
 
    match_token(context, blaise_token_type::PROCEDURE);
    bool is_native = is_token_and_match(context, blaise_token_type::NATIVE);
-   auto function_name = match_token(context, blaise_token_type::IDENTIFIER);
+   auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    parse_subroutine_parameters(context);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);

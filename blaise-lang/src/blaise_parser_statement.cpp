@@ -68,7 +68,7 @@ void blaise_parser::parse_function_call_statement(blaise_parser_context &context
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_call_statement" << std::endl);
 
-   auto function_name = match_token(context, blaise_token_type::IDENTIFIER);
+   auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    parse_function_call_parameters(context);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
@@ -102,7 +102,7 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
 
 void blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_assignment" << std::endl);
-   auto identifier = match_token(context, blaise_token_type::IDENTIFIER);
+   auto identifier = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::ASSIGNMENT);
    parse_expression(context);
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
