@@ -31,9 +31,9 @@ class blaise_module {
    
    // subroutine management;
    void add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);
-   void add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
-                      const gasp::common::token<gasp::blaise::blaise_token_type>& return_type);
 
+   // TODO: Add ability to look into used modules
+   // TODO: Add ability to allowe overloaded functions (i.e. pass the signature of the expected function)
    std::shared_ptr<blaise_subroutine> get_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
 };
 

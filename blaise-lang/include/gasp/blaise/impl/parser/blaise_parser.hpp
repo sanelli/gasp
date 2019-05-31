@@ -21,6 +21,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static void parse_subroutines_declaration(blaise_parser_context &context);
    static void parse_function_declaration(blaise_parser_context &context);
    static void parse_procedure_declaration(blaise_parser_context &context);
+   static void inline parse_subroutine_declaration_impl(blaise_parser_context &context, blaise_token_type expected_token_type, const char* caller_name);
    static void parse_subroutine_parameters(blaise_parser_context &context);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);

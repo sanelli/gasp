@@ -49,10 +49,10 @@ protected:
 
 public:
    blaise_subroutine(std::weak_ptr<blaise_module> module, const std::string& name);
-   blaise_subroutine(std::weak_ptr<blaise_module> module, const std::string& name, blaise_language_type return_type);
 
    std::string name() const;
    blaise_language_type return_type() const;
+   void return_type(const gasp::common::token<gasp::blaise::blaise_token_type> &type);
    std::weak_ptr<blaise_module> module() const;
 
    bool is(blaise_subroutine_flags flag) const;

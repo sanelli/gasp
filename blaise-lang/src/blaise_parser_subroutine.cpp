@@ -30,42 +30,41 @@ void blaise_parser::parse_subroutines_declaration(blaise_parser_context &context
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_declaration" << std::endl);
 }
 
-void blaise_parser::parse_function_declaration(blaise_parser_context &context) {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_declaration" << std::endl);
+void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_context &context, blaise_token_type expected_token_type, const char* caller_name) {
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
 
-   match_token(context, blaise_token_type::FUNCTION);
+   match_token(context, expected_token_type);
    bool is_native = is_token_and_match(context, blaise_token_type::NATIVE);
-   auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
+
+   context.module()->add_subroutine(context.peek_token());
+   context.current_subroutine(context.module()->get_subroutine(context.peek_token()));
+   match_token(context, blaise_token_type::IDENTIFIER);
+
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    parse_subroutine_parameters(context);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
-   match_token(context, blaise_token_type::COLON);
-   auto return_type = parse_variable_type(context);
+   if(expected_token_type == blaise_token_type::FUNCTION) {
+      match_token(context, blaise_token_type::COLON);
+      auto return_type = parse_variable_type(context);
+      context.current_subroutine()->return_type(return_type);
+   }
+   parse_variables_declaration(context);
 
    if(!is_native)
       parse_compound_statement(context);
    
    match_token(context, blaise_token_type::SEMICOLON);
 
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_declaration" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
+}
+
+void blaise_parser::parse_function_declaration(blaise_parser_context &context) {
+   parse_subroutine_declaration_impl(context, blaise_token_type::FUNCTION, "parse_function_declaration");
 }
 
 void blaise_parser::parse_procedure_declaration(blaise_parser_context &context) {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_procedure_declaration" << std::endl);
-
-   match_token(context, blaise_token_type::PROCEDURE);
-   bool is_native = is_token_and_match(context, blaise_token_type::NATIVE);
-   auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
-   match_token(context, blaise_token_type::LEFT_PARENTHESES);
-   parse_subroutine_parameters(context);
-   match_token(context, blaise_token_type::RIGHT_PARENTHESES);
-
-   if(!is_native)
-      parse_compound_statement(context);
-   
-   match_token(context, blaise_token_type::SEMICOLON);
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_procedure_declaration" << std::endl);
+   parse_subroutine_declaration_impl(context, blaise_token_type::PROCEDURE, "parse_procedure_declaration");
 }
 
 void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context) {
@@ -77,10 +76,14 @@ void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context) 
       auto token_type = token.type();
 
       if(token_type == blaise_token_type::IDENTIFIER){
-         vector<gasp::common::token<blaise_token_type>> parameters;
-         parse_variable_names_list(context, parameters);
+         vector<gasp::common::token<blaise_token_type>> names;
+         parse_variable_names_list(context, names);
          match_token(context, blaise_token_type::COLON);
          auto parameters_type = parse_variable_type(context);
+
+         for(const auto& name : names)
+            context.current_subroutine()->add_parameter(name, parameters_type);
+
       } else
             break;
    } while(is_token_and_match(context, blaise_token_type::COMMA));

@@ -16,11 +16,10 @@ using namespace std;
 
 gasp::blaise::language::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_module> module, const string &name)
     : _module(module), _name(name), _return_type(blaise_language_type::VOID) {}
-gasp::blaise::language::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_module> module, const string &name, blaise_language_type return_type)
-    : _module(module), _name(name), _return_type(return_type) {}
 
 std::string gasp::blaise::language::blaise_subroutine::name() const { return _name; }
 blaise_language_type gasp::blaise::language::blaise_subroutine::return_type() const { return _return_type; }
+void gasp::blaise::language::blaise_subroutine::return_type(const token<blaise_token_type> &type) { _return_type = get_type_from_token(type); }
 std::weak_ptr<blaise_module> gasp::blaise::language::blaise_subroutine::module() const { return _module; }
 
 bool gasp::blaise::language::blaise_subroutine::is(blaise_subroutine_flags flag) const {
@@ -62,7 +61,6 @@ std::shared_ptr<blaise_generic_memory_location> gasp::blaise::language::blaise_s
 void gasp::blaise::language::blaise_subroutine::add_variable(const token<blaise_token_type> &identifier,
                                                              const token<blaise_token_type> &type)
 {
-   // TODO: Check no function with the same name has already been added
    GASP_DEBUG("blaise-lang", "[BEGIN] blaise_subroutine::add_variable - Creating variable for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
       throw blaise_language_error(identifier.line(), identifier.column(), make_string("Variable '", identifier.value(), "' already defined."));
@@ -73,7 +71,6 @@ void gasp::blaise::language::blaise_subroutine::add_variable(const token<blaise_
 void gasp::blaise::language::blaise_subroutine::add_constant(const token<blaise_token_type> &identifier,
                                                              const token<blaise_token_type> &type)
 {
-   // TODO: Check no function with the same name has already been added
    GASP_DEBUG("blaise-lang", "[BEGIN] blaise_subroutine::add_constant - Creating constant for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
       throw blaise_language_error(identifier.line(), identifier.column(), make_string("Constant '", identifier.value(), "' already defined."));
@@ -84,7 +81,6 @@ void gasp::blaise::language::blaise_subroutine::add_constant(const token<blaise_
 void gasp::blaise::language::blaise_subroutine::add_parameter(const token<blaise_token_type> &identifier,
                                                              const token<blaise_token_type> &type)
 {
-   // TODO: Check no function with the same name has already been added
    GASP_DEBUG("blaise-lang", "[BEGIN] blaise_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
       throw blaise_language_error(identifier.line(), identifier.column(), make_string("Parameter '", identifier.value(), "' already defined."));

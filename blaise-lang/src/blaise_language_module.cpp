@@ -22,15 +22,6 @@ std::string gasp::blaise::language::blaise_module::name() const { return _name; 
 blaise_module_type gasp::blaise::language::blaise_module::type() const { return _type; }
 void gasp::blaise::language::blaise_module::self(std::weak_ptr<blaise_module> module) { _self = module; }
 
-void gasp::blaise::language::blaise_module::add_subroutine(const token<blaise_token_type> &identifier,
-                                                           const token<blaise_token_type> &return_type)
-{
-   if(!_self.lock())
-      throw std::runtime_error("Module self point not setup");
-   // TODO: Check no function with the same name has already been added
-   _subroutines.push_back(make_shared<blaise_subroutine>(_self, identifier.value(), get_type_from_token(return_type)));
-}
-
 void gasp::blaise::language::blaise_module::add_subroutine(const token<blaise_token_type> &identifier)
 {
    if(!_self.lock())
