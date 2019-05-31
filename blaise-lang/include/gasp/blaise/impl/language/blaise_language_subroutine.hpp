@@ -25,7 +25,7 @@ class blaise_subroutine {
    std::string _name;
    std::weak_ptr<blaise_module> _module;
    blaise_language_type _return_type;
-   std::bitset<sizeof(typename std::underlying_type<blaise_subroutine_flags>::type)> _flags;
+   std::bitset<8 * sizeof(typename std::underlying_type<blaise_subroutine_flags>::type)> _flags;
    std::vector<std::shared_ptr<blaise_subroutine_parameter>> _parameters;
    std::vector<std::shared_ptr<blaise_constant>> _constants;
    std::vector<std::shared_ptr<blaise_variable>> _variables;
