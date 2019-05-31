@@ -32,19 +32,31 @@ int main(int argc, char *argv[])
    stringstream program;
    program << R"___(
       program Hello_World;
+
+      function native read_integer() : integer;
+      function native read_float() : float;
+      procedure native write_string(input: string); 
+      procedure native write_float(input: float);
+      function duplicate(input : float) : float 
+      begin
+      end;
+
       var
          foo, another_foo: integer;
          bar: float;
          equals: boolean;
          a_value: boolean;
+         
       begin
-         readline(foo, bar);
-         another_foo := foo + bar * 2 + -1 / foo;
+         foo := read_integer();
+         another_foo := read_integer();
+         bar := read_float();
+         bar := foo + bar * 2 + -1 / foo;
          equals := bar == foo;
          a_value := true and false;
          begin
-            writeline(foo);
-            writeline(bar);
+            write_string("Results: ");
+            write_float(foo);
          end;
       end.
    )___";

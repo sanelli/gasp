@@ -18,6 +18,10 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    //       handle identifiers followed by array definition
 
    static void parse_program(blaise_parser_context &context);
+   static void parse_subroutines_declaration(blaise_parser_context &context);
+   static void parse_function_declaration(blaise_parser_context &context);
+   static void parse_procedure_declaration(blaise_parser_context &context);
+   static void parse_subroutine_parameters(blaise_parser_context &context);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);
    static void parse_variable_names_list(blaise_parser_context &context, std::vector<gasp::common::token<blaise_token_type>> &variable_names);

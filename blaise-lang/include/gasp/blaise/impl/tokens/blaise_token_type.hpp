@@ -19,6 +19,9 @@ enum class blaise_token_type : unsigned char
    LOGICAL_NOT,
    LOGICAL_EAGER_AND,
    LOGICAL_EAGER_OR,
+   FUNCTION,
+   PROCEDURE,
+   NATIVE,
 
    // TYPES
    // TODO: ADD LONG, UNSIGNED TYPES, ADD BYTE, ADD POINTER, ADD SMART_POINTER

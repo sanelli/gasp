@@ -13,7 +13,6 @@
 namespace gasp::blaise::language {
 
 // TODO: Add function call expression
-// TODO: Add boolean literals (true, false)
 
 class blaise_expression {
    blaise_language_type _result_type;

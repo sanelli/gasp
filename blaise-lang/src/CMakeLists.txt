@@ -8,6 +8,7 @@ target_sources(gasp-blaise-lang
         blaise_parser_context.cpp
         blaise_parser_statement.cpp
         blaise_parser_expression.cpp
+        blaise_parser_subroutine.cpp
         blaise_language_type.cpp
         blaise_language_variable.cpp
         blaise_language_subroutine.cpp

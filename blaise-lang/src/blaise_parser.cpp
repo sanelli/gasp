@@ -44,11 +44,13 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    match_token(context, blaise_token_type::SEMICOLON);
 
    // TODO: match uses
-   // TODO: match functions and procedures
-   // TODO: match constants
+   
+   parse_subroutines_declaration(context);
 
    context.current_subroutine(main_subroutine);
+   // TODO: match constants
    parse_variables_declaration(context);
+
    parse_compound_statement(context);
 
    match_token(context, blaise_token_type::PERIOD);
