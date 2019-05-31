@@ -1,4 +1,8 @@
 #include <memory>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iterator>
 
 #include <gasp/blaise/language.hpp>
 #include <gasp/blaise/tokens.hpp>
@@ -16,6 +20,32 @@ blaise_expression::blaise_expression(blaise_language_expression_type expression_
    :  _expression_type(expression_type), _result_type(result_type){ }
 blaise_language_type blaise_expression::result_type() const { return _result_type; }
 blaise_language_expression_type blaise_expression::expression_type() const { return _expression_type; }
+
+
+//
+// SUBROUTINE CALL EXPRESSION
+//
+blaise_expression_subroutine_call::blaise_expression_subroutine_call(
+      token<blaise_token_type> subroutine_name_token,
+      shared_ptr<blaise_subroutine> subroutine,
+      const vector<shared_ptr<blaise_expression>>& expressions)
+         : blaise_expression(blaise_language_expression_type::FUNCTION_CALL, subroutine->return_type()),
+         _subroutine(subroutine)
+   {
+      if(subroutine->return_type() == blaise_language_type::VOID)
+                  throw blaise_language_error(subroutine_name_token.line(), subroutine_name_token.column(), make_string("Cannot use call procedure '",  subroutine_name_token.value(), " inside an expressions."));
+      std::copy(expressions.begin(), expressions.end(), std::back_inserter(_expressions));
+   }
+
+typename vector<shared_ptr<blaise_expression>>::const_iterator blaise_expression_subroutine_call::begin_actual_parameters() const { return _expressions.cbegin(); }
+typename vector<shared_ptr<blaise_expression>>::const_iterator blaise_expression_subroutine_call::end_actual_parameters() const { return _expressions.cend(); };
+std::shared_ptr<blaise_subroutine> blaise_expression_subroutine_call::subroutine() const { return _subroutine; }
+shared_ptr<blaise_expression_subroutine_call> gasp::blaise::language::blaise_expression_subroutine_call_factory(
+   token<blaise_token_type> subroutine_name_token,
+   shared_ptr<blaise_subroutine> subroutine,
+   const vector<shared_ptr<blaise_expression>>& expressions){
+         return make_shared<blaise_expression_subroutine_call>(subroutine_name_token, subroutine, expressions);
+}
 
 //
 // BINARY EXPRESSION

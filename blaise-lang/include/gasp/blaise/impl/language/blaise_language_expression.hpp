@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
@@ -12,8 +13,6 @@
 
 namespace gasp::blaise::language {
 
-// TODO: Add function call expression
-
 class blaise_expression {
    blaise_language_type _result_type;
    blaise_language_expression_type _expression_type;
@@ -23,6 +22,26 @@ class blaise_expression {
       blaise_language_type result_type() const;
       blaise_language_expression_type expression_type() const;
 };
+
+//
+// SUBROUTINE CALL EXPRESSION
+//
+class blaise_expression_subroutine_call : public blaise_expression {
+   std::shared_ptr<blaise_subroutine> _subroutine;
+   std::vector<std::shared_ptr<blaise_expression>> _expressions;
+public:
+   blaise_expression_subroutine_call(gasp::common::token<gasp::blaise::blaise_token_type> subroutine_name_token,
+      std::shared_ptr<blaise_subroutine> subroutine,
+      const std::vector<std::shared_ptr<blaise_expression>>& expressions
+   );
+   typename std::vector<std::shared_ptr<blaise_expression>>::const_iterator begin_actual_parameters() const;
+   typename std::vector<std::shared_ptr<blaise_expression>>::const_iterator end_actual_parameters() const;
+   std::shared_ptr<blaise_subroutine> subroutine() const;
+};
+std::shared_ptr<blaise_expression_subroutine_call> blaise_expression_subroutine_call_factory(
+   gasp::common::token<gasp::blaise::blaise_token_type> subroutine_name_token,
+   std::shared_ptr<blaise_subroutine> subroutine,
+   const std::vector<std::shared_ptr<blaise_expression>>& expressions);
 
 //
 // BINARY EXPRESSION
