@@ -36,12 +36,18 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    match_token(context, expected_token_type);
    bool is_native = is_token_and_match(context, blaise_token_type::NATIVE);
 
-   context.module()->add_subroutine(context.peek_token());
-   context.current_subroutine(context.module()->get_subroutine(context.peek_token()));
+   auto subroutine_token_identifier = context.peek_token();
+   auto subroutine = context.module()->add_subroutine(subroutine_token_identifier);
+   context.current_subroutine(subroutine);
+
+   if(is_native)
+      context.current_subroutine()->set(language::blaise_subroutine_flags::NATIVE);
+
    match_token(context, blaise_token_type::IDENTIFIER);
 
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
-   parse_subroutine_parameters(context);
+   std::vector<language::blaise_language_type> param_types;
+   parse_subroutine_parameters(context, param_types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    if(expected_token_type == blaise_token_type::FUNCTION) {
@@ -56,6 +62,12 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    
    match_token(context, blaise_token_type::SEMICOLON);
 
+   if(context.module()->count_subroutine(subroutine_token_identifier, param_types) > 1) { 
+      auto subroutine = context.module()->get_subroutine(subroutine_token_identifier, param_types);
+      throw language::blaise_language_error(subroutine_token_identifier.line(), subroutine_token_identifier.column(), 
+               make_string("Duplicated subroutine with signature '", subroutine->signature_as_string() ,"'"));
+   }
+
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
 }
 
@@ -67,11 +79,10 @@ void blaise_parser::parse_procedure_declaration(blaise_parser_context &context) 
    parse_subroutine_declaration_impl(context, blaise_token_type::PROCEDURE, "parse_procedure_declaration");
 }
 
-void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context) {
+void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, std::vector<language::blaise_language_type>& param_types) {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
 
    do {
-
       auto token = context.peek_token();
       auto token_type = token.type();
 
@@ -82,7 +93,10 @@ void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context) 
          auto parameters_type = parse_variable_type(context);
 
          for(const auto& name : names)
-            context.current_subroutine()->add_parameter(name, parameters_type);
+         {
+            auto parameter = context.current_subroutine()->add_parameter(name, parameters_type);
+            param_types.push_back(parameter->type());
+         }
 
       } else
             break;
