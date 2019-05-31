@@ -12,8 +12,10 @@ using namespace std;
 //
 // EXPRESSION
 // 
-blaise_expression::blaise_expression(blaise_language_type result_type) : _result_type(result_type){ }
-blaise_language_type blaise_expression::result_type() { return _result_type; }
+blaise_expression::blaise_expression(blaise_language_expression_type expression_type, blaise_language_type result_type) 
+   :  _expression_type(expression_type), _result_type(result_type){ }
+blaise_language_type blaise_expression::result_type() const { return _result_type; }
+blaise_language_expression_type blaise_expression::expression_type() const { return _expression_type; }
 
 //
 // BINARY EXPRESSION
@@ -21,7 +23,7 @@ blaise_language_type blaise_expression::result_type() { return _result_type; }
 blaise_expression_binary::blaise_expression_binary(shared_ptr<blaise_expression> left,
                token<blaise_token_type> token_operator,
                shared_ptr<blaise_expression> right
-) : blaise_expression(blaise_language_utility::get_resulting_type(token_operator, left->result_type(), right->result_type())),
+) : blaise_expression(blaise_language_expression_type::BINARY, blaise_language_utility::get_resulting_type(token_operator, left->result_type(), right->result_type())),
     _operator(token_operator.type()), _left(left), _right(right) {
 
 }
@@ -40,7 +42,7 @@ std::shared_ptr<blaise_expression_binary> gasp::blaise::language::blaise_express
 //
 blaise_expression_unary::blaise_expression_unary(gasp::common::token<gasp::blaise::blaise_token_type> token_operator, 
       std::shared_ptr<blaise_expression> operand)
-   : blaise_expression(blaise_language_utility::get_resulting_type(token_operator, operand->result_type())),
+   : blaise_expression(blaise_language_expression_type::UNARY, blaise_language_utility::get_resulting_type(token_operator, operand->result_type())),
     _operator(token_operator.type()), _operand(operand) {
 
 }
@@ -52,7 +54,8 @@ std::shared_ptr<blaise_expression_unary> gasp::blaise::language::blaise_expressi
 }
 
 // VARIABLE
-blaise_expression_variable::blaise_expression_variable(shared_ptr<blaise_variable> variable) : blaise_expression(variable->type()), _variable(variable) { 
+blaise_expression_variable::blaise_expression_variable(shared_ptr<blaise_variable> variable) 
+   : blaise_expression(blaise_language_expression_type::VARIABLE, variable->type()), _variable(variable) { 
    
 }
 std::shared_ptr<blaise_variable> blaise_expression_variable::variable() const { return _variable; }
