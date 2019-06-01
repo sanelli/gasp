@@ -23,7 +23,6 @@ bool blaise_language_utility::is_numeric(blaise_language_type type){
 
 bool blaise_language_utility::is_boolean(blaise_language_type type){
    switch(type){
-      // TODO: ADD a TRIBOOLEAN (true, false, undefined)
       case blaise_language_type::BOOLEAN:
          return true;
       default:
@@ -33,7 +32,6 @@ bool blaise_language_utility::is_boolean(blaise_language_type type){
 
 bool blaise_language_utility::is_string(blaise_language_type type){
    switch(type){
-      // TODO: ADD a WIDE_CHAT for 16 bit charcater
       case blaise_language_type::STRING:
          return true;
       default:
@@ -43,7 +41,6 @@ bool blaise_language_utility::is_string(blaise_language_type type){
 
 bool blaise_language_utility::is_char(blaise_language_type type){
    switch(type){
-      // TODO: ADD a WIDE_STRING type
       case blaise_language_type::CHAR:
          return true;
       default:

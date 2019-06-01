@@ -28,7 +28,6 @@ shared_ptr<blaise_subroutine> gasp::blaise::language::blaise_module::add_subrout
 {
    if(!_self.lock())
       throw std::runtime_error("Module self point not setup");
-   // TODO: Check no function with the same name has already been added
    auto subroutine = make_shared<blaise_subroutine>(_self, identifier.value());
    _subroutines.push_back(subroutine);
    return subroutine;

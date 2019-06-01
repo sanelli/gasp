@@ -6,12 +6,7 @@ using namespace gasp::blaise;
 using namespace gasp::common;
 
 blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
-{
-   // TODO: Allow CHAR_LITERAL to be like java unicode sequence '\u0F8a'
-   // TODO: STRING_LITERAL not accept escape \""
-   // TODO: STRING_LITERAL value do not  \""
-   // TODO: IDENTIFIER is not matches for "false_" or "true_" (they are treated like a boolean + identifier)
-
+{   
    // KEYWORDS
    add_token(blaise_token_type::PROGRAM, "program", "PROGRAM");
    add_token(blaise_token_type::MODULE, "module", "MODULE");

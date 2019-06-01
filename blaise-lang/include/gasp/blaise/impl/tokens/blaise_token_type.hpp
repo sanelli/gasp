@@ -24,7 +24,6 @@ enum class blaise_token_type : unsigned char
    NATIVE,
 
    // TYPES
-   // TODO: ADD LONG, UNSIGNED TYPES, ADD BYTE, ADD POINTER, ADD SMART_POINTER
    TYPE_INTEGER,
    TYPE_CHAR,
    TYPE_STRING,

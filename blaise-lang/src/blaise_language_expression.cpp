@@ -121,13 +121,10 @@ shared_ptr<blaise_expression> gasp::blaise::language::blaise_expression_value_fa
       case blaise_token_type::DOUBLE_LITERAL:
          return make_shared<blaise_expression_double_value>(stod(token.value()));
       case blaise_token_type::CHAR_LITERAL:
-         // TODO: Handle the scenario where the char contains an escape sequence
          return make_shared<blaise_expression_char_value>(token.value()[1]);
       case blaise_token_type::STRING_LITERAL:
-         // TODO: Handle the scenario where the char contains an escape sequence
          return make_shared<blaise_expression_string_value>(token.value().substr(1, token.value().length()-2));
       case blaise_token_type::BOOLEAN_LITERAL:
-         // TODO: Handle the scenario where the char contains an escape sequence
          return make_shared<blaise_expression_boolean_value>(token.value() == "true");
       default:
          throw blaise_language_error(token.line(), token.column(), "Token is not an expression");
