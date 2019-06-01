@@ -35,10 +35,11 @@ int main(int argc, char *argv[])
 
       function native read_integer() : integer;
       function native read_float() : float;
-      procedure native write_string(input: string); 
-      procedure native write_float(input: float);
+      procedure native write(input: string); 
+      procedure native write(input: float);
       function duplicate(input : float) : float 
       begin
+         duplicate := 2 * input;
       end;
 
       var
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
          foo := read_integer();
          another_foo := read_integer();
          bar := read_float();
-         bar := foo + bar * 2 + -1 / foo;
+         bar := foo + bar * 2 + -1 / duplicate(foo);
          equals := bar == foo;
          a_value := true and false;
          begin

@@ -29,14 +29,15 @@ class blaise_module {
    blaise_module_type type() const;
    void self(std::weak_ptr<blaise_module> module);
    
-   // subroutine management;
    std::shared_ptr<blaise_subroutine> add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);
 
-   // TODO: Add ability to look into used modules 
    std::shared_ptr<blaise_subroutine> get_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<blaise_language_type>& typaram_typespes) const;
-
+   std::shared_ptr<blaise_subroutine> expect_exact_subroutine(
+      const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
+      const std::vector<blaise_language_type>& typaram_typespes) const;
+      
    unsigned int count_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<blaise_language_type>& param_types) const;

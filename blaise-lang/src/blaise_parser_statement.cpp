@@ -2,7 +2,7 @@
 
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/debug.hpp>
-
+#include <gasp/common/output.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
 #include <gasp/blaise/language.hpp>
@@ -70,13 +70,18 @@ void blaise_parser::parse_function_call_statement(blaise_parser_context &context
 
    auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
-   parse_function_call_parameters(context);
+   vector<shared_ptr<language::blaise_expression>> expressions;
+   vector<language::blaise_language_type> types;
+   parse_function_call_parameters(context, expressions, types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_statement" << std::endl);
 }
 
-void blaise_parser::parse_function_call_parameters(blaise_parser_context &context)
+void blaise_parser::parse_function_call_parameters(blaise_parser_context &context, 
+      std::vector<std::shared_ptr<language::blaise_expression>>& expressions,
+      std::vector<language::blaise_language_type>& types
+      )
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_call_parameters" << std::endl);
 
@@ -85,15 +90,18 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
    if (token_type != blaise_token_type::RIGHT_PARENTHESES)
       do
       {
-         parse_expression(context);
-
-         const auto token = context.peek_token();
-         token_type = token.type();
+         auto expression = parse_expression(context);
+         expressions.push_back(expression);
+         types.push_back(expression->result_type());
+         
          if (is_token_and_match(context, blaise_token_type::COMMA))
             continue;
          else if (!is_token(context, blaise_token_type::RIGHT_PARENTHESES))
+         {
+            auto token = context.peek_token();
             throw_parse_error_with_details(context, token.line(), token.column(), "expected ')' or ','.");
-
+         }
+         token_type = context.peek_token().type();
       } while (token_type != blaise_token_type::RIGHT_PARENTHESES);
 
     GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_parameters" << std::endl);

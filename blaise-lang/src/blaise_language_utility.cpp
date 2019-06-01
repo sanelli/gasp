@@ -1,6 +1,10 @@
+#include <stdexcept>
+
 #include <gasp/blaise/language.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/string.hpp>
+#include <gasp/common/debug.hpp>
 
 using namespace gasp::common;
 using namespace gasp::blaise;
@@ -177,4 +181,44 @@ blaise_language_type blaise_language_utility::get_resulting_type(const token<bla
    }
 
    throw blaise_language_error(token_operator.line(), token_operator.column(), make_string("Operator ", token_operator.type(), " between expression of type ", left, " and ", right," is not allowed."));
+}
+
+bool blaise_language_utility::can_cast(blaise_language_type from, blaise_language_type to) {
+   if(is_numeric(from) && is_numeric(to)){
+      switch(from){
+         case blaise_language_type::INTEGER:
+            switch(to){
+               case blaise_language_type::INTEGER:
+               case blaise_language_type::FLOAT:
+               case blaise_language_type::DOUBLE:
+                  return true;
+               default:
+                  throw std::runtime_error(make_string("Unsupported type '", to,"' passed as 'to' parameter"));
+            }
+         case blaise_language_type::FLOAT:
+            switch(to){
+               case blaise_language_type::INTEGER:
+                  return false;
+               case blaise_language_type::FLOAT:
+               case blaise_language_type::DOUBLE:
+                  return true;
+               default:
+                  throw std::runtime_error(make_string("Unsupported type '", to,"' passed as 'to' parameter"));
+            }
+         case blaise_language_type::DOUBLE:
+            switch(to){
+               case blaise_language_type::INTEGER:
+               case blaise_language_type::FLOAT:
+                  return false;
+               case blaise_language_type::DOUBLE:
+                  return true;
+               default:
+                  throw std::runtime_error(make_string("Unsupported type '", to,"' passed as 'to' parameter"));
+            }
+         default:
+            throw std::runtime_error(make_string("Unsupported type '", from,"' passed as 'from' parameter"));
+      }
+   }
+
+   return false;
 }

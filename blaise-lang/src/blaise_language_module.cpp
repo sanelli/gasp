@@ -1,6 +1,8 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include <vector>
+#include <sstream>
 
 #include <gasp/blaise/language.hpp>
 #include <gasp/blaise/tokens.hpp>
@@ -35,16 +37,51 @@ shared_ptr<blaise_subroutine> gasp::blaise::language::blaise_module::add_subrout
 shared_ptr<blaise_subroutine> gasp::blaise::language::blaise_module::get_subroutine(const token<blaise_token_type> &identifier,
       const std::vector<blaise_language_type>& param_types) const
 {
-   auto it = std::begin(_subroutines);
-   auto end = std::end(_subroutines);
-   while (it != end)
-   {
-      auto subroutine = *it;
-      if (subroutine->signature_match(identifier.value(), param_types))
+   std::vector<shared_ptr<blaise_subroutine>> matching_subs_with_cast;
+
+   for(auto subroutine : _subroutines){
+      if (subroutine->signature_match_exactly(identifier.value(), param_types))
          return subroutine;
-      ++it;
+      if(subroutine->signature_match_with_cast(identifier.value(), param_types))
+         matching_subs_with_cast.push_back(subroutine);
    }
-   return nullptr;
+   
+   switch(matching_subs_with_cast.size())
+   {
+      case 0:
+         return nullptr;
+      case 1:
+         return matching_subs_with_cast.at(0);
+      default:
+         {
+            stringstream stream;
+            for(int index = 0; index < matching_subs_with_cast.size(); ++index){
+               stream << matching_subs_with_cast.at(0)->signature_as_string();
+               if(index != index < matching_subs_with_cast.size()-1) stream << "\n ";
+            }
+            throw blaise_language_error(identifier.line(), identifier.column(), 
+               make_string("Multiple functions matching subroutine call ", identifier.value(), "(" , stream.str(), ")")
+            );
+         }
+   }
+}
+
+shared_ptr<blaise_subroutine> gasp::blaise::language::blaise_module::expect_exact_subroutine(const token<blaise_token_type> &identifier,
+      const std::vector<blaise_language_type>& param_types) const
+{
+   for(auto subroutine : _subroutines){
+      if (subroutine->signature_match_exactly(identifier.value(), param_types))
+         return subroutine;
+   }
+
+   stringstream stream;
+   for(int index = 0; index < param_types.size(); ++index){
+      stream << param_types.at(index);
+      if(index != index < param_types.size()-1) stream << "\n ";
+   }
+   throw blaise_language_error(identifier.line(), identifier.column(), 
+               make_string("Cannot find subroutine  ", identifier.value(), "(",  stream.str(), ")")
+            );
 }
 
 unsigned int gasp::blaise::language::blaise_module::count_subroutine(
@@ -52,5 +89,5 @@ unsigned int gasp::blaise::language::blaise_module::count_subroutine(
       const std::vector<blaise_language_type>& param_types) const {
 
    return std::count_if(std::begin(_subroutines), std::end(_subroutines), 
-      [identifier, param_types](auto subroutine){ return subroutine->signature_match(identifier.value(), param_types); });
+      [identifier, param_types](auto subroutine){ return subroutine->signature_match_exactly(identifier.value(), param_types); });
 }

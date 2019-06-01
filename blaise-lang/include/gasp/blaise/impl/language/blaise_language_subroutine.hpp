@@ -60,7 +60,9 @@ public:
    void reset(blaise_subroutine_flags flag);
 
    // Signature
-   bool signature_match(const std::string name, const std::vector<language::blaise_language_type>& param_types) const;
+   // Check if the 
+   bool signature_match_exactly(const std::string name, const std::vector<language::blaise_language_type>& param_types) const;
+   bool signature_match_with_cast(const std::string name, const std::vector<language::blaise_language_type>& param_types) const;
    std::string signature_as_string() const;
 
    // Memory location management

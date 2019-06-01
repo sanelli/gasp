@@ -23,7 +23,7 @@ blaise_language_type gasp::blaise::language::blaise_subroutine::return_type() co
 void gasp::blaise::language::blaise_subroutine::return_type(const token<blaise_token_type> &type) { _return_type = get_type_from_token(type); }
 std::weak_ptr<blaise_module> gasp::blaise::language::blaise_subroutine::module() const { return _module; }
 
-bool gasp::blaise::language::blaise_subroutine::signature_match(const std::string name, const std::vector<language::blaise_language_type>& param_types) const {
+bool gasp::blaise::language::blaise_subroutine::signature_match_exactly(const std::string name, const std::vector<language::blaise_language_type>& param_types) const {
 
    if(_name != name) return false;
    if( _parameters.size() != param_types.size()) return false;
@@ -31,6 +31,16 @@ bool gasp::blaise::language::blaise_subroutine::signature_match(const std::strin
       if(_parameters.at(index)->type() != param_types.at(index)) return false;
    return true;
 }
+
+bool gasp::blaise::language::blaise_subroutine::signature_match_with_cast(const std::string name, const std::vector<language::blaise_language_type>& param_types) const {
+
+   if(_name != name) return false;
+   if( _parameters.size() != param_types.size()) return false;
+   for(int index=0; index < _parameters.size(); ++index)
+      if(!language::blaise_language_utility::can_cast(param_types.at(index), _parameters.at(index)->type())) return false;
+   return true;
+}
+
 std::string gasp::blaise::language::blaise_subroutine::signature_as_string() const {
    std::stringstream stream;
    stream << _name << "(";

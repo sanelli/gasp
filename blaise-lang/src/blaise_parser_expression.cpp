@@ -59,12 +59,23 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(bla
    {
    case blaise_token_type::IDENTIFIER: // Identifier could be either a variable or a function call
       {
+         auto identifier_token = context.peek_token();
          match_token(context, blaise_token_type::IDENTIFIER);
          const auto lookahead = context.peek_token().type();
          if(is_token_and_match(context, blaise_token_type::LEFT_PARENTHESES)){
-            parse_function_call_parameters(context);
+            vector<shared_ptr<language::blaise_expression>> expressions;
+            vector<language::blaise_language_type> types;
+            parse_function_call_parameters(context, expressions, types);
             match_token(context, blaise_token_type::RIGHT_PARENTHESES);
-            // TODO: Create an expression for the function call
+
+            // Look up for the expression function
+            // TODO: Add ability to look into referenced modules when the name contains a dot
+            auto subroutine = context.module()->get_subroutine(identifier_token, types);
+            if(subroutine == nullptr)
+                     throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), 
+                              make_string("Cannot find a function matching: '", identifier_token.value(), "(", types ,")'"));
+            term_expression = language::blaise_expression_subroutine_call_factory(identifier_token, subroutine, expressions);
+
          } else {
             term_expression = language::blaise_expression_memory_location_factory(context.current_subroutine(), token);
          }

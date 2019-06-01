@@ -22,6 +22,8 @@ static blaise_language_type get_binary_string_result(blaise_language_type left, 
 static blaise_language_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& token_operator, blaise_language_type operand);
 static blaise_language_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& token_operator, blaise_language_type left, blaise_language_type right);
 
+static bool can_cast(blaise_language_type from, blaise_language_type to);
+
 };
 
 }

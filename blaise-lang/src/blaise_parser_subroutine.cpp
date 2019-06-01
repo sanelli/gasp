@@ -54,6 +54,10 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
       match_token(context, blaise_token_type::COLON);
       auto return_type = parse_variable_type(context);
       context.current_subroutine()->return_type(return_type);
+
+      // By definition a function has a variable name with the name 
+      // of the function and its return type
+      context.current_subroutine()->add_variable(subroutine_token_identifier, return_type);
    }
    parse_variables_declaration(context);
 
@@ -63,7 +67,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    match_token(context, blaise_token_type::SEMICOLON);
 
    if(context.module()->count_subroutine(subroutine_token_identifier, param_types) > 1) { 
-      auto subroutine = context.module()->get_subroutine(subroutine_token_identifier, param_types);
+      auto subroutine = context.module()->expect_exact_subroutine(subroutine_token_identifier, param_types);
       throw language::blaise_language_error(subroutine_token_identifier.line(), subroutine_token_identifier.column(), 
                make_string("Duplicated subroutine with signature '", subroutine->signature_as_string() ,"'"));
    }

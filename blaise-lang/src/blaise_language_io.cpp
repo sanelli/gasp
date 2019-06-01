@@ -1,9 +1,10 @@
 #include <ostream>
 #include <stdexcept>
+#include <vector>
 
 #include <gasp/blaise/language.hpp>
 
-std::ostream &gasp::blaise::language::operator<<(std::ostream &os, blaise_language_type type)
+std::ostream &gasp::blaise::language::operator<<(std::ostream &os, gasp::blaise::language::blaise_language_type type)
 {
    switch(type){
       case blaise_language_type::VOID:
@@ -22,4 +23,13 @@ std::ostream &gasp::blaise::language::operator<<(std::ostream &os, blaise_langua
          return os << "boolean";
    }
   throw std::runtime_error("Unexpected type when converting type into string representation.");
+}
+
+std::ostream &gasp::blaise::language::operator<<(std::ostream &os, const std::vector<gasp::blaise::language::blaise_language_type>& list)
+{
+  for(int index = 0; index < list.size(); index++){
+     os << list.at(index);
+     if(index < list.size()-1) os << ", ";
+  }
+  return os;
 }
