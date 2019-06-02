@@ -35,7 +35,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
             std::shared_ptr<language::blaise_statement_compund> parent = nullptr);
    static std::shared_ptr<language::blaise_statement> parse_compound_statement(blaise_parser_context &context,
             std::shared_ptr<language::blaise_statement_compund> parent = nullptr);
-   static void parse_function_call_statement(blaise_parser_context &context);
+   static std::shared_ptr<language::blaise_statement> parse_subroutine_call_statement(blaise_parser_context &context);
    static void parse_function_call_parameters(blaise_parser_context &context, 
                               std::vector<std::shared_ptr<language::blaise_expression>>& expressions,
                               std::vector<language::blaise_language_type>& types);

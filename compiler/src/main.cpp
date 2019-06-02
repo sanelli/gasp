@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
       function native read_integer() : integer;
       function native read_float() : float;
       procedure native write(input: string); 
+      procedure native write(input: integer);
       procedure native write(input: float);
       function duplicate(input : float) : float 
       begin
@@ -56,8 +57,8 @@ int main(int argc, char *argv[])
          equals := bar == foo;
          a_value := true and false;
          begin
-            write_string("Results: ");
-            write_float(foo);
+            write("Results: ");
+            write(foo);
          end;
       end.
    )___";

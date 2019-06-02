@@ -1,4 +1,7 @@
 #include <memory>
+#include <vector>
+#include <string>
+#include <sstream>
 
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/debug.hpp>
@@ -31,10 +34,10 @@ std::shared_ptr<language::blaise_statement> blaise_parser::parse_statement(blais
       switch (lookahead_type)
       {
       case blaise_token_type::LEFT_PARENTHESES:
-         parse_function_call_statement(context);
+         statement = parse_subroutine_call_statement(context);
          break;
       case blaise_token_type::ASSIGNMENT:
-         parse_assignamet_statement(context);
+         statement = parse_assignamet_statement(context);
          break;
       default:
          throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found after indetifier."));
@@ -74,18 +77,34 @@ std::shared_ptr<language::blaise_statement> blaise_parser::parse_compound_statem
    return compund_statement;
 }
 
-void blaise_parser::parse_function_call_statement(blaise_parser_context &context)
+std::shared_ptr<language::blaise_statement> blaise_parser::parse_subroutine_call_statement(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_call_statement" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_statement" << std::endl);
 
-   auto function_name = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
+   auto identifier_token = context.peek_token();
+   match_token(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    vector<shared_ptr<language::blaise_expression>> expressions;
    vector<language::blaise_language_type> types;
    parse_function_call_parameters(context, expressions, types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_statement" << std::endl);
+   auto subroutine = context.module()->get_subroutine(identifier_token, types);
+   // TODO: Lookup in referenced modules
+   if(subroutine == nullptr) {
+      stringstream stream;
+      for(int index = 0; index < types.size(); ++index){
+         stream << types.at(index);
+         if(index != index < types.size()-1) stream << ", ";
+      }
+      throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", stream.str() ,")'"));
+   }
+
+   auto statement = language::make_blaise_statement_subroutine_call(subroutine, expressions);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_statement" << std::endl);
+
+   return statement;
 }
 
 void blaise_parser::parse_function_call_parameters(blaise_parser_context &context, 
