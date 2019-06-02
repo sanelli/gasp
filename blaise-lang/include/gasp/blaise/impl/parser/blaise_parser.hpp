@@ -31,13 +31,15 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static void parse_variable_names_list(blaise_parser_context &context, 
                               std::vector<gasp::common::token<blaise_token_type>> &variable_names);
    static gasp::common::token<blaise_token_type> parse_variable_type(blaise_parser_context &context);
-   static void parse_statement(blaise_parser_context &context);
-   static void parse_compound_statement(blaise_parser_context &context);
+   static std::shared_ptr<language::blaise_statement> parse_statement(blaise_parser_context &context,
+            std::shared_ptr<language::blaise_statement_compund> parent = nullptr);
+   static std::shared_ptr<language::blaise_statement> parse_compound_statement(blaise_parser_context &context,
+            std::shared_ptr<language::blaise_statement_compund> parent = nullptr);
    static void parse_function_call_statement(blaise_parser_context &context);
    static void parse_function_call_parameters(blaise_parser_context &context, 
                               std::vector<std::shared_ptr<language::blaise_expression>>& expressions,
                               std::vector<language::blaise_language_type>& types);
-   static void parse_assignamet_statement(blaise_parser_context &context);
+   static std::shared_ptr<language::blaise_statement> parse_assignamet_statement(blaise_parser_context &context);
    static std::shared_ptr<language::blaise_expression> parse_expression(blaise_parser_context &context);
    static std::shared_ptr<language::blaise_expression> parse_expression_helper(blaise_parser_context &context, 
                               std::shared_ptr<language::blaise_expression> lhs, 

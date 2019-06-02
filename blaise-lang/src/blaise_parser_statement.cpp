@@ -11,8 +11,11 @@ using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::common;
 
-void blaise_parser::parse_statement(blaise_parser_context &context)
+std::shared_ptr<language::blaise_statement> blaise_parser::parse_statement(blaise_parser_context &context,
+            std::shared_ptr<language::blaise_statement_compund> parent)
 {
+   std::shared_ptr<language::blaise_statement> statement = nullptr;
+
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_statement" << std::endl);
 
    const auto token = context.peek_token();
@@ -39,7 +42,7 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
    }
    break;
    case blaise_token_type::BEGIN:
-      parse_compound_statement(context);
+      statement = parse_compound_statement(context, parent);
       break;
       // TODO: Add support for other kind of statement
    default:
@@ -48,20 +51,27 @@ void blaise_parser::parse_statement(blaise_parser_context &context)
    match_token(context, blaise_token_type::SEMICOLON);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_statement" << std::endl);
+
+   return statement;
 }
 
-void blaise_parser::parse_compound_statement(blaise_parser_context &context)
+std::shared_ptr<language::blaise_statement> blaise_parser::parse_compound_statement(blaise_parser_context &context, std::shared_ptr<language::blaise_statement_compund> parent)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_compound_statement" << std::endl);
 
    match_token(context, blaise_token_type::BEGIN);
+   auto compund_statement = language::make_compound_statement();
+   if(parent != nullptr)
+      parent->push_back(compund_statement);
    while (!is_token(context, blaise_token_type::END))
    {
-      parse_statement(context);
+      auto statement = parse_statement(context);
+      compund_statement->push_back(statement);
    }
    match_token(context, blaise_token_type::END);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_compound_statement" << std::endl);
+   return compund_statement;
 }
 
 void blaise_parser::parse_function_call_statement(blaise_parser_context &context)
@@ -108,11 +118,23 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
 
 }
 
-void blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
+std::shared_ptr<language::blaise_statement> blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_assignment" << std::endl);
-   auto identifier = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
+
+   auto identifier = context.peek_token();
+   match_token(context, blaise_token_type::IDENTIFIER);
+   auto variable = context.current_subroutine()->get_variable(identifier);
+
+   if(variable == nullptr)
+         throw_parse_error_with_details(context, identifier.line(), identifier.column(), make_string("Variable ", identifier.value(), " does not exists in the context."));
+
    match_token(context, blaise_token_type::ASSIGNMENT);
-   parse_expression(context);
+   auto expression = parse_expression(context);
+
+   auto statement = language::make_assignement_statement(identifier.line(), identifier.column(), variable, expression);
+
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
+
+   return statement;
 }
 
