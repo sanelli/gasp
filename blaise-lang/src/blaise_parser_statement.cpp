@@ -86,7 +86,7 @@ std::shared_ptr<language::blaise_statement> blaise_parser::parse_subroutine_call
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    vector<shared_ptr<language::blaise_expression>> expressions;
    vector<language::blaise_language_type> types;
-   parse_function_call_parameters(context, expressions, types);
+   parse_subroutine_call_parameters(context, expressions, types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    auto subroutine = context.module()->get_subroutine(identifier_token, types);
@@ -107,12 +107,12 @@ std::shared_ptr<language::blaise_statement> blaise_parser::parse_subroutine_call
    return statement;
 }
 
-void blaise_parser::parse_function_call_parameters(blaise_parser_context &context, 
+void blaise_parser::parse_subroutine_call_parameters(blaise_parser_context &context, 
       std::vector<std::shared_ptr<language::blaise_expression>>& expressions,
       std::vector<language::blaise_language_type>& types
       )
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_function_call_parameters" << std::endl);
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_parameters" << std::endl);
 
    auto token_type = context.peek_token().type();
 
@@ -133,7 +133,7 @@ void blaise_parser::parse_function_call_parameters(blaise_parser_context &contex
          token_type = context.peek_token().type();
       } while (token_type != blaise_token_type::RIGHT_PARENTHESES);
 
-    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_function_call_parameters" << std::endl);
+    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_parameters" << std::endl);
 
 }
 

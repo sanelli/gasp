@@ -65,7 +65,7 @@ shared_ptr<language::blaise_expression> blaise_parser::parse_expression_term(bla
          if(is_token_and_match(context, blaise_token_type::LEFT_PARENTHESES)){
             vector<shared_ptr<language::blaise_expression>> expressions;
             vector<language::blaise_language_type> types;
-            parse_function_call_parameters(context, expressions, types);
+            parse_subroutine_call_parameters(context, expressions, types);
             match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
             // Look up for the expression function
