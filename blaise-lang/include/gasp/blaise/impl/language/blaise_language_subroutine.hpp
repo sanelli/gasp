@@ -12,6 +12,7 @@
 #include <gasp/blaise/impl/language/blaise_language_variable.hpp>
 #include <gasp/blaise/impl/language/blaise_language_type.hpp>
 #include <gasp/blaise/impl/language/blaise_language_module.hpp>
+#include <gasp/blaise/impl/language/blaise_language_statement.hpp>
 
 namespace gasp::blaise::language {
 
@@ -29,6 +30,8 @@ class blaise_subroutine {
    std::vector<std::shared_ptr<blaise_subroutine_parameter>> _parameters;
    std::vector<std::shared_ptr<blaise_constant>> _constants;
    std::vector<std::shared_ptr<blaise_variable>> _variables;
+   std::vector<std::shared_ptr<blaise_statement>> _statements;
+
 protected:
    template<typename TType>
    inline std::shared_ptr<TType> get_memory_from_vector(std::vector<std::shared_ptr<TType>> values,
@@ -77,6 +80,11 @@ public:
                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
    std::shared_ptr<blaise_variable> add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
+
+   // Statements
+   void push_back(std::shared_ptr<blaise_statement> statement);
+   std::shared_ptr<blaise_statement> get_statement(unsigned int) const;
+   unsigned int get_statements_count() const ;
 };
 
 }

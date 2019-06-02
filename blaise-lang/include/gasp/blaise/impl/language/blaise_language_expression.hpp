@@ -13,6 +13,9 @@
 
 namespace gasp::blaise::language {
 
+// Need this forward declaration otherwise the compile will complain
+class blaise_subroutine;
+
 class blaise_expression {
    blaise_language_type _result_type;
    blaise_language_expression_type _expression_type;

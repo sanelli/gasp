@@ -123,3 +123,13 @@ shared_ptr<blaise_subroutine_parameter> gasp::blaise::language::blaise_subroutin
    GASP_DEBUG("blaise-lang", "[END] blaise_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
    return parameter;
 }
+
+void gasp::blaise::language::blaise_subroutine::push_back(std::shared_ptr<blaise_statement> statement) {
+   _statements.push_back(statement);
+}
+std::shared_ptr<blaise_statement> gasp::blaise::language::blaise_subroutine::get_statement(unsigned int index) const { 
+   return _statements.at(index);
+}
+unsigned int gasp::blaise::language::blaise_subroutine::get_statements_count() const { 
+   return _statements.size();
+}
