@@ -1,7 +1,6 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include <sstream>
 
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/debug.hpp>
@@ -92,12 +91,7 @@ std::shared_ptr<language::blaise_statement> blaise_parser::parse_subroutine_call
    auto subroutine = context.module()->get_subroutine(identifier_token, types);
    // TODO: Lookup in referenced modules
    if(subroutine == nullptr) {
-      stringstream stream;
-      for(int index = 0; index < types.size(); ++index){
-         stream << types.at(index);
-         if(index != index < types.size()-1) stream << ", ";
-      }
-      throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", stream.str() ,")'"));
+      throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", types ,")'"));
    }
 
    auto statement = language::make_blaise_statement_subroutine_call(subroutine, expressions);

@@ -2,7 +2,6 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
-#include <sstream>
 
 #include <gasp/blaise/language.hpp>
 #include <gasp/blaise/tokens.hpp>
@@ -73,13 +72,8 @@ shared_ptr<blaise_subroutine> gasp::blaise::language::blaise_module::expect_exac
          return subroutine;
    }
 
-   stringstream stream;
-   for(int index = 0; index < param_types.size(); ++index){
-      stream << param_types.at(index);
-      if(index != index < param_types.size()-1) stream << ", ";
-   }
    throw blaise_language_error(identifier.line(), identifier.column(), 
-               make_string("Cannot find subroutine  ", identifier.value(), "(",  stream.str(), ")")
+               make_string("Cannot find subroutine  ", identifier.value(), "(",  param_types, ")")
             );
 }
 
