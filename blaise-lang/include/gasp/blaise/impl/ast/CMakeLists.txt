@@ -1,0 +1,12 @@
+target_sources(gasp-blaise-lang
+    PUBLIC
+        blaise_ast_error.hpp
+        blaise_ast_module.hpp
+        blaise_ast_subroutine.hpp
+        blaise_ast_type.hpp
+        blaise_ast_variable.hpp
+        blaise_ast_statement.hpp
+        blaise_ast_expression.hpp
+        blaise_ast_utility.hpp
+        blaise_ast_io.hpp
+)

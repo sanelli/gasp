@@ -7,9 +7,9 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 
-#include <gasp/blaise/impl/language/blaise_language_type.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_type.hpp>
 
-namespace gasp::blaise::language {
+namespace gasp::blaise::ast {
 
 enum class blaise_variable_type {
    VARIABLE,
@@ -19,7 +19,7 @@ enum class blaise_variable_type {
 
 class blaise_generic_memory_location {
    std::string _name;
-   blaise_language_type _type;
+   blaise_ast_type _type;
    blaise_variable_type _variable_type;
    public:
       blaise_generic_memory_location(blaise_variable_type variable_type,
@@ -27,7 +27,7 @@ class blaise_generic_memory_location {
                       const gasp::common::token<gasp::blaise::blaise_token_type>& type);
 
       std::string name() const;
-      blaise_language_type type() const;
+      blaise_ast_type type() const;
       blaise_variable_type variable_type() const;
 };
 

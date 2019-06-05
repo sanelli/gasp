@@ -9,12 +9,12 @@ target_sources(gasp-blaise-lang
         blaise_parser_statement.cpp
         blaise_parser_expression.cpp
         blaise_parser_subroutine.cpp
-        blaise_language_type.cpp
-        blaise_language_variable.cpp
-        blaise_language_subroutine.cpp
-        blaise_language_module.cpp
-        blaise_language_expression.cpp
-        blaise_language_utility.cpp
-        blaise_language_io.cpp
-        blaise_language_statement.cpp
+        blaise_ast_type.cpp
+        blaise_ast_variable.cpp
+        blaise_ast_subroutine.cpp
+        blaise_ast_module.cpp
+        blaise_ast_expression.cpp
+        blaise_ast_utility.cpp
+        blaise_ast_io.cpp
+        blaise_ast_statement.cpp
 )

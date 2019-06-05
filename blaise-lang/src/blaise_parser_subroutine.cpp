@@ -5,7 +5,7 @@
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/parser.hpp>
 #include <gasp/blaise/tokens.hpp>
-#include <gasp/blaise/language.hpp>
+#include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/parser.hpp>
 
 using namespace std;
@@ -41,12 +41,12 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    context.current_subroutine(subroutine);
 
    if(is_native)
-      context.current_subroutine()->set(language::blaise_subroutine_flags::NATIVE);
+      context.current_subroutine()->set(ast::blaise_subroutine_flags::NATIVE);
 
    match_token(context, blaise_token_type::IDENTIFIER);
 
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
-   std::vector<language::blaise_language_type> param_types;
+   std::vector<ast::blaise_ast_type> param_types;
    parse_subroutine_parameters(context, param_types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
@@ -68,7 +68,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
 
    if(context.module()->count_subroutine(subroutine_token_identifier, param_types) > 1) { 
       auto subroutine = context.module()->expect_exact_subroutine(subroutine_token_identifier, param_types);
-      throw language::blaise_language_error(subroutine_token_identifier.line(), subroutine_token_identifier.column(), 
+      throw ast::blaise_ast_error(subroutine_token_identifier.line(), subroutine_token_identifier.column(), 
                make_string("Duplicated subroutine with signature '", subroutine->signature_as_string() ,"'"));
    }
 
@@ -83,7 +83,7 @@ void blaise_parser::parse_procedure_declaration(blaise_parser_context &context) 
    parse_subroutine_declaration_impl(context, blaise_token_type::PROCEDURE, "parse_procedure_declaration");
 }
 
-void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, std::vector<language::blaise_language_type>& param_types) {
+void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, std::vector<ast::blaise_ast_type>& param_types) {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
 
    do {

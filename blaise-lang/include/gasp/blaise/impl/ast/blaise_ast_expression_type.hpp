@@ -1,8 +1,8 @@
 #pragma once
 
-namespace gasp::blaise::language {
+namespace gasp::blaise::ast {
 
-enum class blaise_language_expression_type {
+enum class blaise_ast_expression_type {
    UNDEFINED,
    BINARY,
    UNARY,

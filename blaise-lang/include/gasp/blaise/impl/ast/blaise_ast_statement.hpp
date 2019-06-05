@@ -3,11 +3,11 @@
 #include <vector>
 #include <memory>
 
-#include <gasp/blaise/impl/language/blaise_language_variable.hpp>
-#include <gasp/blaise/impl/language/blaise_language_expression.hpp>
-#include <gasp/blaise/impl/language/blaise_language_subroutine.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_variable.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_expression.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_subroutine.hpp>
 
-namespace gasp::blaise::language {
+namespace gasp::blaise::ast {
 
 // Need this forward declaration otherwise the compile will complain
 class blaise_subroutine;
@@ -35,9 +35,9 @@ class blaise_statement_compund : public blaise_statement {
       std::shared_ptr<blaise_statement> get_statement(unsigned int) const;
       unsigned int get_statements_count() const ;
 
-   friend std::shared_ptr<language::blaise_statement_compund> make_compound_statement();
+   friend std::shared_ptr<ast::blaise_statement_compund> make_compound_statement();
 };
-std::shared_ptr<language::blaise_statement_compund> make_compound_statement();
+std::shared_ptr<ast::blaise_statement_compund> make_compound_statement();
 
 class blaise_statement_assignment : public blaise_statement {
    std::shared_ptr<blaise_generic_memory_location> _variable;

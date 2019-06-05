@@ -7,9 +7,9 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 
-#include <gasp/blaise/impl/language/blaise_language_subroutine.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_subroutine.hpp>
 
-namespace gasp::blaise::language {
+namespace gasp::blaise::ast {
 
 enum class blaise_module_type {
    PROGRAM,
@@ -33,14 +33,14 @@ class blaise_module {
 
    std::shared_ptr<blaise_subroutine> get_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_language_type>& typaram_typespes) const;
+      const std::vector<blaise_ast_type>& typaram_typespes) const;
    std::shared_ptr<blaise_subroutine> expect_exact_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_language_type>& typaram_typespes) const;
+      const std::vector<blaise_ast_type>& typaram_typespes) const;
       
    unsigned int count_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_language_type>& param_types) const;
+      const std::vector<blaise_ast_type>& param_types) const;
 };
 
 }

@@ -5,7 +5,7 @@
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/parser.hpp>
 #include <gasp/blaise/tokens.hpp>
-#include <gasp/blaise/language.hpp>
+#include <gasp/blaise/ast.hpp>
 
 #include <gasp/blaise/impl/parser/blaise_parser_context.hpp>
 
@@ -25,28 +25,28 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
                               blaise_token_type expected_token_type, 
                               const char* caller_name);
    static void parse_subroutine_parameters(blaise_parser_context &context, 
-                              std::vector<language::blaise_language_type>& param_types);
+                              std::vector<ast::blaise_ast_type>& param_types);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);
    static void parse_variable_names_list(blaise_parser_context &context, 
                               std::vector<gasp::common::token<blaise_token_type>> &variable_names);
    static gasp::common::token<blaise_token_type> parse_variable_type(blaise_parser_context &context);
-   static std::shared_ptr<language::blaise_statement> parse_statement(blaise_parser_context &context,
-            std::shared_ptr<language::blaise_statement_compund> parent = nullptr);
-   static std::shared_ptr<language::blaise_statement> parse_compound_statement(blaise_parser_context &context,
-            std::shared_ptr<language::blaise_statement_compund> parent = nullptr);
-   static std::shared_ptr<language::blaise_statement> parse_subroutine_call_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_statement> parse_statement(blaise_parser_context &context,
+            std::shared_ptr<ast::blaise_statement_compund> parent = nullptr);
+   static std::shared_ptr<ast::blaise_statement> parse_compound_statement(blaise_parser_context &context,
+            std::shared_ptr<ast::blaise_statement_compund> parent = nullptr);
+   static std::shared_ptr<ast::blaise_statement> parse_subroutine_call_statement(blaise_parser_context &context);
    static void parse_subroutine_call_parameters(blaise_parser_context &context, 
-                              std::vector<std::shared_ptr<language::blaise_expression>>& expressions,
-                              std::vector<language::blaise_language_type>& types);
-   static std::shared_ptr<language::blaise_statement> parse_assignamet_statement(blaise_parser_context &context);
-   static std::shared_ptr<language::blaise_expression> parse_expression(blaise_parser_context &context);
-   static std::shared_ptr<language::blaise_expression> parse_expression_helper(blaise_parser_context &context, 
-                              std::shared_ptr<language::blaise_expression> lhs, 
+                              std::vector<std::shared_ptr<ast::blaise_expression>>& expressions,
+                              std::vector<ast::blaise_ast_type>& types);
+   static std::shared_ptr<ast::blaise_statement> parse_assignamet_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_expression> parse_expression(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_expression> parse_expression_helper(blaise_parser_context &context, 
+                              std::shared_ptr<ast::blaise_expression> lhs, 
                               unsigned int min_precedence);
-   static std::shared_ptr<language::blaise_expression> parse_expression_term(blaise_parser_context &context);
-   static std::shared_ptr<language::blaise_expression> parse_number(blaise_parser_context& context);
-   static std::shared_ptr<language::blaise_expression> parse_boolean(blaise_parser_context& context);
+   static std::shared_ptr<ast::blaise_expression> parse_expression_term(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_expression> parse_number(blaise_parser_context& context);
+   static std::shared_ptr<ast::blaise_expression> parse_boolean(blaise_parser_context& context);
 public:
    void parse(blaise_parser_context &context) const;
 };

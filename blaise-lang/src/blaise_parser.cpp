@@ -7,7 +7,7 @@
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
-#include <gasp/blaise/language.hpp>
+#include <gasp/blaise/ast.hpp>
 
 using namespace std;
 using namespace gasp::blaise;
@@ -32,7 +32,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
 
    match_token(context, blaise_token_type::PROGRAM);
 
-   auto module = std::make_shared<language::blaise_module>(context.peek_token(), language::blaise_module_type::PROGRAM);
+   auto module = std::make_shared<ast::blaise_module>(context.peek_token(), ast::blaise_module_type::PROGRAM);
    module->self(module);
    auto main_subroutine = module->add_subroutine(context.peek_token());
 

@@ -6,7 +6,7 @@
 #include <gasp/blaise/tokenizer.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
-#include <gasp/blaise/language.hpp>
+#include <gasp/blaise/ast.hpp>
 #include <gasp/common/output.hpp>
 #include <gasp/common/debug.hpp>
 
@@ -82,9 +82,9 @@ int main(int argc, char *argv[])
       cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
       return EXIT_FAILURE;
    }
-   catch (gasp::blaise::language::blaise_language_error &error)
+   catch (gasp::blaise::ast::blaise_ast_error &error)
    {
-      cerr << "BLAISE_LANGUAGE_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+      cerr << "BLAISE_ast_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
       return EXIT_FAILURE;
    }
    catch(std::exception &error) { 

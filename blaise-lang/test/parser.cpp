@@ -4,7 +4,7 @@
 #include <gasp/blaise/tokenizer.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/blaise/parser.hpp>
-#include <gasp/blaise/language.hpp>
+#include <gasp/blaise/ast.hpp>
 #include <gasp/common/output.hpp>
 #include <gasp/common/debug.hpp>
 

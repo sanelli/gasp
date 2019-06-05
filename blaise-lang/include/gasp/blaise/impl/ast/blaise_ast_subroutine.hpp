@@ -9,12 +9,12 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 
-#include <gasp/blaise/impl/language/blaise_language_variable.hpp>
-#include <gasp/blaise/impl/language/blaise_language_type.hpp>
-#include <gasp/blaise/impl/language/blaise_language_module.hpp>
-#include <gasp/blaise/impl/language/blaise_language_statement.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_variable.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_type.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_module.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_statement.hpp>
 
-namespace gasp::blaise::language {
+namespace gasp::blaise::ast {
 
 class blaise_module;
 
@@ -25,7 +25,7 @@ enum class blaise_subroutine_flags : unsigned char {
 class blaise_subroutine {
    std::string _name;
    std::weak_ptr<blaise_module> _module;
-   blaise_language_type _return_type;
+   blaise_ast_type _return_type;
    std::bitset<8 * sizeof(typename std::underlying_type<blaise_subroutine_flags>::type)> _flags;
    std::vector<std::shared_ptr<blaise_subroutine_parameter>> _parameters;
    std::vector<std::shared_ptr<blaise_constant>> _constants;
@@ -54,7 +54,7 @@ public:
    blaise_subroutine(std::weak_ptr<blaise_module> module, const std::string& name);
 
    std::string name() const;
-   blaise_language_type return_type() const;
+   blaise_ast_type return_type() const;
    void return_type(const gasp::common::token<gasp::blaise::blaise_token_type> &type);
    std::weak_ptr<blaise_module> module() const;
 
@@ -64,8 +64,8 @@ public:
 
    // Signature
    // Check if the 
-   bool signature_match_exactly(const std::string name, const std::vector<language::blaise_language_type>& param_types) const;
-   bool signature_match_with_cast(const std::string name, const std::vector<language::blaise_language_type>& param_types) const;
+   bool signature_match_exactly(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const;
+   bool signature_match_with_cast(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const;
    std::string signature_as_string() const;
 
    // Memory location management
