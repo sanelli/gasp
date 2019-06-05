@@ -1,0 +1,22 @@
+#pragma once
+
+#include <gasp/blaise/tokens.hpp>
+#include <gasp/common/tokenizer.hpp>
+
+namespace gasp::blaise::ast {
+
+   class blaise_ast {
+      protected:
+         unsigned int _line;
+         unsigned int _column;
+
+         blaise_ast(unsigned int line, unsigned int column);
+         blaise_ast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference);
+         blaise_ast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, blaise_token_type expected_type);
+
+      public:
+         unsigned int line() const;
+         unsigned int column() const;
+   };
+
+}

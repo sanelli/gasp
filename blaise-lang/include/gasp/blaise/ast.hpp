@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gasp/blaise/impl/ast/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_error.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_module.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_subroutine.hpp>

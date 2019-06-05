@@ -16,7 +16,7 @@
 
 namespace gasp::blaise::ast {
 
-class blaise_module;
+class blaise_ast_module;
 
 enum class blaise_subroutine_flags : unsigned char {
    NATIVE = 1 << 0
@@ -24,7 +24,7 @@ enum class blaise_subroutine_flags : unsigned char {
 
 class blaise_subroutine {
    std::string _name;
-   std::weak_ptr<blaise_module> _module;
+   std::weak_ptr<blaise_ast_module> _module;
    blaise_ast_type _return_type;
    std::bitset<8 * sizeof(typename std::underlying_type<blaise_subroutine_flags>::type)> _flags;
    std::vector<std::shared_ptr<blaise_subroutine_parameter>> _parameters;
@@ -51,12 +51,12 @@ protected:
    }
 
 public:
-   blaise_subroutine(std::weak_ptr<blaise_module> module, const std::string& name);
+   blaise_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
 
    std::string name() const;
    blaise_ast_type return_type() const;
    void return_type(const gasp::common::token<gasp::blaise::blaise_token_type> &type);
-   std::weak_ptr<blaise_module> module() const;
+   std::weak_ptr<blaise_ast_module> module() const;
 
    bool is(blaise_subroutine_flags flag) const;
    void set(blaise_subroutine_flags flag);

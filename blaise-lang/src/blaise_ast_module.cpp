@@ -12,18 +12,16 @@ using namespace gasp::blaise;
 using namespace gasp::common;
 using namespace std;
 
-gasp::blaise::ast::blaise_module::blaise_module(const token<blaise_token_type> &identifier, blaise_module_type type)
-    : _name(identifier.value()), _type(type)
+gasp::blaise::ast::blaise_ast_module::blaise_ast_module(const token<blaise_token_type> &reference, const std::string& module_name, blaise_ast_module_type type)
+    : blaise_ast(reference, blaise_token_type::IDENTIFIER), _name(module_name), _type(type)
 {
-   if (identifier.type() != blaise_token_type::IDENTIFIER)
-      throw blaise_ast_error(identifier.line(), identifier.column(), make_string("A token of type '", blaise_token_type::IDENTIFIER, "' was expected but '", identifier.type(), "' was found."));
 }
 
-std::string gasp::blaise::ast::blaise_module::name() const { return _name; }
-blaise_module_type gasp::blaise::ast::blaise_module::type() const { return _type; }
-void gasp::blaise::ast::blaise_module::self(std::weak_ptr<blaise_module> module) { _self = module; }
+std::string gasp::blaise::ast::blaise_ast_module::name() const { return _name; }
+blaise_ast_module_type gasp::blaise::ast::blaise_ast_module::type() const { return _type; }
+void gasp::blaise::ast::blaise_ast_module::self(std::weak_ptr<blaise_ast_module> module) { _self = module; }
 
-shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_module::add_subroutine(const token<blaise_token_type> &identifier)
+shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::add_subroutine(const token<blaise_token_type> &identifier)
 {
    if(!_self.lock())
       throw std::runtime_error("Module self point not setup");
@@ -32,7 +30,7 @@ shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_module::add_subroutine(c
    return subroutine;
 }
 
-shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_module::get_subroutine(const token<blaise_token_type> &identifier,
+shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(const token<blaise_token_type> &identifier,
       const std::vector<blaise_ast_type>& param_types) const
 {
    std::vector<shared_ptr<blaise_subroutine>> matching_subs_with_cast;
@@ -64,7 +62,7 @@ shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_module::get_subroutine(c
    }
 }
 
-shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_module::expect_exact_subroutine(const token<blaise_token_type> &identifier,
+shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::expect_exact_subroutine(const token<blaise_token_type> &identifier,
       const std::vector<blaise_ast_type>& param_types) const
 {
    for(auto subroutine : _subroutines){
@@ -77,7 +75,7 @@ shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_module::expect_exact_sub
             );
 }
 
-unsigned int gasp::blaise::ast::blaise_module::count_subroutine(
+unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<blaise_ast_type>& param_types) const {
 

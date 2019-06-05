@@ -7,27 +7,28 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 
+#include <gasp/blaise/impl/ast/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_subroutine.hpp>
 
 namespace gasp::blaise::ast {
 
-enum class blaise_module_type {
+enum class blaise_ast_module_type {
    PROGRAM,
    MODULE
 };
 
-class blaise_module {
-   blaise_module_type _type;
+class blaise_ast_module : public blaise_ast {
+   blaise_ast_module_type _type;
    std::string _name;
    std::vector<std::shared_ptr<blaise_subroutine>> _subroutines;
-   std::weak_ptr<blaise_module> _self;
+   std::weak_ptr<blaise_ast_module> _self;
 
    public:
-   blaise_module(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, blaise_module_type type);
+   blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type);
 
    std::string name() const;
-   blaise_module_type type() const;
-   void self(std::weak_ptr<blaise_module> module);
+   blaise_ast_module_type type() const;
+   void self(std::weak_ptr<blaise_ast_module> module);
    
    std::shared_ptr<blaise_subroutine> add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);
 

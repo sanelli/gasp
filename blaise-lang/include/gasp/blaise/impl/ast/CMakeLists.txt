@@ -1,5 +1,6 @@
 target_sources(gasp-blaise-lang
     PUBLIC
+        blaise_ast_common.hpp
         blaise_ast_error.hpp
         blaise_ast_module.hpp
         blaise_ast_subroutine.hpp

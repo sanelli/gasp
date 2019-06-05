@@ -15,13 +15,13 @@ using namespace gasp::blaise;
 using namespace gasp::common;
 using namespace std;
 
-gasp::blaise::ast::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_module> module, const string &name)
+gasp::blaise::ast::blaise_subroutine::blaise_subroutine(weak_ptr<blaise_ast_module> module, const string &name)
     : _module(module), _name(name), _return_type(blaise_ast_type::VOID) {}
 
 std::string gasp::blaise::ast::blaise_subroutine::name() const { return _name; }
 blaise_ast_type gasp::blaise::ast::blaise_subroutine::return_type() const { return _return_type; }
 void gasp::blaise::ast::blaise_subroutine::return_type(const token<blaise_token_type> &type) { _return_type = get_type_from_token(type); }
-std::weak_ptr<blaise_module> gasp::blaise::ast::blaise_subroutine::module() const { return _module; }
+std::weak_ptr<blaise_ast_module> gasp::blaise::ast::blaise_subroutine::module() const { return _module; }
 
 bool gasp::blaise::ast::blaise_subroutine::signature_match_exactly(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const {
 
