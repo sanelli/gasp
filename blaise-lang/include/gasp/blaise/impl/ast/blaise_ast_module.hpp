@@ -20,7 +20,7 @@ enum class blaise_ast_module_type {
 class blaise_ast_module : public blaise_ast {
    blaise_ast_module_type _type;
    std::string _name;
-   std::vector<std::shared_ptr<blaise_subroutine>> _subroutines;
+   std::vector<std::shared_ptr<blaise_ast_subroutine>> _subroutines;
    std::weak_ptr<blaise_ast_module> _self;
 
    public:
@@ -30,12 +30,12 @@ class blaise_ast_module : public blaise_ast {
    blaise_ast_module_type type() const;
    void self(std::weak_ptr<blaise_ast_module> module);
    
-   std::shared_ptr<blaise_subroutine> add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);
+   std::shared_ptr<blaise_ast_subroutine> add_subroutine(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier);
 
-   std::shared_ptr<blaise_subroutine> get_subroutine(
+   std::shared_ptr<blaise_ast_subroutine> get_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<blaise_ast_type>& typaram_typespes) const;
-   std::shared_ptr<blaise_subroutine> expect_exact_subroutine(
+   std::shared_ptr<blaise_ast_subroutine> expect_exact_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<blaise_ast_type>& typaram_typespes) const;
       

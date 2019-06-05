@@ -18,19 +18,19 @@ namespace gasp::blaise::ast {
 
 class blaise_ast_module;
 
-enum class blaise_subroutine_flags : unsigned char {
+enum class blaise_ast_subroutine_flags : unsigned char {
    NATIVE = 1 << 0
 };
 
-class blaise_subroutine {
+class blaise_ast_subroutine {
    std::string _name;
    std::weak_ptr<blaise_ast_module> _module;
    blaise_ast_type _return_type;
-   std::bitset<8 * sizeof(typename std::underlying_type<blaise_subroutine_flags>::type)> _flags;
-   std::vector<std::shared_ptr<blaise_subroutine_parameter>> _parameters;
-   std::vector<std::shared_ptr<blaise_constant>> _constants;
-   std::vector<std::shared_ptr<blaise_variable>> _variables;
-   std::vector<std::shared_ptr<blaise_statement>> _statements;
+   std::bitset<8 * sizeof(typename std::underlying_type<blaise_ast_subroutine_flags>::type)> _flags;
+   std::vector<std::shared_ptr<blaise_ast_subroutine_parameter>> _parameters;
+   std::vector<std::shared_ptr<blaise_ast_constant>> _constants;
+   std::vector<std::shared_ptr<blaise_ast_variable>> _variables;
+   std::vector<std::shared_ptr<blaise_ast_statement>> _statements;
 
 protected:
    template<typename TType>
@@ -51,16 +51,16 @@ protected:
    }
 
 public:
-   blaise_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
+   blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
 
    std::string name() const;
    blaise_ast_type return_type() const;
    void return_type(const gasp::common::token<gasp::blaise::blaise_token_type> &type);
    std::weak_ptr<blaise_ast_module> module() const;
 
-   bool is(blaise_subroutine_flags flag) const;
-   void set(blaise_subroutine_flags flag);
-   void reset(blaise_subroutine_flags flag);
+   bool is(blaise_ast_subroutine_flags flag) const;
+   void set(blaise_ast_subroutine_flags flag);
+   void reset(blaise_ast_subroutine_flags flag);
 
    // Signature
    // Check if the 
@@ -69,21 +69,21 @@ public:
    std::string signature_as_string() const;
 
    // Memory location management
-   std::shared_ptr<blaise_subroutine_parameter> get_parameter(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
-   std::shared_ptr<blaise_constant> get_constant(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
-   std::shared_ptr<blaise_variable> get_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
-   std::shared_ptr<blaise_generic_memory_location> get_memory_location(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+   std::shared_ptr<blaise_ast_subroutine_parameter> get_parameter(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+   std::shared_ptr<blaise_ast_constant> get_constant(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+   std::shared_ptr<blaise_ast_variable> get_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
+   std::shared_ptr<blaise_ast_generic_memory_location> get_memory_location(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier) const;
 
-   std::shared_ptr<blaise_subroutine_parameter> add_parameter(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+   std::shared_ptr<blaise_ast_subroutine_parameter> add_parameter(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
-   std::shared_ptr<blaise_constant> add_constant(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+   std::shared_ptr<blaise_ast_constant> add_constant(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
-   std::shared_ptr<blaise_variable> add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
+   std::shared_ptr<blaise_ast_variable> add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& identifier, 
                      const gasp::common::token<gasp::blaise::blaise_token_type>& type);
 
    // Statements
-   void push_back(std::shared_ptr<blaise_statement> statement);
-   std::shared_ptr<blaise_statement> get_statement(unsigned int) const;
+   void push_back(std::shared_ptr<blaise_ast_statement> statement);
+   std::shared_ptr<blaise_ast_statement> get_statement(unsigned int) const;
    unsigned int get_statements_count() const ;
 };
 

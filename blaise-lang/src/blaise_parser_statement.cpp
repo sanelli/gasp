@@ -13,10 +13,10 @@ using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::common;
 
-std::shared_ptr<ast::blaise_statement> blaise_parser::parse_statement(blaise_parser_context &context,
-            std::shared_ptr<ast::blaise_statement_compund> parent)
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise_parser_context &context,
+            std::shared_ptr<ast::blaise_ast_statement_compund> parent)
 {
-   std::shared_ptr<ast::blaise_statement> statement = nullptr;
+   std::shared_ptr<ast::blaise_ast_statement> statement = nullptr;
 
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_statement" << std::endl);
 
@@ -57,7 +57,7 @@ std::shared_ptr<ast::blaise_statement> blaise_parser::parse_statement(blaise_par
    return statement;
 }
 
-std::shared_ptr<ast::blaise_statement> blaise_parser::parse_compound_statement(blaise_parser_context &context, std::shared_ptr<ast::blaise_statement_compund> parent)
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_compound_statement(blaise_parser_context &context, std::shared_ptr<ast::blaise_ast_statement_compund> parent)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_compound_statement" << std::endl);
 
@@ -76,14 +76,14 @@ std::shared_ptr<ast::blaise_statement> blaise_parser::parse_compound_statement(b
    return compund_statement;
 }
 
-std::shared_ptr<ast::blaise_statement> blaise_parser::parse_subroutine_call_statement(blaise_parser_context &context)
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_statement(blaise_parser_context &context)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_statement" << std::endl);
 
    auto identifier_token = context.peek_token();
    match_token(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
-   vector<shared_ptr<ast::blaise_expression>> expressions;
+   vector<shared_ptr<ast::blaise_ast_expression>> expressions;
    vector<ast::blaise_ast_type> types;
    parse_subroutine_call_parameters(context, expressions, types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
@@ -94,7 +94,7 @@ std::shared_ptr<ast::blaise_statement> blaise_parser::parse_subroutine_call_stat
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", types ,")'"));
    }
 
-   auto statement = ast::make_blaise_statement_subroutine_call(subroutine, expressions);
+   auto statement = ast::make_blaise_ast_statement_subroutine_call(subroutine, expressions);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_statement" << std::endl);
 
@@ -102,7 +102,7 @@ std::shared_ptr<ast::blaise_statement> blaise_parser::parse_subroutine_call_stat
 }
 
 void blaise_parser::parse_subroutine_call_parameters(blaise_parser_context &context, 
-      std::vector<std::shared_ptr<ast::blaise_expression>>& expressions,
+      std::vector<std::shared_ptr<ast::blaise_ast_expression>>& expressions,
       std::vector<ast::blaise_ast_type>& types
       )
 {
@@ -131,7 +131,7 @@ void blaise_parser::parse_subroutine_call_parameters(blaise_parser_context &cont
 
 }
 
-std::shared_ptr<ast::blaise_statement> blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_assignment" << std::endl);
 
    auto identifier = context.peek_token();

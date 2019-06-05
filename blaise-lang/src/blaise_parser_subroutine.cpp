@@ -41,7 +41,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    context.current_subroutine(subroutine);
 
    if(is_native)
-      context.current_subroutine()->set(ast::blaise_subroutine_flags::NATIVE);
+      context.current_subroutine()->set(ast::blaise_ast_subroutine_flags::NATIVE);
 
    match_token(context, blaise_token_type::IDENTIFIER);
 

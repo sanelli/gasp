@@ -21,19 +21,19 @@ std::string gasp::blaise::ast::blaise_ast_module::name() const { return _name; }
 blaise_ast_module_type gasp::blaise::ast::blaise_ast_module::type() const { return _type; }
 void gasp::blaise::ast::blaise_ast_module::self(std::weak_ptr<blaise_ast_module> module) { _self = module; }
 
-shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::add_subroutine(const token<blaise_token_type> &identifier)
+shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::add_subroutine(const token<blaise_token_type> &identifier)
 {
    if(!_self.lock())
       throw std::runtime_error("Module self point not setup");
-   auto subroutine = make_shared<blaise_subroutine>(_self, identifier.value());
+   auto subroutine = make_shared<blaise_ast_subroutine>(_self, identifier.value());
    _subroutines.push_back(subroutine);
    return subroutine;
 }
 
-shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(const token<blaise_token_type> &identifier,
+shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(const token<blaise_token_type> &identifier,
       const std::vector<blaise_ast_type>& param_types) const
 {
-   std::vector<shared_ptr<blaise_subroutine>> matching_subs_with_cast;
+   std::vector<shared_ptr<blaise_ast_subroutine>> matching_subs_with_cast;
 
    for(auto subroutine : _subroutines){
       if (subroutine->signature_match_exactly(identifier.value(), param_types))
@@ -62,7 +62,7 @@ shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::get_subrouti
    }
 }
 
-shared_ptr<blaise_subroutine> gasp::blaise::ast::blaise_ast_module::expect_exact_subroutine(const token<blaise_token_type> &identifier,
+shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::expect_exact_subroutine(const token<blaise_token_type> &identifier,
       const std::vector<blaise_ast_type>& param_types) const
 {
    for(auto subroutine : _subroutines){

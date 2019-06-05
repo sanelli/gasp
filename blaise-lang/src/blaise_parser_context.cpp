@@ -18,15 +18,15 @@ void gasp::blaise::blaise_parser_context::module(std::shared_ptr<ast::blaise_ast
 std::shared_ptr<ast::blaise_ast_module> gasp::blaise::blaise_parser_context::module() const {
    return _module;
 }
-void gasp::blaise::blaise_parser_context::main_subroutine(std::shared_ptr<ast::blaise_subroutine> subroutine){
+void gasp::blaise::blaise_parser_context::main_subroutine(std::shared_ptr<ast::blaise_ast_subroutine> subroutine){
    _main_subroutine = subroutine;
 }
-std::shared_ptr<ast::blaise_subroutine> gasp::blaise::blaise_parser_context::main_subroutine() const {
+std::shared_ptr<ast::blaise_ast_subroutine> gasp::blaise::blaise_parser_context::main_subroutine() const {
    return _main_subroutine;
 }
-void gasp::blaise::blaise_parser_context::current_subroutine(std::shared_ptr<ast::blaise_subroutine> subroutine){
+void gasp::blaise::blaise_parser_context::current_subroutine(std::shared_ptr<ast::blaise_ast_subroutine> subroutine){
    _current_subroutine = subroutine;
 }
-std::shared_ptr<ast::blaise_subroutine> gasp::blaise::blaise_parser_context::current_subroutine() const {
+std::shared_ptr<ast::blaise_ast_subroutine> gasp::blaise::blaise_parser_context::current_subroutine() const {
    return _current_subroutine;
 }
