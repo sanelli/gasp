@@ -89,38 +89,38 @@ std::shared_ptr<blaise_ast_generic_memory_location> gasp::blaise::ast::blaise_as
 }
 
 shared_ptr<blaise_ast_variable> gasp::blaise::ast::blaise_ast_subroutine::add_variable(const token<blaise_token_type> &identifier,
-                                                             const token<blaise_token_type> &type)
+                                                             const token<blaise_token_type> &token_type)
 {
-   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << type << std::endl)
+   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << token_type << std::endl)
    if (get_memory_location(identifier) != nullptr)
       throw blaise_ast_error(identifier.line(), identifier.column(), make_string("Variable '", identifier.value(), "' already defined."));
-   auto variable = make_shared<blaise_ast_variable>(identifier, type);
+   auto variable = make_shared<blaise_ast_variable>(identifier, identifier.value(), ast::get_type_from_token(token_type));
    _variables.push_back(variable);
-   GASP_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << type << std::endl)
+   GASP_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << token_type << std::endl)
    return variable;
 }
 
 shared_ptr<blaise_ast_constant> gasp::blaise::ast::blaise_ast_subroutine::add_constant(const token<blaise_token_type> &identifier,
-                                                             const token<blaise_token_type> &type)
+                                                             const token<blaise_token_type> &token_type)
 {
-   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << type << std::endl)
+   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << token_type << std::endl)
    if (get_memory_location(identifier) != nullptr)
       throw blaise_ast_error(identifier.line(), identifier.column(), make_string("Constant '", identifier.value(), "' already defined."));
-   auto constant = make_shared<blaise_ast_constant>(identifier, type);
+   auto constant = make_shared<blaise_ast_constant>(identifier, identifier.value(), ast::get_type_from_token(token_type));
    _constants.push_back(constant);
-   GASP_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << type << std::endl)
+   GASP_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << token_type << std::endl)
    return constant;
 }
 
 shared_ptr<blaise_ast_subroutine_parameter> gasp::blaise::ast::blaise_ast_subroutine::add_parameter(const token<blaise_token_type> &identifier,
-                                                             const token<blaise_token_type> &type)
+                                                             const token<blaise_token_type> &token_type)
 {
-   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
+   GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << token_type << std::endl)
    if (get_memory_location(identifier) != nullptr)
       throw blaise_ast_error(identifier.line(), identifier.column(), make_string("Parameter '", identifier.value(), "' already defined."));
-   auto parameter = make_shared<blaise_ast_subroutine_parameter>(identifier, type);
+   auto parameter = make_shared<blaise_ast_subroutine_parameter>(identifier, identifier.value(), ast::get_type_from_token(token_type));
    _parameters.push_back(parameter);
-   GASP_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
+   GASP_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << token_type << std::endl)
    return parameter;
 }
 
