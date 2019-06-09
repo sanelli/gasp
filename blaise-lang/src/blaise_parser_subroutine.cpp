@@ -53,11 +53,11 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    if(expected_token_type == blaise_token_type::FUNCTION) {
       match_token(context, blaise_token_type::COLON);
       auto return_type = parse_variable_type(context);
-      context.current_subroutine()->return_type(return_type);
+      context.current_subroutine()->return_type(ast::get_type_from_token(return_type));
 
       // By definition a function has a variable name with the name 
       // of the function and its return type
-      context.current_subroutine()->add_variable(subroutine_token_identifier, return_type);
+      context.current_subroutine()->add_variable(subroutine_token_identifier, subroutine_token_identifier.value(), ast::get_type_from_token(return_type));
    }
    parse_variables_declaration(context);
 
@@ -98,7 +98,7 @@ void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, 
 
          for(const auto& name : names)
          {
-            auto parameter = context.current_subroutine()->add_parameter(name, parameters_type);
+            auto parameter = context.current_subroutine()->add_parameter(name, name.value(), ast::get_type_from_token(parameters_type));
             param_types.push_back(parameter->type());
          }
 

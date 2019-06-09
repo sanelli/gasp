@@ -33,7 +33,7 @@ blaise_ast_expression_subroutine_call::blaise_ast_expression_subroutine_call(
          _subroutine(subroutine)
    {
       if(subroutine->return_type() == blaise_ast_type::VOID)
-                  throw blaise_ast_error(subroutine_name_token.line(), subroutine_name_token.column(), make_string("Cannot use call procedure '",  subroutine_name_token.value(), " inside an expressions."));
+                  throw blaise_ast_error(subroutine_name_token.line(), subroutine_name_token.column(), make_string("Cannot call procedure '",  subroutine_name_token.value(), " inside an expressions."));
       std::copy(expressions.begin(), expressions.end(), std::back_inserter(_expressions));
    }
 
@@ -93,7 +93,7 @@ std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::blaise
    switch(token.type()) {
       case blaise_token_type::IDENTIFIER:
       {
-         auto variable = subroutine->get_memory_location(token);
+         auto variable = subroutine->get_memory_location(token.value());
          if(variable == nullptr)
             throw blaise_ast_error(token.line(), token.column(), make_string("Undefined variable/constant/parameter '",token.value(),"'"));
          return make_shared<blaise_ast_expression_memory_location>(variable);

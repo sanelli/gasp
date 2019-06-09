@@ -89,7 +89,7 @@ void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
    GASP_DEBUG("blaise-parser", "[INSIDE] Creating " <<  variable_tokens.size() << " variable(s)." << std::endl)
    for(auto variable_token : variable_tokens) {
       GASP_DEBUG("blaise-parser", "[INSIDE] Creating variable '" << variable_token.value() << "' and type '" << type_token.type() << "'" << std::endl)
-      current_subroutine->add_variable(variable_token, type_token);
+      current_subroutine->add_variable(variable_token, variable_token.value(), ast::get_type_from_token(type_token));
       GASP_DEBUG("blaise-parser", "[INSIDE] Created variable '" << variable_token.value() << "' and type '" << type_token.type() << "'" << std::endl)
    }
 

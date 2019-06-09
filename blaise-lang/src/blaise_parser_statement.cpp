@@ -136,7 +136,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
 
    auto identifier = context.peek_token();
    match_token(context, blaise_token_type::IDENTIFIER);
-   auto variable = context.current_subroutine()->get_variable(identifier);
+   auto variable = context.current_subroutine()->get_variable(identifier.value());
 
    if(variable == nullptr)
          throw_parse_error_with_details(context, identifier.line(), identifier.column(), make_string("Variable ", identifier.value(), " does not exists in the context."));
