@@ -102,31 +102,3 @@ std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::blaise
          throw blaise_ast_error(token.line(), token.column(), "Was expecting an identifier");
    }
 }
-
-//
-// LITERAL
-//
-shared_ptr<blaise_ast_expression> gasp::blaise::ast::blaise_ast_expression_value_factory(token<blaise_token_type> token){
-   switch(token.type()){
-      case blaise_token_type::INTEGER_LITERAL:
-         return make_shared<blaise_ast_expression_integer_value>(stoi(token.value()));
-      case blaise_token_type::INTEGER_BASE_TWO_LITERAL:
-         return make_shared<blaise_ast_expression_integer_value>(stoi(token.value().substr(2), nullptr, 2));
-      case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
-         return make_shared<blaise_ast_expression_integer_value>(stoi(token.value().substr(2), nullptr, 8));
-      case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
-         return make_shared<blaise_ast_expression_integer_value>(stoi(token.value().substr(2), nullptr, 16));
-      case blaise_token_type::FLOAT_LITERAL:
-         return make_shared<blaise_ast_expression_float_value>(stof(token.value()));
-      case blaise_token_type::DOUBLE_LITERAL:
-         return make_shared<blaise_ast_expression_double_value>(stod(token.value()));
-      case blaise_token_type::CHAR_LITERAL:
-         return make_shared<blaise_ast_expression_char_value>(token.value()[1]);
-      case blaise_token_type::STRING_LITERAL:
-         return make_shared<blaise_ast_expression_string_value>(token.value().substr(1, token.value().length()-2));
-      case blaise_token_type::BOOLEAN_LITERAL:
-         return make_shared<blaise_ast_expression_boolean_value>(token.value() == "true");
-      default:
-         throw blaise_ast_error(token.line(), token.column(), "Token is not an expression");
-   }
-}

@@ -133,5 +133,4 @@ class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<b
       blaise_ast_expression_boolean_value(bool value) : blaise_ast_expression_value(value) {}
 };
 
-std::shared_ptr<blaise_ast_expression> blaise_ast_expression_value_factory(gasp::common::token<gasp::blaise::blaise_token_type> token);
 }

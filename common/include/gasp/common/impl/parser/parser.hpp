@@ -76,6 +76,7 @@ protected:
       }
    }
 
+public:
    [[noreturn]]
    static inline void throw_parse_error_with_details(const parser_context<TTokenType> &context, const unsigned int line, const unsigned int column, const std::string& message, unsigned int display_token = 5){
       GASP_DEBUG("common-parser", make_string("common_parser::parser_error<", context.context_token_to_string(display_token), ">") << std::endl);
