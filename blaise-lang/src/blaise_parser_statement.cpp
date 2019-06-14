@@ -61,8 +61,9 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_compound_stateme
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_compound_statement" << std::endl);
 
+   auto begin_token = context.peek_token();
    match_token(context, blaise_token_type::BEGIN);
-   auto compund_statement = ast::make_compound_statement();
+   auto compund_statement = ast::make_compound_statement(begin_token);
    if(parent != nullptr)
       parent->push_back(compund_statement);
    while (!is_token(context, blaise_token_type::END))
@@ -94,7 +95,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", types ,")'"));
    }
 
-   auto statement = ast::make_blaise_ast_statement_subroutine_call(subroutine, expressions);
+   auto statement = ast::make_blaise_ast_statement_subroutine_call(identifier_token, subroutine, expressions);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_statement" << std::endl);
 
@@ -144,7 +145,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
    match_token(context, blaise_token_type::ASSIGNMENT);
    auto expression = parse_expression(context);
 
-   auto statement = ast::make_assignement_statement(identifier.line(), identifier.column(), variable, expression);
+   auto statement = ast::make_assignement_statement(identifier, variable, expression);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
 
