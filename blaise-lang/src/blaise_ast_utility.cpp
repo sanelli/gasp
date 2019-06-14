@@ -101,8 +101,8 @@ blaise_ast_type blaise_ast_utility::get_binary_string_result(blaise_ast_type lef
    throw std::runtime_error("Unexpected runtime combination");
 }
 
-blaise_ast_type blaise_ast_utility::get_resulting_type(const token<blaise_token_type>& token_operator, blaise_ast_type operand) {
-   switch(token_operator.type()) {
+blaise_ast_type blaise_ast_utility::get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, blaise_token_type op, blaise_ast_type operand) {
+   switch(op) {
       case blaise_token_type::LOGICAL_NOT:
          {
             if(is_boolean(operand))
@@ -116,14 +116,14 @@ blaise_ast_type blaise_ast_utility::get_resulting_type(const token<blaise_token_
       }
          break;
       default:
-         throw blaise_ast_error(token_operator.line(), token_operator.column(), make_string("Unsupported unary operator ", token_operator.type(), " for expression of type ", operand));
+         throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported unary operator ", op, " for expression of type ", operand));
    }
 
-   throw blaise_ast_error(token_operator.line(), token_operator.column(), make_string("Operator ", token_operator.type(), " does not support expression of type ", operand));
+   throw blaise_ast_error(reference.line(), reference.column(), make_string("Operator ", op, " does not support expression of type ", operand));
 }
 
-blaise_ast_type blaise_ast_utility::get_resulting_type(const token<blaise_token_type>& token_operator, blaise_ast_type left, blaise_ast_type right) {
-   switch(token_operator.type()) {
+blaise_ast_type blaise_ast_utility::get_resulting_type(const token<blaise_token_type>& reference, blaise_token_type op, blaise_ast_type left, blaise_ast_type right) {
+   switch(op) {
       case blaise_token_type::LOGICAL_AND:
       case blaise_token_type::LOGICAL_OR:
       case blaise_token_type::LOGICAL_EAGER_AND:
@@ -174,10 +174,10 @@ blaise_ast_type blaise_ast_utility::get_resulting_type(const token<blaise_token_
       }
       break;
       default:
-            throw blaise_ast_error(token_operator.line(), token_operator.column(), make_string("Unsupported operator ", token_operator.type(), " between expression of type ", left, " and ", right));
+            throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported operator ", op, " between expression of type ", left, " and ", right));
    }
 
-   throw blaise_ast_error(token_operator.line(), token_operator.column(), make_string("Operator ", token_operator.type(), " between expression of type ", left, " and ", right," is not allowed."));
+   throw blaise_ast_error(reference.line(), reference.column(), make_string("Operator ", op, " between expression of type ", left, " and ", right," is not allowed."));
 }
 
 bool blaise_ast_utility::can_cast(blaise_ast_type from, blaise_ast_type to) {

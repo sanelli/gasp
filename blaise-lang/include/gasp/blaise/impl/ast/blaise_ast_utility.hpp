@@ -19,8 +19,8 @@ static blaise_ast_type get_binary_boolean_result(blaise_ast_type left, blaise_as
 static blaise_ast_type get_binary_char_result(blaise_ast_type left, blaise_ast_type right);
 static blaise_ast_type get_binary_string_result(blaise_ast_type left, blaise_ast_type right);
 
-static blaise_ast_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& token_operator, blaise_ast_type operand);
-static blaise_ast_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& token_operator, blaise_ast_type left, blaise_ast_type right);
+static blaise_ast_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, blaise_ast_type operand);
+static blaise_ast_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, blaise_ast_type left, blaise_ast_type right);
 
 static bool can_cast(blaise_ast_type from, blaise_ast_type to);
 

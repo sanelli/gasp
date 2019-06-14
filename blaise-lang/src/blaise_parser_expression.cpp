@@ -153,23 +153,23 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_number(blaise_parser
 shared_ptr<ast::blaise_ast_expression> gasp::blaise::blaise_ast_expression_value_factory(blaise_parser_context& context, const token<blaise_token_type>& token_literal){
    switch(token_literal.type()){
       case blaise_token_type::INTEGER_LITERAL:
-         return make_shared<ast::blaise_ast_expression_integer_value>(stoi(token_literal.value()));
+         return make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value()));
       case blaise_token_type::INTEGER_BASE_TWO_LITERAL:
-         return make_shared<ast::blaise_ast_expression_integer_value>(stoi(token_literal.value().substr(2), nullptr, 2));
+         return make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 2));
       case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
-         return make_shared<ast::blaise_ast_expression_integer_value>(stoi(token_literal.value().substr(2), nullptr, 8));
+         return make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 8));
       case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
-         return make_shared<ast::blaise_ast_expression_integer_value>(stoi(token_literal.value().substr(2), nullptr, 16));
+         return make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 16));
       case blaise_token_type::FLOAT_LITERAL:
-         return make_shared<ast::blaise_ast_expression_float_value>(stof(token_literal.value()));
+         return make_shared<ast::blaise_ast_expression_float_value>(token_literal, stof(token_literal.value()));
       case blaise_token_type::DOUBLE_LITERAL:
-         return make_shared<ast::blaise_ast_expression_double_value>(stod(token_literal.value()));
+         return make_shared<ast::blaise_ast_expression_double_value>(token_literal, stod(token_literal.value()));
       case blaise_token_type::CHAR_LITERAL:
-         return make_shared<ast::blaise_ast_expression_char_value>(token_literal.value()[1]);
+         return make_shared<ast::blaise_ast_expression_char_value>(token_literal, token_literal.value()[1]);
       case blaise_token_type::STRING_LITERAL:
-         return make_shared<ast::blaise_ast_expression_string_value>(token_literal.value().substr(1, token_literal.value().length()-2));
+         return make_shared<ast::blaise_ast_expression_string_value>(token_literal, token_literal.value().substr(1, token_literal.value().length()-2));
       case blaise_token_type::BOOLEAN_LITERAL:
-         return make_shared<ast::blaise_ast_expression_boolean_value>(token_literal.value() == "true");
+         return make_shared<ast::blaise_ast_expression_boolean_value>(token_literal, token_literal.value() == "true");
       default:
          gasp::blaise::blaise_parser::throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), make_string("Cannot extract literal from token '", token_literal, "'"));
    }
