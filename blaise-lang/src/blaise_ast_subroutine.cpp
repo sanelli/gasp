@@ -37,7 +37,7 @@ bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const s
    if(_name != name) return false;
    if( _parameters.size() != param_types.size()) return false;
    for(int index=0; index < _parameters.size(); ++index)
-      if(!ast::blaise_ast_utility::can_cast(param_types.at(index), _parameters.at(index)->type())) return false;
+      if(!ast::blaise_ast_utility::can_auto_cast(param_types.at(index), _parameters.at(index)->type())) return false;
    return true;
 }
 

@@ -22,7 +22,7 @@ static blaise_ast_type get_binary_string_result(blaise_ast_type left, blaise_ast
 static blaise_ast_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, blaise_ast_type operand);
 static blaise_ast_type get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, blaise_ast_type left, blaise_ast_type right);
 
-static bool can_cast(blaise_ast_type from, blaise_ast_type to);
+static bool can_auto_cast(blaise_ast_type from, blaise_ast_type to);
 static bool can_force_cast(blaise_ast_type from, blaise_ast_type to);
 
 };

@@ -180,7 +180,7 @@ blaise_ast_type blaise_ast_utility::get_resulting_type(const token<blaise_token_
    throw blaise_ast_error(reference.line(), reference.column(), make_string("Operator ", op, " between expression of type ", left, " and ", right," is not allowed."));
 }
 
-bool blaise_ast_utility::can_cast(blaise_ast_type from, blaise_ast_type to) {
+bool blaise_ast_utility::can_auto_cast(blaise_ast_type from, blaise_ast_type to) {
    if(is_numeric(from) && is_numeric(to)){
       switch(from){
          case blaise_ast_type::INTEGER:

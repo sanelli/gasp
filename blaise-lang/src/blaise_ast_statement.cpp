@@ -50,7 +50,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
    if(variable->variable_type() == blaise_ast_variable_type::CONSTANT)
       throw blaise_ast_error(reference.line(), reference.column(), make_string("Variable '", variable->name() ,"' is constant."));
 
-   if(expression->result_type() != variable->type() && !ast::blaise_ast_utility::can_cast(expression->result_type(), variable->type())){
+   if(expression->result_type() != variable->type() && !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable->type())){
         throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot cast '", expression->result_type(), "' into '",variable->type(),"'."));
      }
    
