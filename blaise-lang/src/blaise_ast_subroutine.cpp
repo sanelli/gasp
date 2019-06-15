@@ -16,23 +16,23 @@ using namespace gasp::common;
 using namespace std;
 
 gasp::blaise::ast::blaise_ast_subroutine::blaise_ast_subroutine(weak_ptr<blaise_ast_module> module, const string &name)
-    : _module(module), _name(name), _return_type(blaise_ast_type::VOID) {}
+    : _module(module), _name(name), _return_type(make_plain_type(blaise_ast_system_type::VOID)) {}
 
 std::string gasp::blaise::ast::blaise_ast_subroutine::name() const { return _name; }
-blaise_ast_type gasp::blaise::ast::blaise_ast_subroutine::return_type() const { return _return_type; }
-void gasp::blaise::ast::blaise_ast_subroutine::return_type(const blaise_ast_type &type) { _return_type = type; }
+std::shared_ptr<blaise_ast_type> gasp::blaise::ast::blaise_ast_subroutine::return_type() const { return _return_type; }
+void gasp::blaise::ast::blaise_ast_subroutine::return_type(std::shared_ptr<blaise_ast_type> type) { _return_type = type; }
 std::weak_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_subroutine::module() const { return _module; }
 
-bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_exactly(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const {
+bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_exactly(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const {
 
    if(_name != name) return false;
    if( _parameters.size() != param_types.size()) return false;
    for(int index=0; index < _parameters.size(); ++index)
-      if(_parameters.at(index)->type() != param_types.at(index)) return false;
+      if(!_parameters.at(index)->type()->equals(param_types.at(index))) return false;
    return true;
 }
 
-bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const {
+bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const {
 
    if(_name != name) return false;
    if( _parameters.size() != param_types.size()) return false;
@@ -55,7 +55,7 @@ std::string gasp::blaise::ast::blaise_ast_subroutine::signature_as_string() cons
 unsigned long gasp::blaise::ast::blaise_ast_subroutine::get_arity() const {
    return _parameters.size();
 }
-blaise_ast_type gasp::blaise::ast::blaise_ast_subroutine::get_parameter_type(unsigned long index) const{
+std::shared_ptr<blaise_ast_type> gasp::blaise::ast::blaise_ast_subroutine::get_parameter_type(unsigned long index) const{
    if(index >= get_arity())
       throw std::logic_error(make_string("Required type at index ", get_arity()," for subroutine '", signature_as_string() ,"'."));
    return _parameters.at(index)->type();
@@ -99,7 +99,7 @@ std::shared_ptr<blaise_ast_generic_memory_location> gasp::blaise::ast::blaise_as
 
 shared_ptr<blaise_ast_variable> gasp::blaise::ast::blaise_ast_subroutine::add_variable(const token<blaise_token_type> &reference,
                                                              const std::string& identifier,
-                                                             const blaise_ast_type type)
+                                                            std::shared_ptr<blaise_ast_type> type)
 {
    GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
@@ -112,7 +112,7 @@ shared_ptr<blaise_ast_variable> gasp::blaise::ast::blaise_ast_subroutine::add_va
 
 shared_ptr<blaise_ast_constant> gasp::blaise::ast::blaise_ast_subroutine::add_constant(const token<blaise_token_type> &reference,
                                                              const std::string& identifier,
-                                                             const blaise_ast_type type)
+                                                             std::shared_ptr<blaise_ast_type> type)
 {
    GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
@@ -125,7 +125,7 @@ shared_ptr<blaise_ast_constant> gasp::blaise::ast::blaise_ast_subroutine::add_co
 
 shared_ptr<blaise_ast_subroutine_parameter> gasp::blaise::ast::blaise_ast_subroutine::add_parameter(const token<blaise_token_type> &reference,
                                                              const std::string& identifier,
-                                                             const blaise_ast_type type)
+                                                             std::shared_ptr<blaise_ast_type> type)
 {
    GASP_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)

@@ -46,7 +46,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    match_token(context, blaise_token_type::IDENTIFIER);
 
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
-   std::vector<ast::blaise_ast_type> param_types;
+   std::vector<std::shared_ptr<ast::blaise_ast_type>> param_types;
    parse_subroutine_parameters(context, param_types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
@@ -83,7 +83,7 @@ void blaise_parser::parse_procedure_declaration(blaise_parser_context &context) 
    parse_subroutine_declaration_impl(context, blaise_token_type::PROCEDURE, "parse_procedure_declaration");
 }
 
-void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, std::vector<ast::blaise_ast_type>& param_types) {
+void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, std::vector<std::shared_ptr<ast::blaise_ast_type>>& param_types) {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
 
    do {

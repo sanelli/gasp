@@ -68,7 +68,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       if (is_token_and_match(context, blaise_token_type::LEFT_PARENTHESES))
       {
          vector<shared_ptr<ast::blaise_ast_expression>> expressions;
-         vector<ast::blaise_ast_type> types;
+         vector<std::shared_ptr<ast::blaise_ast_type>> types;
          parse_subroutine_call_parameters(context, expressions, types);
          match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 

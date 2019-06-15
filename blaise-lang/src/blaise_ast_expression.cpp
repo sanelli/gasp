@@ -17,16 +17,16 @@ using namespace std;
 // EXPRESSION
 // 
 blaise_ast_expression::blaise_ast_expression(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-      blaise_ast_expression_type expression_type, blaise_ast_type result_type) 
+      blaise_ast_expression_type expression_type, std::shared_ptr<blaise_ast_type> result_type) 
    : blaise_ast(reference), _expression_type(expression_type), _result_type(result_type){ }
-blaise_ast_type blaise_ast_expression::result_type() const { return _result_type; }
+std::shared_ptr<blaise_ast_type> blaise_ast_expression::result_type() const { return _result_type; }
 blaise_ast_expression_type blaise_ast_expression::expression_type() const { return _expression_type; }
 
 //
 // CAST EXPRESSION
 //
 blaise_ast_expression_cast::blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-      blaise_ast_type target_type,
+      std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> operand
    ) : blaise_ast_expression(reference, blaise_ast_expression_type::CAST, target_type), _operand(operand) {}
 std::shared_ptr<blaise_ast_expression> blaise_ast_expression_cast::operand() const{
@@ -34,13 +34,13 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_expression_cast::operand() con
 }
 
 shared_ptr<blaise_ast_expression> gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-      blaise_ast_type target_type,
+      std::shared_ptr<blaise_ast_type> target_type,
       shared_ptr<blaise_ast_expression> expression){
-      if(expression->result_type() != target_type) {
-            expression = make_shared<blaise_ast_expression_cast>(reference, target_type, expression);
-         }
-         return expression;
-      }
+   if(!expression->result_type()->equals(target_type)) {
+         expression = make_shared<blaise_ast_expression_cast>(reference, target_type, expression);
+   }
+   return expression;
+}
 
 void gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_subroutine> subroutine,
@@ -65,8 +65,8 @@ blaise_ast_expression_subroutine_call::blaise_ast_expression_subroutine_call(
          : blaise_ast_expression(reference, blaise_ast_expression_type::FUNCTION_CALL, subroutine->return_type()),
          _subroutine(subroutine)
    {
-      if(subroutine->return_type() == blaise_ast_type::VOID)
-                  throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot call procedure '", subroutine->signature_as_string(), " inside an expressions."));
+      if(ast::make_plain_type(blaise_ast_system_type::VOID)->equals(subroutine->return_type()))
+            throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot call procedure '", subroutine->signature_as_string(), " inside an expressions."));
       std::copy(expressions.begin(), expressions.end(), std::back_inserter(_expressions));
    }
 

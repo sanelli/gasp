@@ -18,13 +18,13 @@ namespace gasp::blaise::ast {
 class blaise_ast_subroutine;
 
 class blaise_ast_expression : public blaise_ast {
-   blaise_ast_type _result_type;
+   std::shared_ptr<blaise_ast_type> _result_type;
    blaise_ast_expression_type _expression_type;
 
    public:
       blaise_ast_expression(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
-                     blaise_ast_expression_type expression_type, blaise_ast_type result_type);
-      blaise_ast_type result_type() const;
+                     blaise_ast_expression_type expression_type, std::shared_ptr<blaise_ast_type> result_type);
+      std::shared_ptr<blaise_ast_type> result_type() const;
       blaise_ast_expression_type expression_type() const;
 };
 
@@ -32,17 +32,16 @@ class blaise_ast_expression : public blaise_ast {
 // CAST EXPRESSION
 //
 class blaise_ast_expression_cast :  public blaise_ast_expression {
-   blaise_ast_type _target_type;
    std::shared_ptr<blaise_ast_expression> _operand;
 public:
    blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-      blaise_ast_type target_type,
+      std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> operand
    );
    std::shared_ptr<blaise_ast_expression> operand() const;
 };
 std::shared_ptr<blaise_ast_expression> introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-      blaise_ast_type target_type,
+      std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> expression);
 void introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_subroutine> subroutine,
@@ -123,38 +122,38 @@ std::shared_ptr<blaise_ast_expression_memory_location> blaise_ast_expression_mem
 // EXPRESSION LITERAL VALUES
 //
 template<blaise_ast_expression_type TExpressionType, 
-         blaise_ast_type TType, 
+         blaise_ast_system_type TSystemType, 
          typename TValue>
 class blaise_ast_expression_value : public blaise_ast_expression {
    TValue _value;
    public:
       blaise_ast_expression_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, TValue value) 
-            : blaise_ast_expression(reference, TExpressionType, TType), _value(value) {}
+            : blaise_ast_expression(reference, TExpressionType, make_plain_type(TSystemType)), _value(value) {}
 
       TValue value(){ return _value; }
 };
 
-class blaise_ast_expression_integer_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_INTEGER,blaise_ast_type::INTEGER, int> {
+class blaise_ast_expression_integer_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_INTEGER,blaise_ast_system_type::INTEGER, int> {
    public: 
       blaise_ast_expression_integer_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,int value) : blaise_ast_expression_value(reference, value) {}
    };
-class blaise_ast_expression_float_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_FLOAT, blaise_ast_type::FLOAT, float> { 
+class blaise_ast_expression_float_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_FLOAT, blaise_ast_system_type::FLOAT, float> { 
       public: 
       blaise_ast_expression_float_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,float value) : blaise_ast_expression_value(reference, value) {}
 };
-class blaise_ast_expression_double_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_DOUBLE, blaise_ast_type::DOUBLE, double> { 
+class blaise_ast_expression_double_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_DOUBLE, blaise_ast_system_type::DOUBLE, double> { 
       public: 
       blaise_ast_expression_double_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,double value) : blaise_ast_expression_value(reference, value) {}
 };
-class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_type::CHAR, char> { 
+class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_system_type::CHAR, char> { 
       public: 
       blaise_ast_expression_char_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,char value) : blaise_ast_expression_value(reference, value) {}
 };
-class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, blaise_ast_type::STRING, std::string> { 
+class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, blaise_ast_system_type::STRING, std::string> { 
       public: 
       blaise_ast_expression_string_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::string value) : blaise_ast_expression_value(reference, value) {}
 };
-class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BOOLEAN, blaise_ast_type::BOOLEAN, bool> { 
+class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BOOLEAN, blaise_ast_system_type::BOOLEAN, bool> { 
       public: 
       blaise_ast_expression_boolean_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, bool value) : blaise_ast_expression_value(reference, value) {}
 };

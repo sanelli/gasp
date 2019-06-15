@@ -25,7 +25,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
                               blaise_token_type expected_token_type, 
                               const char* caller_name);
    static void parse_subroutine_parameters(blaise_parser_context &context, 
-                              std::vector<ast::blaise_ast_type>& param_types);
+                              std::vector<std::shared_ptr<ast::blaise_ast_type>>& param_types);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);
    static void parse_variable_names_list(blaise_parser_context &context, 
@@ -38,7 +38,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static std::shared_ptr<ast::blaise_ast_statement> parse_subroutine_call_statement(blaise_parser_context &context);
    static void parse_subroutine_call_parameters(blaise_parser_context &context, 
                               std::vector<std::shared_ptr<ast::blaise_ast_expression>>& expressions,
-                              std::vector<ast::blaise_ast_type>& types);
+                              std::vector<std::shared_ptr<ast::blaise_ast_type>>& types);
    static std::shared_ptr<ast::blaise_ast_statement> parse_assignamet_statement(blaise_parser_context &context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression(blaise_parser_context &context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression_helper(blaise_parser_context &context, 

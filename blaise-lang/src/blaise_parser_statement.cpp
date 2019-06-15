@@ -85,7 +85,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
    match_token(context, blaise_token_type::IDENTIFIER);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    vector<shared_ptr<ast::blaise_ast_expression>> expressions;
-   vector<ast::blaise_ast_type> types;
+   vector<std::shared_ptr<ast::blaise_ast_type>> types;
    parse_subroutine_call_parameters(context, expressions, types);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
@@ -106,7 +106,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
 
 void blaise_parser::parse_subroutine_call_parameters(blaise_parser_context &context, 
       std::vector<std::shared_ptr<ast::blaise_ast_expression>>& expressions,
-      std::vector<ast::blaise_ast_type>& types
+      std::vector<std::shared_ptr<ast::blaise_ast_type>>& types
       )
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_parameters" << std::endl);

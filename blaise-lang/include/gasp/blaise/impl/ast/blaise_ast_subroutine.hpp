@@ -25,7 +25,7 @@ enum class blaise_ast_subroutine_flags : unsigned char {
 class blaise_ast_subroutine {
    std::string _name;
    std::weak_ptr<blaise_ast_module> _module;
-   blaise_ast_type _return_type;
+   std::shared_ptr<blaise_ast_type> _return_type;
    std::bitset<8 * sizeof(typename std::underlying_type<blaise_ast_subroutine_flags>::type)> _flags;
    std::vector<std::shared_ptr<blaise_ast_subroutine_parameter>> _parameters;
    std::vector<std::shared_ptr<blaise_ast_constant>> _constants;
@@ -54,8 +54,8 @@ public:
    blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
 
    std::string name() const;
-   blaise_ast_type return_type() const;
-   void return_type(const blaise_ast_type &type);
+   std::shared_ptr<blaise_ast_type> return_type() const;
+   void return_type(std::shared_ptr<blaise_ast_type> type);
    std::weak_ptr<blaise_ast_module> module() const;
 
    bool is(blaise_ast_subroutine_flags flag) const;
@@ -64,11 +64,11 @@ public:
 
    // Signature
    // Check if the 
-   bool signature_match_exactly(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const;
-   bool signature_match_with_cast(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const;
+   bool signature_match_exactly(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
+   bool signature_match_with_cast(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
    std::string signature_as_string() const;
    unsigned long get_arity() const;
-   blaise_ast_type get_parameter_type(unsigned long index) const;
+   std::shared_ptr<blaise_ast_type> get_parameter_type(unsigned long index) const;
 
    // Memory location management
    std::shared_ptr<blaise_ast_subroutine_parameter> get_parameter(const std::string& identifier) const;
@@ -78,13 +78,13 @@ public:
 
    std::shared_ptr<blaise_ast_subroutine_parameter> add_parameter(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                      const std::string& identifier, 
-                     const blaise_ast_type type);
+                     std::shared_ptr<blaise_ast_type> type);
    std::shared_ptr<blaise_ast_constant> add_constant(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                      const std::string& identifier, 
-                     const blaise_ast_type type);
+                     std::shared_ptr<blaise_ast_type> type);
    std::shared_ptr<blaise_ast_variable> add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
                      const std::string& identifier, 
-                     const blaise_ast_type type);
+                     std::shared_ptr<blaise_ast_type> type);
 
    // Statements
    void push_back(std::shared_ptr<blaise_ast_statement> statement);

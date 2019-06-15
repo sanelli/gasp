@@ -30,8 +30,9 @@ shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::add_subr
    return subroutine;
 }
 
-shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(const token<blaise_token_type> &identifier,
-      const std::vector<blaise_ast_type>& param_types) const
+std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(
+      const token<blaise_token_type> &identifier,
+      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const
 {
    std::vector<shared_ptr<blaise_ast_subroutine>> matching_subs_with_cast;
 
@@ -62,8 +63,9 @@ shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_subr
    }
 }
 
-shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::expect_exact_subroutine(const token<blaise_token_type> &identifier,
-      const std::vector<blaise_ast_type>& param_types) const
+std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::expect_exact_subroutine(
+      const token<blaise_token_type> &identifier,
+      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const
 {
    for(auto subroutine : _subroutines){
       if (subroutine->signature_match_exactly(identifier.value(), param_types))
@@ -77,7 +79,7 @@ shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::expect_e
 
 unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_ast_type>& param_types) const {
+      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const {
 
    return std::count_if(std::begin(_subroutines), std::end(_subroutines), 
       [identifier, param_types](auto subroutine){ return subroutine->signature_match_exactly(identifier.value(), param_types); });

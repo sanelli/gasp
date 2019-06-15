@@ -34,14 +34,14 @@ class blaise_ast_module : public blaise_ast {
 
    std::shared_ptr<blaise_ast_subroutine> get_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_ast_type>& typaram_typespes) const;
+      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
    std::shared_ptr<blaise_ast_subroutine> expect_exact_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_ast_type>& typaram_typespes) const;
+      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
       
    unsigned int count_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<blaise_ast_type>& param_types) const;
+      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
 };
 
 }
