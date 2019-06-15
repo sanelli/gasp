@@ -41,6 +41,12 @@ public:
    );
    std::shared_ptr<blaise_ast_expression> operand() const;
 };
+std::shared_ptr<blaise_ast_expression> introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      blaise_ast_type target_type,
+      std::shared_ptr<blaise_ast_expression> expression);
+void introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_subroutine> subroutine,
+      std::vector<std::shared_ptr<blaise_ast_expression>>& expressions);
 
 //
 // SUBROUTINE CALL EXPRESSION

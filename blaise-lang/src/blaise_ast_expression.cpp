@@ -33,6 +33,28 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_expression_cast::operand() con
    return _operand;
 }
 
+shared_ptr<blaise_ast_expression> gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      blaise_ast_type target_type,
+      shared_ptr<blaise_ast_expression> expression){
+      if(expression->result_type() != target_type) {
+            expression = make_shared<blaise_ast_expression_cast>(reference, target_type, expression);
+         }
+         return expression;
+      }
+
+void gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_subroutine> subroutine,
+      std::vector<std::shared_ptr<blaise_ast_expression>>& expressions) {
+
+      if(subroutine->get_arity() != expressions.size())
+         throw std::logic_error(make_string("Number of parameters for subroutine '", subroutine->signature_as_string(),"' do not match the number of expressions (", expressions.size(),")"));
+
+      for(auto index=0; index < expressions.size(); ++index){
+         auto expected_type = subroutine->get_parameter_type(index);
+         expressions.at(index) = introduce_cast_if_required(reference, expected_type, expressions.at(index));
+      }
+}
+
 //
 // SUBROUTINE CALL EXPRESSION
 //

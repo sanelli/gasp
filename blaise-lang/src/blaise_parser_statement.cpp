@@ -95,6 +95,8 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", types ,")'"));
    }
 
+   ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
+
    auto statement = ast::make_blaise_ast_statement_subroutine_call(identifier_token, subroutine, expressions);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_statement" << std::endl);

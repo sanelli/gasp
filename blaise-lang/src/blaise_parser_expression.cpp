@@ -78,6 +78,9 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          if (subroutine == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
                                            make_string("Cannot find a function matching: '", identifier_token.value(), "(", types, ")'"));
+         
+         ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
+         
          term_expression = ast::blaise_ast_expression_subroutine_call_factory(identifier_token, subroutine, expressions);
       }
       else

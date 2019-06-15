@@ -67,6 +67,8 @@ public:
    bool signature_match_exactly(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const;
    bool signature_match_with_cast(const std::string name, const std::vector<ast::blaise_ast_type>& param_types) const;
    std::string signature_as_string() const;
+   unsigned long get_arity() const;
+   blaise_ast_type get_parameter_type(unsigned long index) const;
 
    // Memory location management
    std::shared_ptr<blaise_ast_subroutine_parameter> get_parameter(const std::string& identifier) const;

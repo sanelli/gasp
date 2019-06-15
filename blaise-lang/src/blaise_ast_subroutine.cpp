@@ -52,6 +52,15 @@ std::string gasp::blaise::ast::blaise_ast_subroutine::signature_as_string() cons
    return stream.str();
 }
 
+unsigned long gasp::blaise::ast::blaise_ast_subroutine::get_arity() const {
+   return _parameters.size();
+}
+blaise_ast_type gasp::blaise::ast::blaise_ast_subroutine::get_parameter_type(unsigned long index) const{
+   if(index >= get_arity())
+      throw std::logic_error(make_string("Required type at index ", get_arity()," for subroutine '", signature_as_string() ,"'."));
+   return _parameters.at(index)->type();
+}
+
 bool gasp::blaise::ast::blaise_ast_subroutine::is(blaise_ast_subroutine_flags flag) const {
    return _flags.test(static_cast<typename std::underlying_type<blaise_ast_subroutine_flags>::type>(flag));
 }
