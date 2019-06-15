@@ -219,3 +219,20 @@ bool blaise_ast_utility::can_cast(blaise_ast_type from, blaise_ast_type to) {
 
    return false;
 }
+
+bool blaise_ast_utility::can_force_cast(blaise_ast_type from, blaise_ast_type to) {
+   // Same types I always can force a conversion
+   if(is_numeric(from) && is_numeric(to)) return true;
+   if(is_boolean(from) && is_boolean(to)) return true;
+   if(is_char(from) && is_char(to)) return true;
+   if(is_string(from) && is_string(to)) return true;
+
+   // integer <--> boolean
+   if(from == blaise_ast_type::INTEGER && is_boolean(to)) return true;
+   if(is_boolean(from) && to == blaise_ast_type::INTEGER) return true;
+
+   // integer <--> char
+   if(from == blaise_ast_type::INTEGER && is_char(to)) return true;
+   if(is_char(from) && to == blaise_ast_type::INTEGER) return true;
+   return false;
+}

@@ -28,6 +28,20 @@ class blaise_ast_expression : public blaise_ast {
       blaise_ast_expression_type expression_type() const;
 };
 
+// 
+// CAST EXPRESSION
+//
+class blaise_ast_expression_cast :  public blaise_ast_expression {
+   blaise_ast_type _target_type;
+   std::shared_ptr<blaise_ast_expression> _operand;
+public:
+   blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      blaise_ast_type target_type,
+      std::shared_ptr<blaise_ast_expression> operand
+   );
+   std::shared_ptr<blaise_ast_expression> operand() const;
+};
+
 //
 // SUBROUTINE CALL EXPRESSION
 //

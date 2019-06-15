@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
          bar: float;
          equals: boolean;
          a_value: boolean;
-         
+         myc: char;
+         myi: integer;
       begin
          foo := read_integer();
          another_foo := read_integer();
@@ -60,6 +61,8 @@ int main(int argc, char *argv[])
             write("Results: ");
             write(foo);
          end;
+         myc := 'A';
+         myi := cast<integer>(myc);
       end.
    )___";
 

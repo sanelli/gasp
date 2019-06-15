@@ -14,6 +14,7 @@ enum class blaise_ast_expression_type {
    LITERAL_CHAR,
    LITERAL_STRING,
    LITERAL_BOOLEAN,
+   CAST
 };
 
 }

@@ -37,7 +37,8 @@ EQUALITY_EXPRESSION := INEQUALITY_EXPRESSION (('==' | '<>' ) INEQUALITY_EXPRESSI
 INEQUALITY_EXPRESSION := ADDITIVE_EXPRESSION (('<' | '<=' | '>=' | '>') ADDITIVE_EXPRESSION )*
 ADDITIVE_EXPRESSION := MULTIPLICATIVE_EXPRESSION (('+' | '-' ) MULTIPLICATIVE_EXPRESSION )*
 MULTIPLICATIVE_EXPRESSION := EXPRESSION_TERM (('*' | '/' | '%' ) EXPRESSION_TERM)*
-EXPRESSION_TERM := '(' EXPRESSION ')' | NUMBER | IDENTIFIER | FUNCTION_CALL | '-' EXPRESSION | 'not' EXPRESSION | STRING_LITERAL | CHAR_LITERAL | BOOLEAN_LITERAL
+EXPRESSION_TERM := '(' EXPRESSION ')' | NUMBER | IDENTIFIER | FUNCTION_CALL | '-' EXPRESSION | 'not' EXPRESSION | STRING_LITERAL | CHAR_LITERAL | BOOLEAN_LITERAL | CAST_EXPRESSION
+CAST_EXPRESSION := 'cast' '<' VARIABLE_TYPE '>' '(' EXPRESSION ')'
 
 # Sub-routines
 SUBROUTINE := (FUNCTION_SUBROUTINE_SIGNATURE | PROCEDURE_SUBROUTINE_SIGNATURE) VARIABLES_CLAUSES? COMPOUND_STATEMENT? ';'
@@ -46,3 +47,22 @@ PROCEDURE_SUBROUTINE_SIGNATURE := 'procedure' ('native')? IDENTIFIER '(' SUBROUT
 SUBROUTINE_PARAMETERS := SUBROUTINE_PARAMETER (',' SUBROUTINE_PARAMETER)*
 SUBROUTINE_PARAMETER := VARIABLE_NAME_LIST ':' VARIABLE_TYPE
 ```
+# Automatic type conversion
+| From / To | integer | float | double | char | string | boolean |
+| --- | --- | --- | --- | --- | --- | --- |
+| integer | :white_check_mark: | :white_check_mark: | :white_check_mark: |  |  |  |
+| float |  | :white_check_mark: | :white_check_mark: |  |  |  |
+| double |  |  | :white_check_mark: |  |  |  |
+| char |  |  |  | :white_check_mark: |  |  |
+| string |  |  |  |  | :white_check_mark: |  |
+| boolean |  |  |  |  |  | :white_check_mark: |
+
+# Forced type converstion
+| From / To | integer | float | double | char | string | boolean |
+| --- | --- | --- | --- | --- | --- | --- |
+| integer | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |  | :white_check_mark: |
+| float | :white_check_mark: | :white_check_mark: | :white_check_mark: |  |  |  |
+| double | :white_check_mark: | :white_check_mark: | :white_check_mark: |  |  |  |
+| char | :white_check_mark: |  |  |  | :white_check_mark: |  |
+| string |  |  |  |  | :white_check_mark: |  |
+| boolean | :white_check_mark: |  |  |  |  | :white_check_mark: |

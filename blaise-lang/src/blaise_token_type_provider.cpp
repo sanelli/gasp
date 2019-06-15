@@ -22,6 +22,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::FUNCTION, "function", "FUNCTION");
    add_token(blaise_token_type::PROCEDURE, "procedure", "PROCEDURE");
    add_token(blaise_token_type::NATIVE, "native", "NATIVE");
+   add_token(blaise_token_type::CAST, "cast", "CAST");
 
    // TYPES
    add_token(blaise_token_type::TYPE_INTEGER, "integer", "TYPE_INTEGER");
