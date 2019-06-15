@@ -4,6 +4,7 @@
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/memory.hpp>
 
 namespace gasp::blaise::ast {
 
@@ -43,7 +44,7 @@ class blaise_ast_plain_type : public blaise_ast_type {
       blaise_ast_system_type system_type() const;
       inline virtual bool equals(std::shared_ptr<blaise_ast_type> other) const;
 
-      friend std::shared_ptr<blaise_ast_type> make_plain_type(blaise_ast_system_type system);
+      friend gasp::common::memory;
 };
 std::shared_ptr<blaise_ast_type> make_plain_type(blaise_ast_system_type system);
 

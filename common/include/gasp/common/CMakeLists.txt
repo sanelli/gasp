@@ -9,4 +9,5 @@ target_sources(gasp-common
         gasp_error.hpp
         parser.hpp
         debug.hpp
+        memory.hpp
 )

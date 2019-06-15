@@ -4,11 +4,11 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/memory.hpp>
 
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
 using namespace gasp::common;
-
 
 blaise_ast_type::blaise_ast_type(blaise_ast_type_type type_type) : _type_type(type_type){ }
 blaise_ast_type::~blaise_ast_type(){}
@@ -28,7 +28,7 @@ inline bool blaise_ast_plain_type::equals(std::shared_ptr<blaise_ast_type> other
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::make_plain_type(blaise_ast_system_type system_type){
    static std::map<blaise_ast_system_type, std::shared_ptr<blaise_ast_type>> __types_cache;
    if(__types_cache.count(system_type) == 0)
-      __types_cache[system_type] = std::shared_ptr<blaise_ast_plain_type>(new blaise_ast_plain_type(system_type));
+      __types_cache[system_type] = memory::gasp_make_shared<blaise_ast_plain_type>(system_type);
    return __types_cache.at(system_type);
 }
 

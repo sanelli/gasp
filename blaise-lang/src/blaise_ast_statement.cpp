@@ -7,6 +7,7 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/common/debug.hpp>
 #include <gasp/common/string.hpp>
+#include <gasp/common/memory.hpp>
 
 using namespace std;
 using namespace gasp::common;
@@ -29,7 +30,7 @@ shared_ptr<blaise_ast_statement> blaise_ast_statement_compund::get_statement(uns
 unsigned int blaise_ast_statement_compund::get_statements_count() const { return _statements.size(); }
 shared_ptr<ast::blaise_ast_statement_compund>gasp::blaise::ast::make_compound_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference)
 {
-   return shared_ptr<blaise_ast_statement_compund>(new blaise_ast_statement_compund(reference));
+   return memory::gasp_make_shared<blaise_ast_statement_compund>(reference);
 }
 
 //
@@ -56,7 +57,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
 
    expression = ast::introduce_cast_if_required(reference, variable->type(), expression);
    
-   return shared_ptr<blaise_ast_statement_assignment>(new blaise_ast_statement_assignment(reference, variable, expression));
+   return memory::gasp_make_shared<blaise_ast_statement_assignment>(reference, variable, expression);
 }
 
 //
@@ -76,5 +77,5 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
 std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_statement_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
          std::shared_ptr<blaise_ast_subroutine> subroutine,
          const std::vector<std::shared_ptr<blaise_ast_expression>>& parameters) {
-            return shared_ptr<blaise_ast_statement_subroutine_call>(new blaise_ast_statement_subroutine_call(reference, subroutine, parameters));
+   return memory::gasp_make_shared<blaise_ast_statement_subroutine_call>(reference, subroutine, parameters);
 }
