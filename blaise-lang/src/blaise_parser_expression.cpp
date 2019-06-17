@@ -43,7 +43,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(bl
          rhs = parse_expression_helper(context, rhs, blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
          lookahead_token = std::move(context.peek_token());
       }
-      lhs = ast::blaise_ast_expression_binary_factory(lhs, operator_token, rhs);
+      lhs = ast::make_blaise_ast_expression_binary(lhs, operator_token, rhs);
    }
    GASP_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
    return lhs;
@@ -81,11 +81,11 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          
          ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
          
-         term_expression = ast::blaise_ast_expression_subroutine_call_factory(identifier_token, subroutine, expressions);
+         term_expression = ast::make_blaise_ast_expression_subroutine_call(identifier_token, subroutine, expressions);
       }
       else
       {
-         term_expression = ast::blaise_ast_expression_memory_location_factory(context.current_subroutine(), token);
+         term_expression = ast::make_blaise_ast_expression_memory_location(context.current_subroutine(), token);
       }
    }
    break;
@@ -93,14 +93,14 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
    {
       match_token(context, blaise_token_type::MINUS);
       auto expression = parse_expression(context);
-      term_expression = ast::blaise_ast_expression_unary_factory(token, expression);
+      term_expression = ast::make_blaise_ast_expression_unary(token, expression);
    }
    break;
    case blaise_token_type::LOGICAL_NOT: // it is a negated sub expression
    {
       match_token(context, blaise_token_type::LOGICAL_NOT);
       auto expression = parse_expression(context);
-      term_expression = ast::blaise_ast_expression_unary_factory(token, expression);
+      term_expression = ast::make_blaise_ast_expression_unary(token, expression);
    }
    break;
    case blaise_token_type::INTEGER_LITERAL: // It is a number
@@ -223,5 +223,5 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blai
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    if (!ast::blaise_ast_utility::can_force_cast(expression->result_type(), return_type))
       throw_parse_error_with_details(context, reference.line(), reference.column(), make_string("It is not possible force a cast from '", expression->result_type(), "' to '", return_type, "'."));
-   return make_shared<ast::blaise_ast_expression_cast>(reference, return_type, expression);
+   return ast::make_blaise_ast_expression_cast(reference, return_type, expression);
 }

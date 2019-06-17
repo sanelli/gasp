@@ -7,6 +7,7 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/memory.hpp>
 
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
@@ -33,11 +34,17 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_expression_cast::operand() con
    return _operand;
 }
 
+std::shared_ptr<blaise_ast_expression_cast> gasp::blaise::ast::make_blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_type> target_type,
+      std::shared_ptr<blaise_ast_expression> operand) {
+   return memory::gasp_make_shared<blaise_ast_expression_cast>(reference, target_type, operand);
+}
+
 shared_ptr<blaise_ast_expression> gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_type> target_type,
       shared_ptr<blaise_ast_expression> expression){
    if(!expression->result_type()->equals(target_type)) {
-         expression = make_shared<blaise_ast_expression_cast>(reference, target_type, expression);
+         expression = ast::make_blaise_ast_expression_cast(reference, target_type, expression);
    }
    return expression;
 }
@@ -73,11 +80,11 @@ blaise_ast_expression_subroutine_call::blaise_ast_expression_subroutine_call(
 typename vector<shared_ptr<blaise_ast_expression>>::const_iterator blaise_ast_expression_subroutine_call::begin_actual_parameters() const { return _expressions.cbegin(); }
 typename vector<shared_ptr<blaise_ast_expression>>::const_iterator blaise_ast_expression_subroutine_call::end_actual_parameters() const { return _expressions.cend(); };
 std::shared_ptr<blaise_ast_subroutine> blaise_ast_expression_subroutine_call::subroutine() const { return _subroutine; }
-shared_ptr<blaise_ast_expression_subroutine_call> gasp::blaise::ast::blaise_ast_expression_subroutine_call_factory(
+shared_ptr<blaise_ast_expression_subroutine_call> gasp::blaise::ast::make_blaise_ast_expression_subroutine_call(
    token<blaise_token_type> subroutine_name_token,
    shared_ptr<blaise_ast_subroutine> subroutine,
    const vector<shared_ptr<blaise_ast_expression>>& expressions){
-         return make_shared<blaise_ast_expression_subroutine_call>(subroutine_name_token, subroutine, expressions);
+         return memory::gasp_make_shared<blaise_ast_expression_subroutine_call>(subroutine_name_token, subroutine, expressions);
 }
 
 //
@@ -95,11 +102,11 @@ blaise_ast_expression_binary::blaise_ast_expression_binary(
 shared_ptr<blaise_ast_expression> blaise_ast_expression_binary::left() const { return _left; }
 shared_ptr<blaise_ast_expression> blaise_ast_expression_binary::right() const { return _right; }
 blaise_token_type blaise_ast_expression_binary::op() const { return _operator; }
-std::shared_ptr<blaise_ast_expression_binary> gasp::blaise::ast::blaise_ast_expression_binary_factory(
+std::shared_ptr<blaise_ast_expression_binary> gasp::blaise::ast::make_blaise_ast_expression_binary(
                std::shared_ptr<blaise_ast_expression> left,
                gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
                std::shared_ptr<blaise_ast_expression> right) {
-   return make_shared<blaise_ast_expression_binary>(token_operator, left, token_operator.type(), right);
+   return memory::gasp_make_shared<blaise_ast_expression_binary>(token_operator, left, token_operator.type(), right);
    }
 
 //
@@ -114,9 +121,9 @@ blaise_ast_expression_unary::blaise_ast_expression_unary(const gasp::common::tok
 }
 shared_ptr<blaise_ast_expression> blaise_ast_expression_unary::operand() const { return _operand; }
 blaise_token_type blaise_ast_expression_unary::op() const { return _operator; }
-std::shared_ptr<blaise_ast_expression_unary> gasp::blaise::ast::blaise_ast_expression_unary_factory(gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
+std::shared_ptr<blaise_ast_expression_unary> gasp::blaise::ast::make_blaise_ast_expression_unary(gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
                         std::shared_ptr<blaise_ast_expression> operand) {
-   return make_shared<blaise_ast_expression_unary>(token_operator, token_operator.type(), operand);
+   return memory::gasp_make_shared<blaise_ast_expression_unary>(token_operator, token_operator.type(), operand);
 }
 
 // MEMORY LOCATION
@@ -125,14 +132,14 @@ blaise_ast_expression_memory_location::blaise_ast_expression_memory_location(con
    
 }
 std::shared_ptr<blaise_ast_generic_memory_location> blaise_ast_expression_memory_location::memory_location() const { return _memory_location; }
-std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::blaise_ast_expression_memory_location_factory(const std::shared_ptr<blaise_ast_subroutine>& subroutine, token<blaise_token_type> token){
+std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::make_blaise_ast_expression_memory_location(const std::shared_ptr<blaise_ast_subroutine>& subroutine, token<blaise_token_type> token){
    switch(token.type()) {
       case blaise_token_type::IDENTIFIER:
       {
          auto variable = subroutine->get_memory_location(token.value());
          if(variable == nullptr)
             throw blaise_ast_error(token.line(), token.column(), make_string("Undefined variable/constant/parameter '",token.value(),"'"));
-         return make_shared<blaise_ast_expression_memory_location>(token, variable);
+         return memory::gasp_make_shared<blaise_ast_expression_memory_location>(token, variable);
       }
       default:
          throw blaise_ast_error(token.line(), token.column(), "Was expecting an identifier");
