@@ -25,7 +25,7 @@ shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::add_subr
 {
    if(!_self.lock())
       throw std::runtime_error("Module self point not setup");
-   auto subroutine = make_shared<blaise_ast_subroutine>(_self, identifier.value());
+   auto subroutine = make_blaise_ast_subroutine(_self, identifier.value());
    _subroutines.push_back(subroutine);
    return subroutine;
 }

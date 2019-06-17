@@ -9,6 +9,7 @@
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/debug.hpp>
+#include <gasp/common/memory.hpp>
 
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
@@ -144,4 +145,9 @@ std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::blaise_ast_subroutine::
 }
 unsigned int gasp::blaise::ast::blaise_ast_subroutine::get_statements_count() const { 
    return _statements.size();
+}
+
+std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::make_blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name)
+{
+      return memory::gasp_make_shared<blaise_ast_subroutine>(module, name);
 }

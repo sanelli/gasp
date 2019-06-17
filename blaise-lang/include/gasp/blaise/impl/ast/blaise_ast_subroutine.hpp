@@ -8,6 +8,7 @@
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/memory.hpp>
 
 #include <gasp/blaise/impl/ast/blaise_ast_variable.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_type.hpp>
@@ -50,9 +51,9 @@ protected:
       return nullptr;
    }
 
-public:
    blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
 
+public:
    std::string name() const;
    std::shared_ptr<blaise_ast_type> return_type() const;
    void return_type(std::shared_ptr<blaise_ast_type> type);
@@ -90,6 +91,10 @@ public:
    void push_back(std::shared_ptr<blaise_ast_statement> statement);
    std::shared_ptr<blaise_ast_statement> get_statement(unsigned int) const;
    unsigned int get_statements_count() const ;
+
+   friend gasp::common::memory;
 };
+
+std::shared_ptr<blaise_ast_subroutine> make_blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
 
 }
