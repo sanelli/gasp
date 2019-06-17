@@ -6,6 +6,7 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/memory.hpp>
 
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
@@ -83,4 +84,8 @@ unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
 
    return std::count_if(std::begin(_subroutines), std::end(_subroutines), 
       [identifier, param_types](auto subroutine){ return subroutine->signature_match_exactly(identifier.value(), param_types); });
+}
+
+std::shared_ptr<blaise_ast_module> gasp::blaise::ast::make_blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type){
+   return memory::gasp_make_shared<blaise_ast_module>(reference, module_name, type);
 }

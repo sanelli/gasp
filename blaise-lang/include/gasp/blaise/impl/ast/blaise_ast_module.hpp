@@ -6,6 +6,7 @@
 
 #include <gasp/blaise/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
+#include <gasp/common/memory.hpp>
 
 #include <gasp/blaise/impl/ast/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_subroutine.hpp>
@@ -23,9 +24,9 @@ class blaise_ast_module : public blaise_ast {
    std::vector<std::shared_ptr<blaise_ast_subroutine>> _subroutines;
    std::weak_ptr<blaise_ast_module> _self;
 
-   public:
    blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type);
 
+public:
    std::string name() const;
    blaise_ast_module_type type() const;
    void self(std::weak_ptr<blaise_ast_module> module);
@@ -42,6 +43,11 @@ class blaise_ast_module : public blaise_ast {
    unsigned int count_subroutine(
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
+
+   friend gasp::common::memory;
 };
+
+ std::shared_ptr<blaise_ast_module> make_blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type);
+
 
 }
