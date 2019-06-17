@@ -143,28 +143,28 @@ class blaise_ast_expression_value : public blaise_ast_expression {
 };
 
 class blaise_ast_expression_integer_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_INTEGER,blaise_ast_system_type::INTEGER, int> {
-   public: 
-      blaise_ast_expression_integer_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,int value) : blaise_ast_expression_value(reference, value) {}
+   friend gasp::common::memory;
+   blaise_ast_expression_integer_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,int value) : blaise_ast_expression_value(reference, value) {}
    };
 class blaise_ast_expression_float_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_FLOAT, blaise_ast_system_type::FLOAT, float> { 
-      public: 
-      blaise_ast_expression_float_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,float value) : blaise_ast_expression_value(reference, value) {}
+   friend gasp::common::memory;
+   blaise_ast_expression_float_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,float value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_double_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_DOUBLE, blaise_ast_system_type::DOUBLE, double> { 
-      public: 
-      blaise_ast_expression_double_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,double value) : blaise_ast_expression_value(reference, value) {}
+   friend gasp::common::memory;
+   blaise_ast_expression_double_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,double value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_system_type::CHAR, char> { 
-      public: 
-      blaise_ast_expression_char_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,char value) : blaise_ast_expression_value(reference, value) {}
+   friend gasp::common::memory;
+   blaise_ast_expression_char_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,char value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, blaise_ast_system_type::STRING, std::string> { 
-      public: 
-      blaise_ast_expression_string_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::string value) : blaise_ast_expression_value(reference, value) {}
+   friend gasp::common::memory;
+   blaise_ast_expression_string_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::string value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BOOLEAN, blaise_ast_system_type::BOOLEAN, bool> { 
-      public: 
-      blaise_ast_expression_boolean_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, bool value) : blaise_ast_expression_value(reference, value) {}
+   friend gasp::common::memory;
+   blaise_ast_expression_boolean_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, bool value) : blaise_ast_expression_value(reference, value) {}
 };
 
 }

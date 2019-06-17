@@ -12,6 +12,6 @@
 
 namespace gasp::blaise {
 
-std::shared_ptr<ast::blaise_ast_expression> blaise_ast_expression_value_factory(blaise_parser_context &context, const gasp::common::token<blaise_token_type>& token);
+std::shared_ptr<ast::blaise_ast_expression> make_blaise_ast_expression_value(blaise_parser_context &context, const gasp::common::token<blaise_token_type>& token);
 
 }
