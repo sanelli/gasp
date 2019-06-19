@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
          begin
             write("Results: ");
             write(foo);
-         end;
+         end
          myc := 'A';
          myi := cast<integer>(myc);
          myi := abs(if myi == 0 then 1 else (myi));
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
          if myc == 'b' then begin
             equals:= false;
             a_value := true;
-         end;
+         end
          else
             a_value := false;
       end.

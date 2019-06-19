@@ -46,6 +46,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
    break;
    case blaise_token_type::BEGIN:
       statement = parse_compound_statement(context, parent);
+      match_ending_semicolon = false;
       break;
    case blaise_token_type::IF:
       statement = parse_if_statement(context);
