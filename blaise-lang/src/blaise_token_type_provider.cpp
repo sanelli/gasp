@@ -23,6 +23,9 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::PROCEDURE, "procedure", "PROCEDURE");
    add_token(blaise_token_type::NATIVE, "native", "NATIVE");
    add_token(blaise_token_type::CAST, "cast", "CAST");
+   add_token(blaise_token_type::IF, "if", "IF");
+   add_token(blaise_token_type::THEN, "then", "THEN");
+   add_token(blaise_token_type::ELSE, "else", "else");
 
    // TYPES
    add_token(blaise_token_type::TYPE_INTEGER, "integer", "TYPE_INTEGER");
@@ -42,10 +45,10 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::RIGHT_PARENTHESES, "\\)", "RIGHT_PARENTHESES");
    add_token(blaise_token_type::NOT_EQUAL_TO, "\\<\\>", "NOT_EQUAL_TO");
    add_token(blaise_token_type::EQUAL_TO, "\\=\\=", "EQUAL_TO");
-   add_token(blaise_token_type::GREAT_THAN, "\\>", "GREAT_THAN");
-   add_token(blaise_token_type::LESS_THAN, "\\<", "GREAT_THAN");
    add_token(blaise_token_type::GREAT_THAN_OR_EQUAL_TO, "\\>\\=", "GREAT_THAN_OR_EQUAL_TO");
    add_token(blaise_token_type::LESS_THAN_OR_EQUAL_TO, "\\<\\=", "LESS_THAN_OR_EQUAL_TO");
+   add_token(blaise_token_type::GREAT_THAN, "\\>", "GREAT_THAN");
+   add_token(blaise_token_type::LESS_THAN, "\\<", "GREAT_THAN");
    add_token(blaise_token_type::PLUS, "\\+", "PLUS");
    add_token(blaise_token_type::MINUS, "\\-", "MINUS");
    add_token(blaise_token_type::MULTIPLY, "\\*", "MULTIPLY");

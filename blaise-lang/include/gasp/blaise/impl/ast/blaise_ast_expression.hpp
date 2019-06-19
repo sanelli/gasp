@@ -30,6 +30,30 @@ class blaise_ast_expression : public blaise_ast {
 };
 
 // 
+// TERNARY EXPRESSION
+//
+class blaise_ast_ternary_cast :  public blaise_ast_expression {
+   std::shared_ptr<blaise_ast_expression> _condition;
+   std::shared_ptr<blaise_ast_expression> _then_expression;
+   std::shared_ptr<blaise_ast_expression> _else_expression;
+   blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_expression> then_expression,
+      std::shared_ptr<blaise_ast_expression> else_expression
+   );
+public:
+   std::shared_ptr<blaise_ast_expression> condition() const;
+   std::shared_ptr<blaise_ast_expression> then_expression() const;
+   std::shared_ptr<blaise_ast_expression> else_expression() const;
+   friend gasp::common::memory;
+};
+std::shared_ptr<blaise_ast_ternary_cast> make_blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_expression> then_expression,
+      std::shared_ptr<blaise_ast_expression> else_expression
+   );
+
+// 
 // CAST EXPRESSION
 //
 class blaise_ast_expression_cast :  public blaise_ast_expression {

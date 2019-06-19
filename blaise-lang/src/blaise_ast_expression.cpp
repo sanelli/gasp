@@ -145,3 +145,27 @@ std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::make_b
          throw blaise_ast_error(token.line(), token.column(), "Was expecting an identifier");
    }
 }
+
+// TERNARY
+blaise_ast_ternary_cast::blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<blaise_ast_expression> condition,
+   std::shared_ptr<blaise_ast_expression> then_expression,
+   std::shared_ptr<blaise_ast_expression> else_expression
+) : blaise_ast_expression(reference, blaise_ast_expression_type::TERNARY, blaise_ast_utility::get_common_type(reference, then_expression->result_type(), else_expression->result_type())),
+   _condition(condition), _then_expression(then_expression), _else_expression(else_expression) 
+{
+   if(!condition->result_type()->equals(make_plain_type(blaise_ast_system_type::BOOLEAN)))
+      throw blaise_ast_error(reference.line(), reference.column(), make_string("Ternary condition must be a boolean expression."));
+}
+std::shared_ptr<blaise_ast_expression> blaise_ast_ternary_cast::condition() const { return _condition; }
+std::shared_ptr<blaise_ast_expression> blaise_ast_ternary_cast::then_expression() const { return _then_expression; }
+std::shared_ptr<blaise_ast_expression> blaise_ast_ternary_cast::else_expression() const { return _else_expression; }
+
+std::shared_ptr<blaise_ast_ternary_cast> ast::make_blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<blaise_ast_expression> condition,
+   std::shared_ptr<blaise_ast_expression> then_expression,
+   std::shared_ptr<blaise_ast_expression> else_expression
+   )
+{
+   return memory::gasp_make_shared<blaise_ast_ternary_cast>(reference, condition, then_expression, else_expression);
+}

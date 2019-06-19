@@ -270,3 +270,10 @@ bool blaise_ast_utility::can_force_cast(std::shared_ptr<blaise_ast_type> from, s
    if(is_char(from) && is_integer(to)) return true;
    return false;
 }
+
+std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_common_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::shared_ptr<blaise_ast_type> typeA, std::shared_ptr<blaise_ast_type> typeB){
+   if(typeA->equals(typeB)) return typeA;
+   if(can_auto_cast(typeA, typeB)) return typeB;
+   if(can_auto_cast(typeB, typeA)) return typeA;
+   throw blaise_ast_error(reference.line(), reference.column(), make_string("Mismatch types '", typeA,"' and '", typeB, "'."));
+}

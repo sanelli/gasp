@@ -23,6 +23,9 @@ enum class blaise_token_type : unsigned char
    PROCEDURE,
    NATIVE,
    CAST,
+   IF,
+   THEN,
+   ELSE,
 
    // TYPES
    TYPE_INTEGER,

@@ -42,7 +42,10 @@ int main(int argc, char *argv[])
       begin
          duplicate := 2 * input;
       end;
-
+      function abs(input : integer) : integer 
+      begin
+         abs := if input >= 0 then input else -input;
+      end;
       var
          foo, another_foo: integer;
          bar: float;
@@ -63,6 +66,7 @@ int main(int argc, char *argv[])
          end;
          myc := 'A';
          myi := cast<integer>(myc);
+         myi := abs(if myi == 0 then 1 else (myi));
       end.
    )___";
 

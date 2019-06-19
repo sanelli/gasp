@@ -137,6 +137,11 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       term_expression = parse_cast_expression(context);
    }
    break;
+   case blaise_token_type::IF:
+   {
+      term_expression = parse_ternary_expression(context);
+   }
+   break;
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
@@ -212,6 +217,8 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_boolean(blaise_parse
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blaise_parser_context &context)
 {
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_cast_expression" << std::endl);
+
    auto reference = context.peek_token();
    match_token(context, blaise_token_type::CAST);
    match_token(context, blaise_token_type::LESS_THAN);
@@ -223,5 +230,46 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blai
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    if (!ast::blaise_ast_utility::can_force_cast(expression->result_type(), return_type))
       throw_parse_error_with_details(context, reference.line(), reference.column(), make_string("It is not possible force a cast from '", expression->result_type(), "' to '", return_type, "'."));
-   return ast::make_blaise_ast_expression_cast(reference, return_type, expression);
+   auto cast_expression = ast::make_blaise_ast_expression_cast(reference, return_type, expression);
+   
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_cast_expression" << std::endl);
+   return cast_expression;
+}
+
+shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(blaise_parser_context &context)
+{
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_ternary_expression" << std::endl);
+
+   auto reference = context.peek_token();
+
+   match_token(context, blaise_token_type::IF);
+   //match_token(context, blaise_token_type::LEFT_PARENTHESES);
+   auto condition = parse_expression(context);
+   //match_token(context, blaise_token_type::RIGHT_PARENTHESES);
+   match_token(context, blaise_token_type::THEN);
+   //match_token(context, blaise_token_type::LEFT_PARENTHESES);
+   auto then_expression = parse_expression(context);
+  // match_token(context, blaise_token_type::RIGHT_PARENTHESES);
+   match_token(context, blaise_token_type::ELSE);
+   //match_token(context, blaise_token_type::LEFT_PARENTHESES);
+   auto else_expression = parse_expression(context);
+   //match_token(context, blaise_token_type::RIGHT_PARENTHESES);
+
+   auto bool_type = ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN);
+   if(!condition->result_type()->equals(bool_type)){
+      if(!ast::blaise_ast_utility::can_auto_cast(bool_type, condition->result_type()))
+         throw_parse_error_with_details(context, reference.line(), reference.column(), make_string("Condition expression cannot be converted into a boolean expression."));
+      else
+         condition = ast::introduce_cast_if_required(reference, bool_type, condition);
+   }
+
+   auto common_type = ast::blaise_ast_utility::get_common_type(reference, then_expression->result_type(), else_expression->result_type());
+
+   then_expression = ast::introduce_cast_if_required(reference, common_type, then_expression);
+   else_expression = ast::introduce_cast_if_required(reference, common_type, else_expression);
+
+   auto ternary_expression = ast::make_blaise_ast_ternary_cast(reference, condition, then_expression, else_expression);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_ternary_expression" << std::endl);
+   return ternary_expression;
 }
