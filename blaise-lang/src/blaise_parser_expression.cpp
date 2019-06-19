@@ -28,7 +28,6 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression(blaise_pa
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(blaise_parser_context &context, shared_ptr<ast::blaise_ast_expression> lhs, unsigned int min_precedence)
 {
-
    GASP_DEBUG("blaise-parser", make_string("[ENTER] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
 
    token<blaise_token_type> lookahead_token = context.peek_token();
@@ -115,7 +114,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
    break;
    case blaise_token_type::LEFT_PARENTHESES: // sub expression between parenthesis
    {
-      match_token(context, blaise_token_type::MINUS);
+      match_token(context, blaise_token_type::LEFT_PARENTHESES);
       term_expression = parse_expression(context);
       match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    }
@@ -243,17 +242,11 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(b
    auto reference = context.peek_token();
 
    match_token(context, blaise_token_type::IF);
-   //match_token(context, blaise_token_type::LEFT_PARENTHESES);
    auto condition = parse_expression(context);
-   //match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    match_token(context, blaise_token_type::THEN);
-   //match_token(context, blaise_token_type::LEFT_PARENTHESES);
    auto then_expression = parse_expression(context);
-  // match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    match_token(context, blaise_token_type::ELSE);
-   //match_token(context, blaise_token_type::LEFT_PARENTHESES);
    auto else_expression = parse_expression(context);
-   //match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    auto bool_type = ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN);
    if(!condition->result_type()->equals(bool_type)){
