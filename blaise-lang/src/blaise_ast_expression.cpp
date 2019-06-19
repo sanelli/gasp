@@ -49,6 +49,19 @@ shared_ptr<blaise_ast_expression> gasp::blaise::ast::introduce_cast_if_required(
    return expression;
 }
 
+std::shared_ptr<ast::blaise_ast_expression> ast::cast_to_boolean( 
+   const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<ast::blaise_ast_expression> expression){
+   auto bool_type = ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN);
+   if(!expression->result_type()->equals(bool_type)){
+      if(!ast::blaise_ast_utility::can_auto_cast(bool_type, expression->result_type()))
+         throw ast::blaise_ast_error(reference.line(), reference.column(), make_string("Expression cannot be converted into a boolean expression."));
+      else
+         expression = ast::introduce_cast_if_required(reference, bool_type, expression);
+   }
+   return expression;
+}
+
 void gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_subroutine> subroutine,
       std::vector<std::shared_ptr<blaise_ast_expression>>& expressions) {

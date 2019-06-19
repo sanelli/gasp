@@ -20,7 +20,8 @@ class blaise_ast_subroutine;
 enum class blaise_ast_statement_type : unsigned char{
    COMPOUND,
    ASSIGNEMENT,
-   SUBROUTINE_CALL
+   SUBROUTINE_CALL,
+   IF,
 };
 
 class blaise_ast_statement : public blaise_ast {
@@ -76,5 +77,24 @@ class blaise_ast_statement_subroutine_call : public blaise_ast_statement {
 std::shared_ptr<blaise_ast_statement> make_blaise_ast_statement_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
             std::shared_ptr<blaise_ast_subroutine> subroutine,
             const std::vector<std::shared_ptr<blaise_ast_expression>>& parameters);
+
+class blaise_ast_statement_if : public blaise_ast_statement {
+   std::shared_ptr<blaise_ast_expression> _condition;
+   std::shared_ptr<blaise_ast_statement> _then_statement;
+   std::shared_ptr<blaise_ast_statement> _else_statement;
+   blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> then_statement,
+      std::shared_ptr<blaise_ast_statement> else_statement);
+   public:
+      std::shared_ptr<blaise_ast_expression> condition() const;
+      std::shared_ptr<blaise_ast_statement> then_statement() const;
+      std::shared_ptr<blaise_ast_statement> else_statement() const;
+      friend class gasp::common::memory;
+};
+std::shared_ptr<blaise_ast_statement_if> make_blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> then_statement,
+      std::shared_ptr<blaise_ast_statement> else_statement);
 
 }

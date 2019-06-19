@@ -22,6 +22,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
 
    const auto token = context.peek_token();
    const auto token_type = token.type();
+   auto match_ending_semicolon = true;
 
    switch (token_type)
    {
@@ -46,11 +47,16 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
    case blaise_token_type::BEGIN:
       statement = parse_compound_statement(context, parent);
       break;
+   case blaise_token_type::IF:
+      statement = parse_if_statement(context);
+      match_ending_semicolon = false;
+   break;
       // TODO: Add support for other kind of statement
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
-   match_token(context, blaise_token_type::SEMICOLON);
+   if(match_ending_semicolon)
+      match_token(context, blaise_token_type::SEMICOLON);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_statement" << std::endl);
 
@@ -154,3 +160,23 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
    return statement;
 }
 
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_if_statement(blaise_parser_context &context){
+   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_if_statement" << std::endl);
+
+   auto reference = context.peek_token();
+   match_token(context, blaise_token_type::IF);
+   auto condition_reference = context.peek_token();
+   auto condition_expression = parse_expression(context);
+   match_token(context, blaise_token_type::THEN);
+   auto then_statement = parse_statement(context);
+   std::shared_ptr<ast::blaise_ast_statement> else_statement = nullptr;
+   if(is_token_and_match(context, blaise_token_type::ELSE))
+      else_statement = parse_statement(context);
+
+   condition_expression = ast::cast_to_boolean(condition_reference, condition_expression);
+
+   auto if_statement = ast::make_blaise_ast_statement_if(reference, condition_expression, then_statement, else_statement);
+
+   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_if_statement" << std::endl);
+   return if_statement;
+}

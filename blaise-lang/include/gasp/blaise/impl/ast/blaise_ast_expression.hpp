@@ -75,6 +75,9 @@ std::shared_ptr<blaise_ast_expression> introduce_cast_if_required(const gasp::co
 void introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_subroutine> subroutine,
       std::vector<std::shared_ptr<blaise_ast_expression>>& expressions);
+std::shared_ptr<ast::blaise_ast_expression> cast_to_boolean(
+            const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+            std::shared_ptr<ast::blaise_ast_expression> expression);
 
 //
 // SUBROUTINE CALL EXPRESSION

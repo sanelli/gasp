@@ -31,6 +31,8 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static void parse_variable_names_list(blaise_parser_context &context, 
                               std::vector<gasp::common::token<blaise_token_type>> &variable_names);
    static gasp::common::token<blaise_token_type> parse_variable_type(blaise_parser_context &context);
+
+   // Statement
    static std::shared_ptr<ast::blaise_ast_statement> parse_statement(blaise_parser_context &context,
             std::shared_ptr<ast::blaise_ast_statement_compund> parent = nullptr);
    static std::shared_ptr<ast::blaise_ast_statement> parse_compound_statement(blaise_parser_context &context,
@@ -40,6 +42,9 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
                               std::vector<std::shared_ptr<ast::blaise_ast_expression>>& expressions,
                               std::vector<std::shared_ptr<ast::blaise_ast_type>>& types);
    static std::shared_ptr<ast::blaise_ast_statement> parse_assignamet_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_statement> parse_if_statement(blaise_parser_context &context);
+
+   // Expression
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression(blaise_parser_context &context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression_helper(blaise_parser_context &context, 
                               std::shared_ptr<ast::blaise_ast_expression> lhs, 
@@ -49,6 +54,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static std::shared_ptr<ast::blaise_ast_expression> parse_boolean(blaise_parser_context& context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_cast_expression(blaise_parser_context& context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_ternary_expression(blaise_parser_context& context);
+   
 public:
    void parse(blaise_parser_context &context) const;
 };

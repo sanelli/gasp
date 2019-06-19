@@ -242,19 +242,14 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(b
    auto reference = context.peek_token();
 
    match_token(context, blaise_token_type::IF);
+   auto condition_reference = context.peek_token();
    auto condition = parse_expression(context);
    match_token(context, blaise_token_type::THEN);
    auto then_expression = parse_expression(context);
    match_token(context, blaise_token_type::ELSE);
    auto else_expression = parse_expression(context);
 
-   auto bool_type = ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN);
-   if(!condition->result_type()->equals(bool_type)){
-      if(!ast::blaise_ast_utility::can_auto_cast(bool_type, condition->result_type()))
-         throw_parse_error_with_details(context, reference.line(), reference.column(), make_string("Condition expression cannot be converted into a boolean expression."));
-      else
-         condition = ast::introduce_cast_if_required(reference, bool_type, condition);
-   }
+   condition = ast::cast_to_boolean(condition_reference, condition);
 
    auto common_type = ast::blaise_ast_utility::get_common_type(reference, then_expression->result_type(), else_expression->result_type());
 

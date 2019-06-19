@@ -39,7 +39,7 @@ public:
       std::stringstream stream;
       auto start = first == -1 ? _index : (unsigned) first;
       auto last = length == 0 ? _tokens.size() : std::min(start + length + 1, (unsigned int)_tokens.size());
-      for(unsigned int index = start; index < length; ++index)
+      for(unsigned int index = start; index < last; ++index)
          stream << index << ":" << token(index) << (index == length-1 ? "" : ", ");
       return stream.str();
    }

@@ -67,6 +67,14 @@ int main(int argc, char *argv[])
          myc := 'A';
          myi := cast<integer>(myc);
          myi := abs(if myi == 0 then 1 else (myi));
+         if a_value then 
+            a_value := foo == another_foo;
+         if myc == 'b' then begin
+            equals:= false;
+            a_value := true;
+         end;
+         else
+            a_value := false;
       end.
    )___";
 

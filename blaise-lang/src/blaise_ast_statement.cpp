@@ -79,3 +79,26 @@ std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_stateme
          const std::vector<std::shared_ptr<blaise_ast_expression>>& parameters) {
    return memory::gasp_make_shared<blaise_ast_statement_subroutine_call>(reference, subroutine, parameters);
 }
+
+ blaise_ast_statement_if::blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> then_statement,
+      std::shared_ptr<blaise_ast_statement> else_statement) 
+      : blaise_ast_statement(reference, blaise_ast_statement_type::IF),
+         _condition(condition),
+         _then_statement(then_statement),
+         _else_statement(else_statement)
+{  
+   if(condition->result_type() != ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN)){
+        throw blaise_ast_error(reference.line(), reference.column(), make_string("Condition must be a boolean expression"));
+     }
+}
+std::shared_ptr<blaise_ast_expression> blaise_ast_statement_if::condition() const { return _condition; }
+std::shared_ptr<blaise_ast_statement> blaise_ast_statement_if::then_statement() const { return _then_statement; }
+std::shared_ptr<blaise_ast_statement> blaise_ast_statement_if::else_statement() const { return _else_statement; }
+std::shared_ptr<blaise_ast_statement_if> ast::make_blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> then_statement,
+      std::shared_ptr<blaise_ast_statement> else_statement) {
+   return memory::gasp_make_shared<blaise_ast_statement_if>(reference, condition, then_statement, else_statement);
+}
