@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             a_value := false;
          ctr1[0] := "Stefano";
          ctr2[0] := 11;
-         ctr2[1] := 10 + 2 * ctr[2];
+         ctr2[1] := 10 + 2 * ctr2[2];
       end.
    )___";
 

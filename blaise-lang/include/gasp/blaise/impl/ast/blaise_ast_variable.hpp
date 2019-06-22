@@ -18,7 +18,7 @@ enum class blaise_ast_variable_type
 {
    VARIABLE,
    CONSTANT,
-   PARAMETER
+   PARAMETER,
 };
 
 class blaise_ast_generic_memory_location : public blaise_ast

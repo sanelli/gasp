@@ -8,7 +8,7 @@
 #include <gasp/blaise/tokens.hpp>
 
 #include <gasp/blaise/impl/ast/blaise_ast_common.hpp>
-#include <gasp/blaise/impl/ast/blaise_ast_variable.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_identifier.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_expression.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_subroutine.hpp>
 
@@ -46,19 +46,19 @@ class blaise_ast_statement_compund : public blaise_ast_statement {
 std::shared_ptr<ast::blaise_ast_statement_compund> make_compound_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference);
 
 class blaise_ast_statement_assignment : public blaise_ast_statement {
-   std::shared_ptr<blaise_ast_generic_memory_location> _variable;
+   std::shared_ptr<blaise_ast_identifier> _identifier;
    std::shared_ptr<blaise_ast_expression> _expression;
    blaise_ast_statement_assignment(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
-                  std::shared_ptr<blaise_ast_generic_memory_location> variable, 
+                  std::shared_ptr<blaise_ast_identifier> identifier, 
                   std::shared_ptr<blaise_ast_expression> expression);
    public:
-   std::shared_ptr<blaise_ast_generic_memory_location> variable() const;
+   std::shared_ptr<blaise_ast_identifier> identifier() const;
    std::shared_ptr<blaise_ast_expression> expression() const;
 
    friend class gasp::common::memory;
 };
 std::shared_ptr<blaise_ast_statement> make_assignement_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
-                  std::shared_ptr<blaise_ast_generic_memory_location> variable, 
+                  std::shared_ptr<blaise_ast_identifier> identifier, 
                   std::shared_ptr<blaise_ast_expression> expression);
 
 class blaise_ast_statement_subroutine_call : public blaise_ast_statement {

@@ -1,6 +1,6 @@
 #include <vector>
 #include <memory>
-
+#include <stdexcept>
 
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/blaise/tokens.hpp>
@@ -37,27 +37,62 @@ shared_ptr<ast::blaise_ast_statement_compund>gasp::blaise::ast::make_compound_st
 // ASSIGNMENT STATEMENT
 //
 blaise_ast_statement_assignment::blaise_ast_statement_assignment(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-                              shared_ptr<blaise_ast_generic_memory_location> variable,
+                              shared_ptr<blaise_ast_identifier> identifier,
                               shared_ptr<blaise_ast_expression> expression) 
                             : blaise_ast_statement(reference, blaise_ast_statement_type::ASSIGNEMENT),
-                            _variable(variable),
+                            _identifier(identifier),
                             _expression(expression)
                             { }
-shared_ptr<blaise_ast_generic_memory_location> blaise_ast_statement_assignment::variable() const { return _variable; }
+shared_ptr<blaise_ast_identifier> blaise_ast_statement_assignment::identifier() const { return _identifier; }
 shared_ptr<blaise_ast_expression> blaise_ast_statement_assignment::expression() const { return _expression; }
 shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-                                                                  shared_ptr<blaise_ast_generic_memory_location> variable,
+                                                                  shared_ptr<blaise_ast_identifier> identifier,
                                                                   shared_ptr<blaise_ast_expression> expression) {
-   if(variable->variable_type() == blaise_ast_variable_type::CONSTANT)
-      throw blaise_ast_error(reference.line(), reference.column(), make_string("Variable '", variable->name() ,"' is constant."));
+   std::shared_ptr<blaise_ast_type> variable_real_type = nullptr;
+   std::shared_ptr<blaise_ast_generic_memory_location> variable = nullptr;
 
-   if(expression->result_type() != variable->type() && !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable->type())){
-        throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot cast '", expression->result_type(), "' into '",variable->type(),"'."));
-     }
+   switch(identifier->type()) {
+      case blaise_ast_identifier_type::VARIABLE:
+      {
+         auto variable_identifier = std::static_pointer_cast<blaise_ast_variable_identifier>(identifier);
+         variable = variable_identifier->variable();
+         variable_real_type = variable->type();
+         if(variable->type()->type_type() == ast::blaise_ast_type_type::ARRAY)
+            throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported type: '", variable_real_type, "'. An array should not be used here."));
+      } 
+      break;
+      case blaise_ast_identifier_type::ARRAY:
+      {
+         auto array_identifier = std::static_pointer_cast<blaise_ast_array_identifier>(identifier);
+         variable = array_identifier->variable();
+         variable_real_type = ast::blaise_ast_utility::as_array_type(variable->type())->inner_type();
+         if(variable->type()->type_type() != ast::blaise_ast_type_type::ARRAY)
+            throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported type: '", variable_real_type, "'. An array was expected here."));
+      }
+      break;
+      default:
+         throw blaise_ast_error(reference.line(), reference.column(), "Unexpected identifier type.");
+   }
 
-   expression = ast::introduce_cast_if_required(reference, variable->type(), expression);
+   switch(variable->variable_type()){
+      case blaise_ast_variable_type::VARIABLE:
+      case blaise_ast_variable_type::PARAMETER:
+         break; // All good!
+      case blaise_ast_variable_type::CONSTANT:
+         throw blaise_ast_error(reference.line(), reference.column(), make_string("Variable '", variable->name() ,"' is constant."));
+      default:
+         throw blaise_ast_error(reference.line(), reference.column(), make_string("Unexpected variable type"));
+   }
+
+    if(expression->result_type() !=variable_real_type && !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable_real_type))
+      throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot cast '", expression->result_type(), "' into '",variable_real_type,"'."));
+
+   if(variable_real_type == nullptr)
+      throw blaise_ast_error(reference.line(), reference.column(), "Variable type or underlying type cannot be detected.");
+
+   expression = ast::introduce_cast_if_required(reference, variable_real_type, expression);
    
-   return memory::gasp_make_shared<blaise_ast_statement_assignment>(reference, variable, expression);
+   return memory::gasp_make_shared<blaise_ast_statement_assignment>(reference, identifier, expression);
 }
 
 //

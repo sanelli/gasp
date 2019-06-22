@@ -36,7 +36,8 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
       case blaise_token_type::LEFT_PARENTHESES:
          statement = parse_subroutine_call_statement(context);
          break;
-      case blaise_token_type::ASSIGNMENT:
+      case blaise_token_type::ASSIGNMENT: // Variable assignment
+      case blaise_token_type::LEFT_BRACKET: // Array assignement
          statement = parse_assignamet_statement(context);
          break;
       default:
@@ -149,12 +150,22 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
    auto variable = context.current_subroutine()->get_variable(identifier.value());
 
    if(variable == nullptr)
-         throw_parse_error_with_details(context, identifier.line(), identifier.column(), make_string("Variable ", identifier.value(), " does not exists in the context."));
+      throw_parse_error_with_details(context, identifier.line(), identifier.column(), make_string("Variable ", identifier.value(), " does not exists in the context."));
+
+   std::shared_ptr<ast::blaise_ast_identifier> variable_identifier = nullptr;
+
+   if(is_token_and_match(context, blaise_token_type::LEFT_BRACKET)){ // Assignment to array
+      auto indexing_expression = parse_expression(context);
+      match_token(context, blaise_token_type::RIGHT_BRACKET);
+      variable_identifier = ast::make_blaise_ast_array_identifier(identifier, variable, indexing_expression);
+   } else { // Standard variable identifier
+      variable_identifier = ast::make_blaise_ast_variable_identifier(identifier, variable);
+   }
 
    match_token(context, blaise_token_type::ASSIGNMENT);
    auto expression = parse_expression(context);
 
-   auto statement = ast::make_assignement_statement(identifier, variable, expression);
+   auto statement = ast::make_assignement_statement(identifier, variable_identifier, expression);
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
 
