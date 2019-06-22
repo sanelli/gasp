@@ -10,3 +10,4 @@
 #include <gasp/blaise/impl/ast/blaise_ast_statement.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_utility.hpp>
 #include <gasp/blaise/impl/ast/blaise_ast_io.hpp>
+#include <gasp/blaise/impl/ast/blaise_ast_identifier.hpp>
