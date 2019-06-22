@@ -13,6 +13,7 @@ private:
 
 public:
 static std::shared_ptr<blaise_ast_plain_type> as_plain_type(std::shared_ptr<blaise_ast_type> type); 
+static std::shared_ptr<blaise_ast_array_type> as_array_type(std::shared_ptr<blaise_ast_type> type); 
 
 static bool is_numeric(std::shared_ptr<blaise_ast_type> type);
 static bool is_integer(std::shared_ptr<blaise_ast_type> type);

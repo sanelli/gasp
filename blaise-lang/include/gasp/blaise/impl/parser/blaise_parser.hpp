@@ -30,7 +30,7 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
    static void parse_variable_declaration(blaise_parser_context &context);
    static void parse_variable_names_list(blaise_parser_context &context, 
                               std::vector<gasp::common::token<blaise_token_type>> &variable_names);
-   static gasp::common::token<blaise_token_type> parse_variable_type(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_type> parse_variable_type(blaise_parser_context &context);
 
    // Statement
    static std::shared_ptr<ast::blaise_ast_statement> parse_statement(blaise_parser_context &context,

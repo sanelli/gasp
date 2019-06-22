@@ -221,8 +221,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blai
    auto reference = context.peek_token();
    match_token(context, blaise_token_type::CAST);
    match_token(context, blaise_token_type::LESS_THAN);
-   auto return_type_token = parse_variable_type(context);
-   auto return_type = ast::get_type_from_token(return_type_token);
+   auto return_type = parse_variable_type(context);
    match_token(context, blaise_token_type::GREAT_THAN);
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    auto expression = parse_expression(context);

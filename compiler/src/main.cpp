@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
          a_value: boolean;
          myc: char;
          myi: integer;
+         ctr1: array<string>[20];
+         ctr2: array<integer>[2];
       begin
          foo := read_integer();
          another_foo := read_integer();
@@ -75,6 +77,9 @@ int main(int argc, char *argv[])
          end
          else
             a_value := false;
+         ctr1[0] := "Stefano";
+         ctr2[0] := 11;
+         ctr2[1] := 10 + 2 * ctr[2];
       end.
    )___";
 

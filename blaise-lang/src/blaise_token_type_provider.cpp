@@ -34,6 +34,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::TYPE_FLOAT, "float", "TYPE_FLOAT");
    add_token(blaise_token_type::TYPE_DOUBLE, "double", "TYPE_DOUBLE");
    add_token(blaise_token_type::TYPE_BOOLEAN, "boolean", "TYPE_BOOLEAN");
+   add_token(blaise_token_type::TYPE_ARRAY, "array", "TYPE_ARRAY");
 
    // PUNCTUATION
    add_token(blaise_token_type::ASSIGNMENT, ":=", "ASSIGNMENT");
@@ -43,6 +44,8 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::COMMA, "\\,", "COMMA");
    add_token(blaise_token_type::LEFT_PARENTHESES, "\\(", "LEFT_PARENTHESES");
    add_token(blaise_token_type::RIGHT_PARENTHESES, "\\)", "RIGHT_PARENTHESES");
+   add_token(blaise_token_type::LEFT_BRACKET, "\\[", "LEFT_BRACKET");
+   add_token(blaise_token_type::RIGHT_BRACKET, "\\]", "RIGHT_BRACKET");
    add_token(blaise_token_type::NOT_EQUAL_TO, "\\<\\>", "NOT_EQUAL_TO");
    add_token(blaise_token_type::EQUAL_TO, "\\=\\=", "EQUAL_TO");
    add_token(blaise_token_type::GREAT_THAN_OR_EQUAL_TO, "\\>\\=", "GREAT_THAN_OR_EQUAL_TO");

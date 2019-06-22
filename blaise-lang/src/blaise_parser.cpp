@@ -81,16 +81,17 @@ void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
    std::vector<token<blaise_token_type>> variable_tokens;
    parse_variable_names_list(context, variable_tokens);
    match_token(context, blaise_token_type::COLON);
-   const auto type_token = parse_variable_type(context);
+   const auto variable_type = parse_variable_type(context);
+   
    match_token(context, blaise_token_type::SEMICOLON);
 
    auto current_subroutine = context.current_subroutine();
 
    GASP_DEBUG("blaise-parser", "[INSIDE] Creating " <<  variable_tokens.size() << " variable(s)." << std::endl)
    for(auto variable_token : variable_tokens) {
-      GASP_DEBUG("blaise-parser", "[INSIDE] Creating variable '" << variable_token.value() << "' and type '" << type_token.type() << "'" << std::endl)
-      current_subroutine->add_variable(variable_token, variable_token.value(), ast::get_type_from_token(type_token));
-      GASP_DEBUG("blaise-parser", "[INSIDE] Created variable '" << variable_token.value() << "' and type '" << type_token.type() << "'" << std::endl)
+      GASP_DEBUG("blaise-parser", "[INSIDE] Creating variable '" << variable_token.value() << "' and type '" << variable_type << "'" << std::endl);
+      current_subroutine->add_variable(variable_token, variable_token.value(), variable_type);
+      GASP_DEBUG("blaise-parser", "[INSIDE] Done created variable '" << variable_token.value() << "' and type '" << variable_type << "'" << std::endl);
    }
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_declaration" << std::endl);
@@ -111,21 +112,39 @@ void blaise_parser::parse_variable_names_list(blaise_parser_context &context, st
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_names_list" << std::endl);
 }
 
-token<blaise_token_type> blaise_parser::parse_variable_type(blaise_parser_context &context)
+std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_parser_context &context)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
 
-   const auto token = context.peek_token();
-   const auto token_type = token.type();
+   const auto type_token = context.peek_token();
+   const auto token_type = type_token.type();
    // if (is_unsigned && !blaise_token_type_utility::is_unsigned_type(token_type))
    //    throw parser_error("unexpected type after UNSIGNED keyword");
    // else 
    if (!blaise_token_type_utility::is_type(token_type))
-      throw parser_error(token.line(), token.column(), "unexpected type");
+      throw parser_error(type_token.line(), type_token.column(), "unexpected type");
    match_token(context, token_type);
+
+   std::shared_ptr<ast::blaise_ast_type> variable_type = nullptr;
+   if(type_token.type() == blaise_token_type::TYPE_ARRAY) { 
+      match_token(context, blaise_token_type::LESS_THAN);
+      auto inner_type = parse_variable_type(context);
+      match_token(context, blaise_token_type::GREAT_THAN);
+      match_token(context, blaise_token_type::LEFT_BRACKET);
+      auto array_size_expression = parse_number(context);
+      if(!ast::blaise_ast_utility::is_integer(array_size_expression->result_type()))
+         throw_parse_error_with_details(context, "An integral value was expected as array size");
+      match_token(context, blaise_token_type::RIGHT_BRACKET);
+
+      auto array_size = std::static_pointer_cast<ast::blaise_ast_expression_integer_value>(array_size_expression);
+      variable_type = ast::get_array_type_from_token(type_token, inner_type, array_size->value());
+   }else {
+      // Just a plain variable
+      variable_type = ast::get_type_from_token(type_token);
+   }
 
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_type" << std::endl);
 
-   return token;
+   return variable_type;
 }
 

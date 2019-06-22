@@ -34,6 +34,7 @@ enum class blaise_token_type : unsigned char
    TYPE_FLOAT,
    TYPE_DOUBLE,
    TYPE_BOOLEAN,
+   TYPE_ARRAY,
 
    // PUNCTUATION
    ASSIGNMENT,
@@ -41,8 +42,8 @@ enum class blaise_token_type : unsigned char
    PERIOD,
    COLON,
    COMMA,
-   LEFT_PARENTHESES,
-   RIGHT_PARENTHESES,
+   LEFT_PARENTHESES, RIGHT_PARENTHESES,
+   LEFT_BRACKET, RIGHT_BRACKET,
    GREAT_THAN, LESS_THAN, GREAT_THAN_OR_EQUAL_TO, LESS_THAN_OR_EQUAL_TO,
    EQUAL_TO, NOT_EQUAL_TO,
    PLUS, MINUS,

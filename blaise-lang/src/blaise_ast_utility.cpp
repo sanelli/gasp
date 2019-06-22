@@ -15,6 +15,10 @@ std::shared_ptr<blaise_ast_plain_type> blaise_ast_utility::as_plain_type(std::sh
    return std::dynamic_pointer_cast<blaise_ast_plain_type>(type);
 }
 
+std::shared_ptr<blaise_ast_array_type> blaise_ast_utility::as_array_type(std::shared_ptr<blaise_ast_type> type){
+   return std::dynamic_pointer_cast<blaise_ast_array_type>(type);
+}
+
 bool blaise_ast_utility::is_integer(std::shared_ptr<blaise_ast_type> type) {
    if(!is_numeric(type)) return false;
    return as_plain_type(type)->system_type() == blaise_ast_system_type::INTEGER;
