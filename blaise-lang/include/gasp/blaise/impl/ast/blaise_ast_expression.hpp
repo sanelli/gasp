@@ -149,29 +149,29 @@ enum class blaise_ast_expression_memory_access_type {
    MEMORY_LOCATION,
    ARRAY
 };
-class blaise_ast_expression_identifier : public blaise_ast_expression {
+class blaise_ast_expression_generic_memory_access : public blaise_ast_expression {
    blaise_ast_expression_memory_access_type _memory_access_type;
 protected:
-   blaise_ast_expression_identifier(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_generic_memory_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                   blaise_ast_expression_memory_access_type identifier_type, 
                   std::shared_ptr<blaise_ast_type> result_type);
 public:
    blaise_ast_expression_memory_access_type memory_access_type() const;
 };
 
-class blaise_ast_expression_memory_location : public blaise_ast_expression_identifier {
+class blaise_ast_expression_memory_access : public blaise_ast_expression_generic_memory_access {
    std::shared_ptr<blaise_ast_generic_memory_location> _memory_location;
-   blaise_ast_expression_memory_location(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_memory_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                      std::shared_ptr<blaise_ast_generic_memory_location> memory_location);
 public:
    std::shared_ptr<blaise_ast_generic_memory_location> memory_location() const;
    friend gasp::common::memory;
 };
-std::shared_ptr<blaise_ast_expression_memory_location> make_blaise_ast_expression_memory_location(
+std::shared_ptr<blaise_ast_expression_memory_access> make_blaise_ast_expression_memory_access(
       const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_generic_memory_location> memory_location);
 
-class blaise_ast_expression_array_access : public blaise_ast_expression_identifier {
+class blaise_ast_expression_array_access : public blaise_ast_expression_generic_memory_access {
    std::shared_ptr<blaise_ast_generic_memory_location> _array;
    std::shared_ptr<blaise_ast_expression> _indexing;
    blaise_ast_expression_array_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,

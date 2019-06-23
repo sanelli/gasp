@@ -116,7 +116,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
                      make_string("Cannot find variable with name '", identifier_token.value(),"'"));
 
-         term_expression = ast::make_blaise_ast_expression_memory_location(identifier_token, memory_location);
+         term_expression = ast::make_blaise_ast_expression_memory_access(identifier_token, memory_location);
       }
    }
    break;
