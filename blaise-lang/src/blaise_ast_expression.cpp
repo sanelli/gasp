@@ -139,26 +139,41 @@ std::shared_ptr<blaise_ast_expression_unary> gasp::blaise::ast::make_blaise_ast_
    return memory::gasp_make_shared<blaise_ast_expression_unary>(token_operator, token_operator.type(), operand);
 }
 
-// MEMORY LOCATION
-blaise_ast_expression_memory_location::blaise_ast_expression_memory_location(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, shared_ptr<blaise_ast_generic_memory_location> memory_location) 
-   : blaise_ast_expression(reference, blaise_ast_expression_type::MEMORY_LOCATION, memory_location->type()), _memory_location(memory_location) { 
+// MEMORY ACCESS
+blaise_ast_expression_identifier::blaise_ast_expression_identifier(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+                  blaise_ast_expression_identifier_type identifier_type,
+                  std::shared_ptr<blaise_ast_type> result_type) 
+                  : blaise_ast_expression(reference, blaise_ast_expression_type::IDENTIFIER, result_type), 
+                  _identifier_type(identifier_type){
+
+   }
+blaise_ast_expression_identifier_type blaise_ast_expression_identifier::identifier_type() const { return _identifier_type; }
+
+blaise_ast_expression_memory_location::blaise_ast_expression_memory_location(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+                     std::shared_ptr<blaise_ast_generic_memory_location> memory_location) 
+   : blaise_ast_expression_identifier(reference, blaise_ast_expression_identifier_type::MEMORY_LOCATION, memory_location->type()),
+       _memory_location(memory_location) { 
    
 }
 std::shared_ptr<blaise_ast_generic_memory_location> blaise_ast_expression_memory_location::memory_location() const { return _memory_location; }
-std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::make_blaise_ast_expression_memory_location(const std::shared_ptr<blaise_ast_subroutine>& subroutine, token<blaise_token_type> token){
-   switch(token.type()) {
-      case blaise_token_type::IDENTIFIER:
-      {
-         auto variable = subroutine->get_memory_location(token.value());
-         if(variable == nullptr)
-            throw blaise_ast_error(token.line(), token.column(), make_string("Undefined variable/constant/parameter '",token.value(),"'"));
-         return memory::gasp_make_shared<blaise_ast_expression_memory_location>(token, variable);
-      }
-      default:
-         throw blaise_ast_error(token.line(), token.column(), "Was expecting an identifier");
-   }
+std::shared_ptr<blaise_ast_expression_memory_location> gasp::blaise::ast::make_blaise_ast_expression_memory_location(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_generic_memory_location> memory_location){
+  return memory::gasp_make_shared<blaise_ast_expression_memory_location>(reference, memory_location);
 }
 
+blaise_ast_expression_array_access::blaise_ast_expression_array_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+                     std::shared_ptr<blaise_ast_generic_memory_location> array,
+                     std::shared_ptr<blaise_ast_expression> indexing)
+   : blaise_ast_expression_identifier(reference, blaise_ast_expression_identifier_type::MEMORY_LOCATION, ast::blaise_ast_utility::as_array_type(array->type())->inner_type()), 
+      _array(array), _indexing(indexing) { 
+      }
+std::shared_ptr<blaise_ast_generic_memory_location> blaise_ast_expression_array_access::array() const { return _array;}
+std::shared_ptr<blaise_ast_expression> blaise_ast_expression_array_access::indexing() const { return _indexing; }
+std::shared_ptr<blaise_ast_expression_array_access> gasp::blaise::ast::make_blaise_ast_expression_array_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+                     std::shared_ptr<blaise_ast_generic_memory_location> array,
+                     std::shared_ptr<blaise_ast_expression> indexing){
+  return memory::gasp_make_shared<blaise_ast_expression_array_access>(reference, array, indexing);
+}
 // TERNARY
 blaise_ast_ternary_cast::blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
    std::shared_ptr<blaise_ast_expression> condition,

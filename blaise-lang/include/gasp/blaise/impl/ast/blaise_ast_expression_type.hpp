@@ -6,7 +6,7 @@ enum class blaise_ast_expression_type {
    UNDEFINED,
    BINARY,
    UNARY,
-   MEMORY_LOCATION,
+   IDENTIFIER,
    FUNCTION_CALL,
    LITERAL_INTEGER,
    LITERAL_FLOAT,

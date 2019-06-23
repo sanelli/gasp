@@ -64,7 +64,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       auto identifier_token = context.peek_token();
       match_token(context, blaise_token_type::IDENTIFIER);
       const auto lookahead = context.peek_token().type();
-      if (is_token_and_match(context, blaise_token_type::LEFT_PARENTHESES))
+      if (is_token_and_match(context, blaise_token_type::LEFT_PARENTHESES)) // Function call
       {
          vector<shared_ptr<ast::blaise_ast_expression>> expressions;
          vector<std::shared_ptr<ast::blaise_ast_type>> types;
@@ -81,10 +81,42 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
          
          term_expression = ast::make_blaise_ast_expression_subroutine_call(identifier_token, subroutine, expressions);
+      } else if(is_token_and_match(context, blaise_token_type::LEFT_BRACKET)){ // Array access
+         auto indexing_expression = parse_expression(context);
+         match_token(context, blaise_token_type::RIGHT_BRACKET);
+
+        auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
+        if(memory_location == nullptr)
+            throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                     make_string("Cannot find array with name '", identifier_token.value(),"'"));
+         switch(memory_location->type()->type_type()){
+            case ast::blaise_ast_type_type::ARRAY: // All good
+            break;
+            case ast::blaise_ast_type_type::PLAIN:
+            case ast::blaise_ast_type_type::POINTER:
+            case ast::blaise_ast_type_type::USER_DEFINED:
+                throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                     make_string("Variable '", identifier_token.value(),"' must be of type array"));
+            default:
+               throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                     make_string("Unexpected variable type '", memory_location->type(),"'."));
+         }
+         auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
+         if(indexing_expression->result_type() != integer_type && !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type)){
+             throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
+                     make_string("indexing expression must be an integer or a type that can be casted to an integer."));
+         }
+         term_expression = ast::make_blaise_ast_expression_array_access(identifier_token, memory_location, indexing_expression);
+
       }
-      else
+      else // Variable access
       {
-         term_expression = ast::make_blaise_ast_expression_memory_location(context.current_subroutine(), token);
+        auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
+        if(memory_location == nullptr)
+            throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                     make_string("Cannot find variable with name '", identifier_token.value(),"'"));
+
+         term_expression = ast::make_blaise_ast_expression_memory_location(identifier_token, memory_location);
       }
    }
    break;
