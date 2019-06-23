@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
       procedure native write(input: string); 
       procedure native write(input: integer);
       procedure native write(input: float);
+      procedure native write(input: array<integer>, input_size: integer);
       function duplicate(input : float) : float 
       begin
          duplicate := 2 * input;

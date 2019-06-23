@@ -81,7 +81,7 @@ void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
    std::vector<token<blaise_token_type>> variable_tokens;
    parse_variable_names_list(context, variable_tokens);
    match_token(context, blaise_token_type::COLON);
-   const auto variable_type = parse_variable_type(context);
+   const auto variable_type = parse_variable_type(context, true);
    
    match_token(context, blaise_token_type::SEMICOLON);
 
@@ -112,7 +112,7 @@ void blaise_parser::parse_variable_names_list(blaise_parser_context &context, st
    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_names_list" << std::endl);
 }
 
-std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_parser_context &context)
+std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_parser_context &context, bool accept_unbounded_array)
 {
    GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
 
@@ -128,16 +128,23 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
    std::shared_ptr<ast::blaise_ast_type> variable_type = nullptr;
    if(type_token.type() == blaise_token_type::TYPE_ARRAY) { 
       match_token(context, blaise_token_type::LESS_THAN);
-      auto inner_type = parse_variable_type(context);
+      auto inner_type = parse_variable_type(context, true);
       match_token(context, blaise_token_type::GREAT_THAN);
-      match_token(context, blaise_token_type::LEFT_BRACKET);
-      auto array_size_expression = parse_number(context);
-      if(!ast::blaise_ast_utility::is_integer(array_size_expression->result_type()))
-         throw_parse_error_with_details(context, "An integral value was expected as array size");
-      match_token(context, blaise_token_type::RIGHT_BRACKET);
+      auto array_size_length = 0;
+      if(is_token_and_match(context, blaise_token_type::LEFT_BRACKET)){
+         auto array_size_expression = parse_number(context);
+         if(!ast::blaise_ast_utility::is_integer(array_size_expression->result_type()))
+            throw_parse_error_with_details(context, "An integral value was expected as array size");
+         match_token(context, blaise_token_type::RIGHT_BRACKET);
+         auto array_size = std::static_pointer_cast<ast::blaise_ast_expression_integer_value>(array_size_expression);
+         array_size_length = array_size->value();
+      } else {
+         GASP_DEBUG("blaise-parser", "[INSIDE] blaise_parser::parse_variable_type accept_unbounded_array = " << (accept_unbounded_array ? "TRUE" : "FALSE") << std::endl);
+         if(!accept_unbounded_array)
+            throw_parse_error_with_details(context, "Array size required");
+      }
 
-      auto array_size = std::static_pointer_cast<ast::blaise_ast_expression_integer_value>(array_size_expression);
-      variable_type = ast::get_array_type_from_token(type_token, inner_type, array_size->value());
+      variable_type = ast::get_array_type_from_token(type_token, inner_type, array_size_length, accept_unbounded_array);
    }else {
       // Just a plain variable
       variable_type = ast::get_type_from_token(type_token);

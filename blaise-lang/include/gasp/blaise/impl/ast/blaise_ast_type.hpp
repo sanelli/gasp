@@ -56,6 +56,7 @@ class blaise_ast_array_type : public blaise_ast_type {
       ~blaise_ast_array_type();
       std::shared_ptr<blaise_ast_type> inner_type() const;
       unsigned int size() const;
+      bool is_unbounded() const;
       inline virtual bool equals(std::shared_ptr<blaise_ast_type> other) const;
 
       friend gasp::common::memory;
@@ -66,6 +67,6 @@ std::shared_ptr<blaise_ast_type> make_plain_type(blaise_ast_system_type system);
 std::shared_ptr<blaise_ast_type> get_array_type_from_token(
    const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
    std::shared_ptr<blaise_ast_type> inner_type,
-   int array_size);
+   const int array_size, const bool accept_unbounded_array);
 
 }

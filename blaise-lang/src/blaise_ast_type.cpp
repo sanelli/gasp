@@ -60,6 +60,7 @@ blaise_ast_array_type::blaise_ast_array_type(std::shared_ptr<blaise_ast_type> in
 blaise_ast_array_type::~blaise_ast_array_type(){}
 std::shared_ptr<blaise_ast_type> blaise_ast_array_type::inner_type() const { return _inner_type; }
 unsigned int blaise_ast_array_type::size() const { return _size; }
+bool blaise_ast_array_type::is_unbounded() const { return _size == 0; }
 
 inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other) const {
    if(type_type() != other->type_type()) return false;
@@ -70,8 +71,8 @@ inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_array_type_from_token(
    const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
    std::shared_ptr<blaise_ast_type> inner_type,
-   int array_size) { 
-      if(array_size <= 0)
+   const int array_size, const bool accept_unbounded_array) { 
+      if(array_size < 0 || (!accept_unbounded_array && array_size == 0))
          throw blaise_ast_error(reference.line(), reference.column(), make_string("Array must have a size greater than 0."));
    return memory::gasp_make_shared<blaise_ast_array_type>(inner_type, static_cast<unsigned int>(array_size));
    }
