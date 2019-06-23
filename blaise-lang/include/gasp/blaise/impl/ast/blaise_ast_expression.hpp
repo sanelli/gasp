@@ -145,18 +145,18 @@ std::shared_ptr<blaise_ast_expression_unary> make_blaise_ast_expression_unary(ga
 //
 // EXPRESSION IDENTIFIER
 //
-enum class blaise_ast_expression_identifier_type {
+enum class blaise_ast_expression_memory_access_type {
    MEMORY_LOCATION,
    ARRAY
 };
 class blaise_ast_expression_identifier : public blaise_ast_expression {
-   blaise_ast_expression_identifier_type _identifier_type;
+   blaise_ast_expression_memory_access_type _memory_access_type;
 protected:
    blaise_ast_expression_identifier(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
-                  blaise_ast_expression_identifier_type identifier_type, 
+                  blaise_ast_expression_memory_access_type identifier_type, 
                   std::shared_ptr<blaise_ast_type> result_type);
 public:
-   blaise_ast_expression_identifier_type identifier_type() const;
+   blaise_ast_expression_memory_access_type memory_access_type() const;
 };
 
 class blaise_ast_expression_memory_location : public blaise_ast_expression_identifier {
