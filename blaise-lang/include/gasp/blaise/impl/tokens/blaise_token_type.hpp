@@ -26,6 +26,15 @@ enum class blaise_token_type : unsigned char
    IF,
    THEN,
    ELSE,
+   DO,
+   WHILE,
+   REPEAT,
+   UNTIL,
+   FOR,
+   FROM,
+   TO,
+   STEP,
+   FINALLY,
 
    // TYPES
    TYPE_INTEGER,

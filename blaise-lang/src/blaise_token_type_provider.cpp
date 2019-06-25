@@ -25,7 +25,15 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::CAST, "cast", "CAST");
    add_token(blaise_token_type::IF, "if", "IF");
    add_token(blaise_token_type::THEN, "then", "THEN");
-   add_token(blaise_token_type::ELSE, "else", "else");
+   add_token(blaise_token_type::ELSE, "else", "ELSE");
+   add_token(blaise_token_type::DO, "do", "DO");
+   add_token(blaise_token_type::WHILE, "while", "WHILE");
+   add_token(blaise_token_type::REPEAT, "repeat", "REPEAT");
+   add_token(blaise_token_type::UNTIL, "until", "UNTIL");
+   add_token(blaise_token_type::FOR, "for", "FOR");
+   add_token(blaise_token_type::FROM, "from", "FROM");
+   add_token(blaise_token_type::TO, "to", "TO");
+   add_token(blaise_token_type::FINALLY, "finally", "FINALLY");
 
    // TYPES
    add_token(blaise_token_type::TYPE_INTEGER, "integer", "TYPE_INTEGER");
