@@ -115,7 +115,10 @@ std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_stateme
    return memory::gasp_make_shared<blaise_ast_statement_subroutine_call>(reference, subroutine, parameters);
 }
 
- blaise_ast_statement_if::blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+//
+// IF STATEMENT
+//
+blaise_ast_statement_if::blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> then_statement,
       std::shared_ptr<blaise_ast_statement> else_statement) 
@@ -136,4 +139,104 @@ std::shared_ptr<blaise_ast_statement_if> ast::make_blaise_ast_statement_if(const
       std::shared_ptr<blaise_ast_statement> then_statement,
       std::shared_ptr<blaise_ast_statement> else_statement) {
    return memory::gasp_make_shared<blaise_ast_statement_if>(reference, condition, then_statement, else_statement);
+}
+
+//
+// FOR LOOP
+//
+blaise_ast_statement_for_loop::blaise_ast_statement_for_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_identifier> variable,
+      std::shared_ptr<blaise_ast_expression> from_expression,
+      std::shared_ptr<blaise_ast_expression> to_expression,
+      std::shared_ptr<blaise_ast_expression> step_expression,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally)
+      : blaise_ast_statement(reference, blaise_ast_statement_type::FOR_LOOP),
+        _variable(variable),
+        _from_expression(from_expression),
+        _to_expression(to_expression),
+        _step_expression(step_expression),
+        _body(body),
+        _finally(finally)
+      { }
+std::shared_ptr<blaise_ast_identifier> blaise_ast_statement_for_loop::variable() const { return _variable; }
+std::shared_ptr<blaise_ast_expression> blaise_ast_statement_for_loop::from_expression() const { return _from_expression; }
+std::shared_ptr<blaise_ast_expression> blaise_ast_statement_for_loop::to_expression() const { return _to_expression; }
+std::shared_ptr<blaise_ast_expression> blaise_ast_statement_for_loop::step_expression() const { return _step_expression; }
+std::shared_ptr<blaise_ast_statement> blaise_ast_statement_for_loop::body() const { return _body; }
+std::shared_ptr<blaise_ast_statement> blaise_ast_statement_for_loop::finally() const { return _finally; }
+std::shared_ptr<blaise_ast_statement_for_loop> ast::make_blaise_ast_statement_for_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_identifier> variable,
+      std::shared_ptr<blaise_ast_expression> from_expression,
+      std::shared_ptr<blaise_ast_expression> to_expression,
+      std::shared_ptr<blaise_ast_expression> step_expression,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally){
+   return memory::gasp_make_shared<blaise_ast_statement_for_loop>(reference, variable, from_expression, to_expression, step_expression, body, finally);
+}
+
+//
+// GENERIC LOOP
+//
+blaise_ast_statement_generic_loop::blaise_ast_statement_generic_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      blaise_ast_statement_type type,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally)
+      : blaise_ast_statement(reference, type),
+       _condition(condition),
+       _body(body),
+       _finally(finally)
+      {
+      }
+std::shared_ptr<blaise_ast_expression> blaise_ast_statement_generic_loop::condition() const { return _condition; }
+std::shared_ptr<blaise_ast_statement> blaise_ast_statement_generic_loop::body() const { return _body; }
+std::shared_ptr<blaise_ast_statement> blaise_ast_statement_generic_loop::finally() const { return _finally; }
+
+//
+// DO-WHILE LOOP
+//
+blaise_ast_statement_dowhile_loop::blaise_ast_statement_dowhile_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally)
+      : blaise_ast_statement_generic_loop(reference, blaise_ast_statement_type::DO_WHILE_LOOP, condition, body, finally)
+   {}
+std::shared_ptr<blaise_ast_statement_dowhile_loop> ast::make_blaise_ast_statement_dowhile_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally){
+   return memory::gasp_make_shared<blaise_ast_statement_dowhile_loop>(reference, condition, body, finally);
+}
+
+//
+// WHILE LOOP
+//
+blaise_ast_statement_while_loop::blaise_ast_statement_while_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally)
+      : blaise_ast_statement_generic_loop(reference, blaise_ast_statement_type::WHILE_LOOP, condition, body, finally)
+   {}
+std::shared_ptr<blaise_ast_statement_while_loop> ast::make_blaise_ast_statement_while_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally){
+   return memory::gasp_make_shared<blaise_ast_statement_while_loop>(reference, condition, body, finally);
+}
+
+//
+// REPEAT UNTIL LOOP
+//
+blaise_ast_statement_repeatuntil_loop::blaise_ast_statement_repeatuntil_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally)
+      : blaise_ast_statement_generic_loop(reference, blaise_ast_statement_type::REPEAT_UNTIL_LOOP, condition, body, finally)
+   {}
+std::shared_ptr<blaise_ast_statement_repeatuntil_loop> ast::make_blaise_ast_statement_repeatuntil_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_expression> condition,
+      std::shared_ptr<blaise_ast_statement> body,
+      std::shared_ptr<blaise_ast_statement> finally){
+   return memory::gasp_make_shared<blaise_ast_statement_repeatuntil_loop>(reference, condition, body, finally);
 }
