@@ -107,7 +107,6 @@ class blaise_ast_statement_for_loop : public blaise_ast_statement {
    std::shared_ptr<blaise_ast_expression> _to_expression;
    std::shared_ptr<blaise_ast_expression> _step_expression;
    std::shared_ptr<blaise_ast_statement> _body;
-   std::shared_ptr<blaise_ast_statement> _finally;
 
    blaise_ast_statement_for_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_identifier> variable,
