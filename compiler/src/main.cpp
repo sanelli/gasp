@@ -81,6 +81,19 @@ int main(int argc, char *argv[])
          ctr1[0] := "Stefano";
          ctr2[0] := 11;
          ctr2[1] := 10 + 2 * ctr2[2];
+         for myi from (0) to (10) step 2 begin
+            foo := foo + 10;
+         end
+         while equals begin
+            equals := false;
+         end
+         do begin
+            equals := equals and false;
+         end while equals;
+         releat
+            foo := foo + 1;
+            equals := foo > 100;
+         until not equals;
       end.
    )___";
 
