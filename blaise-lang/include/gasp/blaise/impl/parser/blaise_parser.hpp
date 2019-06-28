@@ -43,6 +43,10 @@ class blaise_parser : public gasp::common::parser<blaise_token_type>
                               std::vector<std::shared_ptr<ast::blaise_ast_type>>& types);
    static std::shared_ptr<ast::blaise_ast_statement> parse_assignamet_statement(blaise_parser_context &context);
    static std::shared_ptr<ast::blaise_ast_statement> parse_if_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_statement> parse_for_loop_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_statement> parse_while_loop_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_statement> parse_do_while_loop_statement(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_statement> parse_repeat_until_loop_statement(blaise_parser_context &context);
 
    // Expression
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression(blaise_parser_context &context);
