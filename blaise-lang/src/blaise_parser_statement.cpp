@@ -161,10 +161,10 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
 
    auto identifier = context.peek_token();
    match_token(context, blaise_token_type::IDENTIFIER);
-   // TODO: This MUST NOT be a vairable but a memory location
-   // TODO: Must checl here this is not a constant
-   auto variable = context.current_subroutine()->get_variable(identifier.value());
-
+   auto variable = context.current_subroutine()->get_memory_location(identifier.value());
+   if(variable->variable_type() == ast::blaise_ast_variable_type::CONSTANT) 
+      throw_parse_error_with_details(context, identifier.line(), identifier.column(),
+                  make_string("Constant '", identifier.value(),"' cannot be assigned"));
    if(variable == nullptr)
       throw_parse_error_with_details(context, identifier.line(), identifier.column(), make_string("Variable ", identifier.value(), " does not exists in the context."));
 
