@@ -1,0 +1,10 @@
+program code0001;
+var
+   i: integer;
+   j, k: integer;
+   c: char;
+   s: string;
+   w: float;
+   b: boolean;
+begin
+end.

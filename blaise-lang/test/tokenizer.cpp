@@ -619,6 +619,14 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
             REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
             REQUIRE(tokens.at(0).value() == "true_");
          }
+
+         THEN("it does not mess up with identifiers starting with another keywords"){
+            tokenizer.tokenize("variable", 0, tokens);
+            REQUIRE(tokens.size() == 1);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::IDENTIFIER);
+            REQUIRE(tokens.at(0).value() == "variable");
+         }
+
       }
    }
 }

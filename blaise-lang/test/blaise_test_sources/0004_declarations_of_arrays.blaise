@@ -1,0 +1,10 @@
+program code0004;
+var
+   i: array<integer>[10];
+   b: array<boolean>[10];
+   f: array<float>[10];
+   d: array<double>[10];
+   c: array<char>[10];
+   d: array<string>[10];
+begin
+end.
