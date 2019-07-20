@@ -26,11 +26,11 @@ public:
    void set_ignore_spaces(bool ignore_spaces) { _ignore_spaces = ignore_spaces; }
    void ignore_spaces() { return _ignore_spaces; }
 
-   void add(TTokenType token, const std::string &rule, bool keep_value = false, bool keep_token = true)
+   void add(TTokenType token, const std::string &rule, bool keep_value = false, bool keep_token = true, bool is_punctuation = false)
    {
       if (!keep_token && keep_value)
          throw gasp::common::gasp_error("Trying to add a token where keep_token = false but keep_value = true");
-      _rules.emplace_back(token, rule, keep_value, keep_token);
+      _rules.emplace_back(token, rule, keep_value, keep_token, is_punctuation);
    }
 
    template <typename TTokenContainer>

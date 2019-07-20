@@ -28,5 +28,6 @@ public:
    static std::string name(blaise_token_type token_type);
    static bool keep_value(blaise_token_type token_type);
    static bool keep_token(blaise_token_type token_type);
+   static bool is_punctuation(blaise_token_type token_type);
 };
 }

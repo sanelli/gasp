@@ -30,9 +30,19 @@ int main(int argc, char *argv[])
    blaise_parser_context context;
 
    stringstream program;
-   program << R"___(
-      program Hello_World;
 
+   // program << R"__(
+   //    variable
+   // )__";
+
+   // program <<  R"__(program variable_program;
+   // var
+   //   true_: boolean;
+   // begin    
+   // end.)__";
+
+   program << R"___(
+      program hello_world;
       function native read_integer() : integer;
       function native read_float() : float;
       procedure native write(input: string); 
@@ -87,10 +97,10 @@ int main(int argc, char *argv[])
          do begin
             equals := equals and false;
          end while equals;
-         repeat
+         repeat begin
             foo := foo + 1;
             equals := foo > 100;
-         until not equals;
+         end until not equals;
          for myi from 0 to 10 step 2 begin
             foo := foo + 10;
          end

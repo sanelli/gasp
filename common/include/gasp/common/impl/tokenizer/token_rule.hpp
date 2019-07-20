@@ -23,13 +23,21 @@ class token_rule
    std::regex _regexp;
    bool _keep_value;
    bool _keep_token;
+   bool _is_punctuation;
    std::string _plain_regexp;
 
 public:
-   token_rule(TTokenType token_type, std::string regular_expression, bool keep_value, bool keep_token) 
-   : _token_type(token_type), _keep_value(keep_value), _keep_token(keep_token), _plain_regexp(regular_expression)
+   token_rule(TTokenType token_type, std::string regular_expression, bool keep_value, bool keep_token, bool is_punctuation = false)
+   : _token_type(token_type), _keep_value(keep_value), _keep_token(keep_token), _plain_regexp(regular_expression), _is_punctuation(is_punctuation)
    {
-      _regexp.assign("^(?:(?:" + regular_expression + ")(?:\\b|\\s*$|\\s*))", std::regex_constants::ECMAScript);
+      auto after_expression_match_word = std::string("(?:\\b|\\s+|$)");
+      auto after_expression = std::string("(?:\\s+|$|)");
+      auto expression_group = std::string("(?:" + regular_expression + ")");
+      std::string expression = expression_group;
+      if(!is_punctuation) expression = expression + after_expression_match_word;
+      else expression = expression + after_expression;
+      std::string final_expression = "^(?:" +  expression + ")";
+      _regexp.assign(final_expression, std::regex_constants::ECMAScript | std::regex_constants::optimize);
    }
 
    std::tuple<bool, token<TTokenType>, std::string, bool> match(std::string input, int line, int column, bool ignore_spaces) const
@@ -44,7 +52,7 @@ public:
       if (found)
          {
             auto value = _keep_value ? match[0] : std::string("");
-            if(ignore_spaces){
+            if(_keep_value && ignore_spaces){
                gasp::common::ltrim(value);
                gasp::common::rtrim(value);
             }

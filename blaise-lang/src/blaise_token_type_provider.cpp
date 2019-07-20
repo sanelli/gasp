@@ -45,26 +45,26 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::TYPE_ARRAY, "array", "TYPE_ARRAY");
 
    // PUNCTUATION
-   add_token(blaise_token_type::ASSIGNMENT, ":=", "ASSIGNMENT");
-   add_token(blaise_token_type::SEMICOLON, ";", "SEMICOLON");
-   add_token(blaise_token_type::PERIOD, "\\.", "PERIOD");
-   add_token(blaise_token_type::COLON, "\\:", "COLON");
-   add_token(blaise_token_type::COMMA, "\\,", "COMMA");
-   add_token(blaise_token_type::LEFT_PARENTHESES, "\\(", "LEFT_PARENTHESES");
-   add_token(blaise_token_type::RIGHT_PARENTHESES, "\\)", "RIGHT_PARENTHESES");
-   add_token(blaise_token_type::LEFT_BRACKET, "\\[", "LEFT_BRACKET");
-   add_token(blaise_token_type::RIGHT_BRACKET, "\\]", "RIGHT_BRACKET");
-   add_token(blaise_token_type::NOT_EQUAL_TO, "\\<\\>", "NOT_EQUAL_TO");
-   add_token(blaise_token_type::EQUAL_TO, "\\=\\=", "EQUAL_TO");
-   add_token(blaise_token_type::GREAT_THAN_OR_EQUAL_TO, "\\>\\=", "GREAT_THAN_OR_EQUAL_TO");
-   add_token(blaise_token_type::LESS_THAN_OR_EQUAL_TO, "\\<\\=", "LESS_THAN_OR_EQUAL_TO");
-   add_token(blaise_token_type::GREAT_THAN, "\\>", "GREAT_THAN");
-   add_token(blaise_token_type::LESS_THAN, "\\<", "GREAT_THAN");
-   add_token(blaise_token_type::PLUS, "\\+", "PLUS");
-   add_token(blaise_token_type::MINUS, "\\-", "MINUS");
-   add_token(blaise_token_type::MULTIPLY, "\\*", "MULTIPLY");
-   add_token(blaise_token_type::DIVIDE, "\\/", "DIVIDE");
-   add_token(blaise_token_type::REMAINDER, "\\%", "REMAINDER");
+   add_token(blaise_token_type::ASSIGNMENT, ":=", "ASSIGNMENT", false, true, true);
+   add_token(blaise_token_type::SEMICOLON, ";", "SEMICOLON", false, true, true);
+   add_token(blaise_token_type::PERIOD, "\\.", "PERIOD", false, true, true);
+   add_token(blaise_token_type::COLON, "\\:", "COLON", false, true, true);
+   add_token(blaise_token_type::COMMA, "\\,", "COMMA", false, true, true);
+   add_token(blaise_token_type::LEFT_PARENTHESES, "\\(", "LEFT_PARENTHESES", false, true, true);
+   add_token(blaise_token_type::RIGHT_PARENTHESES, "\\)", "RIGHT_PARENTHESES", false, true, true);
+   add_token(blaise_token_type::LEFT_BRACKET, "\\[", "LEFT_BRACKET", false, true, true);
+   add_token(blaise_token_type::RIGHT_BRACKET, "\\]", "RIGHT_BRACKET", false, true, true);
+   add_token(blaise_token_type::NOT_EQUAL_TO, "\\<\\>", "NOT_EQUAL_TO", false, true, true);
+   add_token(blaise_token_type::EQUAL_TO, "\\=\\=", "EQUAL_TO", false, true, true);
+   add_token(blaise_token_type::GREAT_THAN_OR_EQUAL_TO, "\\>\\=", "GREAT_THAN_OR_EQUAL_TO", false, true, true);
+   add_token(blaise_token_type::LESS_THAN_OR_EQUAL_TO, "\\<\\=", "LESS_THAN_OR_EQUAL_TO", false, true, true);
+   add_token(blaise_token_type::GREAT_THAN, "\\>", "GREAT_THAN", false, true, true);
+   add_token(blaise_token_type::LESS_THAN, "\\<", "GREAT_THAN", false, true, true);
+   add_token(blaise_token_type::PLUS, "\\+", "PLUS", false, true, true);
+   add_token(blaise_token_type::MINUS, "\\-", "MINUS", false, true, true);
+   add_token(blaise_token_type::MULTIPLY, "\\*", "MULTIPLY", false, true, true);
+   add_token(blaise_token_type::DIVIDE, "\\/", "DIVIDE", false, true, true);
+   add_token(blaise_token_type::REMAINDER, "\\%", "REMAINDER", false, true, true);
 
    // LITERALS
    add_token(blaise_token_type::INTEGER_BASE_TWO_LITERAL, "0b[0-1]+", "INTEGER_BASE_TWO_LITERAL", true);
@@ -73,8 +73,8 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::FLOAT_LITERAL, "[0-9]+\\.[0-9]+f", "FLOAT_LITERAL", true);
    add_token(blaise_token_type::DOUBLE_LITERAL, "[0-9]+\\.[0-9]+d?", "DOUBLE_LITERAL", true);
    add_token(blaise_token_type::INTEGER_LITERAL, "[0-9]+", "INTEGER_LITERAL", true);
-   add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.|\\\\u[0-9a-fA-f]{4})*\"", "STIRNG_LITERAL", true);
-   add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.|\\\\u[0-9a-fA-f]{4})'", "CHAR_LITERAL", true);
+   add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"]|\\\\.|\\\\u[0-9a-fA-f]{4})*\"", "STIRNG_LITERAL", true, true, true);
+   add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^']|\\\\.|\\\\u[0-9a-fA-f]{4})'", "CHAR_LITERAL", true, true, true);
    add_token(blaise_token_type::BOOLEAN_LITERAL, "true|false", "BOOLEAN_LITERAL", true);
    add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z_][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
@@ -87,3 +87,4 @@ std::string blaise_token_type_provider::rule(blaise_token_type token_type) { ret
 std::string blaise_token_type_provider::name(blaise_token_type token_type) { return _private.name(token_type); }
 bool blaise_token_type_provider::keep_value(blaise_token_type token_type) { return _private.keep_value(token_type); }
 bool blaise_token_type_provider::keep_token(blaise_token_type token_type) { return _private.keep_token(token_type); }
+bool blaise_token_type_provider::is_punctuation(blaise_token_type token_type) { return _private.is_punctuation(token_type); }

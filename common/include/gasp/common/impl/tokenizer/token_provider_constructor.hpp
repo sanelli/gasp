@@ -12,13 +12,13 @@ template <typename TTokenType>
 class token_provider_constructor
 {
 protected:
-   std::map<TTokenType, std::tuple<std::string, std::string, bool, bool>> _token_values;
+   std::map<TTokenType, std::tuple<std::string, std::string, bool, bool, bool>> _token_values;
    std::vector<TTokenType> _tokens;
 
-   void add_token(TTokenType token, std::string rule, std::string name, bool keep_value = false, bool keep_token = true)
+   void add_token(TTokenType token, std::string rule, std::string name, bool keep_value = false, bool keep_token = true, bool is_punctuation = false)
    {
       _tokens.push_back(token);
-      _token_values.insert(std::make_pair<>(token, std::make_tuple<>(rule, name, keep_value, keep_token)));
+      _token_values.insert(std::make_pair<>(token, std::make_tuple<>(rule, name, keep_value, keep_token, is_punctuation)));
    }
 
 public:
@@ -31,6 +31,7 @@ public:
    std::string name(TTokenType token) const { return std::get<1>(_token_values.at(token)); }
    bool keep_value(TTokenType token) const { return std::get<2>(_token_values.at(token)); }
    bool keep_token(TTokenType token) const { return std::get<3>(_token_values.at(token)); }
+   bool is_punctuation(TTokenType token) const { return std::get<4>(_token_values.at(token)); }
 };
 
 } // namespace gasp::common

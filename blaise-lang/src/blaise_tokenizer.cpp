@@ -18,7 +18,8 @@ blaise_tokenizer::blaise_tokenizer()
       auto rule = blaise_token_type_provider::rule(token);
       auto keep_value = blaise_token_type_provider::keep_value(token);
       auto keep_token = blaise_token_type_provider::keep_token(token);
+      auto is_punctuation = blaise_token_type_provider::is_punctuation(token);
 
-      add(token, rule, keep_value, keep_token);
+      add(token, rule, keep_value, keep_token, is_punctuation);
    }
 }
