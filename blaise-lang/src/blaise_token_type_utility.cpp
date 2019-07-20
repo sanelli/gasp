@@ -46,6 +46,7 @@ bool blaise_token_type_utility::is_operator(blaise_token_type token_type){
       case blaise_token_type::EQUAL_TO:
       case blaise_token_type::NOT_EQUAL_TO:
       case blaise_token_type::LOGICAL_AND:
+      case blaise_token_type::LOGICAL_OR:
       case blaise_token_type::LOGICAL_EAGER_AND:
       case blaise_token_type::LOGICAL_EAGER_OR:
          return true;
