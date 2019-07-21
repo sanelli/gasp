@@ -1,7 +1,7 @@
 program code0003;
 var
-   i, j, k: koolean;
-kegin
+   i, j, k: boolean;
+begin
    i := true;
    i := false;
    i := true and false;
