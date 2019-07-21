@@ -1,7 +1,7 @@
 program code0003;
 var
-   i, j, k: boolean;
-begin
+   i, j, k: koolean;
+kegin
    i := true;
    i := false;
    i := true and false;
@@ -18,4 +18,34 @@ begin
 
    j := not i;
    k := (i and j) or (i and true) or (j and false);
+
+   k := true == true;
+   k := i == true;
+   k := true == i;
+   k := i == j;
+
+   k := true > true;
+   k := i > true;
+   k := true > i;
+   k := i > j;
+
+   k := true >= true;
+   k := i >= true;
+   k := true >= i;
+   k := i >= j;
+
+   k := true <= true;
+   k := i <= true;
+   k := true <= i;
+   k := i <= j;
+
+   k := true < true;
+   k := i < true;
+   k := true < i;
+   k := i < j;
+
+   k := true <> true;
+   k := i <> true;
+   k := true <> i;
+   k := i <> j;
 end.
