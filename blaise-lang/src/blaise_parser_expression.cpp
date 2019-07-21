@@ -42,6 +42,9 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(bl
          rhs = parse_expression_helper(context, rhs, blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
          lookahead_token = std::move(context.peek_token());
       }
+
+      // TODO: Introduce casts if needed on both dife of the operation (Issue #50)
+
       lhs = ast::make_blaise_ast_expression_binary(lhs, operator_token, rhs);
    }
    GASP_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);

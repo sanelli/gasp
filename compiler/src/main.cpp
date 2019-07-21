@@ -42,12 +42,56 @@ int main(int argc, char *argv[])
    // end.)__";
 
    program << R"___(
-   program code0003;
+program code0003;
 var
    i, j, k: boolean;
 begin
    i := true;
-   j := i or false;
+   i := false;
+   i := true and false;
+   i := true or false;
+   i := not true;
+
+   j := i and true;
+   j := true and i;
+   j := i and i;
+
+   j := i or true;
+   j := true or i;
+   j := i or i;
+
+   j := not i;
+   k := (i and j) or (i and true) or (j and false);
+
+   k := true == true;
+   k := i == true;
+   k := true == i;
+   k := i == j;
+
+   k := true > true;
+   k := i > true;
+   k := true > i;
+   k := i > j;
+
+   k := true >= true;
+   k := i >= true;
+   k := true >= i;
+   k := i >= j;
+
+   k := true <= true;
+   k := i <= true;
+   k := true <= i;
+   k := i <= j;
+
+   k := true < true;
+   k := i < true;
+   k := true < i;
+   k := i < j;
+
+   k := true <> true;
+   k := i <> true;
+   k := true <> i;
+   k := i <> j;
 end.
    )___";
 

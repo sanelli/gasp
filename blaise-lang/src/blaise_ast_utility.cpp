@@ -205,7 +205,9 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const to
       {
          if((is_numeric(left) && is_numeric(right)) ||
             (is_char(left) && is_char(right)) ||
-            (is_string(left) && is_string(right)))
+            (is_string(left) && is_string(right)) ||
+            (is_boolean(left) && is_boolean(right))
+            )
                return make_plain_type(blaise_ast_system_type::BOOLEAN);
       }
       break;
