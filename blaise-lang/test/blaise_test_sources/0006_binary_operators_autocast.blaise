@@ -1,0 +1,9 @@
+program code006;
+var
+ i: integer;
+ f, g: float;
+begin
+   i := 10;
+   f := cast<float>(20.30);
+   g := i + f;
+end.

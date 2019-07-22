@@ -42,8 +42,16 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(bl
          rhs = parse_expression_helper(context, rhs, blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
          lookahead_token = std::move(context.peek_token());
       }
-
-      // TODO: Introduce casts if needed on both dife of the operation (Issue #50)
+      if(lhs->result_type() != rhs->result_type()) {
+         if(ast::blaise_ast_utility::can_auto_cast(lhs->result_type(), rhs->result_type()))
+            lhs = ast::introduce_cast_if_required(operator_token, rhs->result_type(), lhs);
+         else if(ast::blaise_ast_utility::can_auto_cast(rhs->result_type(), lhs->result_type()))
+            rhs = ast::introduce_cast_if_required(operator_token, lhs->result_type(), rhs);
+         else
+            throw_parse_error_with_details(context, lhs->line(), lhs->column(),
+                      make_string("Operator ", operator_token, " between expressions of type ",lhs->result_type(), 
+                      " and ", rhs->result_type(), " is not supported."));
+      }
 
       lhs = ast::make_blaise_ast_expression_binary(lhs, operator_token, rhs);
    }

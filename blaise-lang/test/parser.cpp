@@ -35,13 +35,15 @@ SCENARIO("Parse testing programs", "[blaise-lang][parser][base]")
                               "0002_operations_on_integers",
                               "0003_operations_on_booleans",
                               "0004_declarations_of_arrays",
-                              "0005_operations_on_arrays"
+                              "0005_operations_on_arrays",
+                              "0006_binary_operators_autocast"
                               };
+   const std::string extension(".blaise");
 
    for (const auto filename : filenames)
       GIVEN(filename)
       {
-         ifstream stream(std::string("../blaise-lang/test/blaise_test_sources/") + filename + ".blaise", std::ifstream::in);
+         ifstream stream(filename + extension, std::ifstream::in);
          if (stream.is_open())
          {
             REQUIRE_NOTHROW(tokenizer.tokenize(stream, context));
@@ -52,7 +54,4 @@ SCENARIO("Parse testing programs", "[blaise-lang][parser][base]")
             throw std::runtime_error(std::string("cannot load file ") + filename);
          }
       }
-
-   // GENERATE_TEST_FOR("0000_simple_empty_program.blaise");
-   // GENERATE_TEST_FOR("0001_variable_declaration.blaise");
 }
