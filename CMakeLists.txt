@@ -32,10 +32,20 @@ target_link_libraries(gasp-blaise-lang-test Catch2::Catch2)
 add_subdirectory(blaise-lang)
 
 #################################################
+# torricelly lang
+#################################################
+add_library(gasp-torricelly-lang SHARED "")
+set_target_properties(gasp-torricelly-lang PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-torricelly-lang gasp-common)
+
+add_subdirectory(torricelly-lang)
+
+#################################################
 # GASP main executable
 #################################################
 add_executable(gasp "")
 add_subdirectory(compiler)
 target_link_libraries(gasp gasp-common)
 target_link_libraries(gasp gasp-blaise-lang)
+target_link_libraries(gasp gasp-torricelly-lang)
 
