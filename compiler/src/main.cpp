@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <memory>
 
 #include <gasp/blaise/tokenizer.hpp>
 #include <gasp/blaise/tokens.hpp>
@@ -10,9 +11,15 @@
 #include <gasp/common/output.hpp>
 #include <gasp/common/debug.hpp>
 
+#include <gasp/torricelly/torricelly.hpp>
+#include <gasp/blaise-to-torricelly/blaise_to_torricelly.hpp>
+
 using namespace std;
 using namespace gasp::common;
 using namespace gasp::blaise;
+using namespace gasp::torricelly;
+using namespace gasp::blaise_to_torricelly;
+
 
 // TODO: Add error codes when I throw errors
 
@@ -28,6 +35,7 @@ int main(int argc, char *argv[])
    blaise_tokenizer tokenizer;
    blaise_parser parser;
    blaise_parser_context context;
+   std::vector<std::shared_ptr<torricelly_module>> modules;
 
    stringstream program;
 
@@ -167,6 +175,9 @@ int main(int argc, char *argv[])
       tokenizer.tokenize(program, context);
       cout << context << endl;
       parser.parse(context);
+      gasp::blaise_to_torricelly::translator translator(context.module());
+      translator.execute(modules);
+      
       return EXIT_SUCCESS;
    }
    catch (gasp::common::tokenizer_error &error)
