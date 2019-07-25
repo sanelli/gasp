@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <gasp/common/memory.hpp>
 
 namespace gasp::torricelly {
 
