@@ -30,7 +30,7 @@ class blaise_ast_type {
    protected:
       blaise_ast_type(blaise_ast_type_type type_type);
    public:
-      ~blaise_ast_type();
+      virtual ~blaise_ast_type();
       blaise_ast_type_type type_type() const;
       inline virtual bool equals(std::shared_ptr<blaise_ast_type> other) const = 0;
 };
@@ -40,9 +40,9 @@ class blaise_ast_plain_type : public blaise_ast_type {
    protected:
       blaise_ast_plain_type(blaise_ast_system_type system_type);
    public:
-      ~blaise_ast_plain_type();
+      ~blaise_ast_plain_type() override;
       blaise_ast_system_type system_type() const;
-      inline virtual bool equals(std::shared_ptr<blaise_ast_type> other) const;
+      inline bool equals(std::shared_ptr<blaise_ast_type> other) const override;
 
       friend gasp::common::memory;
 };
@@ -53,11 +53,11 @@ class blaise_ast_array_type : public blaise_ast_type {
    protected:
       blaise_ast_array_type(std::shared_ptr<blaise_ast_type> inner_type, unsigned int size);
    public:
-      ~blaise_ast_array_type();
+      ~blaise_ast_array_type() override;
       std::shared_ptr<blaise_ast_type> inner_type() const;
       unsigned int size() const;
       bool is_unbounded() const;
-      inline virtual bool equals(std::shared_ptr<blaise_ast_type> other) const;
+      inline bool equals(std::shared_ptr<blaise_ast_type> other) const override;
 
       friend gasp::common::memory;
 };
