@@ -43,6 +43,10 @@ unsigned int torricelly_subroutine::count_instructions() const {
    return _instructions.size(); 
 }
 
+unsigned int torricelly_subroutine::next_label(){
+   return ++_labels_counter;
+}
+
 std::shared_ptr<torricelly::torricelly_subroutine> torricelly::make_torricelly_subroutine(const std::string& name, std::shared_ptr<torricelly::torricelly_type> return_type){
    return memory::gasp_make_shared<torricelly_subroutine>(name, return_type);
 }

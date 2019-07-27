@@ -16,6 +16,7 @@ class torricelly_subroutine {
    std::vector<std::shared_ptr<torricelly::torricelly_type>> _parameters;
    std::vector<std::shared_ptr<torricelly::torricelly_type>> _variables;
    std::vector<std::shared_ptr<torricelly::torricelly_instruction>> _instructions;
+   unsigned int _labels_counter;
 
    torricelly_subroutine(const std::string& name, std::shared_ptr<torricelly::torricelly_type> return_type);
 public:
@@ -30,6 +31,8 @@ public:
    void remove_instruction(unsigned int index);
    std::shared_ptr<torricelly::torricelly_instruction> get_instruction(unsigned int index) const;
    unsigned int count_instructions() const;
+
+   unsigned int next_label();
 
    friend gasp::common::memory;
 };
