@@ -18,7 +18,7 @@ class torricelly_module
 
 public:
    std::string module_name() const;
-   int add_subroutine(std::shared_ptr<torricelly_subroutine> subroutine);
+   unsigned int add_subroutine(std::shared_ptr<torricelly_subroutine> subroutine);
 
    friend gasp::common::memory;
 };

@@ -3,4 +3,5 @@ target_sources(gasp-torricelly-lang
         torricelly_module.cpp
         torricelly_type.cpp
         torricelly_subroutine.cpp
+        torricelly_instruction.cpp
 )

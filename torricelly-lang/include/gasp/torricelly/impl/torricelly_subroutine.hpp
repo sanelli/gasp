@@ -18,8 +18,8 @@ class torricelly_subroutine {
 public:
    std::string name() const;
    std::shared_ptr<torricelly::torricelly_type> return_type() const;
-   int add_parameter(std::shared_ptr<torricelly::torricelly_type> type);
-   int add_variable(std::shared_ptr<torricelly::torricelly_type> type);
+   unsigned int add_parameter(std::shared_ptr<torricelly::torricelly_type> type);
+   unsigned int add_variable(std::shared_ptr<torricelly::torricelly_type> type);
 
    friend gasp::common::memory;
 };

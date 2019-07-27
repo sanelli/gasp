@@ -4,4 +4,5 @@ target_sources(gasp-torricelly-lang
         torricelly_type.hpp
         torricelly_subroutine.hpp
         torricelly_instruction_code.hpp
+        torricelly_instruction.hpp
 )
