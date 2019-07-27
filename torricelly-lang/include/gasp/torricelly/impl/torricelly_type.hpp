@@ -1,17 +1,19 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 #include <gasp/common/memory.hpp>
 
 namespace gasp::torricelly {
 
-enum class torricelly_type_type {
+enum class torricelly_type_type : unsigned char {
    UNDEFINED,
    SYSTEM,
-   DERIVED
+   STRUCTURED
 };
 
-enum class torricelly_system_type_type {
+enum class torricelly_system_type_type : unsigned char {
+   UNDEFINED,
    VOID,
    INTEGER,
    FLOAT,
@@ -19,6 +21,9 @@ enum class torricelly_system_type_type {
    CHAR,
    BOOLEAN
 };
+
+std::ostream &operator<<(std::ostream &os, torricelly_type_type type);
+std::ostream &operator<<(std::ostream &os, torricelly_system_type_type type);
 
 class torricelly_type {
    torricelly_type_type _type_type;
