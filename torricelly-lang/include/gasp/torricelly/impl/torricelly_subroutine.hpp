@@ -13,7 +13,6 @@ namespace gasp::torricelly {
 class torricelly_subroutine {
    std::string _name;
    std::shared_ptr<torricelly::torricelly_type> _return_type;
-   std::vector<std::shared_ptr<torricelly::torricelly_type>> _parameters;
    std::vector<std::shared_ptr<torricelly::torricelly_type>> _variables;
    std::vector<std::shared_ptr<torricelly::torricelly_instruction>> _instructions;
    unsigned int _labels_counter;
@@ -22,7 +21,6 @@ class torricelly_subroutine {
 public:
    std::string name() const;
    std::shared_ptr<torricelly::torricelly_type> return_type() const;
-   unsigned int add_parameter(std::shared_ptr<torricelly::torricelly_type> type);
    unsigned int add_variable(std::shared_ptr<torricelly::torricelly_type> type);
 
    unsigned int append_instruction(std::shared_ptr<torricelly::torricelly_instruction> instruction);
