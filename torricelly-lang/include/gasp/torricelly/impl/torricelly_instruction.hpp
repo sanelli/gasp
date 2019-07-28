@@ -45,6 +45,8 @@ public:
    unsigned int label() const;
    void set_label(unsigned int label);
 
+   void validate() const;
+
    friend gasp::common::memory;
 };
 
