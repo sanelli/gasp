@@ -3,6 +3,7 @@ target_sources(gasp-torricelly-lang
         torricelly_error.hpp
         torricelly_module.hpp
         torricelly_type.hpp
+        torricelly_type_io.hpp
         torricelly_subroutine.hpp
         torricelly_instruction_code.hpp
         torricelly_instruction.hpp

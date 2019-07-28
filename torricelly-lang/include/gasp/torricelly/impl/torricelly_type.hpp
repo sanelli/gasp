@@ -22,9 +22,6 @@ enum class torricelly_system_type_type : unsigned char {
    BOOLEAN
 };
 
-std::ostream &operator<<(std::ostream &os, torricelly_type_type type);
-std::ostream &operator<<(std::ostream &os, torricelly_system_type_type type);
-
 class torricelly_type {
    torricelly_type_type _type_type;
 protected:
