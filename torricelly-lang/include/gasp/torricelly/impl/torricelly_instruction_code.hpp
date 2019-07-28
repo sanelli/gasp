@@ -75,4 +75,6 @@ enum class torricelly_inst_code : unsigned short {
    RET
 };
 
+const char* to_string(torricelly_inst_code code);
+
 }
