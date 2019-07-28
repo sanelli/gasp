@@ -8,23 +8,53 @@ using namespace gasp;
 using namespace gasp::common;
 using namespace gasp::torricelly;
 
-torricelly_value::torricelly_value(torricelly_system_type_type system_type, torricelly_value_union value) 
-   : _type(torricelly_type_type::SYSTEM), _system_type(system_type), _value(value) {}
-torricelly_value::torricelly_value(const torricelly_value& other)
-   : _type(other._type), _system_type(other._system_type), _value(other._value) {}
-torricelly_value::torricelly_value(torricelly_value&& other) {
-   *this = std::move(other);
+torricelly_value_union::torricelly_value_union() : _integer(0) {}
+torricelly_value_union::~torricelly_value_union() {}
+
+torricelly_value::torricelly_value(torricelly_system_type_type system_type, const torricelly_value_union& value) 
+   : _type(torricelly_type_type::SYSTEM), _system_type(system_type) {
+   copy_value(value);
 }
+
+torricelly_value::torricelly_value(const torricelly_value& other)
+   : _type(other._type), _system_type(other._system_type) {
+   copy_value(other._value);
+}
+
+void torricelly_value::copy_value(const torricelly_value_union& value) {
+   if(_type == torricelly_type_type::SYSTEM)
+      switch(_system_type){
+         case torricelly_system_type_type::UNDEFINED:
+            throw torricelly_error("Cannot create a value out of undefined type");
+         case torricelly_system_type_type::VOID:
+            throw torricelly_error("Cannot create a value out of 'void' type");
+         case torricelly_system_type_type::INTEGER:
+         _value._integer = value._integer;
+         break;
+         case torricelly_system_type_type::FLOAT:
+            _value._float = value._float;
+            break;
+         case torricelly_system_type_type::DOUBLE:
+            _value._double = value._double;
+            break;
+         case torricelly_system_type_type::CHAR:
+            _value._char = value._char;
+            break;
+         case torricelly_system_type_type::BOOLEAN:
+            _value._boolean = value._boolean;
+            break;
+         case torricelly_system_type_type::STRING_LITERAL:
+            _value._string_literal = value._string_literal;
+            break;
+         default:
+            throw torricelly_error("Cannot create a value out of unknown type");
+      }
+}
+
 torricelly_value& torricelly_value::operator=(const torricelly_value& other) {
    _type = other._type;
    _system_type = other._system_type;
-   _value = other._value;
-   return *this;
-}
-torricelly_value& torricelly_value::operator=(torricelly_value&& other){
-   _type = std::move(other._type);
-   _system_type = std::move(other._system_type);
-   _value = std::move(other._value);
+   copy_value(other._value);
    return *this;
 }
 
@@ -46,6 +76,7 @@ char torricelly_value::get_char() const { throw_if_is_not(torricelly_system_type
 bool torricelly_value::get_boolean() const { throw_if_is_not(torricelly_system_type_type::BOOLEAN); return _value._boolean; }
 float torricelly_value::get_float() const { throw_if_is_not(torricelly_system_type_type::FLOAT); return _value._float; }
 double torricelly_value::get_double() const { throw_if_is_not(torricelly_system_type_type::DOUBLE); return _value._double; }
+std::string torricelly_value::get_string_literal() const { throw_if_is_not(torricelly_system_type_type::STRING_LITERAL); return _value._string_literal; }
 
 bool torricelly_value::match(std::shared_ptr<torricelly_type> type) const {
    if(type->type_type() != _type) return false;
@@ -65,8 +96,33 @@ bool torricelly_value::match(std::shared_ptr<torricelly_type> type) const {
    return false;
 }
 
-torricelly_value torricelly_value::make(int value) { return torricelly_value(torricelly_system_type_type::INTEGER, { ._integer = value}); }
-torricelly_value torricelly_value::make(bool value){ return torricelly_value(torricelly_system_type_type::BOOLEAN, { ._boolean = value}); }
-torricelly_value torricelly_value::make(char value){ return torricelly_value(torricelly_system_type_type::CHAR, { ._char = value}); }
-torricelly_value torricelly_value::make(float value){ return torricelly_value(torricelly_system_type_type::FLOAT, { ._float = value}); }
-torricelly_value torricelly_value::make(double value){ return torricelly_value(torricelly_system_type_type::DOUBLE, { ._double = value}); }
+torricelly_value torricelly_value::make(int value) { 
+   torricelly_value_union value_union;
+   value_union._integer = value;
+   return torricelly_value(torricelly_system_type_type::INTEGER, value_union); 
+   }
+torricelly_value torricelly_value::make(bool value){ 
+    torricelly_value_union value_union;
+   value_union._boolean = value;
+   return torricelly_value(torricelly_system_type_type::BOOLEAN, value_union); 
+}
+torricelly_value torricelly_value::make(char value){ 
+    torricelly_value_union value_union;
+   value_union._char = value;
+   return torricelly_value(torricelly_system_type_type::CHAR, value_union); 
+}
+torricelly_value torricelly_value::make(float value){ 
+    torricelly_value_union value_union;
+   value_union._float = value;
+   return torricelly_value(torricelly_system_type_type::FLOAT, value_union); 
+}
+torricelly_value torricelly_value::make(double value){ 
+    torricelly_value_union value_union;
+   value_union._double = value;
+   return torricelly_value(torricelly_system_type_type::DOUBLE, value_union); 
+}
+torricelly_value torricelly_value::make(std::string value){ 
+    torricelly_value_union value_union;
+   value_union._string_literal = value;
+   return torricelly_value(torricelly_system_type_type::STRING_LITERAL, value_union); 
+}

@@ -25,8 +25,8 @@ bool torricelly_instruction::has_label() const { return _label > 0; }
 void torricelly_instruction::set_label(unsigned int label) { _label = label; }
 
 void torricelly_instruction::validate() const {
-   const cd = code();
-   if(has_parameter_reference() && !torricelly_inst_code_helper::accept_parameter(cd)
+   const torricelly_inst_code cd = code();
+   if(has_parameter_reference() && !torricelly_inst_code_helper::accept_parameter(cd))
       throw torricelly_error(make_string("Instruction code '", cd,"' does not accept any parameter"));
    if(!has_parameter_reference() && torricelly_inst_code_helper::accept_parameter(cd))
       throw torricelly_error(make_string("Instruction code '", cd,"' requires a parameter"));

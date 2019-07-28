@@ -19,7 +19,8 @@ enum class torricelly_system_type_type : unsigned char {
    FLOAT,
    DOUBLE,
    CHAR,
-   BOOLEAN
+   BOOLEAN,
+   STRING_LITERAL // Used to define literal constants in the code (for instance for calling functions)
 };
 
 class torricelly_type {
