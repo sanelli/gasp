@@ -20,7 +20,12 @@ enum class torricelly_inst_ref_type {
     * @brief Refers to a subroutine function
     * 
     */
-   SUBROUTINE
+   SUBROUTINE,
+   /**
+    * @brief Refers to a label ID
+    * 
+    */
+   LABEL
 };
 
 class torricelly_instruction {
@@ -32,9 +37,11 @@ class torricelly_instruction {
    torricelly_instruction(torricelly_inst_code code);
 public:
    torricelly_inst_code code() const;
+   bool has_parameter_reference() const;
    unsigned int parameter_reference() const;
    torricelly_inst_ref_type ref_type() const;
    void set_parameter_reference(unsigned int parameter_reference, torricelly_inst_ref_type ref_type);
+   bool has_label() const;
    unsigned int label() const;
    void set_label(unsigned int label);
 

@@ -19,6 +19,10 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, int n
    os._os << number;
    return os;
 }
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, unsigned int number) {
+   os._os << number;
+   return os;
+}
 torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, bool boolean){
    os._os << boolean;
    return os;
