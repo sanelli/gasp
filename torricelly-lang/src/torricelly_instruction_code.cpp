@@ -3,7 +3,7 @@
 using namespace gasp;
 using namespace gasp::torricelly;
 
-const char *torricelly::to_string(torricelly_inst_code code)
+const char *torricelly_inst_code_helper::to_string(torricelly_inst_code code)
 {
    switch (code)
    {  
@@ -66,5 +66,52 @@ const char *torricelly::to_string(torricelly_inst_code code)
    case torricelly_inst_code::RET: return "ret";
    default: 
       throw torricelly_error("Cannot get instruction code string representation: unknown instruction code");
+   }
+}
+
+bool torricelly_inst_code_helper::accept_parameter(torricelly_inst_code code)
+{
+   return accept_reference(code) || accept_label(code);
+}
+
+bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
+{
+   switch (code)
+   {  
+   case torricelly_inst_code::PUSH_INTEGER: 
+   case torricelly_inst_code::PUSH_BOOLEAN:
+   case torricelly_inst_code::PUSH_CHAR:
+   case torricelly_inst_code::PUSH_FLOAT:
+   case torricelly_inst_code::PUSH_DOUBLE:
+   case torricelly_inst_code::LOAD_INTEGER:
+   case torricelly_inst_code::LOAD_BOOLEAN:
+   case torricelly_inst_code::LOAD_CHAR:
+   case torricelly_inst_code::LOAD_FLOAT:
+   case torricelly_inst_code::LOAD_DOUBLE:
+   case torricelly_inst_code::STORE_INTEGER:
+   case torricelly_inst_code::STORE_BOOLEAN:
+   case torricelly_inst_code::STORE_CHAR:
+   case torricelly_inst_code::STORE_FLOAT:
+   case torricelly_inst_code::STORE_DOUBLE:
+   case torricelly_inst_code::INVOKE:
+      return true;
+   default: 
+      return false;
+   }
+}
+
+bool torricelly_inst_code_helper::accept_label(torricelly_inst_code code)
+{
+   switch (code)
+   {  
+   case torricelly_inst_code::JUMP:
+   case torricelly_inst_code::JUMP_EQ_ZERO:
+   case torricelly_inst_code::JUMP_LT_ZERO:
+   case torricelly_inst_code::JUMP_LTE_ZERO:
+   case torricelly_inst_code::JUMP_GT_ZERO:
+   case torricelly_inst_code::JUMP_GTE_ZERO:
+      return true;
+   default: 
+      return false;
    }
 }
