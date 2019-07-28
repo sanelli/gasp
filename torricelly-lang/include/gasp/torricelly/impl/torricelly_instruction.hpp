@@ -6,16 +6,35 @@
 
 namespace gasp::torricelly {
 
+/**
+ * @brief 
+ * 
+ */
+enum class torricelly_inst_ref_type {
+   /**
+    * @brief Refers to a module field
+    * 
+    */
+   MODULE, 
+   /**
+    * @brief Refers to a subroutine function
+    * 
+    */
+   SUBROUTINE
+};
+
 class torricelly_instruction {
    torricelly_inst_code _code;
    unsigned int _parameter_reference;
+   torricelly_inst_ref_type _ref_type;
    unsigned int _label;
-   torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference);
+   torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type);
    torricelly_instruction(torricelly_inst_code code);
 public:
    torricelly_inst_code code() const;
    unsigned int parameter_reference() const;
-   void set_parameter_reference(unsigned int parameter_reference);
+   torricelly_inst_ref_type ref_type() const;
+   void set_parameter_reference(unsigned int parameter_reference, torricelly_inst_ref_type ref_type);
    unsigned int label() const;
    void set_label(unsigned int label);
 
@@ -23,6 +42,6 @@ public:
 };
 
 std::shared_ptr<torricelly_instruction> make_torricelly_instruction(torricelly_inst_code code);
-std::shared_ptr<torricelly_instruction> make_torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference);
+std::shared_ptr<torricelly_instruction> make_torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type);
 
 }
