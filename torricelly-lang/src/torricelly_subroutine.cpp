@@ -16,6 +16,13 @@ torricelly_subroutine::torricelly_subroutine(const std::string& name,
 std::string torricelly_subroutine::name() const { return _name; };
 std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::return_type() const { return _return_type; }
 
+void torricelly_subroutine::set_flags(torricelly_subroutine_flag flags) { 
+   _flags = flags;
+}
+bool torricelly_subroutine::is(torricelly_subroutine_flag flag) const { 
+   return (_flags & flag) == flag;
+}
+
 unsigned int torricelly_subroutine::add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter) {
    _variable_types.push_back(type);
    _variable_initial_values.push_back(initial_value);
@@ -64,16 +71,96 @@ unsigned int torricelly_subroutine::next_label(){
    return ++_labels_counter;
 }
 
-void torricelly_subroutine::validate() const { 
+unsigned int torricelly_subroutine::get_number_of_labels() const { return _labels_counter; }
+
+void torricelly_subroutine::validate(unsigned int number_of_module_fields) const {
+
+   if(is(torricelly_subroutine_flag::STATIC) && is(torricelly_subroutine_flag::VIRTUAL))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::STATIC,"' and '", torricelly_subroutine_flag::VIRTUAL,"'"));
+   if(is(torricelly_subroutine_flag::STATIC) && is(torricelly_subroutine_flag::OVERRIDE))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::STATIC,"' and '", torricelly_subroutine_flag::OVERRIDE,"'"));
+   if(is(torricelly_subroutine_flag::STATIC) && is(torricelly_subroutine_flag::FINAL))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::STATIC,"' and '", torricelly_subroutine_flag::FINAL,"'"));
+   if(is(torricelly_subroutine_flag::VIRTUAL) && is(torricelly_subroutine_flag::OVERRIDE))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::VIRTUAL,"' and '", torricelly_subroutine_flag::OVERRIDE,"'"));
+   if(is(torricelly_subroutine_flag::VIRTUAL) && is(torricelly_subroutine_flag::FINAL))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::VIRTUAL,"' and '", torricelly_subroutine_flag::FINAL,"'"));
+   if(is(torricelly_subroutine_flag::PUBLIC) && is(torricelly_subroutine_flag::PRIVATE))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::PUBLIC,"' and '", torricelly_subroutine_flag::PRIVATE,"'"));
+   if(is(torricelly_subroutine_flag::PUBLIC) && is(torricelly_subroutine_flag::PROTECTED))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::PUBLIC,"' and '", torricelly_subroutine_flag::PROTECTED,"'"));
+   if(is(torricelly_subroutine_flag::PRIVATE) && is(torricelly_subroutine_flag::PROTECTED))
+      throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::PRIVATE,"' and '", torricelly_subroutine_flag::PROTECTED,"'"));
+
    const unsigned int num_of_par = get_number_of_parameters();
    const unsigned int num_of_var = get_number_of_variables();
+   const unsigned int num_of_labels = get_number_of_labels();
    if(num_of_par > num_of_var)
-      throw torricelly_error(make_string("The number of parameters (", num_of_par,") is greather than the number of variables (",num_of_var,")"));
-   for(auto instruction : _instructions)
-      instruction->validate();
+      throw torricelly_error(make_string("The number of parameters (", num_of_par,") is greater than the number of variables (",num_of_var,")"));
+   for(auto index = 0; index < _instructions.size(); ++index)
+   {  
+      auto instruction = _instructions.at(index);
+      try{
+         instruction->validate();
+      }catch(const torricelly_error& inst_error) { 
+         throw torricelly_error(make_string("Instruction at ", index, " is not valid: ", inst_error.what()));
+      }
+      if(instruction->has_label() && instruction->label() > num_of_labels)
+         throw torricelly_error(make_string("Instruction at ", index, " has an invalid label."));
+      if(instruction->has_parameter_reference()) { 
+         auto ref = instruction->parameter_reference();
+         switch(instruction->ref_type()) { 
+            case torricelly_inst_ref_type::MODULE:
+               if(ref > number_of_module_fields)
+                  throw torricelly_error(make_string("Instruction at ", index, " refers to an invalid module variable."));
+               // TODO: Check if instruction match type of module variable
+               break;
+            case torricelly_inst_ref_type::SUBROUTINE:
+               if(ref > num_of_var)
+                  throw torricelly_error(make_string("Instruction at ", index, " refers to an invalid subroutine variable."));
+                // TODO: Check if instruction match type of module variable
+               break;
+            case torricelly_inst_ref_type::LABEL:
+               if(ref > num_of_labels)
+                  throw torricelly_error(make_string("Instruction at ", index, " refers to an invalid label."));
+               break;
+            default:
+               throw torricelly_error(make_string("Instruction at ", index, " refers to an unknown parameter reference type."));
+         }
+      }
+    }
 }
 
 std::shared_ptr<torricelly::torricelly_subroutine> torricelly::make_torricelly_subroutine(const std::string& name, std::shared_ptr<torricelly::torricelly_type> return_type){
    return memory::gasp_make_shared<torricelly_subroutine>(name, return_type);
 }
 
+torricelly_subroutine_flag torricelly::operator|(torricelly_subroutine_flag value1, torricelly_subroutine_flag value2) {
+   return static_cast<torricelly_subroutine_flag>(
+      static_cast<std::underlying_type<torricelly_subroutine_flag>::type>(value1)
+      |
+      static_cast<std::underlying_type<torricelly_subroutine_flag>::type>(value2)
+   );
+}
+torricelly_subroutine_flag torricelly::operator&(torricelly_subroutine_flag value1, torricelly_subroutine_flag value2) {
+   return static_cast<torricelly_subroutine_flag>(
+      static_cast<std::underlying_type<torricelly_subroutine_flag>::type>(value1)
+      &
+      static_cast<std::underlying_type<torricelly_subroutine_flag>::type>(value2)
+   );
+}
+
+std::ostream& torricelly::operator<<(std::ostream& os, torricelly_subroutine_flag flag){
+   switch(flag){
+      case torricelly_subroutine_flag::NOTHING: return os;
+      case torricelly_subroutine_flag::STATIC: return os << "static";
+      case torricelly_subroutine_flag::VIRTUAL: return os << "static";
+      case torricelly_subroutine_flag::OVERRIDE: return os << "override";
+      case torricelly_subroutine_flag::FINAL: return os << "final";
+      case torricelly_subroutine_flag::PUBLIC: return os << "public";
+      case torricelly_subroutine_flag::PRIVATE: return os << "private";
+      case torricelly_subroutine_flag::PROTECTED: return os << "protected";
+      default:
+         throw torricelly_error("Cannot write flag into output stream: unknown flag");
+   }
+}
