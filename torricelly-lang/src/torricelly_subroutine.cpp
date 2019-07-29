@@ -75,6 +75,7 @@ unsigned int torricelly_subroutine::get_number_of_labels() const { return _label
 
 void torricelly_subroutine::validate(unsigned int number_of_module_fields) const {
 
+   // Check flags
    if(is(torricelly_subroutine_flag::STATIC) && is(torricelly_subroutine_flag::VIRTUAL))
       throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::STATIC,"' and '", torricelly_subroutine_flag::VIRTUAL,"'"));
    if(is(torricelly_subroutine_flag::STATIC) && is(torricelly_subroutine_flag::OVERRIDE))
@@ -92,40 +93,51 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
    if(is(torricelly_subroutine_flag::PRIVATE) && is(torricelly_subroutine_flag::PROTECTED))
       throw torricelly_error(make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::PRIVATE,"' and '", torricelly_subroutine_flag::PROTECTED,"'"));
 
+   // Check variables count
    const unsigned int num_of_par = get_number_of_parameters();
    const unsigned int num_of_var = get_number_of_variables();
    const unsigned int num_of_labels = get_number_of_labels();
    if(num_of_par > num_of_var)
       throw torricelly_error(make_string("The number of parameters (", num_of_par,") is greater than the number of variables (",num_of_var,")"));
-   for(auto index = 0; index < _instructions.size(); ++index)
+   
+   // Check all variables matches their initial values
+   for(auto variable_index = 0; variable_index < num_of_var; ++variable_index) {
+      auto initial_value = _variable_initial_values.at(variable_index);
+      auto variable_type = _variable_types.at(variable_index);
+      if(!initial_value.match(variable_type))
+         throw torricelly_error(make_string("Variable at index ", variable_index + 1," has type ", variable_type, " but initial value has type <type = ", initial_value.type(),", system_type = ", initial_value.system_type() ,">."));
+   }
+   
+   // Check instructions
+   for(auto instruction_index = 0; instruction_index < _instructions.size(); ++instruction_index)
    {  
-      auto instruction = _instructions.at(index);
+      auto instruction = _instructions.at(instruction_index);
       try{
          instruction->validate();
       }catch(const torricelly_error& inst_error) { 
-         throw torricelly_error(make_string("Instruction at ", index, " is not valid: ", inst_error.what()));
+         throw torricelly_error(make_string("Instruction at ", instruction_index, " is not valid: ", inst_error.what()));
       }
       if(instruction->has_label() && instruction->label() > num_of_labels)
-         throw torricelly_error(make_string("Instruction at ", index, " has an invalid label."));
+         throw torricelly_error(make_string("Instruction at ", instruction_index, " has an invalid label."));
       if(instruction->has_parameter_reference()) { 
          auto ref = instruction->parameter_reference();
          switch(instruction->ref_type()) { 
             case torricelly_inst_ref_type::MODULE:
                if(ref > number_of_module_fields)
-                  throw torricelly_error(make_string("Instruction at ", index, " refers to an invalid module variable."));
+                  throw torricelly_error(make_string("Instruction at ", instruction_index, " refers to an invalid module variable."));
                // TODO: Check if instruction match type of module variable
                break;
             case torricelly_inst_ref_type::SUBROUTINE:
                if(ref > num_of_var)
-                  throw torricelly_error(make_string("Instruction at ", index, " refers to an invalid subroutine variable."));
+                  throw torricelly_error(make_string("Instruction at ", instruction_index, " refers to an invalid subroutine variable."));
                 // TODO: Check if instruction match type of module variable
                break;
             case torricelly_inst_ref_type::LABEL:
                if(ref > num_of_labels)
-                  throw torricelly_error(make_string("Instruction at ", index, " refers to an invalid label."));
+                  throw torricelly_error(make_string("Instruction at ", instruction_index, " refers to an invalid label."));
                break;
             default:
-               throw torricelly_error(make_string("Instruction at ", index, " refers to an unknown parameter reference type."));
+               throw torricelly_error(make_string("Instruction at ", instruction_index, " refers to an unknown parameter reference type."));
          }
       }
     }

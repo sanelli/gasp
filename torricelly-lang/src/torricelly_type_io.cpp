@@ -1,4 +1,5 @@
 #include <ostream>
+#include <memory>
 #include <gasp/torricelly/torricelly.hpp>
 
 using namespace gasp;
@@ -37,4 +38,20 @@ std::ostream &torricelly::operator<<(std::ostream &os, torricelly_system_type_ty
       throw torricelly_error("Unknown torricelly system type");
    }
    return os;
+}
+
+std::ostream &torricelly::operator<<(std::ostream &os, std::shared_ptr<torricelly_type> type) {
+   switch(type->type_type()){
+      case torricelly_type_type::UNDEFINED:
+         return os << torricelly_system_type_type::UNDEFINED;
+      case torricelly_type_type::SYSTEM:
+      {
+         auto system_type = std::dynamic_pointer_cast<toricelly_system_type>(type);
+         return os << torricelly_type_type::SYSTEM << "::" << system_type->system_type();
+      }
+      case torricelly_type_type::STRUCTURED:
+         return os << torricelly_type_type::STRUCTURED;
+      default:
+         throw torricelly_error("Unknown type");
+   }
 }
