@@ -40,6 +40,13 @@ target_link_libraries(gasp-torricelly-lang gasp-common)
 
 add_subdirectory(torricelly-lang)
 
+add_library(gasp-torricelly-lang-io SHARED "")
+set_target_properties(gasp-torricelly-lang-io PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-torricelly-lang-io gasp-torricelly-lang)
+target_link_libraries(gasp-torricelly-lang-io gasp-common)
+
+add_subdirectory(torricelly-lang-io)
+
 #################################################
 # blaise-to-torricelly
 #################################################
@@ -59,5 +66,6 @@ add_subdirectory(compiler)
 target_link_libraries(gasp gasp-common)
 target_link_libraries(gasp gasp-blaise-lang)
 target_link_libraries(gasp gasp-torricelly-lang)
+target_link_libraries(gasp gasp-torricelly-lang-io)
 target_link_libraries(gasp gasp-blaise-to-torricelly)
 

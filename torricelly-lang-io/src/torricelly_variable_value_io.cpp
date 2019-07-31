@@ -1,6 +1,7 @@
 #include <ostream>
 
 #include <gasp/torricelly/torricelly.hpp>
+#include <gasp/torricelly/torricelly_io.hpp>
 
 using namespace gasp;
 using namespace gasp::torricelly;

@@ -3,7 +3,7 @@
 using namespace gasp;
 using namespace gasp::torricelly;
 
-const char *torricelly_inst_code_helper::to_string(torricelly_inst_code code)
+const char *torricelly::to_string(torricelly_inst_code code)
 {
    switch (code)
    {  
@@ -114,4 +114,8 @@ bool torricelly_inst_code_helper::accept_label(torricelly_inst_code code)
    default: 
       return false;
    }
+}
+
+std::ostream& torricelly::operator<<(std::ostream& os, torricelly_inst_code code){
+   return os << to_string(code);
 }

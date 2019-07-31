@@ -2,8 +2,8 @@
 
 #include <memory>
 
+#include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/impl/torricelly_io.hpp>
-#include <gasp/torricelly/impl/torricelly_subroutine.hpp>
 
 namespace gasp::torricelly {
 

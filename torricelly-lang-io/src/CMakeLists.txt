@@ -1,0 +1,9 @@
+target_sources(gasp-torricelly-lang-io
+    PRIVATE
+        torricelly_io.cpp
+        torricelly_type_io.cpp
+        torricelly_subroutine_io.cpp
+        torricelly_instruction_io.cpp
+        torricelly_variable_value_io.cpp
+        torricelly_instruction_code_io.cpp
+)

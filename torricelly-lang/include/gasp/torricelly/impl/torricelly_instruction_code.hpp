@@ -78,10 +78,12 @@ enum class torricelly_inst_code : unsigned short {
 
 class torricelly_inst_code_helper {
 public:
-   static const char* to_string(torricelly_inst_code code);
    static bool accept_parameter(torricelly_inst_code code);
    static bool accept_reference(torricelly_inst_code code);
    static bool accept_label(torricelly_inst_code code);
 };
+
+const char* to_string(torricelly_inst_code code);
+std::ostream& operator<<(std::ostream& os, torricelly_inst_code code);
 
 }
