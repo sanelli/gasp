@@ -25,7 +25,7 @@ std::ostream &gasp::blaise::ast::operator<<(std::ostream &os, gasp::blaise::ast:
   throw std::runtime_error("Unexpected type when converting type into string representation.");
 }
 
-std::ostream &gasp::blaise::ast::operator<<(std::ostream &os, std::shared_ptr<gasp::blaise::ast::blaise_ast_type> type){
+std::ostream &gasp::blaise::ast::operator<<(std::ostream &os, const std::shared_ptr<const gasp::blaise::ast::blaise_ast_type> type){
    switch(type->type_type()){
       case gasp::blaise::ast::blaise_ast_type_type::PLAIN:
          return os << gasp::blaise::ast::blaise_ast_utility::as_plain_type(type)->system_type();

@@ -9,7 +9,6 @@
 namespace gasp::blaise
 {
 
-std::ostream &
-operator<<(std::ostream &os, const blaise_token_type &token_type);
+std::ostream &operator<<(std::ostream &os, const blaise_token_type &token_type);
 
 } // namespace gasp::blaise

@@ -11,12 +11,20 @@ using namespace gasp::common;
 using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 
-std::shared_ptr<blaise_ast_plain_type> blaise_ast_utility::as_plain_type(std::shared_ptr<blaise_ast_type> type){
+std::shared_ptr<blaise_ast_plain_type> blaise_ast_utility::as_plain_type(const std::shared_ptr<blaise_ast_type> type){
    return std::dynamic_pointer_cast<blaise_ast_plain_type>(type);
 }
 
-std::shared_ptr<blaise_ast_array_type> blaise_ast_utility::as_array_type(std::shared_ptr<blaise_ast_type> type){
+std::shared_ptr<blaise_ast_array_type> blaise_ast_utility::as_array_type(const std::shared_ptr<blaise_ast_type> type){
    return std::dynamic_pointer_cast<blaise_ast_array_type>(type);
+}
+
+std::shared_ptr<const blaise_ast_plain_type> blaise_ast_utility::as_plain_type(const std::shared_ptr<const blaise_ast_type> type){
+   return std::dynamic_pointer_cast<const blaise_ast_plain_type>(type);
+}
+
+std::shared_ptr<const blaise_ast_array_type> blaise_ast_utility::as_array_type(const std::shared_ptr<const blaise_ast_type> type){
+   return std::dynamic_pointer_cast<const blaise_ast_array_type>(type);
 }
 
 bool blaise_ast_utility::is_integer(std::shared_ptr<blaise_ast_type> type) {
