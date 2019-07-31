@@ -12,15 +12,18 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, std::
    os << "   .flags" << subroutine->get_flags() << std::endl;
    os << "   .returns " << subroutine ->return_type() << std::endl;
    os << "   .variables " << subroutine->get_number_of_variables() << std::endl;
-   for(unsigned int variable_index = 1; variable_index <= subroutine->get_number_of_variables(); ++variable_index) { 
+   for(auto variable_index = 1u; variable_index <= subroutine->get_number_of_variables(); ++variable_index) { 
       os << "      .variable "
-         << "#" << variable_index << " "
+         << torricelly_inst_ref_type::SUBROUTINE << variable_index << " "
          << subroutine->get_variable_type(variable_index) << " "
          << subroutine->get_initial_value(variable_index) 
          << (subroutine->is_parameter(variable_index) ? " [parameter]" : "")
          << std::endl
          ;
    }
+
+   for(auto instruction_index = 1u; instruction_index <= subroutine->get_number_of_instructions(); ++instruction_index)
+      os << subroutine->get_instruction(instruction_index) << std::endl;
    return os;
 }
 

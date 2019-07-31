@@ -25,7 +25,7 @@ public:
    std::string module_name() const;
 
    unsigned int add_subroutine(std::shared_ptr<torricelly_subroutine> subroutine);
-   unsigned int get_numbers_of_subroutines() const;
+   unsigned int get_number_of_subroutines() const;
    std::shared_ptr<torricelly_subroutine> get_subroutine(unsigned int index) const;
 
    unsigned int add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value);

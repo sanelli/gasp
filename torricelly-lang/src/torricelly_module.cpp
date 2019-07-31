@@ -18,11 +18,11 @@ unsigned int torricelly_module::add_subroutine(std::shared_ptr<torricelly_subrou
    _subroutines.push_back(subroutine);
    return _subroutines.size();
 }
-unsigned int torricelly_module::get_numbers_of_subroutines() const { 
+unsigned int torricelly_module::get_number_of_subroutines() const { 
    return _subroutines.size(); 
 }
 std::shared_ptr<torricelly_subroutine> torricelly_module::get_subroutine(unsigned int index) const {
-   return _subroutines.at(index);
+   return _subroutines.at(index - 1);
 }
 
 unsigned int torricelly_module::add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value) {
@@ -31,10 +31,10 @@ unsigned int torricelly_module::add_variable(std::shared_ptr<torricelly::torrice
    return _variable_types.size();
 }
 std::shared_ptr<torricelly::torricelly_type> torricelly_module::get_variable_type(unsigned int index) const {
-   return _variable_types.at(index);
+   return _variable_types.at(index - 1);
 }
 torricelly_value torricelly_module::get_initial_value(unsigned int index) const {
-   return _variable_initial_values.at(index);
+   return _variable_initial_values.at(index - 1);
 }
 unsigned int torricelly_module::get_number_of_variables() const {
    return _variable_types.size();

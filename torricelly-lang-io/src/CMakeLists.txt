@@ -6,4 +6,5 @@ target_sources(gasp-torricelly-lang-io
         torricelly_instruction_io.cpp
         torricelly_value_io.cpp
         torricelly_instruction_code_io.cpp
+        torricelly_module_io.cpp
 )

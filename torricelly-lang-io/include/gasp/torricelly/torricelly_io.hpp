@@ -6,3 +6,4 @@
 #include <gasp/torricelly/impl/torricelly_instruction_code_io.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction_io.hpp>
 #include <gasp/torricelly/impl/torricelly_subroutine_io.hpp>
+#include <gasp/torricelly/impl/torricelly_module_io.hpp>
