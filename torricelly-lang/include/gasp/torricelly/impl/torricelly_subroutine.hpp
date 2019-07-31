@@ -9,7 +9,7 @@
 #include <gasp/common/memory.hpp>
 #include <gasp/torricelly/impl/torricelly_type.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction.hpp>
-#include <gasp/torricelly/impl/torricelly_variable_value.hpp>
+#include <gasp/torricelly/impl/torricelly_value.hpp>
 
 namespace gasp::torricelly {
 

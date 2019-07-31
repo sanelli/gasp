@@ -6,5 +6,5 @@ target_sources(gasp-torricelly-lang
         torricelly_subroutine.hpp
         torricelly_instruction_code.hpp
         torricelly_instruction.hpp
-        torricelly_variable_value.hpp
+        torricelly_value.hpp
 )

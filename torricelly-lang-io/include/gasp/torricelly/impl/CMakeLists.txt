@@ -4,6 +4,6 @@ target_sources(gasp-torricelly-lang-io
         torricelly_subroutine_io.hpp
         torricelly_instruction_code_io.hpp
         torricelly_instruction_io.hpp
-        torricelly_variable_value_io.hpp
+        torricelly_value_io.hpp
         torricelly_io.hpp
 )
