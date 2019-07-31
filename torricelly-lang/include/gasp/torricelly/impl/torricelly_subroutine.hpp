@@ -46,7 +46,6 @@ public:
    torricelly_subroutine_flag get_flags() const;
    bool is(torricelly_subroutine_flag flag) const;
 
-
    unsigned int add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter = false);
    std::shared_ptr<torricelly::torricelly_type> get_variable_type(unsigned int index) const;
    torricelly_value get_initial_value(unsigned int index) const;
