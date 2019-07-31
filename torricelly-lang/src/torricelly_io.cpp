@@ -23,6 +23,10 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, unsig
    os._os << number;
    return os;
 }
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, size_t number){
+   os._os << number;
+   return os;
+}
 torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, bool boolean){
    os._os << boolean;
    return os;
@@ -37,5 +41,9 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, float
 }
 torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, double number){
    os._os << number;
+   return os;
+}
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, std::ostream&(*manipualtor)(std::ostream&)){
+   manipualtor(os._os);
    return os;
 }

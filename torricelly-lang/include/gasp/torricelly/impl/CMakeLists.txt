@@ -5,10 +5,12 @@ target_sources(gasp-torricelly-lang
         torricelly_type.hpp
         torricelly_type_io.hpp
         torricelly_subroutine.hpp
+        torricelly_subroutine_io.hpp
         torricelly_instruction_code.hpp
         torricelly_instruction_code_io.hpp
         torricelly_instruction.hpp
         torricelly_instruction_io.hpp
         torricelly_variable_value.hpp
+        torricelly_variable_value_io.hpp
         torricelly_io.hpp
 )

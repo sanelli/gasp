@@ -12,7 +12,7 @@ using namespace gasp::torricelly;
 
 torricelly_subroutine::torricelly_subroutine(const std::string& name, 
    std::shared_ptr<torricelly::torricelly_type> return_type)
-   : _name(name), _return_type(return_type), _number_of_parameters(0) { }
+   : _name(name), _return_type(return_type) { }
 std::string torricelly_subroutine::name() const { return _name; };
 std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::return_type() const { return _return_type; }
 
@@ -22,12 +22,14 @@ void torricelly_subroutine::set_flags(torricelly_subroutine_flag flags) {
 bool torricelly_subroutine::is(torricelly_subroutine_flag flag) const { 
    return (_flags & flag) == flag;
 }
-
+torricelly_subroutine_flag torricelly_subroutine::get_flags() const {
+   return _flags;
+}
 unsigned int torricelly_subroutine::add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter) {
    _variable_types.push_back(type);
    _variable_initial_values.push_back(initial_value);
    if(is_parameter)
-      _number_of_parameters++;
+      _parameters.insert(_variable_types.size());
    return _variable_types.size();
 }
 std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::get_variable_type(unsigned int index) const {
@@ -44,9 +46,11 @@ unsigned int torricelly_subroutine::get_number_of_variables() const {
    return _variable_types.size();
 }
 unsigned int torricelly_subroutine::get_number_of_parameters() const {
-   return _number_of_parameters;
+   return _parameters.size();
 }
-
+bool torricelly_subroutine::is_parameter(unsigned int variable_index) const { 
+   return _parameters.count(variable_index) > 0; 
+}
 unsigned int torricelly_subroutine::append_instruction(std::shared_ptr<torricelly::torricelly_instruction> instruction) {
    _instructions.push_back(instruction);
    return _instructions.size();
@@ -163,15 +167,19 @@ torricelly_subroutine_flag torricelly::operator&(torricelly_subroutine_flag valu
 }
 
 std::ostream& torricelly::operator<<(std::ostream& os, torricelly_subroutine_flag flag){
+   return os << to_string(flag);
+}
+
+std::string torricelly::to_string(torricelly_subroutine_flag flag){
    switch(flag){
-      case torricelly_subroutine_flag::NOTHING: return os;
-      case torricelly_subroutine_flag::STATIC: return os << "static";
-      case torricelly_subroutine_flag::VIRTUAL: return os << "static";
-      case torricelly_subroutine_flag::OVERRIDE: return os << "override";
-      case torricelly_subroutine_flag::FINAL: return os << "final";
-      case torricelly_subroutine_flag::PUBLIC: return os << "public";
-      case torricelly_subroutine_flag::PRIVATE: return os << "private";
-      case torricelly_subroutine_flag::PROTECTED: return os << "protected";
+      case torricelly_subroutine_flag::NOTHING: return "";
+      case torricelly_subroutine_flag::STATIC: return "static";
+      case torricelly_subroutine_flag::VIRTUAL: return "virtual";
+      case torricelly_subroutine_flag::OVERRIDE: return "override";
+      case torricelly_subroutine_flag::FINAL: return "final";
+      case torricelly_subroutine_flag::PUBLIC: return "public";
+      case torricelly_subroutine_flag::PRIVATE: return "private";
+      case torricelly_subroutine_flag::PROTECTED: return "protected";
       default:
          throw torricelly_error("Cannot write flag into output stream: unknown flag");
    }

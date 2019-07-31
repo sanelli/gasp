@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <memory>
 #include <ostream>
 #include <gasp/common/memory.hpp>
@@ -45,5 +46,13 @@ class toricelly_system_type : public torricelly_type {
 };
 
 std::shared_ptr<toricelly_system_type> make_torricelly_system_type(torricelly_system_type_type system_type);
-   
+
+std::ostream &operator<<(std::ostream &os, torricelly_type_type type);
+std::ostream &operator<<(std::ostream &os, torricelly_system_type_type type);
+std::ostream &operator<<(std::ostream &os, std::shared_ptr<torricelly_type> type);
+
+std::string to_string(torricelly_type_type type);
+std::string to_string(torricelly_system_type_type type);
+std::string to_string(std::shared_ptr<torricelly_type> type);
+
 }
