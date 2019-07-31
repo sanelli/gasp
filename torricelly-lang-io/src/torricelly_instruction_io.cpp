@@ -15,7 +15,7 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, torri
    }
 }
 
-torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, std::shared_ptr<torricelly_instruction> instruction){
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_instruction> instruction){
    if(instruction->has_label())
       os << torricelly_inst_ref_type::LABEL << instruction->label() << ": ";
    os << instruction->code();

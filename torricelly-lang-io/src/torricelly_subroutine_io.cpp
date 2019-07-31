@@ -6,7 +6,7 @@
 using namespace gasp;
 using namespace gasp::torricelly;
 
-torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, std::shared_ptr<torricelly_subroutine> subroutine) { 
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_subroutine> subroutine) { 
 
    os << ".subroutine " << subroutine->name() << std::endl;
    os << "   .flags" << subroutine->get_flags() << std::endl;

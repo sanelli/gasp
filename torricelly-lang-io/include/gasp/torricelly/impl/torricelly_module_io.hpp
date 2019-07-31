@@ -7,6 +7,6 @@
 
 namespace gasp::torricelly {
 
-torricelly_text_output& operator<<(torricelly_text_output& os, std::shared_ptr<torricelly_module> module);
+torricelly_text_output& operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_module> module);
 
 }

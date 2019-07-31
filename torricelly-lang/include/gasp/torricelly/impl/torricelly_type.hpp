@@ -49,10 +49,10 @@ std::shared_ptr<toricelly_system_type> make_torricelly_system_type(torricelly_sy
 
 std::ostream &operator<<(std::ostream &os, torricelly_type_type type);
 std::ostream &operator<<(std::ostream &os, torricelly_system_type_type type);
-std::ostream &operator<<(std::ostream &os, std::shared_ptr<torricelly_type> type);
+std::ostream &operator<<(std::ostream &os, const std::shared_ptr<const torricelly_type> type);
 
 std::string to_string(torricelly_type_type type);
 std::string to_string(torricelly_system_type_type type);
-std::string to_string(std::shared_ptr<torricelly_type> type);
+std::string to_string(const std::shared_ptr<const torricelly_type> type);
 
 }

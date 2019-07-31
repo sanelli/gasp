@@ -6,7 +6,7 @@
 using namespace gasp;
 using namespace gasp::torricelly;
 
-torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, std::shared_ptr<torricelly_module> module) { 
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_module> module) { 
 
    os << ".module " << module->module_name() << std::endl;
    os << "   .variables " << module->get_number_of_variables() << std::endl;

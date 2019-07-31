@@ -34,7 +34,7 @@ std::ostream &torricelly::operator<<(std::ostream &os, torricelly_system_type_ty
    return os << to_string(type);
 }
 
-std::ostream &torricelly::operator<<(std::ostream &os, std::shared_ptr<torricelly_type> type) {
+std::ostream &torricelly::operator<<(std::ostream &os, const std::shared_ptr<const torricelly_type> type) {
    return os << to_string(type);
 }
 
@@ -70,13 +70,13 @@ std::string torricelly::to_string(torricelly_system_type_type type){
       throw torricelly_error("Unknown torricelly system type");
    }
 }
-std::string torricelly::to_string(std::shared_ptr<torricelly_type> type) { 
+std::string torricelly::to_string(const std::shared_ptr<const torricelly_type> type) { 
    switch(type->type_type()){
       case torricelly_type_type::UNDEFINED:
          return to_string(torricelly_system_type_type::UNDEFINED);
       case torricelly_type_type::SYSTEM:
       {
-         auto system_type = std::dynamic_pointer_cast<toricelly_system_type>(type);
+         auto system_type = std::dynamic_pointer_cast<const toricelly_system_type>(type);
          return to_string(torricelly_type_type::SYSTEM) + "::" + to_string(system_type->system_type());
       }
       case torricelly_type_type::STRUCTURED:
