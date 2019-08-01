@@ -4,7 +4,7 @@
 #include <string>
 
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
-#include <gasp/blaise/tokenier/tokens.hpp>
+#include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 
 using namespace gasp::common;
