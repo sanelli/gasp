@@ -1,14 +1,5 @@
 target_sources(gasp-blaise-lang
     PRIVATE
-        blaise_tokenizer.cpp
-        blaise_token_type_provider.cpp
-        blaise_token_type_utility.cpp
-        blaise_token_type_io.cpp
-        blaise_parser.cpp
-        blaise_parser_context.cpp
-        blaise_parser_statement.cpp
-        blaise_parser_expression.cpp
-        blaise_parser_subroutine.cpp
         blaise_ast_common.cpp
         blaise_ast_type.cpp
         blaise_ast_variable.cpp

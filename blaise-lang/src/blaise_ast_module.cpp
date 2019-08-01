@@ -4,8 +4,8 @@
 #include <vector>
 
 #include <gasp/blaise/ast.hpp>
-#include <gasp/blaise/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+#include <gasp/blaise/tokenizer/tokens.hpp>
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/common/memory.hpp>
 
 using namespace gasp::blaise::ast;

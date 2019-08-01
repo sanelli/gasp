@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/blaise/tokens.hpp>
+#include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/ast.hpp>
 #include <gasp/common/debug.hpp>
 #include <gasp/common/string.hpp>

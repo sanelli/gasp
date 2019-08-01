@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include <gasp/blaise/ast.hpp>
-#include <gasp/blaise/tokens.hpp>
+#include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/common/debug.hpp>
 #include <gasp/common/memory.hpp>

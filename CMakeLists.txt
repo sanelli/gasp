@@ -20,16 +20,40 @@ set_target_properties(gasp-common PROPERTIES LINKER_LANGUAGE CXX)
 #################################################
 # blaise lang
 #################################################
+add_library(gasp-blaise-lang-tokenizer SHARED "")
+set_target_properties(gasp-blaise-lang-tokenizer PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-tokenizer gasp-common)
+
+add_executable(gasp-blaise-lang-tokenizer-test "")
+set_target_properties(gasp-blaise-lang-tokenizer-test PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-tokenizer-test gasp-blaise-lang-tokenizer)
+target_link_libraries(gasp-blaise-lang-tokenizer-test gasp-common)
+target_link_libraries(gasp-blaise-lang-tokenizer-test Catch2::Catch2)
+
+add_subdirectory(blaise-lang-tokenizer)
+
 add_library(gasp-blaise-lang SHARED "")
 set_target_properties(gasp-blaise-lang PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(gasp-blaise-lang gasp-common)
-
-add_executable(gasp-blaise-lang-test "")
-set_target_properties(gasp-blaise-lang-test PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(gasp-blaise-lang-test gasp-blaise-lang)
-target_link_libraries(gasp-blaise-lang-test Catch2::Catch2)
+target_link_libraries(gasp-blaise-lang gasp-blaise-lang-tokenizer)
 
 add_subdirectory(blaise-lang)
+
+add_library(gasp-blaise-lang-parser SHARED "")
+set_target_properties(gasp-blaise-lang-parser PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-parser gasp-common)
+target_link_libraries(gasp-blaise-lang-parser gasp-blaise-lang)
+target_link_libraries(gasp-blaise-lang-parser gasp-blaise-lang-tokenizer)
+
+add_executable(gasp-blaise-lang-parser-test "")
+set_target_properties(gasp-blaise-lang-parser-test PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-parser-test gasp-blaise-lang-tokenizer)
+target_link_libraries(gasp-blaise-lang-parser-test gasp-blaise-lang-parser)
+target_link_libraries(gasp-blaise-lang-parser-test gasp-blaise-lang)
+target_link_libraries(gasp-blaise-lang-parser-test gasp-common)
+target_link_libraries(gasp-blaise-lang-parser-test Catch2::Catch2)
+
+add_subdirectory(blaise-lang-parser)
 
 #################################################
 # torricelly lang
@@ -65,6 +89,8 @@ add_executable(gasp "")
 add_subdirectory(compiler)
 target_link_libraries(gasp gasp-common)
 target_link_libraries(gasp gasp-blaise-lang)
+target_link_libraries(gasp gasp-blaise-lang-tokenizer)
+target_link_libraries(gasp gasp-blaise-lang-parser)
 target_link_libraries(gasp gasp-torricelly-lang)
 target_link_libraries(gasp gasp-torricelly-lang-io)
 target_link_libraries(gasp gasp-blaise-to-torricelly)
