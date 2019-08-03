@@ -9,7 +9,7 @@
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
 #include <gasp/common/output.hpp>
-#include <gasp/common/debug.hpp>
+#include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise_to_torricelly.hpp>
@@ -25,10 +25,10 @@ using namespace gasp::blaise_to_torricelly;
 
 int main(int argc, char *argv[])
 {
-   GASP_INSTALL_DEBUGGER("blaise-parser"); 
-   GASP_INSTALL_DEBUGGER("common-parser");
-   GASP_INSTALL_DEBUGGER("blaise-lang");
-   GASP_INSTALL_DEBUGGER("common-tokenizer");
+   SANELLI_INSTALL_DEBUGGER("blaise-parser"); 
+   SANELLI_INSTALL_DEBUGGER("sanelli-parser");
+   SANELLI_INSTALL_DEBUGGER("blaise-lang");
+   SANELLI_INSTALL_DEBUGGER("sanelli-tokenizer");
 
    cout << "GASP - by Stefano Anelli." << endl;
 

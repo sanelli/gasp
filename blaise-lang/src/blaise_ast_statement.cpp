@@ -5,7 +5,7 @@
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/ast.hpp>
-#include <gasp/common/debug.hpp>
+#include <sanelli/sanelli.hpp>
 #include <gasp/common/string.hpp>
 #include <gasp/common/memory.hpp>
 

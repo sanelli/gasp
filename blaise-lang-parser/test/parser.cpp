@@ -6,7 +6,7 @@
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
 #include <gasp/common/output.hpp>
-#include <gasp/common/debug.hpp>
+#include <sanelli/sanelli.hpp>
 
 using namespace std;
 using namespace gasp::common;

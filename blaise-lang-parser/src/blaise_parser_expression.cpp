@@ -2,7 +2,7 @@
 #include <string>
 
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/debug.hpp>
+#include <sanelli/sanelli.hpp>
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -16,19 +16,19 @@ using namespace gasp::common;
 // https://en.wikipedia.org/wiki/Operator-precedence_parser
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression" << std::endl);
 
    const auto lhs = parse_expression_term(context);
    const auto expression = parse_expression_helper(context, lhs, 0);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression" << std::endl);
 
    return expression;
 }
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(blaise_parser_context &context, shared_ptr<ast::blaise_ast_expression> lhs, unsigned int min_precedence)
 {
-   GASP_DEBUG("blaise-parser", make_string("[ENTER] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
+   SANELLI_DEBUG("blaise-parser", make_string("[ENTER] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
 
    token<blaise_token_type> lookahead_token = context.peek_token();
    while (blaise_token_type_utility::is_operator(lookahead_token.type()) && blaise_token_type_utility::get_operator_precedence(lookahead_token.type()) >= min_precedence)
@@ -55,7 +55,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(bl
 
       lhs = ast::make_blaise_ast_expression_binary(lhs, operator_token, rhs);
    }
-   GASP_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
+   SANELLI_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
    return lhs;
 }
 
@@ -66,7 +66,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
    const auto token = context.peek_token();
    const auto token_type = token.type();
 
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
 
    switch (token_type)
    {
@@ -188,13 +188,13 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
    }
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
    return term_expression;
 }
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_number(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_number" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_number" << std::endl);
 
    shared_ptr<ast::blaise_ast_expression> number_literal = nullptr;
 
@@ -206,7 +206,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_number(blaise_parser
    number_literal = make_blaise_ast_expression_value(context, token);
    match_token(context, token_type);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_number" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_number" << std::endl);
    return number_literal;
 }
 
@@ -241,7 +241,7 @@ shared_ptr<ast::blaise_ast_expression> gasp::blaise::make_blaise_ast_expression_
 //       the triboolean type (true, false, undefined)
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_boolean(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_boolean" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_boolean" << std::endl);
 
    shared_ptr<ast::blaise_ast_expression> boolean_literal = nullptr;
 
@@ -253,13 +253,13 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_boolean(blaise_parse
    boolean_literal = make_blaise_ast_expression_value(context, literal_token);
    match_token(context, token_type);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_boolean" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_boolean" << std::endl);
    return boolean_literal;
 }
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_cast_expression" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_cast_expression" << std::endl);
 
    auto reference = context.peek_token();
    match_token(context, blaise_token_type::CAST);
@@ -273,13 +273,13 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blai
       throw_parse_error_with_details(context, reference.line(), reference.column(), make_string("It is not possible force a cast from '", expression->result_type(), "' to '", return_type, "'."));
    auto cast_expression = ast::make_blaise_ast_expression_cast(reference, return_type, expression);
    
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_cast_expression" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_cast_expression" << std::endl);
    return cast_expression;
 }
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_ternary_expression" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_ternary_expression" << std::endl);
 
    auto reference = context.peek_token();
 
@@ -300,6 +300,6 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(b
 
    auto ternary_expression = ast::make_blaise_ast_ternary_cast(reference, condition, then_expression, else_expression);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_ternary_expression" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_ternary_expression" << std::endl);
    return ternary_expression;
 }

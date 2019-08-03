@@ -7,13 +7,14 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
+#include <sanelli/sanelli.hpp>
 
 using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::common;
 
 void blaise_parser::parse_subroutines_declaration(blaise_parser_context &context) {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_declaration" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_declaration" << std::endl);
 
    do {
    auto token = context.peek_token();
@@ -27,11 +28,11 @@ void blaise_parser::parse_subroutines_declaration(blaise_parser_context &context
          break;
    }while(true);
 
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_declaration" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_declaration" << std::endl);
 }
 
 void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_context &context, blaise_token_type expected_token_type, const char* caller_name) {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
 
    match_token(context, expected_token_type);
    bool is_native = is_token_and_match(context, blaise_token_type::NATIVE);
@@ -72,7 +73,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
                make_string("Duplicated subroutine with signature '", subroutine->signature_as_string() ,"'"));
    }
 
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);
 }
 
 void blaise_parser::parse_function_declaration(blaise_parser_context &context) {
@@ -84,7 +85,7 @@ void blaise_parser::parse_procedure_declaration(blaise_parser_context &context) 
 }
 
 void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, std::vector<std::shared_ptr<ast::blaise_ast_type>>& param_types) {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
 
    do {
       auto token = context.peek_token();
@@ -106,6 +107,6 @@ void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, 
             break;
    } while(is_token_and_match(context, blaise_token_type::COMMA));
 
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_parameters" << std::endl);
 }
 

@@ -3,7 +3,7 @@
 #include <string>
 
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/debug.hpp>
+#include <sanelli/sanelli.hpp>
 #include <gasp/common/output.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -18,7 +18,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
 {
    std::shared_ptr<ast::blaise_ast_statement> statement = nullptr;
 
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_statement" << std::endl);
 
    const auto token = context.peek_token();
    const auto token_type = token.type();
@@ -74,14 +74,14 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
    if(match_ending_semicolon)
       match_token(context, blaise_token_type::SEMICOLON);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_statement" << std::endl);
 
    return statement;
 }
 
 std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_compound_statement(blaise_parser_context &context, std::shared_ptr<ast::blaise_ast_statement_compund> parent)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_compound_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_compound_statement" << std::endl);
 
    auto begin_token = context.peek_token();
    match_token(context, blaise_token_type::BEGIN);
@@ -95,13 +95,13 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_compound_stateme
    }
    match_token(context, blaise_token_type::END);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_compound_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_compound_statement" << std::endl);
    return compund_statement;
 }
 
 std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_statement(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_statement" << std::endl);
 
    auto identifier_token = context.peek_token();
    match_token(context, blaise_token_type::IDENTIFIER);
@@ -121,7 +121,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
 
    auto statement = ast::make_blaise_ast_statement_subroutine_call(identifier_token, subroutine, expressions);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_statement" << std::endl);
 
    return statement;
 }
@@ -131,7 +131,7 @@ void blaise_parser::parse_subroutine_call_parameters(blaise_parser_context &cont
       std::vector<std::shared_ptr<ast::blaise_ast_type>>& types
       )
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_parameters" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_call_parameters" << std::endl);
 
    auto token_type = context.peek_token().type();
 
@@ -152,12 +152,12 @@ void blaise_parser::parse_subroutine_call_parameters(blaise_parser_context &cont
          token_type = context.peek_token().type();
       } while (token_type != blaise_token_type::RIGHT_PARENTHESES);
 
-    GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_parameters" << std::endl);
+    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_subroutine_call_parameters" << std::endl);
 
 }
 
 std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_statement(blaise_parser_context &context){
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_assignment" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_assignment" << std::endl);
 
    auto identifier = context.peek_token();
    match_token(context, blaise_token_type::IDENTIFIER);
@@ -183,13 +183,13 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
 
    auto statement = ast::make_assignement_statement(identifier, variable_identifier, expression);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_assignment" << std::endl);
 
    return statement;
 }
 
 std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_if_statement(blaise_parser_context &context){
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_if_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_if_statement" << std::endl);
 
    auto reference = context.peek_token();
    match_token(context, blaise_token_type::IF);
@@ -205,7 +205,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_if_statement(bla
 
    auto if_statement = ast::make_blaise_ast_statement_if(reference, condition_expression, then_statement, else_statement);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_if_statement" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_if_statement" << std::endl);
    return if_statement;
 }
 

@@ -3,7 +3,7 @@
 #include <memory>
 
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/debug.hpp>
+#include <sanelli/sanelli.hpp>
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -28,7 +28,7 @@ void blaise_parser::parse(blaise_parser_context &context) const
 
 void blaise_parser::parse_program(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_program" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_program" << std::endl);
 
    match_token(context, blaise_token_type::PROGRAM);
 
@@ -55,12 +55,12 @@ void blaise_parser::parse_program(blaise_parser_context &context)
 
    match_token(context, blaise_token_type::PERIOD);
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_program" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_program" << std::endl);
 }
 
 void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variables_declaration" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variables_declaration" << std::endl);
 
    if (!is_token(context, blaise_token_type::VAR))
       return; // No such variables
@@ -71,12 +71,12 @@ void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
       parse_variable_declaration(context);
    }
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variables_declaration" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variables_declaration" << std::endl);
 }
 
 void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_declaration" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_declaration" << std::endl);
 
    std::vector<token<blaise_token_type>> variable_tokens;
    parse_variable_names_list(context, variable_tokens);
@@ -87,19 +87,19 @@ void blaise_parser::parse_variable_declaration(blaise_parser_context &context)
 
    auto current_subroutine = context.current_subroutine();
 
-   GASP_DEBUG("blaise-parser", "[INSIDE] Creating " <<  variable_tokens.size() << " variable(s)." << std::endl)
+   SANELLI_DEBUG("blaise-parser", "[INSIDE] Creating " <<  variable_tokens.size() << " variable(s)." << std::endl)
    for(auto variable_token : variable_tokens) {
-      GASP_DEBUG("blaise-parser", "[INSIDE] Creating variable '" << variable_token.value() << "' and type '" << variable_type << "'" << std::endl);
+      SANELLI_DEBUG("blaise-parser", "[INSIDE] Creating variable '" << variable_token.value() << "' and type '" << variable_type << "'" << std::endl);
       current_subroutine->add_variable(variable_token, variable_token.value(), variable_type);
-      GASP_DEBUG("blaise-parser", "[INSIDE] Done created variable '" << variable_token.value() << "' and type '" << variable_type << "'" << std::endl);
+      SANELLI_DEBUG("blaise-parser", "[INSIDE] Done created variable '" << variable_token.value() << "' and type '" << variable_type << "'" << std::endl);
    }
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_declaration" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_declaration" << std::endl);
 }
 
 void blaise_parser::parse_variable_names_list(blaise_parser_context &context, std::vector<token<blaise_token_type>> &variable_names)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_names_list" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_names_list" << std::endl);
 
    // TODO: Possible generate a new variable definition, not just the name
    do
@@ -109,12 +109,12 @@ void blaise_parser::parse_variable_names_list(blaise_parser_context &context, st
       variable_names.push_back(token);
    } while (is_token_and_match(context, blaise_token_type::COMMA));
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_names_list" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_names_list" << std::endl);
 }
 
 std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_parser_context &context, bool accept_unbounded_array)
 {
-   GASP_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_variable_type" << std::endl);
 
    const auto type_token = context.peek_token();
    const auto token_type = type_token.type();
@@ -139,7 +139,7 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
          auto array_size = std::static_pointer_cast<ast::blaise_ast_expression_integer_value>(array_size_expression);
          array_size_length = array_size->value();
       } else {
-         GASP_DEBUG("blaise-parser", "[INSIDE] blaise_parser::parse_variable_type accept_unbounded_array = " << (accept_unbounded_array ? "TRUE" : "FALSE") << std::endl);
+         SANELLI_DEBUG("blaise-parser", "[INSIDE] blaise_parser::parse_variable_type accept_unbounded_array = " << (accept_unbounded_array ? "TRUE" : "FALSE") << std::endl);
          if(!accept_unbounded_array)
             throw_parse_error_with_details(context, "Array size required");
       }
@@ -150,7 +150,7 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
       variable_type = ast::get_type_from_token(type_token);
    }
 
-   GASP_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_type" << std::endl);
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_variable_type" << std::endl);
 
    return variable_type;
 }
