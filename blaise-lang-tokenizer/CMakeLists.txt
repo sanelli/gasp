@@ -1,4 +1,14 @@
+add_library(gasp-blaise-lang-tokenizer SHARED "")
+set_target_properties(gasp-blaise-lang-tokenizer PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-tokenizer gasp-common)
+target_link_libraries(gasp-blaise-lang-tokenizer libsanelli)
 target_include_directories(gasp-blaise-lang-tokenizer PUBLIC include)
+
+add_executable(gasp-blaise-lang-tokenizer-test "")
+set_target_properties(gasp-blaise-lang-tokenizer-test PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-blaise-lang-tokenizer-test gasp-blaise-lang-tokenizer)
+target_link_libraries(gasp-blaise-lang-tokenizer-test gasp-common)
+target_link_libraries(gasp-blaise-lang-tokenizer-test Catch2::Catch2)
 
 add_subdirectory(include)
 add_subdirectory(src)
