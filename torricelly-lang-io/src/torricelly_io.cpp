@@ -8,6 +8,10 @@ using namespace gasp::torricelly;
 
 torricelly_text_output::torricelly_text_output(std::ostream& os) : _os(os) { }
 
+unsigned int torricelly_text_output::version_major() const { return 0; }
+unsigned int torricelly_text_output::version_minor() const { return 0; }
+unsigned int torricelly_text_output::version_build() const { return 1; }
+
 torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const char* text){
    os._os << text;
    return os;

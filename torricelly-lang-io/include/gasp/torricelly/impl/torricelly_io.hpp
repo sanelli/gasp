@@ -10,6 +10,10 @@ class torricelly_text_output {
 public:
    torricelly_text_output(std::ostream& os);
 
+   unsigned int version_major() const;
+   unsigned int version_minor() const;
+   unsigned int version_build() const;
+
    friend torricelly_text_output& operator<<(torricelly_text_output& os, const char* text);
    friend torricelly_text_output& operator<<(torricelly_text_output& os, const std::string& text);
    friend torricelly_text_output& operator<<(torricelly_text_output& os, int number);
