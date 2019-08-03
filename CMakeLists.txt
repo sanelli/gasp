@@ -23,7 +23,7 @@ set_target_properties(gasp-common PROPERTIES LINKER_LANGUAGE CXX)
 add_library(gasp-blaise-lang-tokenizer SHARED "")
 set_target_properties(gasp-blaise-lang-tokenizer PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(gasp-blaise-lang-tokenizer gasp-common)
-target_link_libraries(gasp-blaise-lang-tokenizer sanelli)
+target_link_libraries(gasp-blaise-lang-tokenizer libsanelli)
 
 add_executable(gasp-blaise-lang-tokenizer-test "")
 set_target_properties(gasp-blaise-lang-tokenizer-test PROPERTIES LINKER_LANGUAGE CXX)
