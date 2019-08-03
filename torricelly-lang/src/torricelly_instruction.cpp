@@ -1,11 +1,11 @@
 #include <memory>
 
-#include <gasp/common/string.hpp>
-#include <gasp/common/memory.hpp>
+
+#include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 
+using namespace sanelli;
 using namespace gasp;
-using namespace gasp::common;
 using namespace gasp::torricelly;
 
 torricelly_instruction::torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type)
@@ -27,21 +27,21 @@ void torricelly_instruction::set_label(unsigned int label) { _label = label; }
 void torricelly_instruction::validate() const {
    const torricelly_inst_code cd = code();
    if(has_parameter_reference() && !torricelly_inst_code_helper::accept_parameter(cd))
-      throw torricelly_error(make_string("Instruction code '", cd,"' does not accept any parameter"));
+      throw torricelly_error(sanelli::make_string("Instruction code '", cd,"' does not accept any parameter"));
    if(!has_parameter_reference() && torricelly_inst_code_helper::accept_parameter(cd))
-      throw torricelly_error(make_string("Instruction code '", cd,"' requires a parameter"));
+      throw torricelly_error(sanelli::make_string("Instruction code '", cd,"' requires a parameter"));
    switch(ref_type()){
       case torricelly_inst_ref_type::LABEL:
          if(!torricelly_inst_code_helper::accept_label(cd))
-            throw torricelly_error(make_string("Instruction code '", cd,"' does not accept a label parameter"));
+            throw torricelly_error(sanelli::make_string("Instruction code '", cd,"' does not accept a label parameter"));
          break;
       case torricelly_inst_ref_type::MODULE:
          if(!torricelly_inst_code_helper::accept_reference(cd))
-            throw torricelly_error(make_string("Instruction code '", cd,"' does not accept a module variable reference"));
+            throw torricelly_error(sanelli::make_string("Instruction code '", cd,"' does not accept a module variable reference"));
          break;
       case torricelly_inst_ref_type::SUBROUTINE:
          if(!torricelly_inst_code_helper::accept_reference(cd))
-            throw torricelly_error(make_string("Instruction code '", cd,"' does not accept a subroutine variable reference"));
+            throw torricelly_error(sanelli::make_string("Instruction code '", cd,"' does not accept a subroutine variable reference"));
          break;
       default:
          throw torricelly_error("Unknwon instruction reference type detected during validation");
@@ -49,9 +49,9 @@ void torricelly_instruction::validate() const {
 }
 
 std::shared_ptr<torricelly_instruction> torricelly::make_torricelly_instruction(torricelly_inst_code code) {
-   return memory::gasp_make_shared<torricelly_instruction>(code);
+   return memory::make_shared<torricelly_instruction>(code);
 }
 
 std::shared_ptr<torricelly_instruction> torricelly::make_torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type){
-   return memory::gasp_make_shared<torricelly_instruction>(code, parameter_reference, ref_type);
+   return memory::make_shared<torricelly_instruction>(code, parameter_reference, ref_type);
 }

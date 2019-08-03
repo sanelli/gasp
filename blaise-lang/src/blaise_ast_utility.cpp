@@ -4,7 +4,7 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/string.hpp>
+
 #include <sanelli/sanelli.hpp>
 
 using namespace gasp::common;
@@ -158,10 +158,10 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const ga
       }
          break;
       default:
-         throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported unary operator ", op, " for expression of type ", operand));
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported unary operator ", op, " for expression of type ", operand));
    }
 
-   throw blaise_ast_error(reference.line(), reference.column(), make_string("Operator ", op, " does not support expression of type ", operand));
+   throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Operator ", op, " does not support expression of type ", operand));
 }
 
 std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const token<blaise_token_type>& reference, blaise_token_type op, std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right) {
@@ -220,10 +220,10 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const to
       }
       break;
       default:
-            throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported operator ", op, " between expression of type ", left, " and ", right));
+            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported operator ", op, " between expression of type ", left, " and ", right));
    }
 
-   throw blaise_ast_error(reference.line(), reference.column(), make_string("Operator ", op, " between expression of type ", left, " and ", right," is not allowed."));
+   throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Operator ", op, " between expression of type ", left, " and ", right," is not allowed."));
 }
 
 bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, std::shared_ptr<blaise_ast_type> to) {
@@ -238,7 +238,7 @@ bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, st
                case blaise_ast_system_type::DOUBLE:
                   return true;
                default:
-                  throw std::runtime_error(make_string("Unsupported type '", to,"' passed as 'to' parameter"));
+                  throw std::runtime_error(sanelli::make_string("Unsupported type '", to,"' passed as 'to' parameter"));
             }
          case blaise_ast_system_type::FLOAT:
             switch(system_type_to){
@@ -248,7 +248,7 @@ bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, st
                case blaise_ast_system_type::DOUBLE:
                   return true;
                default:
-                  throw std::runtime_error(make_string("Unsupported type '", to,"' passed as 'to' parameter"));
+                  throw std::runtime_error(sanelli::make_string("Unsupported type '", to,"' passed as 'to' parameter"));
             }
          case blaise_ast_system_type::DOUBLE:
             switch(system_type_to){
@@ -258,10 +258,10 @@ bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, st
                case blaise_ast_system_type::DOUBLE:
                   return true;
                default:
-                  throw std::runtime_error(make_string("Unsupported type '", to,"' passed as 'to' parameter"));
+                  throw std::runtime_error(sanelli::make_string("Unsupported type '", to,"' passed as 'to' parameter"));
             }
          default:
-            throw std::runtime_error(make_string("Unsupported type '", from,"' passed as 'from' parameter"));
+            throw std::runtime_error(sanelli::make_string("Unsupported type '", from,"' passed as 'from' parameter"));
       }
    }
 
@@ -289,5 +289,5 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_common_type(const gasp:
    if(typeA->equals(typeB)) return typeA;
    if(can_auto_cast(typeA, typeB)) return typeB;
    if(can_auto_cast(typeB, typeA)) return typeA;
-   throw blaise_ast_error(reference.line(), reference.column(), make_string("Mismatch types '", typeA,"' and '", typeB, "'."));
+   throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Mismatch types '", typeA,"' and '", typeB, "'."));
 }

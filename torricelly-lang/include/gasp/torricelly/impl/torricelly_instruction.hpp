@@ -1,7 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <gasp/common/memory.hpp>
+
+#include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction_code.hpp>
 
 namespace gasp::torricelly {
@@ -47,7 +48,7 @@ public:
 
    void validate() const;
 
-   friend gasp::common::memory;
+   friend sanelli::memory;
 };
 
 std::shared_ptr<torricelly_instruction> make_torricelly_instruction(torricelly_inst_code code);

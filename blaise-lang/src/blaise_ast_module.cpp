@@ -6,8 +6,9 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+#include <sanelli/sanelli.hpp>
 
+using namespace sanelli;
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
 using namespace gasp::common;
@@ -58,7 +59,7 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get
                if(index != index < matching_subs_with_cast.size()-1) stream << "\n ";
             }
             throw blaise_ast_error(identifier.line(), identifier.column(), 
-               make_string("Multiple functions matching subroutine call ", identifier.value(), "(" , stream.str(), ")")
+               sanelli::make_string("Multiple functions matching subroutine call ", identifier.value(), "(" , stream.str(), ")")
             );
          }
    }
@@ -74,7 +75,7 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::exp
    }
 
    throw blaise_ast_error(identifier.line(), identifier.column(), 
-               make_string("Cannot find subroutine  ", identifier.value(), "(",  param_types, ")")
+               sanelli::make_string("Cannot find subroutine  ", identifier.value(), "(",  param_types, ")")
             );
 }
 
@@ -87,5 +88,5 @@ unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
 }
 
 std::shared_ptr<blaise_ast_module> gasp::blaise::ast::make_blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type){
-   return memory::gasp_make_shared<blaise_ast_module>(reference, module_name, type);
+   return memory::make_shared<blaise_ast_module>(reference, module_name, type);
 }

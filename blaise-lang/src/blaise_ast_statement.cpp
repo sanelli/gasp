@@ -6,9 +6,8 @@
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/ast.hpp>
 #include <sanelli/sanelli.hpp>
-#include <gasp/common/string.hpp>
-#include <gasp/common/memory.hpp>
 
+using namespace sanelli;
 using namespace std;
 using namespace gasp::common;
 using namespace gasp::blaise;
@@ -30,7 +29,7 @@ shared_ptr<blaise_ast_statement> blaise_ast_statement_compund::get_statement(uns
 unsigned int blaise_ast_statement_compund::get_statements_count() const { return _statements.size(); }
 shared_ptr<ast::blaise_ast_statement_compund>gasp::blaise::ast::make_compound_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference)
 {
-   return memory::gasp_make_shared<blaise_ast_statement_compund>(reference);
+   return memory::make_shared<blaise_ast_statement_compund>(reference);
 }
 
 //
@@ -58,7 +57,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
          variable = variable_identifier->variable();
          variable_real_type = variable->type();
          if(variable->type()->type_type() == ast::blaise_ast_type_type::ARRAY)
-            throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported type: '", variable_real_type, "'. An array should not be used here."));
+            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "'. An array should not be used here."));
       } 
       break;
       case blaise_ast_identifier_type::ARRAY:
@@ -67,7 +66,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
          variable = array_identifier->variable();
          variable_real_type = ast::blaise_ast_utility::as_array_type(variable->type())->inner_type();
          if(variable->type()->type_type() != ast::blaise_ast_type_type::ARRAY)
-            throw blaise_ast_error(reference.line(), reference.column(), make_string("Unsupported type: '", variable_real_type, "'. An array was expected here."));
+            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "'. An array was expected here."));
       }
       break;
       default:
@@ -79,20 +78,20 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       case blaise_ast_variable_type::PARAMETER:
          break; // All good!
       case blaise_ast_variable_type::CONSTANT:
-         throw blaise_ast_error(reference.line(), reference.column(), make_string("Variable '", variable->name() ,"' is constant."));
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Variable '", variable->name() ,"' is constant."));
       default:
-         throw blaise_ast_error(reference.line(), reference.column(), make_string("Unexpected variable type"));
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unexpected variable type"));
    }
 
     if(expression->result_type() !=variable_real_type && !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable_real_type))
-      throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot cast '", expression->result_type(), "' into '",variable_real_type,"'."));
+      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot cast '", expression->result_type(), "' into '",variable_real_type,"'."));
 
    if(variable_real_type == nullptr)
       throw blaise_ast_error(reference.line(), reference.column(), "Variable type or underlying type cannot be detected.");
 
    expression = ast::introduce_cast_if_required(reference, variable_real_type, expression);
    
-   return memory::gasp_make_shared<blaise_ast_statement_assignment>(reference, identifier, expression);
+   return memory::make_shared<blaise_ast_statement_assignment>(reference, identifier, expression);
 }
 
 //
@@ -112,7 +111,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
 std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_statement_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
          std::shared_ptr<blaise_ast_subroutine> subroutine,
          const std::vector<std::shared_ptr<blaise_ast_expression>>& parameters) {
-   return memory::gasp_make_shared<blaise_ast_statement_subroutine_call>(reference, subroutine, parameters);
+   return memory::make_shared<blaise_ast_statement_subroutine_call>(reference, subroutine, parameters);
 }
 
 //
@@ -128,7 +127,7 @@ blaise_ast_statement_if::blaise_ast_statement_if(const gasp::common::token<gasp:
          _else_statement(else_statement)
 {  
    if(condition->result_type() != ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN)){
-        throw blaise_ast_error(reference.line(), reference.column(), make_string("Condition must be a boolean expression"));
+        throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Condition must be a boolean expression"));
      }
 }
 std::shared_ptr<blaise_ast_expression> blaise_ast_statement_if::condition() const { return _condition; }
@@ -138,7 +137,7 @@ std::shared_ptr<blaise_ast_statement_if> ast::make_blaise_ast_statement_if(const
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> then_statement,
       std::shared_ptr<blaise_ast_statement> else_statement) {
-   return memory::gasp_make_shared<blaise_ast_statement_if>(reference, condition, then_statement, else_statement);
+   return memory::make_shared<blaise_ast_statement_if>(reference, condition, then_statement, else_statement);
 }
 
 //
@@ -168,7 +167,7 @@ std::shared_ptr<blaise_ast_statement_for_loop> ast::make_blaise_ast_statement_fo
       std::shared_ptr<blaise_ast_expression> to_expression,
       std::shared_ptr<blaise_ast_expression> step_expression,
       std::shared_ptr<blaise_ast_statement> body){
-   return memory::gasp_make_shared<blaise_ast_statement_for_loop>(reference, variable, from_expression, to_expression, step_expression, body);
+   return memory::make_shared<blaise_ast_statement_for_loop>(reference, variable, from_expression, to_expression, step_expression, body);
 }
 
 //
@@ -197,7 +196,7 @@ blaise_ast_statement_dowhile_loop::blaise_ast_statement_dowhile_loop(const gasp:
 std::shared_ptr<blaise_ast_statement_dowhile_loop> ast::make_blaise_ast_statement_dowhile_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body){
-   return memory::gasp_make_shared<blaise_ast_statement_dowhile_loop>(reference, condition, body);
+   return memory::make_shared<blaise_ast_statement_dowhile_loop>(reference, condition, body);
 }
 
 //
@@ -211,7 +210,7 @@ blaise_ast_statement_while_loop::blaise_ast_statement_while_loop(const gasp::com
 std::shared_ptr<blaise_ast_statement_while_loop> ast::make_blaise_ast_statement_while_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body){
-   return memory::gasp_make_shared<blaise_ast_statement_while_loop>(reference, condition, body);
+   return memory::make_shared<blaise_ast_statement_while_loop>(reference, condition, body);
 }
 
 //
@@ -225,5 +224,5 @@ blaise_ast_statement_repeatuntil_loop::blaise_ast_statement_repeatuntil_loop(con
 std::shared_ptr<blaise_ast_statement_repeatuntil_loop> ast::make_blaise_ast_statement_repeatuntil_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body){
-   return memory::gasp_make_shared<blaise_ast_statement_repeatuntil_loop>(reference, condition, body);
+   return memory::make_shared<blaise_ast_statement_repeatuntil_loop>(reference, condition, body);
 }

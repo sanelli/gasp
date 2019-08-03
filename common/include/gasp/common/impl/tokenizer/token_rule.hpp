@@ -5,10 +5,9 @@
 #include <tuple>
 #include <utility>
 
+#include <sanelli/sanelli.hpp>
 #include <gasp/common/debug.hpp>
 #include <gasp/common/gasp_error.hpp>
-#include <gasp/common/string.hpp>
-
 #include <gasp/common/impl/tokenizer/tokenizer_error.hpp>
 #include <gasp/common/impl/tokenizer/token.hpp>
 #include <gasp/common/impl/tokenizer/token_io.hpp>
@@ -53,8 +52,8 @@ public:
          {
             auto value = _keep_value ? match[0] : std::string("");
             if(_keep_value && ignore_spaces){
-               gasp::common::ltrim(value);
-               gasp::common::rtrim(value);
+               sanelli::ltrim(value);
+               sanelli::rtrim(value);
             }
             return std::make_tuple<>(true, token(_token_type, value, line, column), match[0], _keep_token);
          }

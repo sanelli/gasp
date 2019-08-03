@@ -3,7 +3,8 @@
 #include <string>
 #include <memory>
 #include <ostream>
-#include <gasp/common/memory.hpp>
+
+#include <sanelli/sanelli.hpp>
 
 namespace gasp::torricelly {
 
@@ -42,7 +43,7 @@ class toricelly_system_type : public torricelly_type {
    torricelly_system_type_type system_type() const;
    inline bool equals(std::shared_ptr<torricelly_type> other) const override;
 
-   friend gasp::common::memory;
+   friend sanelli::memory;
 };
 
 std::shared_ptr<toricelly_system_type> make_torricelly_system_type(torricelly_system_type_type system_type);

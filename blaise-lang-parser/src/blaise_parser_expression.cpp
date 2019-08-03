@@ -3,11 +3,11 @@
 
 #include <gasp/common/tokenizer.hpp>
 #include <sanelli/sanelli.hpp>
-
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
 
+using namespace sanelli;
 using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::common;
@@ -28,7 +28,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression(blaise_pa
 
 shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(blaise_parser_context &context, shared_ptr<ast::blaise_ast_expression> lhs, unsigned int min_precedence)
 {
-   SANELLI_DEBUG("blaise-parser", make_string("[ENTER] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
+   SANELLI_DEBUG("blaise-parser", sanelli::make_string("[ENTER] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
 
    token<blaise_token_type> lookahead_token = context.peek_token();
    while (blaise_token_type_utility::is_operator(lookahead_token.type()) && blaise_token_type_utility::get_operator_precedence(lookahead_token.type()) >= min_precedence)
@@ -49,13 +49,13 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(bl
             rhs = ast::introduce_cast_if_required(operator_token, lhs->result_type(), rhs);
          else
             throw_parse_error_with_details(context, lhs->line(), lhs->column(),
-                      make_string("Operator ", operator_token, " between expressions of type ",lhs->result_type(), 
+                      sanelli::make_string("Operator ", operator_token, " between expressions of type ",lhs->result_type(), 
                       " and ", rhs->result_type(), " is not supported."));
       }
 
       lhs = ast::make_blaise_ast_expression_binary(lhs, operator_token, rhs);
    }
-   SANELLI_DEBUG("blaise-parser", make_string("[EXIT] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
+   SANELLI_DEBUG("blaise-parser", sanelli::make_string("[EXIT] blaise_parser::parse_expression<", min_precedence, ">") << std::endl);
    return lhs;
 }
 
@@ -87,7 +87,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          auto subroutine = context.module()->get_subroutine(identifier_token, types);
          if (subroutine == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                                           make_string("Cannot find a function matching: '", identifier_token.value(), "(", types, ")'"));
+                                           sanelli::make_string("Cannot find a function matching: '", identifier_token.value(), "(", types, ")'"));
          
          ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
          
@@ -99,7 +99,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
         auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
         if(memory_location == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     make_string("Cannot find array with name '", identifier_token.value(),"'"));
+                     sanelli::make_string("Cannot find array with name '", identifier_token.value(),"'"));
          switch(memory_location->type()->type_type()){
             case ast::blaise_ast_type_type::ARRAY: // All good
             break;
@@ -107,15 +107,15 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
             case ast::blaise_ast_type_type::POINTER:
             case ast::blaise_ast_type_type::USER_DEFINED:
                 throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     make_string("Variable '", identifier_token.value(),"' must be of type array"));
+                     sanelli::make_string("Variable '", identifier_token.value(),"' must be of type array"));
             default:
                throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     make_string("Unexpected variable type '", memory_location->type(),"'."));
+                     sanelli::make_string("Unexpected variable type '", memory_location->type(),"'."));
          }
          auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
          if(indexing_expression->result_type() != integer_type && !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type)){
              throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
-                     make_string("indexing expression must be an integer or a type that can be casted to an integer."));
+                     sanelli::make_string("indexing expression must be an integer or a type that can be casted to an integer."));
          }
          term_expression = ast::make_blaise_ast_expression_array_access(identifier_token, memory_location, indexing_expression);
 
@@ -125,7 +125,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
         auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
         if(memory_location == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     make_string("Cannot find variable with name '", identifier_token.value(),"'"));
+                     sanelli::make_string("Cannot find variable with name '", identifier_token.value(),"'"));
 
          term_expression = ast::make_blaise_ast_expression_memory_access(identifier_token, memory_location);
       }
@@ -185,7 +185,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
    }
    break;
    default:
-      throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
+      throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("Unexpected token '", token_type, "' found."));
    }
 
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_expression_term<" << token_type << ">" << std::endl);
@@ -201,7 +201,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_number(blaise_parser
    auto token = context.peek_token();
    auto token_type = token.type();
    if (!blaise_token_type_utility::is_number(token_type))
-      throw_parse_error_with_details(context, token.line(), token.column(), make_string("A number was expected but found '", token_type, "'"));
+      throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("A number was expected but found '", token_type, "'"));
 
    number_literal = make_blaise_ast_expression_value(context, token);
    match_token(context, token_type);
@@ -215,25 +215,25 @@ shared_ptr<ast::blaise_ast_expression> gasp::blaise::make_blaise_ast_expression_
    switch (token_literal.type())
    {
    case blaise_token_type::INTEGER_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value()));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value()));
    case blaise_token_type::INTEGER_BASE_TWO_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 2));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 2));
    case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 8));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 8));
    case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 16));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 16));
    case blaise_token_type::FLOAT_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_float_value>(token_literal, stof(token_literal.value()));
+      return memory::make_shared<ast::blaise_ast_expression_float_value>(token_literal, stof(token_literal.value()));
    case blaise_token_type::DOUBLE_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_double_value>(token_literal, stod(token_literal.value()));
+      return memory::make_shared<ast::blaise_ast_expression_double_value>(token_literal, stod(token_literal.value()));
    case blaise_token_type::CHAR_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_char_value>(token_literal, token_literal.value()[1]);
+      return memory::make_shared<ast::blaise_ast_expression_char_value>(token_literal, token_literal.value()[1]);
    case blaise_token_type::STRING_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_string_value>(token_literal, token_literal.value().substr(1, token_literal.value().length() - 2));
+      return memory::make_shared<ast::blaise_ast_expression_string_value>(token_literal, token_literal.value().substr(1, token_literal.value().length() - 2));
    case blaise_token_type::BOOLEAN_LITERAL:
-      return memory::gasp_make_shared<ast::blaise_ast_expression_boolean_value>(token_literal, token_literal.value() == "true");
+      return memory::make_shared<ast::blaise_ast_expression_boolean_value>(token_literal, token_literal.value() == "true");
    default:
-      gasp::blaise::blaise_parser::throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), make_string("Cannot extract literal from token '", token_literal, "'"));
+      gasp::blaise::blaise_parser::throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Cannot extract literal from token '", token_literal, "'"));
    }
 }
 
@@ -248,7 +248,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_boolean(blaise_parse
    auto literal_token = context.peek_token();
    auto token_type = literal_token.type();
    if (!blaise_token_type_utility::is_boolean(token_type))
-      throw_parse_error_with_details(context, literal_token.line(), literal_token.column(), make_string("A boolean was expected but found '", token_type, "'"));
+      throw_parse_error_with_details(context, literal_token.line(), literal_token.column(), sanelli::make_string("A boolean was expected but found '", token_type, "'"));
 
    boolean_literal = make_blaise_ast_expression_value(context, literal_token);
    match_token(context, token_type);
@@ -270,7 +270,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blai
    auto expression = parse_expression(context);
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    if (!ast::blaise_ast_utility::can_force_cast(expression->result_type(), return_type))
-      throw_parse_error_with_details(context, reference.line(), reference.column(), make_string("It is not possible force a cast from '", expression->result_type(), "' to '", return_type, "'."));
+      throw_parse_error_with_details(context, reference.line(), reference.column(), sanelli::make_string("It is not possible force a cast from '", expression->result_type(), "' to '", return_type, "'."));
    auto cast_expression = ast::make_blaise_ast_expression_cast(reference, return_type, expression);
    
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_cast_expression" << std::endl);

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include <gasp/common/memory.hpp>
+
 #include <gasp/torricelly/impl/torricelly_subroutine.hpp>
 #include <gasp/torricelly/impl/torricelly_type.hpp>
 #include <gasp/torricelly/impl/torricelly_value.hpp>
@@ -33,7 +33,7 @@ public:
    torricelly_value get_initial_value(unsigned int index) const;
    unsigned int get_number_of_variables() const;
 
-   friend gasp::common::memory;
+   friend sanelli::memory;
 };
 
 std::shared_ptr<torricelly_module> make_torricelly_module(const std::string &module_name);

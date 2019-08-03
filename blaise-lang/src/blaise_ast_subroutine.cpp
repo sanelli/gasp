@@ -9,8 +9,8 @@
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
 #include <sanelli/sanelli.hpp>
-#include <gasp/common/memory.hpp>
 
+using namespace sanelli;
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
 using namespace gasp::common;
@@ -58,7 +58,7 @@ unsigned long gasp::blaise::ast::blaise_ast_subroutine::get_arity() const {
 }
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::blaise_ast_subroutine::get_parameter_type(unsigned long index) const{
    if(index >= get_arity())
-      throw std::logic_error(make_string("Required type at index ", get_arity()," for subroutine '", signature_as_string() ,"'."));
+      throw std::logic_error(sanelli::make_string("Required type at index ", get_arity()," for subroutine '", signature_as_string() ,"'."));
    return _parameters.at(index)->type();
 }
 
@@ -104,7 +104,7 @@ shared_ptr<blaise_ast_variable> gasp::blaise::ast::blaise_ast_subroutine::add_va
 {
    SANELLI_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
-      throw blaise_ast_error(reference.line(), reference.column(), make_string("Variable '", identifier, "' already defined."));
+      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Variable '", identifier, "' already defined."));
    auto variable = ast::make_blaise_ast_variable(reference, identifier, type);
    _variables.push_back(variable);
    SANELLI_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_variable - Creating variable for " << identifier << " with type " << type << std::endl)
@@ -117,7 +117,7 @@ shared_ptr<blaise_ast_constant> gasp::blaise::ast::blaise_ast_subroutine::add_co
 {
    SANELLI_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
-      throw blaise_ast_error(reference.line(), reference.column(), make_string("Constant '", identifier, "' already defined."));
+      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Constant '", identifier, "' already defined."));
    auto constant = ast::make_blaise_ast_constant(reference, identifier, type);
    _constants.push_back(constant);
    SANELLI_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_constant - Creating constant for " << identifier << " with type " << type << std::endl)
@@ -130,7 +130,7 @@ shared_ptr<blaise_ast_subroutine_parameter> gasp::blaise::ast::blaise_ast_subrou
 {
    SANELLI_DEBUG("blaise-lang", "[BEGIN] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
    if (get_memory_location(identifier) != nullptr)
-      throw blaise_ast_error(reference.line(), reference.column(), make_string("Parameter '", identifier, "' already defined."));
+      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Parameter '", identifier, "' already defined."));
    auto parameter = ast::make_blaise_ast_subroutine_parameter(reference, identifier, type);
    _parameters.push_back(parameter);
    SANELLI_DEBUG("blaise-lang", "[END] blaise_ast_subroutine::add_parameter - Creating parameter for " << identifier << " with type " << type << std::endl)
@@ -149,5 +149,5 @@ unsigned int gasp::blaise::ast::blaise_ast_subroutine::get_statements_count() co
 
 std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::make_blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name)
 {
-      return memory::gasp_make_shared<blaise_ast_subroutine>(module, name);
+      return memory::make_shared<blaise_ast_subroutine>(module, name);
 }

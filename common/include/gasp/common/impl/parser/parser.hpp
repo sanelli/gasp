@@ -6,9 +6,8 @@
 #include <sstream>
 #include <algorithm>
 
-#include <gasp/common/string.hpp>
+#include <sanelli/sanelli.hpp>
 #include <gasp/common/debug.hpp>
-
 #include <gasp/common/impl/parser/parser_error.hpp>
 #include <gasp/common/impl/parser/parser_context.hpp>
 #include <gasp/common/impl/parser/parser_io.hpp>
@@ -55,7 +54,7 @@ protected:
          context.move_next_token();
          return value;
       } else {
-         auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
+         auto message = sanelli::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
          throw_parse_error_with_details(context, token.line(), token.column(), message);
       }
    }
@@ -71,7 +70,7 @@ protected:
          context.move_next_token();
       } else {
          auto token = context.peek_token();
-         auto message = gasp::common::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
+         auto message = sanelli::make_string("Unexpected token: was expecting '", token_type, "' but found '", token.type(), "'.");
          throw_parse_error_with_details(context, token.line(), token.column(), message);
       }
    }

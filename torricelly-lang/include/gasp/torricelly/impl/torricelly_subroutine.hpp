@@ -6,7 +6,7 @@
 #include <ostream>
 #include <set>
 
-#include <gasp/common/memory.hpp>
+
 #include <gasp/torricelly/impl/torricelly_type.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction.hpp>
 #include <gasp/torricelly/impl/torricelly_value.hpp>
@@ -65,7 +65,7 @@ public:
 
    void validate(unsigned int number_of_module_fields) const;
 
-   friend gasp::common::memory;
+   friend sanelli::memory;
 };
 
 std::shared_ptr<torricelly_subroutine> make_torricelly_subroutine(const std::string& name, std::shared_ptr<torricelly::torricelly_type> return_type);

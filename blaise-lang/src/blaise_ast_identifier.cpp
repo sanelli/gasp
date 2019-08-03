@@ -2,9 +2,10 @@
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
 #include <gasp/blaise/ast.hpp>
+#include <sanelli/sanelli.hpp>
 
+using namespace sanelli;
 using namespace std;
 using namespace gasp;
 using namespace gasp::common;
@@ -25,7 +26,7 @@ blaise_ast_variable_identifier::blaise_ast_variable_identifier(const gasp::commo
 std::shared_ptr<blaise_ast_generic_memory_location> blaise_ast_variable_identifier::variable() const { return _variable; }
 std::shared_ptr<blaise_ast_variable_identifier> ast::make_blaise_ast_variable_identifier(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                                  std::shared_ptr<blaise_ast_generic_memory_location> variable){
-   return memory::gasp_make_shared<blaise_ast_variable_identifier>(reference, variable);
+   return memory::make_shared<blaise_ast_variable_identifier>(reference, variable);
 }
 
  blaise_ast_array_identifier::blaise_ast_array_identifier(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
@@ -40,5 +41,5 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_array_identifier::indexing_exp
 std::shared_ptr<blaise_ast_array_identifier> ast::make_blaise_ast_array_identifier(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                                  std::shared_ptr<blaise_ast_generic_memory_location> variable,
                                  std::shared_ptr<blaise_ast_expression> indexing_expression){
-   return memory::gasp_make_shared<blaise_ast_array_identifier>(reference, variable, indexing_expression);
+   return memory::make_shared<blaise_ast_array_identifier>(reference, variable, indexing_expression);
 }

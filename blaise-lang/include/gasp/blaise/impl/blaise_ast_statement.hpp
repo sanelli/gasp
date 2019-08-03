@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include <gasp/common/memory.hpp>
+
 #include <gasp/common/tokenizer.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 
@@ -45,7 +45,7 @@ class blaise_ast_statement_compund : public blaise_ast_statement {
       std::shared_ptr<blaise_ast_statement> get_statement(unsigned int) const;
       unsigned int get_statements_count() const ;
 
-   friend class gasp::common::memory;
+   friend class sanelli::memory;
 };
 std::shared_ptr<ast::blaise_ast_statement_compund> make_compound_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference);
 
@@ -59,7 +59,7 @@ class blaise_ast_statement_assignment : public blaise_ast_statement {
    std::shared_ptr<blaise_ast_identifier> identifier() const;
    std::shared_ptr<blaise_ast_expression> expression() const;
 
-   friend class gasp::common::memory;
+   friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement> make_assignement_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
                   std::shared_ptr<blaise_ast_identifier> identifier, 
@@ -76,7 +76,7 @@ class blaise_ast_statement_subroutine_call : public blaise_ast_statement {
    unsigned int parameters_count() const;
    std::shared_ptr<blaise_ast_expression> actual_parameter(unsigned int index) const;
 
-   friend class gasp::common::memory;
+   friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement> make_blaise_ast_statement_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
             std::shared_ptr<blaise_ast_subroutine> subroutine,
@@ -94,7 +94,7 @@ class blaise_ast_statement_if : public blaise_ast_statement {
       std::shared_ptr<blaise_ast_expression> condition() const;
       std::shared_ptr<blaise_ast_statement> then_statement() const;
       std::shared_ptr<blaise_ast_statement> else_statement() const;
-      friend class gasp::common::memory;
+      friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement_if> make_blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
@@ -120,7 +120,7 @@ class blaise_ast_statement_for_loop : public blaise_ast_statement {
       std::shared_ptr<blaise_ast_expression> to_expression() const;
       std::shared_ptr<blaise_ast_expression> step_expression() const;
       std::shared_ptr<blaise_ast_statement> body() const;
-      friend class gasp::common::memory;
+      friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement_for_loop> make_blaise_ast_statement_for_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_identifier> variable,
@@ -147,7 +147,7 @@ class blaise_ast_statement_while_loop : public blaise_ast_statement_generic_loop
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body);
 public:
-      friend class gasp::common::memory;
+      friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement_while_loop> make_blaise_ast_statement_while_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
@@ -158,7 +158,7 @@ class blaise_ast_statement_dowhile_loop : public blaise_ast_statement_generic_lo
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body);
 public:
-      friend class gasp::common::memory;
+      friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement_dowhile_loop> make_blaise_ast_statement_dowhile_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
@@ -169,7 +169,7 @@ class blaise_ast_statement_repeatuntil_loop : public blaise_ast_statement_generi
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body);
 public:
-      friend class gasp::common::memory;
+      friend class sanelli::memory;
 };
 std::shared_ptr<blaise_ast_statement_repeatuntil_loop> make_blaise_ast_statement_repeatuntil_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,

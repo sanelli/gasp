@@ -3,9 +3,8 @@
 #include <string>
 #include <vector>
 
+#include <sanelli/sanelli.hpp>
 #include <gasp/common/debug.hpp>
-#include <gasp/common/string.hpp>
-
 #include <gasp/common/impl/tokenizer/tokenizer_error.hpp>
 #include <gasp/common/impl/tokenizer/token.hpp>
 #include <gasp/common/impl/tokenizer/token_io.hpp>
@@ -39,7 +38,7 @@ public:
       auto line = input;
       int column = 0;
       if (_ignore_spaces)
-         column += gasp::common::ltrim(line);
+         column += sanelli::ltrim(line);
       if (line.length() == 0)
          return; // Skip empty lines
       while (line.length() > 0)
@@ -58,7 +57,7 @@ public:
                line = line.substr(substring.length());
                column += substring.length();
                if (_ignore_spaces)
-                  column += gasp::common::ltrim(line);
+                  column += sanelli::ltrim(line);
                break;
             }
          }

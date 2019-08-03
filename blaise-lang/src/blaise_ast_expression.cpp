@@ -7,8 +7,10 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+#include <sanelli/sanelli.hpp>
 
+
+using namespace sanelli;
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
 using namespace gasp::common;
@@ -37,7 +39,7 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_expression_cast::operand() con
 std::shared_ptr<blaise_ast_expression_cast> gasp::blaise::ast::make_blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> operand) {
-   return memory::gasp_make_shared<blaise_ast_expression_cast>(reference, target_type, operand);
+   return memory::make_shared<blaise_ast_expression_cast>(reference, target_type, operand);
 }
 
 shared_ptr<blaise_ast_expression> gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
@@ -55,7 +57,7 @@ std::shared_ptr<ast::blaise_ast_expression> ast::cast_to_boolean(
    auto bool_type = ast::make_plain_type(ast::blaise_ast_system_type::BOOLEAN);
    if(!expression->result_type()->equals(bool_type)){
       if(!ast::blaise_ast_utility::can_auto_cast(bool_type, expression->result_type()))
-         throw ast::blaise_ast_error(reference.line(), reference.column(), make_string("Expression cannot be converted into a boolean expression."));
+         throw ast::blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Expression cannot be converted into a boolean expression."));
       else
          expression = ast::introduce_cast_if_required(reference, bool_type, expression);
    }
@@ -67,7 +69,7 @@ void gasp::blaise::ast::introduce_cast_if_required(const gasp::common::token<gas
       std::vector<std::shared_ptr<blaise_ast_expression>>& expressions) {
 
       if(subroutine->get_arity() != expressions.size())
-         throw std::logic_error(make_string("Number of parameters for subroutine '", subroutine->signature_as_string(),"' do not match the number of expressions (", expressions.size(),")"));
+         throw std::logic_error(sanelli::make_string("Number of parameters for subroutine '", subroutine->signature_as_string(),"' do not match the number of expressions (", expressions.size(),")"));
 
       for(auto index=0; index < expressions.size(); ++index){
          auto expected_type = subroutine->get_parameter_type(index);
@@ -86,7 +88,7 @@ blaise_ast_expression_subroutine_call::blaise_ast_expression_subroutine_call(
          _subroutine(subroutine)
    {
       if(ast::make_plain_type(blaise_ast_system_type::VOID)->equals(subroutine->return_type()))
-            throw blaise_ast_error(reference.line(), reference.column(), make_string("Cannot call procedure '", subroutine->signature_as_string(), " inside an expressions."));
+            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot call procedure '", subroutine->signature_as_string(), " inside an expressions."));
       std::copy(expressions.begin(), expressions.end(), std::back_inserter(_expressions));
    }
 
@@ -97,7 +99,7 @@ shared_ptr<blaise_ast_expression_subroutine_call> gasp::blaise::ast::make_blaise
    token<blaise_token_type> subroutine_name_token,
    shared_ptr<blaise_ast_subroutine> subroutine,
    const vector<shared_ptr<blaise_ast_expression>>& expressions){
-         return memory::gasp_make_shared<blaise_ast_expression_subroutine_call>(subroutine_name_token, subroutine, expressions);
+         return memory::make_shared<blaise_ast_expression_subroutine_call>(subroutine_name_token, subroutine, expressions);
 }
 
 //
@@ -119,7 +121,7 @@ std::shared_ptr<blaise_ast_expression_binary> gasp::blaise::ast::make_blaise_ast
                std::shared_ptr<blaise_ast_expression> left,
                gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
                std::shared_ptr<blaise_ast_expression> right) {
-   return memory::gasp_make_shared<blaise_ast_expression_binary>(token_operator, left, token_operator.type(), right);
+   return memory::make_shared<blaise_ast_expression_binary>(token_operator, left, token_operator.type(), right);
    }
 
 //
@@ -136,7 +138,7 @@ shared_ptr<blaise_ast_expression> blaise_ast_expression_unary::operand() const {
 blaise_token_type blaise_ast_expression_unary::op() const { return _operator; }
 std::shared_ptr<blaise_ast_expression_unary> gasp::blaise::ast::make_blaise_ast_expression_unary(gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
                         std::shared_ptr<blaise_ast_expression> operand) {
-   return memory::gasp_make_shared<blaise_ast_expression_unary>(token_operator, token_operator.type(), operand);
+   return memory::make_shared<blaise_ast_expression_unary>(token_operator, token_operator.type(), operand);
 }
 
 // MEMORY ACCESS
@@ -158,7 +160,7 @@ blaise_ast_expression_memory_access::blaise_ast_expression_memory_access(const g
 std::shared_ptr<blaise_ast_generic_memory_location> blaise_ast_expression_memory_access::memory_location() const { return _memory_location; }
 std::shared_ptr<blaise_ast_expression_memory_access> gasp::blaise::ast::make_blaise_ast_expression_memory_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_generic_memory_location> memory_location){
-  return memory::gasp_make_shared<blaise_ast_expression_memory_access>(reference, memory_location);
+  return memory::make_shared<blaise_ast_expression_memory_access>(reference, memory_location);
 }
 
 blaise_ast_expression_array_access::blaise_ast_expression_array_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
@@ -172,7 +174,7 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_expression_array_access::index
 std::shared_ptr<blaise_ast_expression_array_access> gasp::blaise::ast::make_blaise_ast_expression_array_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
                      std::shared_ptr<blaise_ast_generic_memory_location> array,
                      std::shared_ptr<blaise_ast_expression> indexing){
-  return memory::gasp_make_shared<blaise_ast_expression_array_access>(reference, array, indexing);
+  return memory::make_shared<blaise_ast_expression_array_access>(reference, array, indexing);
 }
 // TERNARY
 blaise_ast_ternary_cast::blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
@@ -183,7 +185,7 @@ blaise_ast_ternary_cast::blaise_ast_ternary_cast(const gasp::common::token<gasp:
    _condition(condition), _then_expression(then_expression), _else_expression(else_expression) 
 {
    if(!condition->result_type()->equals(make_plain_type(blaise_ast_system_type::BOOLEAN)))
-      throw blaise_ast_error(reference.line(), reference.column(), make_string("Ternary condition must be a boolean expression."));
+      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Ternary condition must be a boolean expression."));
 }
 std::shared_ptr<blaise_ast_expression> blaise_ast_ternary_cast::condition() const { return _condition; }
 std::shared_ptr<blaise_ast_expression> blaise_ast_ternary_cast::then_expression() const { return _then_expression; }
@@ -195,5 +197,5 @@ std::shared_ptr<blaise_ast_ternary_cast> ast::make_blaise_ast_ternary_cast(const
    std::shared_ptr<blaise_ast_expression> else_expression
    )
 {
-   return memory::gasp_make_shared<blaise_ast_ternary_cast>(reference, condition, then_expression, else_expression);
+   return memory::make_shared<blaise_ast_ternary_cast>(reference, condition, then_expression, else_expression);
 }

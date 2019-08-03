@@ -70,7 +70,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    if(context.module()->count_subroutine(subroutine_token_identifier, param_types) > 1) { 
       auto subroutine = context.module()->expect_exact_subroutine(subroutine_token_identifier, param_types);
       throw ast::blaise_ast_error(subroutine_token_identifier.line(), subroutine_token_identifier.column(), 
-               make_string("Duplicated subroutine with signature '", subroutine->signature_as_string() ,"'"));
+               sanelli::make_string("Duplicated subroutine with signature '", subroutine->signature_as_string() ,"'"));
    }
 
    SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::" << caller_name << std::endl);

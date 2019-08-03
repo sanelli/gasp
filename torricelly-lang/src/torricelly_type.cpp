@@ -1,11 +1,11 @@
 #include <string>
 #include <memory>
 
-#include <gasp/common/memory.hpp>
+#include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 
+using namespace sanelli;
 using namespace gasp;
-using namespace gasp::common;
 using namespace gasp::torricelly;
 
 torricelly_type::torricelly_type(torricelly_type_type type_type) : _type_type(type_type) {}
@@ -23,7 +23,7 @@ inline bool toricelly_system_type::equals(std::shared_ptr<torricelly_type> other
 }
 
 std::shared_ptr<toricelly_system_type> torricelly::make_torricelly_system_type(torricelly_system_type_type system_type){
-   return memory::gasp_make_shared<toricelly_system_type>(system_type);
+   return memory::make_shared<toricelly_system_type>(system_type);
 }
 
 std::ostream &torricelly::operator<<(std::ostream &os, torricelly_type_type type){

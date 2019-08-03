@@ -6,7 +6,7 @@
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+
 
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/blaise_ast_subroutine.hpp>
@@ -44,7 +44,7 @@ public:
       const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
 
-   friend gasp::common::memory;
+   friend sanelli::memory;
 };
 
  std::shared_ptr<blaise_ast_module> make_blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type);

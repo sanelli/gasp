@@ -4,7 +4,7 @@
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+#include <sanelli/sanelli.hpp>
 
 namespace gasp::blaise::ast {
 
@@ -44,7 +44,7 @@ class blaise_ast_plain_type : public blaise_ast_type {
       blaise_ast_system_type system_type() const;
       inline bool equals(std::shared_ptr<blaise_ast_type> other) const override;
 
-      friend gasp::common::memory;
+      friend sanelli::memory;
 };
 
 class blaise_ast_array_type : public blaise_ast_type {
@@ -59,7 +59,7 @@ class blaise_ast_array_type : public blaise_ast_type {
       bool is_unbounded() const;
       inline bool equals(std::shared_ptr<blaise_ast_type> other) const override;
 
-      friend gasp::common::memory;
+      friend sanelli::memory;
 };
 
 std::shared_ptr<blaise_ast_type> get_type_from_token(const gasp::common::token<gasp::blaise::blaise_token_type>& token);

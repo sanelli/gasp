@@ -1,11 +1,9 @@
 #include <utility>
 #include <memory>
 
-#include <gasp/common/string.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 
 using namespace gasp;
-using namespace gasp::common;
 using namespace gasp::torricelly;
 
 torricelly_value_union::torricelly_value_union() : _integer(0) {}
@@ -68,7 +66,7 @@ bool torricelly_value::is(torricelly_system_type_type system_type) const {
 
  void torricelly_value::throw_if_is_not(torricelly_system_type_type system_type) const {
     if(!is(system_type))
-      throw torricelly_error(make_string("Expected type '", system_type, "' but found '", system_type,"'."));
+      throw torricelly_error(sanelli::make_string("Expected type '", system_type, "' but found '", system_type,"'."));
  }
 
 int torricelly_value::get_integer() const { throw_if_is_not(torricelly_system_type_type::INTEGER); return _value._integer; }

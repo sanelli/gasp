@@ -2,11 +2,12 @@
 #include <memory>
 #include <vector>
 
-#include <gasp/common/memory.hpp>
+
+#include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 
+using namespace sanelli;
 using namespace gasp;
-using namespace gasp::common;
 using namespace gasp::torricelly;
 
 torricelly_module::torricelly_module(const std::string& module_name)
@@ -41,5 +42,5 @@ unsigned int torricelly_module::get_number_of_variables() const {
 }
 
 std::shared_ptr<torricelly_module> torricelly::make_torricelly_module(const std::string& module_name){
- return memory::gasp_make_shared<torricelly_module>(module_name);
+ return memory::make_shared<torricelly_module>(module_name);
 }

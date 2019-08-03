@@ -4,8 +4,9 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+#include <sanelli/sanelli.hpp>
 
+using namespace sanelli;
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
 using namespace gasp::common;
@@ -51,15 +52,15 @@ gasp::blaise::ast::blaise_ast_constant::blaise_ast_constant(
 std::shared_ptr<blaise_ast_variable> gasp::blaise::ast::make_blaise_ast_variable(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type){
-   return memory::gasp_make_shared<blaise_ast_variable>(reference, identifier, type);
+   return memory::make_shared<blaise_ast_variable>(reference, identifier, type);
                        }
 std::shared_ptr<blaise_ast_constant> gasp::blaise::ast::make_blaise_ast_constant(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type){
-   return memory::gasp_make_shared<blaise_ast_constant>(reference, identifier, type);
+   return memory::make_shared<blaise_ast_constant>(reference, identifier, type);
                        }
 std::shared_ptr<blaise_ast_subroutine_parameter> gasp::blaise::ast::make_blaise_ast_subroutine_parameter(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type){
-   return memory::gasp_make_shared<blaise_ast_subroutine_parameter>(reference, identifier, type);
+   return memory::make_shared<blaise_ast_subroutine_parameter>(reference, identifier, type);
                        }

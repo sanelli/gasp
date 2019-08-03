@@ -6,7 +6,7 @@
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+
 
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/blaise_ast_type.hpp>
@@ -41,7 +41,7 @@ public:
 
 class blaise_ast_variable : public blaise_ast_generic_memory_location
 {
-   friend gasp::common::memory;
+   friend sanelli::memory;
    blaise_ast_variable(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
@@ -52,7 +52,7 @@ std::shared_ptr<blaise_ast_variable> make_blaise_ast_variable(const gasp::common
 
 class blaise_ast_constant : public blaise_ast_generic_memory_location
 {
-   friend gasp::common::memory;
+   friend sanelli::memory;
    blaise_ast_constant(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
@@ -63,7 +63,7 @@ std::shared_ptr<blaise_ast_constant> make_blaise_ast_constant(const gasp::common
 
 class blaise_ast_subroutine_parameter : public blaise_ast_generic_memory_location
 {
-   friend gasp::common::memory;
+   friend sanelli::memory;
    blaise_ast_subroutine_parameter(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
                                    const std::string &identifier,
                                    std::shared_ptr<blaise_ast_type> type);

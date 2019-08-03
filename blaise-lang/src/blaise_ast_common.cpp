@@ -13,7 +13,7 @@ blaise_ast::blaise_ast(const token<blaise_token_type>& reference)
 blaise_ast::blaise_ast(const token<blaise_token_type>& reference, blaise_token_type expected_type)
    : _line(reference.line()), _column(reference.column()) { 
       if(reference.type() != expected_type)
-         throw blaise_ast_error(reference.line(), reference.column(), make_string("A token of type '", expected_type, "' was expected but '", reference.type(), "' was found."));
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("A token of type '", expected_type, "' was expected but '", reference.type(), "' was found."));
     }
 unsigned int blaise_ast::line() const { return _line; }
 unsigned int blaise_ast::column() const { return _column; }

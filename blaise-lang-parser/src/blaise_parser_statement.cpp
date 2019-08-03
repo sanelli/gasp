@@ -41,7 +41,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
          statement = parse_assignamet_statement(context);
          break;
       default:
-         throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found after indetifier."));
+         throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("Unexpected token '", token_type, "' found after indetifier."));
       }
    }
    break;
@@ -69,7 +69,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
       break;
       // TODO: Add support for other kind of statement
    default:
-      throw_parse_error_with_details(context, token.line(), token.column(), make_string("Unexpected token '", token_type, "' found."));
+      throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("Unexpected token '", token_type, "' found."));
    }
    if(match_ending_semicolon)
       match_token(context, blaise_token_type::SEMICOLON);
@@ -114,7 +114,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
    auto subroutine = context.module()->get_subroutine(identifier_token, types);
    // TODO: Lookup in referenced modules
    if(subroutine == nullptr) {
-      throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), make_string("Cannot find function '", identifier_token.value(),"(", types ,")'"));
+      throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), sanelli::make_string("Cannot find function '", identifier_token.value(),"(", types ,")'"));
    }
 
    ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
@@ -164,9 +164,9 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
    auto variable = context.current_subroutine()->get_memory_location(identifier.value());
    if(variable->variable_type() == ast::blaise_ast_variable_type::CONSTANT) 
       throw_parse_error_with_details(context, identifier.line(), identifier.column(),
-                  make_string("Constant '", identifier.value(),"' cannot be assigned"));
+                  sanelli::make_string("Constant '", identifier.value(),"' cannot be assigned"));
    if(variable == nullptr)
-      throw_parse_error_with_details(context, identifier.line(), identifier.column(), make_string("Variable ", identifier.value(), " does not exists in the context."));
+      throw_parse_error_with_details(context, identifier.line(), identifier.column(), sanelli::make_string("Variable ", identifier.value(), " does not exists in the context."));
 
    std::shared_ptr<ast::blaise_ast_identifier> variable_identifier = nullptr;
 
@@ -220,27 +220,27 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_for_loop_stateme
    auto variable = context.current_subroutine()->get_memory_location(identifier_token.value());
    if(variable == nullptr)
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                  make_string("Cannot find variable with name '", identifier_token.value(),"'"));
+                  sanelli::make_string("Cannot find variable with name '", identifier_token.value(),"'"));
    if(variable->variable_type() == ast::blaise_ast_variable_type::CONSTANT) 
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                  make_string("Cannot user constant '", identifier_token.value(),"' as for loop indexing"));
+                  sanelli::make_string("Cannot user constant '", identifier_token.value(),"' as for loop indexing"));
    if(!ast::blaise_ast_utility::is_integer(variable->type()))
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                  make_string("Cannot user variable '", identifier_token.value(),"': it must be of type 'integer'."));
+                  sanelli::make_string("Cannot user variable '", identifier_token.value(),"': it must be of type 'integer'."));
    auto variable_identifier = ast::make_blaise_ast_variable_identifier(identifier_token, variable);
 
    match_token(context, blaise_token_type::FROM);
    auto from_expression = parse_expression(context);
    if(!ast::blaise_ast_utility::is_integer(from_expression->result_type()) && ! ast::blaise_ast_utility::can_auto_cast(from_expression->result_type(), integer_type))
       throw_parse_error_with_details(context, from_expression->line(), from_expression->column(),
-                  make_string("FROM expression must be integer."));
+                  sanelli::make_string("FROM expression must be integer."));
    from_expression = ast::introduce_cast_if_required(loop_token, integer_type, from_expression);
    
    match_token(context, blaise_token_type::TO);
    auto to_expression = parse_expression(context);
    if(!ast::blaise_ast_utility::is_integer(to_expression->result_type()) && ! ast::blaise_ast_utility::can_auto_cast(to_expression->result_type(), integer_type))
       throw_parse_error_with_details(context, to_expression->line(), to_expression->column(),
-                  make_string("TO expression must be integer."));
+                  sanelli::make_string("TO expression must be integer."));
    to_expression = ast::introduce_cast_if_required(loop_token, integer_type, to_expression);
 
    std::shared_ptr<ast::blaise_ast_expression> step_expression;
@@ -248,7 +248,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_for_loop_stateme
       step_expression = parse_expression(context);
       if(!ast::blaise_ast_utility::is_integer(step_expression->result_type()) && ! ast::blaise_ast_utility::can_auto_cast(step_expression->result_type(), integer_type))
          throw_parse_error_with_details(context, step_expression->line(), step_expression->column(),
-                     make_string("STEP expression must be integer."));
+                     sanelli::make_string("STEP expression must be integer."));
       step_expression = ast::introduce_cast_if_required(loop_token, integer_type, step_expression);
    }
    auto body = parse_statement(context);
@@ -263,7 +263,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_while_loop_state
    auto condition = parse_expression(context);
    if(!ast::blaise_ast_utility::is_boolean(condition->result_type()) && ! ast::blaise_ast_utility::can_auto_cast(condition->result_type(), boolean_type))
       throw_parse_error_with_details(context, condition->line(), condition->column(),
-                  make_string("Condition must be a bollean expression."));
+                  sanelli::make_string("Condition must be a bollean expression."));
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    auto body = parse_statement(context);
    return ast::make_blaise_ast_statement_while_loop(loop_token, condition, body);
@@ -278,7 +278,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_do_while_loop_st
    auto condition = parse_expression(context);
    if(!ast::blaise_ast_utility::is_boolean(condition->result_type()) && ! ast::blaise_ast_utility::can_auto_cast(condition->result_type(), boolean_type))
       throw_parse_error_with_details(context, condition->line(), condition->column(),
-                  make_string("Condition must be a bollean expression."));
+                  sanelli::make_string("Condition must be a bollean expression."));
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    return ast::make_blaise_ast_statement_while_loop(loop_token, condition, body);
 }
@@ -292,7 +292,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_repeat_until_loo
    auto condition = parse_expression(context);
    if(!ast::blaise_ast_utility::is_boolean(condition->result_type()) && ! ast::blaise_ast_utility::can_auto_cast(condition->result_type(), boolean_type))
       throw_parse_error_with_details(context, condition->line(), condition->column(),
-                  make_string("Condition must be a bollean expression."));
+                  sanelli::make_string("Condition must be a bollean expression."));
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    return ast::make_blaise_ast_statement_while_loop(loop_token, condition, body);
 }

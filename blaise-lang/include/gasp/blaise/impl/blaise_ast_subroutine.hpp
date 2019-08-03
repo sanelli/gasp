@@ -8,7 +8,7 @@
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/common/tokenizer.hpp>
-#include <gasp/common/memory.hpp>
+
 
 #include <gasp/blaise/impl/blaise_ast_variable.hpp>
 #include <gasp/blaise/impl/blaise_ast_type.hpp>
@@ -92,7 +92,7 @@ public:
    std::shared_ptr<blaise_ast_statement> get_statement(unsigned int) const;
    unsigned int get_statements_count() const ;
 
-   friend gasp::common::memory;
+   friend sanelli::memory;
 };
 
 std::shared_ptr<blaise_ast_subroutine> make_blaise_ast_subroutine(std::weak_ptr<blaise_ast_module> module, const std::string& name);
