@@ -1,7 +1,6 @@
 #pragma once
 
-#include <gasp/blaise/tokenizer/tokens.hpp>
-
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
 
 namespace gasp::blaise::ast {
 

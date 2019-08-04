@@ -1,7 +1,7 @@
 #include <string>
 
 #include <sanelli/sanelli.hpp>
-#include <gasp/blaise/tokenizer/tokens.hpp>
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
 
 using namespace gasp::blaise;
 using namespace sanelli;

@@ -1,8 +1,7 @@
-#include <gasp/blaise/tokenizer/tokens.hpp>
 #include <sanelli/sanelli.hpp>
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
 
 using namespace gasp::blaise;
-
 
 bool blaise_token_type_utility::is_type(blaise_token_type token_type)
 {
