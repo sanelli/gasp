@@ -8,7 +8,6 @@
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
-#include <gasp/common/output.hpp>
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
