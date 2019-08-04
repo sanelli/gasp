@@ -1,7 +1,7 @@
 #include <memory>
 #include <string>
 
-#include <gasp/common/tokenizer.hpp>
+
 #include <sanelli/sanelli.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -10,7 +10,7 @@
 using namespace sanelli;
 using namespace std;
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 // Algorihtm for expression management is taked from
 // https://en.wikipedia.org/wiki/Operator-precedence_parser

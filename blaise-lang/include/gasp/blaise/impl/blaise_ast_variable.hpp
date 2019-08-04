@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 
 
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
@@ -29,7 +29,7 @@ class blaise_ast_generic_memory_location : public blaise_ast
 
 protected:
    blaise_ast_generic_memory_location(blaise_ast_variable_type variable_type,
-                                      const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+                                      const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                                       const std::string &identifier,
                                       std::shared_ptr<blaise_ast_type> type);
 
@@ -42,33 +42,33 @@ public:
 class blaise_ast_variable : public blaise_ast_generic_memory_location
 {
    friend sanelli::memory;
-   blaise_ast_variable(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+   blaise_ast_variable(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
 };
-std::shared_ptr<blaise_ast_variable> make_blaise_ast_variable(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+std::shared_ptr<blaise_ast_variable> make_blaise_ast_variable(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
 
 class blaise_ast_constant : public blaise_ast_generic_memory_location
 {
    friend sanelli::memory;
-   blaise_ast_constant(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+   blaise_ast_constant(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
 };
-std::shared_ptr<blaise_ast_constant> make_blaise_ast_constant(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+std::shared_ptr<blaise_ast_constant> make_blaise_ast_constant(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
 
 class blaise_ast_subroutine_parameter : public blaise_ast_generic_memory_location
 {
    friend sanelli::memory;
-   blaise_ast_subroutine_parameter(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+   blaise_ast_subroutine_parameter(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                                    const std::string &identifier,
                                    std::shared_ptr<blaise_ast_type> type);
 };
-std::shared_ptr<blaise_ast_subroutine_parameter> make_blaise_ast_subroutine_parameter(const gasp::common::token<gasp::blaise::blaise_token_type> &reference,
+std::shared_ptr<blaise_ast_subroutine_parameter> make_blaise_ast_subroutine_parameter(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
 

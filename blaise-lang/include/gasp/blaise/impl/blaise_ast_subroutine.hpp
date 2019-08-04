@@ -7,7 +7,7 @@
 #include <algorithm>
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 
 
 #include <gasp/blaise/impl/blaise_ast_variable.hpp>
@@ -77,13 +77,13 @@ public:
    std::shared_ptr<blaise_ast_variable> get_variable(const std::string& identifier) const;
    std::shared_ptr<blaise_ast_generic_memory_location> get_memory_location(const std::string& identifier) const;
 
-   std::shared_ptr<blaise_ast_subroutine_parameter> add_parameter(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<blaise_ast_subroutine_parameter> add_parameter(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                      const std::string& identifier, 
                      std::shared_ptr<blaise_ast_type> type);
-   std::shared_ptr<blaise_ast_constant> add_constant(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<blaise_ast_constant> add_constant(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                      const std::string& identifier, 
                      std::shared_ptr<blaise_ast_type> type);
-   std::shared_ptr<blaise_ast_variable> add_variable(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
+   std::shared_ptr<blaise_ast_variable> add_variable(const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
                      const std::string& identifier, 
                      std::shared_ptr<blaise_ast_type> type);
 

@@ -1,7 +1,7 @@
 #include <gasp/blaise/tokenizer/tokens.hpp>
 
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 std::ostream &gasp::blaise::operator<<(std::ostream &os, const blaise_token_type &token_type)
 {

@@ -2,32 +2,32 @@
 #include <memory>
 #include <stdexcept>
 
-#include <gasp/common/tokenizer.hpp>
+
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/ast.hpp>
 #include <sanelli/sanelli.hpp>
 
 using namespace sanelli;
 using namespace std;
-using namespace gasp::common;
+
 using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 
 //
 // GENERIC STATEMENT
 //
-blaise_ast_statement::blaise_ast_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, blaise_ast_statement_type type) 
+blaise_ast_statement::blaise_ast_statement(const sanelli::token<gasp::blaise::blaise_token_type>& reference, blaise_ast_statement_type type) 
       : blaise_ast(reference), _type(type) {}
 
 //
 // COMPOUND STATEMENT
 //
-blaise_ast_statement_compund::blaise_ast_statement_compund(const gasp::common::token<gasp::blaise::blaise_token_type>& reference) 
+blaise_ast_statement_compund::blaise_ast_statement_compund(const sanelli::token<gasp::blaise::blaise_token_type>& reference) 
    : blaise_ast_statement(reference, blaise_ast_statement_type::COMPOUND) {}
 void blaise_ast_statement_compund::push_back(shared_ptr<blaise_ast_statement> statement) { _statements.push_back(statement); }
 shared_ptr<blaise_ast_statement> blaise_ast_statement_compund::get_statement(unsigned int index) const { return _statements.at(index); }
 unsigned int blaise_ast_statement_compund::get_statements_count() const { return _statements.size(); }
-shared_ptr<ast::blaise_ast_statement_compund>gasp::blaise::ast::make_compound_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference)
+shared_ptr<ast::blaise_ast_statement_compund>gasp::blaise::ast::make_compound_statement(const sanelli::token<gasp::blaise::blaise_token_type>& reference)
 {
    return memory::make_shared<blaise_ast_statement_compund>(reference);
 }
@@ -35,7 +35,7 @@ shared_ptr<ast::blaise_ast_statement_compund>gasp::blaise::ast::make_compound_st
 //
 // ASSIGNMENT STATEMENT
 //
-blaise_ast_statement_assignment::blaise_ast_statement_assignment(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_assignment::blaise_ast_statement_assignment(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                               shared_ptr<blaise_ast_identifier> identifier,
                               shared_ptr<blaise_ast_expression> expression) 
                             : blaise_ast_statement(reference, blaise_ast_statement_type::ASSIGNEMENT),
@@ -44,7 +44,7 @@ blaise_ast_statement_assignment::blaise_ast_statement_assignment(const gasp::com
                             { }
 shared_ptr<blaise_ast_identifier> blaise_ast_statement_assignment::identifier() const { return _identifier; }
 shared_ptr<blaise_ast_expression> blaise_ast_statement_assignment::expression() const { return _expression; }
-shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                                                                   shared_ptr<blaise_ast_identifier> identifier,
                                                                   shared_ptr<blaise_ast_expression> expression) {
    std::shared_ptr<blaise_ast_type> variable_real_type = nullptr;
@@ -97,7 +97,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
 //
 // SUBROUTINE CALL
 //
-   blaise_ast_statement_subroutine_call::blaise_ast_statement_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_statement_subroutine_call::blaise_ast_statement_subroutine_call(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                   std::shared_ptr<blaise_ast_subroutine> subroutine,
                   const std::vector<std::shared_ptr<blaise_ast_expression>>& parameters) : 
             blaise_ast_statement(reference, blaise_ast_statement_type::SUBROUTINE_CALL),
@@ -108,7 +108,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
    unsigned int blaise_ast_statement_subroutine_call::parameters_count() const { return _actual_parameters.size(); }
    std::shared_ptr<blaise_ast_expression> blaise_ast_statement_subroutine_call::actual_parameter(unsigned int index) const { return _actual_parameters.at(index); }
 
-std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_statement_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_statement_subroutine_call(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
          std::shared_ptr<blaise_ast_subroutine> subroutine,
          const std::vector<std::shared_ptr<blaise_ast_expression>>& parameters) {
    return memory::make_shared<blaise_ast_statement_subroutine_call>(reference, subroutine, parameters);
@@ -117,7 +117,7 @@ std::shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_blaise_ast_stateme
 //
 // IF STATEMENT
 //
-blaise_ast_statement_if::blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_if::blaise_ast_statement_if(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> then_statement,
       std::shared_ptr<blaise_ast_statement> else_statement) 
@@ -133,7 +133,7 @@ blaise_ast_statement_if::blaise_ast_statement_if(const gasp::common::token<gasp:
 std::shared_ptr<blaise_ast_expression> blaise_ast_statement_if::condition() const { return _condition; }
 std::shared_ptr<blaise_ast_statement> blaise_ast_statement_if::then_statement() const { return _then_statement; }
 std::shared_ptr<blaise_ast_statement> blaise_ast_statement_if::else_statement() const { return _else_statement; }
-std::shared_ptr<blaise_ast_statement_if> ast::make_blaise_ast_statement_if(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_statement_if> ast::make_blaise_ast_statement_if(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> then_statement,
       std::shared_ptr<blaise_ast_statement> else_statement) {
@@ -143,7 +143,7 @@ std::shared_ptr<blaise_ast_statement_if> ast::make_blaise_ast_statement_if(const
 //
 // FOR LOOP
 //
-blaise_ast_statement_for_loop::blaise_ast_statement_for_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_for_loop::blaise_ast_statement_for_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_identifier> variable,
       std::shared_ptr<blaise_ast_expression> from_expression,
       std::shared_ptr<blaise_ast_expression> to_expression,
@@ -161,7 +161,7 @@ std::shared_ptr<blaise_ast_expression> blaise_ast_statement_for_loop::from_expre
 std::shared_ptr<blaise_ast_expression> blaise_ast_statement_for_loop::to_expression() const { return _to_expression; }
 std::shared_ptr<blaise_ast_expression> blaise_ast_statement_for_loop::step_expression() const { return _step_expression; }
 std::shared_ptr<blaise_ast_statement> blaise_ast_statement_for_loop::body() const { return _body; }
-std::shared_ptr<blaise_ast_statement_for_loop> ast::make_blaise_ast_statement_for_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_statement_for_loop> ast::make_blaise_ast_statement_for_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_identifier> variable,
       std::shared_ptr<blaise_ast_expression> from_expression,
       std::shared_ptr<blaise_ast_expression> to_expression,
@@ -173,7 +173,7 @@ std::shared_ptr<blaise_ast_statement_for_loop> ast::make_blaise_ast_statement_fo
 //
 // GENERIC LOOP
 //
-blaise_ast_statement_generic_loop::blaise_ast_statement_generic_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_generic_loop::blaise_ast_statement_generic_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       blaise_ast_statement_type type,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body)
@@ -188,12 +188,12 @@ std::shared_ptr<blaise_ast_statement> blaise_ast_statement_generic_loop::body() 
 //
 // DO-WHILE LOOP
 //
-blaise_ast_statement_dowhile_loop::blaise_ast_statement_dowhile_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_dowhile_loop::blaise_ast_statement_dowhile_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body)
       : blaise_ast_statement_generic_loop(reference, blaise_ast_statement_type::DO_WHILE_LOOP, condition, body)
    {}
-std::shared_ptr<blaise_ast_statement_dowhile_loop> ast::make_blaise_ast_statement_dowhile_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_statement_dowhile_loop> ast::make_blaise_ast_statement_dowhile_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body){
    return memory::make_shared<blaise_ast_statement_dowhile_loop>(reference, condition, body);
@@ -202,12 +202,12 @@ std::shared_ptr<blaise_ast_statement_dowhile_loop> ast::make_blaise_ast_statemen
 //
 // WHILE LOOP
 //
-blaise_ast_statement_while_loop::blaise_ast_statement_while_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_while_loop::blaise_ast_statement_while_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body)
       : blaise_ast_statement_generic_loop(reference, blaise_ast_statement_type::WHILE_LOOP, condition, body)
    {}
-std::shared_ptr<blaise_ast_statement_while_loop> ast::make_blaise_ast_statement_while_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_statement_while_loop> ast::make_blaise_ast_statement_while_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body){
    return memory::make_shared<blaise_ast_statement_while_loop>(reference, condition, body);
@@ -216,12 +216,12 @@ std::shared_ptr<blaise_ast_statement_while_loop> ast::make_blaise_ast_statement_
 //
 // REPEAT UNTIL LOOP
 //
-blaise_ast_statement_repeatuntil_loop::blaise_ast_statement_repeatuntil_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+blaise_ast_statement_repeatuntil_loop::blaise_ast_statement_repeatuntil_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body)
       : blaise_ast_statement_generic_loop(reference, blaise_ast_statement_type::REPEAT_UNTIL_LOOP, condition, body)
    {}
-std::shared_ptr<blaise_ast_statement_repeatuntil_loop> ast::make_blaise_ast_statement_repeatuntil_loop(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_statement_repeatuntil_loop> ast::make_blaise_ast_statement_repeatuntil_loop(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_statement> body){
    return memory::make_shared<blaise_ast_statement_repeatuntil_loop>(reference, condition, body);

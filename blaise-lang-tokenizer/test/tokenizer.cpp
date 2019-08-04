@@ -5,9 +5,9 @@
 
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+#include <sanelli/sanelli.hpp>
 
-using namespace gasp::common;
+using namespace sanelli;
 using namespace gasp::blaise;
 
 SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")

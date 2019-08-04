@@ -4,7 +4,7 @@
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 
 namespace gasp::blaise::ast {
 
@@ -28,9 +28,9 @@ static std::shared_ptr<blaise_ast_type> get_binary_boolean_result(std::shared_pt
 static std::shared_ptr<blaise_ast_type> get_binary_char_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right);
 static std::shared_ptr<blaise_ast_type> get_binary_string_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right);
 
-static std::shared_ptr<blaise_ast_type> get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, std::shared_ptr<blaise_ast_type> operand);
-static std::shared_ptr<blaise_ast_type> get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right);
-static std::shared_ptr<blaise_ast_type> get_common_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::shared_ptr<blaise_ast_type> typeA, std::shared_ptr<blaise_ast_type> typeB);
+static std::shared_ptr<blaise_ast_type> get_resulting_type(const sanelli::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, std::shared_ptr<blaise_ast_type> operand);
+static std::shared_ptr<blaise_ast_type> get_resulting_type(const sanelli::token<gasp::blaise::blaise_token_type>& reference, gasp::blaise::blaise_token_type op, std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right);
+static std::shared_ptr<blaise_ast_type> get_common_type(const sanelli::token<gasp::blaise::blaise_token_type>& reference, std::shared_ptr<blaise_ast_type> typeA, std::shared_ptr<blaise_ast_type> typeB);
 
 static bool can_auto_cast(std::shared_ptr<blaise_ast_type> from, std::shared_ptr<blaise_ast_type> to);
 static bool can_force_cast(std::shared_ptr<blaise_ast_type> from, std::shared_ptr<blaise_ast_type> to);

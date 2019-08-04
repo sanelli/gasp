@@ -11,7 +11,7 @@
 using namespace sanelli;
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 using namespace std;
 
 gasp::blaise::ast::blaise_ast_module::blaise_ast_module(const token<blaise_token_type> &reference, const std::string& module_name, blaise_ast_module_type type)
@@ -80,13 +80,13 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::exp
 }
 
 unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
-      const gasp::common::token<gasp::blaise::blaise_token_type>& identifier,
+      const sanelli::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const {
 
    return std::count_if(std::begin(_subroutines), std::end(_subroutines), 
       [identifier, param_types](auto subroutine){ return subroutine->signature_match_exactly(identifier.value(), param_types); });
 }
 
-std::shared_ptr<blaise_ast_module> gasp::blaise::ast::make_blaise_ast_module(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type){
+std::shared_ptr<blaise_ast_module> gasp::blaise::ast::make_blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type){
    return memory::make_shared<blaise_ast_module>(reference, module_name, type);
 }

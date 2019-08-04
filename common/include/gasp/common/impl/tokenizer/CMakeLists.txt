@@ -1,9 +1,0 @@
-target_sources(gasp-common
-    PUBLIC
-        tokenizer_error.hpp
-        token.hpp
-        token_io.hpp
-        token_rule.hpp
-        tokenizer.hpp
-        token_provider_constructor.hpp
-)

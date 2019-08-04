@@ -1,12 +1,12 @@
 #pragma once
 
-#include <gasp/common/tokenizer.hpp>
+#include <sanelli/sanelli.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 
 namespace gasp::blaise
 {
 
-class blaise_tokenizer : public gasp::common::tokenizer<gasp::blaise::blaise_token_type> 
+class blaise_tokenizer : public sanelli::tokenizer<gasp::blaise::blaise_token_type> 
 {
 
 public:

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 
 namespace gasp::blaise::ast {
 
@@ -11,8 +11,8 @@ namespace gasp::blaise::ast {
          unsigned int _column;
 
          blaise_ast(unsigned int line, unsigned int column);
-         blaise_ast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference);
-         blaise_ast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, blaise_token_type expected_type);
+         blaise_ast(const sanelli::token<gasp::blaise::blaise_token_type>& reference);
+         blaise_ast(const sanelli::token<gasp::blaise::blaise_token_type>& reference, blaise_token_type expected_type);
 
       public:
          unsigned int line() const;

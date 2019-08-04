@@ -2,7 +2,7 @@
 #include <sanelli/sanelli.hpp>
 
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 bool blaise_token_type_utility::is_type(blaise_token_type token_type)
 {
@@ -86,7 +86,7 @@ bool blaise_token_type_utility::get_operator_precedence(blaise_token_type token_
       case blaise_token_type::IF: // Terary
          return 30;
       default:
-         throw gasp::common::tokenizer_error(0,0, sanelli::make_string("unexpected token with type '",token_type,"': it is not a supported operator"));
+         throw sanelli::tokenizer_error(0,0, sanelli::make_string("unexpected token with type '",token_type,"': it is not a supported operator"));
    }
 }
 

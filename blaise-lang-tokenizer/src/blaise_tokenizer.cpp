@@ -1,12 +1,12 @@
 #include <vector>
 #include <string>
 
-#include <gasp/common/tokenizer.hpp>
+
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 using namespace std;
 
 blaise_tokenizer::blaise_tokenizer()

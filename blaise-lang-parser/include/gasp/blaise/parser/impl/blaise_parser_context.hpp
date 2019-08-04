@@ -3,15 +3,15 @@
 #include <vector>
 #include <memory>
 
-#include <gasp/common/tokenizer.hpp>
-#include <gasp/common/parser.hpp>
+
+
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/ast.hpp>
 
 namespace gasp::blaise
 {
 
-class blaise_parser_context : public gasp::common::parser_context<blaise_token_type>
+class blaise_parser_context : public sanelli::parser_context<blaise_token_type>
 {
    std::shared_ptr<ast::blaise_ast_module> _module;
    std::shared_ptr<ast::blaise_ast_subroutine> _main_subroutine;

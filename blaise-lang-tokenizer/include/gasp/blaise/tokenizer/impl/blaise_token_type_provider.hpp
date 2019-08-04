@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 
-#include <gasp/common/tokenizer.hpp>
-
+#include <sanelli/sanelli.hpp>
 #include <gasp/blaise/tokenizer/impl/blaise_token_type.hpp>
 
 namespace gasp::blaise
@@ -12,7 +11,7 @@ namespace gasp::blaise
 
 class blaise_token_type_provider
 {
-   class blaise_token_provider_constructor : public gasp::common::token_provider_constructor<blaise_token_type>
+   class blaise_token_provider_constructor : public sanelli::token_provider_constructor<blaise_token_type>
    {
    public:
       blaise_token_provider_constructor();

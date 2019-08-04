@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 
 
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
@@ -23,7 +23,7 @@ class blaise_ast_expression : public blaise_ast {
    blaise_ast_expression_type _expression_type;
 
    public:
-      blaise_ast_expression(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
+      blaise_ast_expression(const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
                      blaise_ast_expression_type expression_type, 
                      std::shared_ptr<blaise_ast_type> result_type);
       std::shared_ptr<blaise_ast_type> result_type() const;
@@ -37,7 +37,7 @@ class blaise_ast_ternary_cast :  public blaise_ast_expression {
    std::shared_ptr<blaise_ast_expression> _condition;
    std::shared_ptr<blaise_ast_expression> _then_expression;
    std::shared_ptr<blaise_ast_expression> _else_expression;
-   blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_ternary_cast(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_expression> then_expression,
       std::shared_ptr<blaise_ast_expression> else_expression
@@ -48,7 +48,7 @@ public:
    std::shared_ptr<blaise_ast_expression> else_expression() const;
    friend sanelli::memory;
 };
-std::shared_ptr<blaise_ast_ternary_cast> make_blaise_ast_ternary_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_ternary_cast> make_blaise_ast_ternary_cast(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_expression> condition,
       std::shared_ptr<blaise_ast_expression> then_expression,
       std::shared_ptr<blaise_ast_expression> else_expression
@@ -59,7 +59,7 @@ std::shared_ptr<blaise_ast_ternary_cast> make_blaise_ast_ternary_cast(const gasp
 //
 class blaise_ast_expression_cast :  public blaise_ast_expression {
    std::shared_ptr<blaise_ast_expression> _operand;
-   blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_cast(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> operand
    );
@@ -67,17 +67,17 @@ public:
    std::shared_ptr<blaise_ast_expression> operand() const;
    friend sanelli::memory;
 };
-std::shared_ptr<blaise_ast_expression_cast> make_blaise_ast_expression_cast(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_expression_cast> make_blaise_ast_expression_cast(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> operand);
-std::shared_ptr<blaise_ast_expression> introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+std::shared_ptr<blaise_ast_expression> introduce_cast_if_required(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_type> target_type,
       std::shared_ptr<blaise_ast_expression> expression);
-void introduce_cast_if_required(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+void introduce_cast_if_required(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_subroutine> subroutine,
       std::vector<std::shared_ptr<blaise_ast_expression>>& expressions);
 std::shared_ptr<ast::blaise_ast_expression> cast_to_boolean(
-            const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+            const sanelli::token<gasp::blaise::blaise_token_type>& reference,
             std::shared_ptr<ast::blaise_ast_expression> expression);
 
 //
@@ -86,7 +86,7 @@ std::shared_ptr<ast::blaise_ast_expression> cast_to_boolean(
 class blaise_ast_expression_subroutine_call : public blaise_ast_expression {
    std::shared_ptr<blaise_ast_subroutine> _subroutine;
    std::vector<std::shared_ptr<blaise_ast_expression>> _expressions;
-   blaise_ast_expression_subroutine_call(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_subroutine_call(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_subroutine> subroutine,
       const std::vector<std::shared_ptr<blaise_ast_expression>>& expressions
    );
@@ -97,7 +97,7 @@ public:
    friend sanelli::memory;
 };
 std::shared_ptr<blaise_ast_expression_subroutine_call> make_blaise_ast_expression_subroutine_call(
-   gasp::common::token<gasp::blaise::blaise_token_type> subroutine_name_token,
+   sanelli::token<gasp::blaise::blaise_token_type> subroutine_name_token,
    std::shared_ptr<blaise_ast_subroutine> subroutine,
    const std::vector<std::shared_ptr<blaise_ast_expression>>& expressions);
 
@@ -109,7 +109,7 @@ class blaise_ast_expression_binary : public blaise_ast_expression {
    std::shared_ptr<blaise_ast_expression> _left;
    std::shared_ptr<blaise_ast_expression> _right;
    blaise_ast_expression_binary(
-               const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+               const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                std::shared_ptr<blaise_ast_expression> left,
                gasp::blaise::blaise_token_type op,
                std::shared_ptr<blaise_ast_expression> right
@@ -122,7 +122,7 @@ public:
 };
 std::shared_ptr<blaise_ast_expression_binary> make_blaise_ast_expression_binary(
                std::shared_ptr<blaise_ast_expression> left,
-               gasp::common::token<gasp::blaise::blaise_token_type> token_operator,
+               sanelli::token<gasp::blaise::blaise_token_type> token_operator,
                std::shared_ptr<blaise_ast_expression> right);
 
 //
@@ -131,7 +131,7 @@ std::shared_ptr<blaise_ast_expression_binary> make_blaise_ast_expression_binary(
 class blaise_ast_expression_unary : public blaise_ast_expression {
    gasp::blaise::blaise_token_type _operator;
    std::shared_ptr<blaise_ast_expression> _operand;
-   blaise_ast_expression_unary(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_unary(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       gasp::blaise::blaise_token_type op,
       std::shared_ptr<blaise_ast_expression> operand);
 public:
@@ -139,7 +139,7 @@ public:
    gasp::blaise::blaise_token_type op() const;
    friend sanelli::memory;
 };
-std::shared_ptr<blaise_ast_expression_unary> make_blaise_ast_expression_unary(gasp::common::token<gasp::blaise::blaise_token_type> token,
+std::shared_ptr<blaise_ast_expression_unary> make_blaise_ast_expression_unary(sanelli::token<gasp::blaise::blaise_token_type> token,
                         std::shared_ptr<blaise_ast_expression> operand);
 
 //
@@ -152,7 +152,7 @@ enum class blaise_ast_expression_memory_access_type {
 class blaise_ast_expression_generic_memory_access : public blaise_ast_expression {
    blaise_ast_expression_memory_access_type _memory_access_type;
 protected:
-   blaise_ast_expression_generic_memory_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_generic_memory_access(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                   blaise_ast_expression_memory_access_type identifier_type, 
                   std::shared_ptr<blaise_ast_type> result_type);
 public:
@@ -161,20 +161,20 @@ public:
 
 class blaise_ast_expression_memory_access : public blaise_ast_expression_generic_memory_access {
    std::shared_ptr<blaise_ast_generic_memory_location> _memory_location;
-   blaise_ast_expression_memory_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_memory_access(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                      std::shared_ptr<blaise_ast_generic_memory_location> memory_location);
 public:
    std::shared_ptr<blaise_ast_generic_memory_location> memory_location() const;
    friend sanelli::memory;
 };
 std::shared_ptr<blaise_ast_expression_memory_access> make_blaise_ast_expression_memory_access(
-      const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_generic_memory_location> memory_location);
 
 class blaise_ast_expression_array_access : public blaise_ast_expression_generic_memory_access {
    std::shared_ptr<blaise_ast_generic_memory_location> _array;
    std::shared_ptr<blaise_ast_expression> _indexing;
-   blaise_ast_expression_array_access(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+   blaise_ast_expression_array_access(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                      std::shared_ptr<blaise_ast_generic_memory_location> array,
                      std::shared_ptr<blaise_ast_expression> indexing);
 public:
@@ -183,7 +183,7 @@ public:
    friend sanelli::memory;
 };
 std::shared_ptr<blaise_ast_expression_array_access> make_blaise_ast_expression_array_access(
-      const gasp::common::token<gasp::blaise::blaise_token_type>& reference,
+      const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_generic_memory_location> array,
       std::shared_ptr<blaise_ast_expression> indexing);
 
@@ -196,7 +196,7 @@ template<blaise_ast_expression_type TExpressionType,
 class blaise_ast_expression_value : public blaise_ast_expression {
    TValue _value;
    public:
-      blaise_ast_expression_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, TValue value) 
+      blaise_ast_expression_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference, TValue value) 
             : blaise_ast_expression(reference, TExpressionType, make_plain_type(TSystemType)), _value(value) {}
 
       TValue value(){ return _value; }
@@ -204,27 +204,27 @@ class blaise_ast_expression_value : public blaise_ast_expression {
 
 class blaise_ast_expression_integer_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_INTEGER,blaise_ast_system_type::INTEGER, int> {
    friend sanelli::memory;
-   blaise_ast_expression_integer_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,int value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_integer_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference,int value) : blaise_ast_expression_value(reference, value) {}
    };
 class blaise_ast_expression_float_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_FLOAT, blaise_ast_system_type::FLOAT, float> { 
    friend sanelli::memory;
-   blaise_ast_expression_float_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,float value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_float_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference,float value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_double_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_DOUBLE, blaise_ast_system_type::DOUBLE, double> { 
    friend sanelli::memory;
-   blaise_ast_expression_double_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,double value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_double_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference,double value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_system_type::CHAR, char> { 
    friend sanelli::memory;
-   blaise_ast_expression_char_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference,char value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_char_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference,char value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, blaise_ast_system_type::STRING, std::string> { 
    friend sanelli::memory;
-   blaise_ast_expression_string_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::string value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_string_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference, std::string value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BOOLEAN, blaise_ast_system_type::BOOLEAN, bool> { 
    friend sanelli::memory;
-   blaise_ast_expression_boolean_value(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, bool value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_boolean_value(const sanelli::token<gasp::blaise::blaise_token_type>& reference, bool value) : blaise_ast_expression_value(reference, value) {}
 };
 
 }

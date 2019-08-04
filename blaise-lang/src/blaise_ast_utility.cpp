@@ -3,11 +3,9 @@
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
-
 #include <sanelli/sanelli.hpp>
 
-using namespace gasp::common;
+using namespace sanelli;
 using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 
@@ -143,7 +141,7 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_binary_string_result(st
    throw std::runtime_error("Unexpected runtime combination");
 }
 
-std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, blaise_token_type op, std::shared_ptr<blaise_ast_type> operand) {
+std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const sanelli::token<gasp::blaise::blaise_token_type>& reference, blaise_token_type op, std::shared_ptr<blaise_ast_type> operand) {
    switch(op) {
       case blaise_token_type::LOGICAL_NOT:
          {
@@ -285,7 +283,7 @@ bool blaise_ast_utility::can_force_cast(std::shared_ptr<blaise_ast_type> from, s
    return false;
 }
 
-std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_common_type(const gasp::common::token<gasp::blaise::blaise_token_type>& reference, std::shared_ptr<blaise_ast_type> typeA, std::shared_ptr<blaise_ast_type> typeB){
+std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_common_type(const sanelli::token<gasp::blaise::blaise_token_type>& reference, std::shared_ptr<blaise_ast_type> typeA, std::shared_ptr<blaise_ast_type> typeB){
    if(typeA->equals(typeB)) return typeA;
    if(can_auto_cast(typeA, typeB)) return typeB;
    if(can_auto_cast(typeB, typeA)) return typeA;

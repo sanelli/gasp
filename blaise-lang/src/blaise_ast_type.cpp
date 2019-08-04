@@ -3,14 +3,13 @@
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
 #include <sanelli/sanelli.hpp>
 
 using namespace sanelli;
 using namespace gasp;
 using namespace gasp::blaise::ast;
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 blaise_ast_type::blaise_ast_type(blaise_ast_type_type type_type) : _type_type(type_type){ }
 blaise_ast_type::~blaise_ast_type(){}
@@ -37,7 +36,7 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::make_plain_type(blaise_ast_s
 //
 // TYPE
 //
-std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const gasp::common::token<gasp::blaise::blaise_token_type>& token) {
+std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sanelli::token<gasp::blaise::blaise_token_type>& token) {
    switch(token.type()){
       case blaise_token_type::TYPE_INTEGER:
          return make_plain_type(blaise_ast_system_type::INTEGER);
@@ -71,7 +70,7 @@ inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other
 };
 
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_array_type_from_token(
-   const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
+   const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
    std::shared_ptr<blaise_ast_type> inner_type,
    const int array_size, const bool accept_unbounded_array) { 
       if(array_size < 0 || (!accept_unbounded_array && array_size == 0))

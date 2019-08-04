@@ -3,14 +3,14 @@
 #include <string>
 
 #include <sanelli/sanelli.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
 
 using namespace std;
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise_parser_context &context,
             std::shared_ptr<ast::blaise_ast_statement_compund> parent)

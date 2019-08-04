@@ -14,7 +14,7 @@
 #include <gasp/blaise-to-torricelly/blaise_to_torricelly.hpp>
 
 using namespace std;
-using namespace gasp::common;
+
 using namespace gasp::blaise;
 using namespace gasp::torricelly;
 using namespace gasp::blaise_to_torricelly;
@@ -181,14 +181,14 @@ int main(int argc, char *argv[])
       
       return EXIT_SUCCESS;
    }
-   catch (gasp::common::tokenizer_error &error)
+   catch (sanelli::tokenizer_error &error)
    {
       cerr << "TOKENIZER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
       cerr << context << endl;
 
       return EXIT_FAILURE;
    }
-   catch (gasp::common::parser_error &error)
+   catch (sanelli::parser_error &error)
    {
       cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
       return EXIT_FAILURE;

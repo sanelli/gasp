@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 
-#include <gasp/common/tokenizer.hpp>
-#include <gasp/common/parser.hpp>
+
+
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -11,7 +11,7 @@
 
 using namespace std;
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 void blaise_parser::parse_subroutines_declaration(blaise_parser_context &context) {
    SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_subroutine_declaration" << std::endl);
@@ -92,7 +92,7 @@ void blaise_parser::parse_subroutine_parameters(blaise_parser_context &context, 
       auto token_type = token.type();
 
       if(token_type == blaise_token_type::IDENTIFIER){
-         vector<gasp::common::token<blaise_token_type>> names;
+         vector<sanelli::token<blaise_token_type>> names;
          parse_variable_names_list(context, names);
          match_token(context, blaise_token_type::COLON);
          auto parameters_type = parse_variable_type(context, true);

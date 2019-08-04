@@ -1,9 +1,10 @@
 #include <string>
 
+#include <sanelli/sanelli.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
 
 using namespace gasp::blaise;
-using namespace gasp::common;
+using namespace sanelli;
 
 blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
 {   

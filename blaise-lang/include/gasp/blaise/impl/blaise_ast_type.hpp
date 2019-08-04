@@ -3,7 +3,7 @@
 #include <memory>
 
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
+
 #include <sanelli/sanelli.hpp>
 
 namespace gasp::blaise::ast {
@@ -62,10 +62,10 @@ class blaise_ast_array_type : public blaise_ast_type {
       friend sanelli::memory;
 };
 
-std::shared_ptr<blaise_ast_type> get_type_from_token(const gasp::common::token<gasp::blaise::blaise_token_type>& token);
+std::shared_ptr<blaise_ast_type> get_type_from_token(const sanelli::token<gasp::blaise::blaise_token_type>& token);
 std::shared_ptr<blaise_ast_type> make_plain_type(blaise_ast_system_type system);
 std::shared_ptr<blaise_ast_type> get_array_type_from_token(
-   const gasp::common::token<gasp::blaise::blaise_token_type>& reference, 
+   const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
    std::shared_ptr<blaise_ast_type> inner_type,
    const int array_size, const bool accept_unbounded_array);
 

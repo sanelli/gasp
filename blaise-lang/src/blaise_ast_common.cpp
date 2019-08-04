@@ -1,8 +1,8 @@
+#include <sanelli/sanelli.hpp>
 #include <gasp/blaise/tokenizer/tokens.hpp>
-#include <gasp/common/tokenizer.hpp>
 #include <gasp/blaise/ast.hpp>
 
-using namespace gasp::common;
+using namespace sanelli;
 using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 

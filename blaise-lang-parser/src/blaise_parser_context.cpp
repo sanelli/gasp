@@ -6,10 +6,10 @@
 
 using namespace std;
 using namespace gasp::blaise;
-using namespace gasp::common;
+
 
 gasp::blaise::blaise_parser_context::blaise_parser_context() 
-   : gasp::common::parser_context<blaise_token_type>(), 
+   : sanelli::parser_context<blaise_token_type>(), 
    _main_subroutine(nullptr), _module(nullptr), _current_subroutine(nullptr) {
 }
 void gasp::blaise::blaise_parser_context::module(std::shared_ptr<ast::blaise_ast_module> module){

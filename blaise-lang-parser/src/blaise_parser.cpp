@@ -2,16 +2,14 @@
 #include <algorithm>
 #include <memory>
 
-#include <gasp/common/tokenizer.hpp>
 #include <sanelli/sanelli.hpp>
-
 #include <gasp/blaise/tokenizer/tokens.hpp>
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
 
+using namespace sanelli;
 using namespace std;
 using namespace gasp::blaise;
-using namespace gasp::common;
 
 void blaise_parser::parse(blaise_parser_context &context) const
 {
