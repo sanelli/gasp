@@ -3,7 +3,7 @@
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
-#include <gasp/blaise-to-torricelly/blaise_to_torricelly.hpp>
+#include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 
 using namespace gasp;
 using namespace gasp::torricelly;

@@ -11,7 +11,7 @@
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
-#include <gasp/blaise-to-torricelly/blaise_to_torricelly.hpp>
+#include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 
 using namespace std;
 
@@ -26,10 +26,8 @@ int main(int argc, char *argv[])
 {
    SANELLI_INSTALL_DEBUGGER("blaise-parser"); 
    SANELLI_INSTALL_DEBUGGER("sanelli-parser");
-   SANELLI_INSTALL_DEBUGGER("common-parser");
    SANELLI_INSTALL_DEBUGGER("blaise-lang");
    SANELLI_INSTALL_DEBUGGER("sanelli-tokenizer");
-   SANELLI_INSTALL_DEBUGGER("common-tokenizer");
 
    cout << "GASP - by Stefano Anelli." << endl;
 
