@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-
 #include <gasp/torricelly/impl/torricelly_subroutine.hpp>
 #include <gasp/torricelly/impl/torricelly_type.hpp>
 #include <gasp/torricelly/impl/torricelly_value.hpp>
@@ -32,6 +31,9 @@ public:
    std::shared_ptr<torricelly::torricelly_type> get_variable_type(unsigned int index) const;
    torricelly_value get_initial_value(unsigned int index) const;
    unsigned int get_number_of_variables() const;
+   unsigned int get_variable_with_string_literal(const std::string& string_literal) const;
+
+   void validate() const;
 
    friend sanelli::memory;
 };

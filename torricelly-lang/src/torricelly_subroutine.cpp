@@ -105,17 +105,18 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
       throw torricelly_error(sanelli::make_string("The number of parameters (", num_of_par,") is greater than the number of variables (",num_of_var,")"));
    
    // Check all variables matches their initial values
-   for(auto variable_index = 0; variable_index < num_of_var; ++variable_index) {
-      auto initial_value = _variable_initial_values.at(variable_index);
-      auto variable_type = _variable_types.at(variable_index);
+   for(auto variable_index = 1; variable_index <= num_of_var; ++variable_index) {
+      auto initial_value = get_initial_value(variable_index);
+      auto variable_type = get_variable_type(variable_index);
       if(!initial_value.match(variable_type))
-         throw torricelly_error(sanelli::make_string("Variable at index ", variable_index + 1," has type ", variable_type, " but initial value has type <type = ", initial_value.type(),", system_type = ", initial_value.system_type() ,">."));
+         throw torricelly_error(sanelli::make_string("Variable at index ", variable_index ," has type ", variable_type, " but initial value has type <type = ", initial_value.type(),", system_type = ", initial_value.system_type() ,"> in  subroutine '", name() ,"'"));
    }
    
    // Check instructions
-   for(auto instruction_index = 0; instruction_index < _instructions.size(); ++instruction_index)
+   auto num_of_inst = get_number_of_instructions();
+   for(auto instruction_index = 1; instruction_index <= num_of_inst; ++instruction_index)
    {  
-      auto instruction = _instructions.at(instruction_index);
+      auto instruction = get_instruction(instruction_index);
       try{
          instruction->validate();
       }catch(const torricelly_error& inst_error) { 
