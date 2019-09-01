@@ -102,70 +102,85 @@ int main(int argc, char *argv[])
 // end.
 //    )___";
 
+   // program << R"___(
+   //    program hello_world;
+   //    function native read_integer() : integer;
+   //    function native read_float() : float;
+   //    procedure native write(input: string); 
+   //    procedure native write(input: integer);
+   //    procedure native write(input: float);
+   //    procedure native write(input: array<integer>, input_size: integer);
+   //    function duplicate(input : float) : float 
+   //    begin
+   //       duplicate := 2 * input;
+   //    end;
+   //    function abs(input : integer) : integer 
+   //    begin
+   //       abs := if input >= 0 then input else -input;
+   //    end;
+   //    var
+   //       foo, another_foo: integer;
+   //       bar: float;
+   //       equals: boolean;
+   //       a_value: boolean;
+   //       myc: char;
+   //       myi: integer;
+   //       ctr1: array<string>[20];
+   //       ctr2: array<integer>[2];
+   //    begin
+   //       foo := read_integer();
+   //       another_foo := read_integer();
+   //       bar := read_float();
+   //       bar := foo + bar * 2 + -1 / duplicate(foo);
+   //       equals := bar == foo;
+   //       a_value := true and false;
+   //       begin
+   //          write("Results: ");
+   //          write(foo);
+   //       end
+   //       myc := 'A';
+   //       myi := cast<integer>(myc);
+   //       myi := abs(if myi == 0 then 1 else (myi));
+   //       if a_value then 
+   //          a_value := foo == another_foo;
+   //       if myc == 'b' then begin
+   //          equals:= false;
+   //          a_value := true;
+   //       end
+   //       else
+   //          a_value := false;
+   //       ctr1[0] := "Stefano";
+   //       ctr2[0] := 11;
+   //       ctr2[1] := 10 + 2 * ctr2[2];
+   //       while equals begin
+   //          equals := false;
+   //       end
+   //       do begin
+   //          equals := equals and false;
+   //       end while equals;
+   //       repeat begin
+   //          foo := foo + 1;
+   //          equals := foo > 100;
+   //       end until not equals;
+   //       for myi from 0 to 10 step 2 begin
+   //          foo := foo + 10;
+   //       end
+   //       bar := bar + foo;
+   //    end.
+   // )___";
+
    program << R"___(
       program hello_world;
-      function native read_integer() : integer;
-      function native read_float() : float;
-      procedure native write(input: string); 
-      procedure native write(input: integer);
-      procedure native write(input: float);
-      procedure native write(input: array<integer>, input_size: integer);
-      function duplicate(input : float) : float 
+      function duplicate(i: integer) : integer
       begin
-         duplicate := 2 * input;
-      end;
-      function abs(input : integer) : integer 
-      begin
-         abs := if input >= 0 then input else -input;
+         duplicate := 2 * i;
       end;
       var
-         foo, another_foo: integer;
-         bar: float;
-         equals: boolean;
-         a_value: boolean;
-         myc: char;
-         myi: integer;
-         ctr1: array<string>[20];
-         ctr2: array<integer>[2];
+         i,j,k: integer;
       begin
-         foo := read_integer();
-         another_foo := read_integer();
-         bar := read_float();
-         bar := foo + bar * 2 + -1 / duplicate(foo);
-         equals := bar == foo;
-         a_value := true and false;
-         begin
-            write("Results: ");
-            write(foo);
-         end
-         myc := 'A';
-         myi := cast<integer>(myc);
-         myi := abs(if myi == 0 then 1 else (myi));
-         if a_value then 
-            a_value := foo == another_foo;
-         if myc == 'b' then begin
-            equals:= false;
-            a_value := true;
-         end
-         else
-            a_value := false;
-         ctr1[0] := "Stefano";
-         ctr2[0] := 11;
-         ctr2[1] := 10 + 2 * ctr2[2];
-         while equals begin
-            equals := false;
-         end
-         do begin
-            equals := equals and false;
-         end while equals;
-         repeat begin
-            foo := foo + 1;
-            equals := foo > 100;
-         end until not equals;
-         for myi from 0 to 10 step 2 begin
-            foo := foo + 10;
-         end
-         bar := bar + foo;
+         i := 0;
+         j := 1;
+         k := duplicate(j);
       end.
    )___";
 
