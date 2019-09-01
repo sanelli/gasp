@@ -50,8 +50,35 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    return torricelly_subroutine;
 }
 
-std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::translator::translate_type(std::shared_ptr<blaise::ast::blaise_ast_type> type) const{
-   return nullptr;
+std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::translator::translate_type(std::shared_ptr<blaise::ast::blaise_ast_type> type) const
+{
+   switch (type->type_type())
+   {
+   case blaise::ast::blaise_ast_type_type::PLAIN:
+   {
+      auto plain_type = blaise::ast::blaise_ast_utility::as_plain_type(type);
+      switch (plain_type->system_type())
+      {
+      case blaise::ast::blaise_ast_system_type::BOOLEAN:
+         return make_torricelly_system_type(torricelly_system_type_type::BOOLEAN);
+      case blaise::ast::blaise_ast_system_type::CHAR :
+         return make_torricelly_system_type(torricelly_system_type_type::CHAR);
+      case blaise::ast::blaise_ast_system_type::DOUBLE :
+         return make_torricelly_system_type(torricelly_system_type_type::DOUBLE);
+      case blaise::ast::blaise_ast_system_type::FLOAT:
+         return make_torricelly_system_type(torricelly_system_type_type::FLOAT);
+      case blaise::ast::blaise_ast_system_type::INTEGER :
+         return make_torricelly_system_type(torricelly_system_type_type::INTEGER);
+      case blaise::ast::blaise_ast_system_type::VOID :
+         return make_torricelly_system_type(torricelly_system_type_type::VOID);
+      default:
+         throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise system type");
+      }
+   }
+   break;
+   default:
+      throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise type");
+   }
 }
 
 bool blaise_to_torricelly::translator::has_translated(const std::vector<std::shared_ptr<gasp::torricelly::torricelly_module>> &torricelly_modules,
