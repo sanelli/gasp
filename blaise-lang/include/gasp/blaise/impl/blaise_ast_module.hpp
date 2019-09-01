@@ -4,10 +4,6 @@
 #include <memory>
 #include <vector>
 
-
-
-
-
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/blaise_ast_subroutine.hpp>
 
@@ -43,6 +39,9 @@ public:
    unsigned int count_subroutine(
       const sanelli::token<gasp::blaise::blaise_token_type>& identifier,
       const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
+
+   unsigned int count_subroutines() const;
+   std::shared_ptr<blaise_ast_subroutine> get_subroutine(unsigned int index) const;
 
    friend sanelli::memory;
 };
