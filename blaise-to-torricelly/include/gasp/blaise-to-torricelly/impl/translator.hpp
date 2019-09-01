@@ -18,6 +18,8 @@ class translator
    std::string get_mangled_module_name(const std::string &name) const;
    std::string get_mangled_subroutine_name(std::shared_ptr<gasp::blaise::ast::blaise_ast_subroutine> subroutine) const;
    std::string get_mangled_type_name(std::shared_ptr<gasp::blaise::ast::blaise_ast_type> type) const;
+
+   std::shared_ptr<gasp::torricelly::torricelly_module> translate_module(std::shared_ptr<blaise::ast::blaise_ast_module> module) const;
 public:
    translator(std::shared_ptr<blaise::ast::blaise_ast_module> blaise_module);
    std::shared_ptr<blaise::ast::blaise_ast_module> blaise_module() const;
