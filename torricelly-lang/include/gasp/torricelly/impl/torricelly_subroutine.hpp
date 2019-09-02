@@ -5,7 +5,7 @@
 #include <vector>
 #include <ostream>
 #include <set>
-
+#include <map>
 
 #include <gasp/torricelly/impl/torricelly_type.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction.hpp>

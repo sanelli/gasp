@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
+#include <map>
+#include <string>
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
@@ -47,6 +49,36 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
    auto return_type = translate_type(subroutine->return_type());
    auto torricelly_subroutine = make_torricelly_subroutine(subroutine_mangled_name, return_type);
+
+   std::map<std::string, unsigned int> variables_mapping;
+
+   for (auto index = 0UL; index < subroutine->count_parameters(); ++index)
+   {
+      auto parameter = subroutine->get_parameter(index);
+      auto torricelly_type = translate_type(parameter->type());
+      auto initial_value = get_type_initial_value(parameter->type());
+      auto torricelly_index = torricelly_subroutine->add_variable(torricelly_type, initial_value, true);
+      variables_mapping.insert(std::make_pair(parameter->name(), torricelly_index));
+   }
+
+   for (auto index = 0UL; index < subroutine->count_constants(); ++index)
+   {
+      auto constant = subroutine->get_constant(index);
+      auto torricelly_type = translate_type(constant->type());
+      auto initial_value = get_type_initial_value(constant->type());
+      auto torricelly_index = torricelly_subroutine->add_variable(torricelly_type, initial_value, false);
+      variables_mapping.insert(std::make_pair(constant->name(), torricelly_index));
+   }
+
+   for (auto index = 0UL; index < subroutine->count_variables(); ++index)
+   {
+      auto variable = subroutine->get_variable(index);
+      auto torricelly_type = translate_type(variable->type());
+      auto initial_value = get_type_initial_value(variable->type());
+      auto torricelly_index = torricelly_subroutine->add_variable(torricelly_type, initial_value, false);
+      variables_mapping.insert(std::make_pair(variable->name(), torricelly_index));
+   }
+
    return torricelly_subroutine;
 }
 
@@ -61,16 +93,47 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
       {
       case blaise::ast::blaise_ast_system_type::BOOLEAN:
          return make_torricelly_system_type(torricelly_system_type_type::BOOLEAN);
-      case blaise::ast::blaise_ast_system_type::CHAR :
+      case blaise::ast::blaise_ast_system_type::CHAR:
          return make_torricelly_system_type(torricelly_system_type_type::CHAR);
-      case blaise::ast::blaise_ast_system_type::DOUBLE :
+      case blaise::ast::blaise_ast_system_type::DOUBLE:
          return make_torricelly_system_type(torricelly_system_type_type::DOUBLE);
       case blaise::ast::blaise_ast_system_type::FLOAT:
          return make_torricelly_system_type(torricelly_system_type_type::FLOAT);
-      case blaise::ast::blaise_ast_system_type::INTEGER :
+      case blaise::ast::blaise_ast_system_type::INTEGER:
          return make_torricelly_system_type(torricelly_system_type_type::INTEGER);
-      case blaise::ast::blaise_ast_system_type::VOID :
+      case blaise::ast::blaise_ast_system_type::VOID:
          return make_torricelly_system_type(torricelly_system_type_type::VOID);
+      default:
+         throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise system type");
+      }
+   }
+   break;
+   default:
+      throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise type");
+   }
+}
+
+gasp::torricelly::torricelly_value blaise_to_torricelly::translator::get_type_initial_value(std::shared_ptr<blaise::ast::blaise_ast_type> type) const
+{
+   switch (type->type_type())
+   {
+   case blaise::ast::blaise_ast_type_type::PLAIN:
+   {
+      auto plain_type = blaise::ast::blaise_ast_utility::as_plain_type(type);
+      switch (plain_type->system_type())
+      {
+      case blaise::ast::blaise_ast_system_type::BOOLEAN:
+         return torricelly_value::make(false);
+      case blaise::ast::blaise_ast_system_type::CHAR:
+         return torricelly_value::make((char)0);
+      case blaise::ast::blaise_ast_system_type::DOUBLE:
+         return torricelly_value::make(0.00);
+      case blaise::ast::blaise_ast_system_type::FLOAT:
+         return torricelly_value::make(0.00f);
+      case blaise::ast::blaise_ast_system_type::INTEGER:
+        return torricelly_value::make(0);
+      case blaise::ast::blaise_ast_system_type::VOID:
+         throw gasp::common::gasp_internal_error("VOID type does not have an initial value");
       default:
          throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise system type");
       }

@@ -4,12 +4,12 @@
 #include <sstream>
 #include <memory>
 
-#include <gasp/blaise/tokenizer/tokenizer.hpp>
-
-#include <gasp/blaise/parser/parser.hpp>
-#include <gasp/blaise/ast.hpp>
 #include <sanelli/sanelli.hpp>
 
+#include <gasp/common/internal_error.hpp>
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
+#include <gasp/blaise/parser/parser.hpp>
+#include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 
@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
    SANELLI_INSTALL_DEBUGGER("sanelli-parser");
    SANELLI_INSTALL_DEBUGGER("blaise-lang");
    SANELLI_INSTALL_DEBUGGER("sanelli-tokenizer");
-
+   SANELLI_INSTALL_DEBUGGER("torricelly-lang");
+   
    cout << "GASP - by Stefano Anelli." << endl;
 
    blaise_tokenizer tokenizer;
@@ -208,11 +209,15 @@ int main(int argc, char *argv[])
    }
    catch (gasp::blaise::ast::blaise_ast_error &error)
    {
-      cerr << "BLAISE_ast_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+      cerr << "BLAISE_AST_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+      return EXIT_FAILURE;
+   }
+   catch (gasp::common::gasp_internal_error& error){
+       cerr << "INTERNAL_ERROR: " << error.what() << endl;
       return EXIT_FAILURE;
    }
    catch(std::exception &error) { 
-      cerr << "GENERIC_ERROR:"  << error.what() << endl;
+      cerr << "GENERIC_ERROR: "  << error.what() << endl;
       return EXIT_FAILURE;
    }
    catch(...) { 
