@@ -87,6 +87,13 @@ std::shared_ptr<blaise_ast_subroutine_parameter> gasp::blaise::ast::blaise_ast_s
    return get_memory_from_vector(_parameters, identifier);
 }
 
+unsigned int gasp::blaise::ast::blaise_ast_subroutine::count_parameters() const { return _parameters.size(); }
+std::shared_ptr<blaise_ast_subroutine_parameter> gasp::blaise::ast::blaise_ast_subroutine::get_parameter(unsigned int index) const { return _parameters.at(index); }
+unsigned int gasp::blaise::ast::blaise_ast_subroutine::count_constants() const { return _constants.size(); }
+std::shared_ptr<blaise_ast_constant> gasp::blaise::ast::blaise_ast_subroutine::get_constant(unsigned int index) const { return _constants.at(index); }
+unsigned int gasp::blaise::ast::blaise_ast_subroutine::count_variables() const { return _variables.size(); }
+std::shared_ptr<blaise_ast_variable> gasp::blaise::ast::blaise_ast_subroutine::get_variable(unsigned int index) const { return _variables.at(index); }
+
 std::shared_ptr<blaise_ast_generic_memory_location> gasp::blaise::ast::blaise_ast_subroutine::get_memory_location(const std::string &identifier) const
 {
    auto variable = get_variable(identifier);

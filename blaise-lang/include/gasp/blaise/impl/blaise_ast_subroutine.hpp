@@ -6,10 +6,6 @@
 #include <type_traits>
 #include <algorithm>
 
-
-
-
-
 #include <gasp/blaise/impl/blaise_ast_variable.hpp>
 #include <gasp/blaise/impl/blaise_ast_type.hpp>
 #include <gasp/blaise/impl/blaise_ast_module.hpp>
@@ -76,6 +72,13 @@ public:
    std::shared_ptr<blaise_ast_constant> get_constant(const std::string& identifier) const;
    std::shared_ptr<blaise_ast_variable> get_variable(const std::string& identifier) const;
    std::shared_ptr<blaise_ast_generic_memory_location> get_memory_location(const std::string& identifier) const;
+
+   unsigned int count_parameters() const;
+   std::shared_ptr<blaise_ast_subroutine_parameter> get_parameter(unsigned int index) const;
+   unsigned int count_constants() const;
+   std::shared_ptr<blaise_ast_constant> get_constant(unsigned int index) const;
+   unsigned int count_variables() const;
+   std::shared_ptr<blaise_ast_variable> get_variable(unsigned int index) const;
 
    std::shared_ptr<blaise_ast_subroutine_parameter> add_parameter(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                      const std::string& identifier, 
