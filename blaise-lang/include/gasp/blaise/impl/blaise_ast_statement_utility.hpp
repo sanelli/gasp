@@ -8,6 +8,7 @@ namespace gasp::blaise::ast
 {
 class blaise_ast_statement_utility
 {
+public:
    static std::shared_ptr<blaise_ast_statement_compund> as_compound(std::shared_ptr<blaise_ast_statement> statement);
    static std::shared_ptr<blaise_ast_statement_assignment> as_assignment(std::shared_ptr<blaise_ast_statement> statement);
    static std::shared_ptr<blaise_ast_statement_subroutine_call> as_subroutine_call(std::shared_ptr<blaise_ast_statement> statement);
