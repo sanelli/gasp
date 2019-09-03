@@ -40,6 +40,6 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    case ast::blaise_ast_statement_type::REPEAT_UNTIL_LOOP:
       break;
    default:
-      throw blaise_to_torricelly_error("Unknown statement type");
+      throw blaise_to_torricelly_internal_error("Unknown statement type");
    }
 }
