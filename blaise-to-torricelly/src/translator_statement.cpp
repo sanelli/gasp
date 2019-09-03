@@ -24,7 +24,11 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    switch (statement->type())
    {
    case ast::blaise_ast_statement_type::COMPOUND:
-      break;
+   {
+      auto compound_statement = ast::blaise_ast_statement_utility::as_compound(statement);
+      translate_compound_statement(torricelly_subroutine, variables_mapping, compound_statement);
+   }
+   break;
    case ast::blaise_ast_statement_type::ASSIGNEMENT:
       break;
    case ast::blaise_ast_statement_type::SUBROUTINE_CALL:
@@ -42,4 +46,9 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    default:
       throw blaise_to_torricelly_internal_error("Unknown statement type");
    }
+}
+
+void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement) const
+{
+   
 }
