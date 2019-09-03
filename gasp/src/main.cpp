@@ -216,6 +216,10 @@ int main(int argc, char *argv[])
        cerr << "INTERNAL_ERROR: " << error.what() << endl;
       return EXIT_FAILURE;
    }
+   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_error& error){
+       cerr << "BLAISE_TO_TORRICELLI_ERROR: " << error.what() << endl;
+      return EXIT_FAILURE;
+   }
    catch(std::exception &error) { 
       cerr << "GENERIC_ERROR: "  << error.what() << endl;
       return EXIT_FAILURE;

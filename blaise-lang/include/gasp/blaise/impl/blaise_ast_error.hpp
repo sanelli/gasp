@@ -3,9 +3,6 @@
 #include <string>
 #include <stdexcept>
 
-
-
-
 namespace gasp::blaise::ast {
 
 class blaise_ast_error : public std::runtime_error

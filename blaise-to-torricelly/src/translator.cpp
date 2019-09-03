@@ -79,6 +79,12 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       variables_mapping.insert(std::make_pair(variable->name(), torricelly_index));
    }
 
+   auto statements_count = subroutine->get_statements_count();
+   for(auto index = 0UL; index < statements_count; ++index) { 
+      auto statement = subroutine->get_statement(index);
+      translate_statement(torricelly_subroutine, variables_mapping, statement);
+   }
+
    return torricelly_subroutine;
 }
 
@@ -104,12 +110,12 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
       case blaise::ast::blaise_ast_system_type::VOID:
          return make_torricelly_system_type(torricelly_system_type_type::VOID);
       default:
-         throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise system type");
+         throw blaise_to_torricelly_error("Type conversion not implemented for blaise system type");
       }
    }
    break;
    default:
-      throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise type");
+      throw blaise_to_torricelly_error("Type conversion not implemented for blaise type");
    }
 }
 
@@ -133,14 +139,14 @@ gasp::torricelly::torricelly_value blaise_to_torricelly::translator::get_type_in
       case blaise::ast::blaise_ast_system_type::INTEGER:
         return torricelly_value::make(0);
       case blaise::ast::blaise_ast_system_type::VOID:
-         throw gasp::common::gasp_internal_error("VOID type does not have an initial value");
+         throw blaise_to_torricelly_error("VOID type does not have an initial value");
       default:
-         throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise system type");
+         throw blaise_to_torricelly_error("Type conversion not implemented for blaise system type");
       }
    }
    break;
    default:
-      throw gasp::common::gasp_internal_error("Type conversion not implemented for blaise type");
+      throw blaise_to_torricelly_error("Type conversion not implemented for blaise type");
    }
 }
 
@@ -192,11 +198,11 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
       case blaise::ast::blaise_ast_system_type::INTEGER:
          return "i";
       default:
-         throw gasp::common::gasp_internal_error("Mangling not implemeneted for system type");
+         throw blaise_to_torricelly_error("Mangling not implemeneted for system type");
       }
    }
    break;
    default:
-      throw gasp::common::gasp_internal_error("Mangling not implemeneted for type");
+      throw blaise_to_torricelly_error("Mangling not implemeneted for type");
    }
 }

@@ -18,7 +18,7 @@ using namespace gasp::blaise::ast;
 //
 blaise_ast_statement::blaise_ast_statement(const sanelli::token<gasp::blaise::blaise_token_type>& reference, blaise_ast_statement_type type) 
       : blaise_ast(reference), _type(type) {}
-
+blaise_ast_statement_type blaise_ast_statement::type() { return _type; }
 //
 // COMPOUND STATEMENT
 //
