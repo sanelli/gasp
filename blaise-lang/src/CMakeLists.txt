@@ -9,5 +9,6 @@ target_sources(gasp-blaise-lang
         blaise_ast_utility.cpp
         blaise_ast_io.cpp
         blaise_ast_statement.cpp
+        blaise_ast_statement_utility.cpp
         blaise_ast_identifier.cpp
 )
