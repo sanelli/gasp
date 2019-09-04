@@ -18,15 +18,16 @@ using namespace gasp::blaise;
 
 void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
                                                            const std::map<std::string, unsigned int> &variables_mapping,
-                                                           std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement) const
+                                                           std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement,
+                                                           unsigned int& max_stack_size) const
 {
-
+   max_stack_size = 0U;
    switch (statement->type())
    {
    case ast::blaise_ast_statement_type::COMPOUND:
    {
       auto compound_statement = ast::blaise_ast_statement_utility::as_compound(statement);
-      translate_compound_statement(torricelly_subroutine, variables_mapping, compound_statement);
+      translate_compound_statement(torricelly_subroutine, variables_mapping, compound_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::ASSIGNEMENT:
@@ -48,7 +49,10 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
 }
 
-void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement) const
+void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, 
+   const std::map<std::string, unsigned int> &variables_mapping, 
+   std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
+   unsigned int& max_stack_size) const
 {
-   
+
 }

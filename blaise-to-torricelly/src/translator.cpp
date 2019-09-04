@@ -80,9 +80,12 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    }
 
    auto statements_count = subroutine->get_statements_count();
+   unsigned int max_stack_size = 1;
    for(auto index = 0UL; index < statements_count; ++index) { 
       auto statement = subroutine->get_statement(index);
-      translate_statement(torricelly_subroutine, variables_mapping, statement);
+      unsigned int instruction_max_stack_size = 0U;
+      translate_statement(torricelly_subroutine, variables_mapping, statement, instruction_max_stack_size);
+      max_stack_size = std::max(max_stack_size, instruction_max_stack_size);
    }
 
    return torricelly_subroutine;
