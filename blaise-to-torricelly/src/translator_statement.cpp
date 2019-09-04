@@ -19,7 +19,7 @@ using namespace gasp::blaise;
 void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
                                                            const std::map<std::string, unsigned int> &variables_mapping,
                                                            std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement,
-                                                           unsigned int& max_stack_size) const
+                                                           unsigned int &max_stack_size) const
 {
    max_stack_size = 0U;
    switch (statement->type())
@@ -49,10 +49,9 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
 }
 
-void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, 
-   const std::map<std::string, unsigned int> &variables_mapping, 
-   std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
-   unsigned int& max_stack_size) const
+void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                                    const std::map<std::string, unsigned int> &variables_mapping,
+                                                                    std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
+                                                                    unsigned int &max_stack_size) const
 {
-
 }

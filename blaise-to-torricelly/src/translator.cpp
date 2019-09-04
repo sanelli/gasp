@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <map>
 #include <string>
+#include <cmath>
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
@@ -81,7 +82,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
 
    auto statements_count = subroutine->get_statements_count();
    unsigned int max_stack_size = 1;
-   for(auto index = 0UL; index < statements_count; ++index) { 
+   for (auto index = 0UL; index < statements_count; ++index)
+   {
       auto statement = subroutine->get_statement(index);
       unsigned int instruction_max_stack_size = 0U;
       translate_statement(torricelly_subroutine, variables_mapping, statement, instruction_max_stack_size);
@@ -140,7 +142,7 @@ gasp::torricelly::torricelly_value blaise_to_torricelly::translator::get_type_in
       case blaise::ast::blaise_ast_system_type::FLOAT:
          return torricelly_value::make(0.00f);
       case blaise::ast::blaise_ast_system_type::INTEGER:
-        return torricelly_value::make(0);
+         return torricelly_value::make(0);
       case blaise::ast::blaise_ast_system_type::VOID:
          throw blaise_to_torricelly_internal_error("VOID type does not have an initial value");
       default:
