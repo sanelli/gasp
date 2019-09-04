@@ -7,6 +7,7 @@
 #include <gasp/blaise/impl/blaise_ast_type.hpp>
 #include <gasp/blaise/impl/blaise_ast_variable.hpp>
 #include <gasp/blaise/impl/blaise_ast_expression.hpp>
+#include <gasp/blaise/impl/blaise_ast_expression_utility.hpp>
 #include <gasp/blaise/impl/blaise_ast_statement.hpp>
 #include <gasp/blaise/impl/blaise_ast_statement_utility.hpp>
 #include <gasp/blaise/impl/blaise_ast_utility.hpp>

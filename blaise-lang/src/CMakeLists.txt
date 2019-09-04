@@ -6,6 +6,7 @@ target_sources(gasp-blaise-lang
         blaise_ast_subroutine.cpp
         blaise_ast_module.cpp
         blaise_ast_expression.cpp
+        blaise_ast_expression_utility.cpp
         blaise_ast_utility.cpp
         blaise_ast_io.cpp
         blaise_ast_statement.cpp

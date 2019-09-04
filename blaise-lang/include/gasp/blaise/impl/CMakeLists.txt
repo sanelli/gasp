@@ -9,6 +9,7 @@ target_sources(gasp-blaise-lang
         blaise_ast_statement.hpp
         blaise_ast_statement_utility.hpp
         blaise_ast_expression.hpp
+        blaise_ast_expression_utility.hpp
         blaise_ast_utility.hpp
         blaise_ast_io.hpp
         blaise_ast_identifier.hpp

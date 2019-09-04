@@ -298,7 +298,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(b
    then_expression = ast::introduce_cast_if_required(reference, common_type, then_expression);
    else_expression = ast::introduce_cast_if_required(reference, common_type, else_expression);
 
-   auto ternary_expression = ast::make_blaise_ast_ternary_cast(reference, condition, then_expression, else_expression);
+   auto ternary_expression = ast::make_blaise_ast_expression_ternary(reference, condition, then_expression, else_expression);
 
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_ternary_expression" << std::endl);
    return ternary_expression;
