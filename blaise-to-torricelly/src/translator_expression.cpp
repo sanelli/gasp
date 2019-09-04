@@ -31,29 +31,33 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    case ast::blaise_ast_expression_type::FUNCTION_CALL:
       break;
    case ast::blaise_ast_expression_type::IDENTIFIER:
-      break;
+   {
+      auto memory_access_expression = ast::blaise_ast_expression_utility::as_memory_access(expression);
+      translate_memory_access_expression(torricelly_subroutine, variables_mapping, memory_access_expression, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_expression_type::LITERAL_BOOLEAN:
    {
-      auto integer_expression = ast::blaise_ast_expression_utility::as_boolean_literal(expression);
-      translate_literal_boolean_expression(torricelly_subroutine, variables_mapping, integer_expression, max_stack_size);
+      auto boolean_expression = ast::blaise_ast_expression_utility::as_boolean_literal(expression);
+      translate_literal_boolean_expression(torricelly_subroutine, variables_mapping, boolean_expression, max_stack_size);
    }
    break;
    case ast::blaise_ast_expression_type::LITERAL_CHAR:
    {
-      auto integer_expression = ast::blaise_ast_expression_utility::as_char_literal(expression);
-      translate_literal_char_expression(torricelly_subroutine, variables_mapping, integer_expression, max_stack_size);
+      auto char_expression = ast::blaise_ast_expression_utility::as_char_literal(expression);
+      translate_literal_char_expression(torricelly_subroutine, variables_mapping, char_expression, max_stack_size);
    }
    break;
    case ast::blaise_ast_expression_type::LITERAL_DOUBLE:
    {
-      auto integer_expression = ast::blaise_ast_expression_utility::as_double_literal(expression);
-      translate_literal_double_expression(torricelly_subroutine, variables_mapping, integer_expression, max_stack_size);
+      auto double_expression = ast::blaise_ast_expression_utility::as_double_literal(expression);
+      translate_literal_double_expression(torricelly_subroutine, variables_mapping, double_expression, max_stack_size);
    }
    break;
    case ast::blaise_ast_expression_type::LITERAL_FLOAT:
    {
-      auto integer_expression = ast::blaise_ast_expression_utility::as_float_literal(expression);
-      translate_literal_float_expression(torricelly_subroutine, variables_mapping, integer_expression, max_stack_size);
+      auto float_expression = ast::blaise_ast_expression_utility::as_float_literal(expression);
+      translate_literal_float_expression(torricelly_subroutine, variables_mapping, float_expression, max_stack_size);
    }
    break;
    case ast::blaise_ast_expression_type::LITERAL_INTEGER:
@@ -133,5 +137,82 @@ void blaise_to_torricelly::translator::translate_literal_boolean_expression(std:
    auto instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
+   max_stack_size = 1;
+}
+
+void blaise_to_torricelly::translator::translate_memory_access_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_generic_memory_access> expression, unsigned int &max_stack_size) const
+{
+   max_stack_size = 0U;
+   switch (expression->memory_access_type())
+   {
+   case ast::blaise_ast_expression_memory_access_type::ARRAY:
+      throw blaise_to_torricelly_internal_error("ARRAY memory access type not supported.");
+      break;
+   case ast::blaise_ast_expression_memory_access_type::MEMORY_LOCATION:
+   {
+      auto variable_access_expression = ast::blaise_ast_expression_utility::as_variable_memory_access(expression);
+      translate_variable_access_expression(torricelly_subroutine, variables_mapping, variable_access_expression, max_stack_size);
+   }
+   break;
+   default:
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown access memory type");
+   }
+}
+
+void blaise_to_torricelly::translator::translate_variable_access_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_memory_access> expression, unsigned int &max_stack_size) const
+{
+   auto memory_location = expression->memory_location();
+   auto memory_location_type = translate_type(memory_location->type());
+
+   auto memory_location_index_it = variables_mapping.find(memory_location->name());
+   if (memory_location_index_it == variables_mapping.end())
+      throw blaise_to_torricelly_error(expression->line(), expression->column(), sanelli::make_string("Cannot find variable '", memory_location->name(), "'."));
+
+   auto memory_location_index = memory_location_index_it->second;
+   auto instruction_code = torricelly_inst_code::NOOP;
+   switch (memory_location_type->type_type())
+   {
+   case torricelly_type_type::SYSTEM:
+   {
+      auto memory_location_system_type = torricelly_type_utility::as_system_type(memory_location_type);
+      switch (memory_location_system_type->system_type())
+      {
+      case torricelly::torricelly_system_type_type::BOOLEAN:
+         instruction_code = torricelly_inst_code::LOAD_BOOLEAN;
+         break;
+      case torricelly::torricelly_system_type_type::CHAR:
+         instruction_code = torricelly_inst_code::LOAD_CHAR;
+         break;
+      case torricelly::torricelly_system_type_type::DOUBLE:
+         instruction_code = torricelly_inst_code::LOAD_DOUBLE;
+         break;
+      case torricelly::torricelly_system_type_type::FLOAT:
+         instruction_code = torricelly_inst_code::LOAD_FLOAT;
+         break;
+      case torricelly::torricelly_system_type_type::INTEGER:
+         instruction_code = torricelly_inst_code::LOAD_INTEGER;
+         break;
+      case torricelly::torricelly_system_type_type::STRING_LITERAL:
+         throw blaise_to_torricelly_internal_error("STRING_LITERAL torricelly system type when translating memory access expression");
+         break;
+      case torricelly::torricelly_system_type_type::VOID:
+         throw blaise_to_torricelly_internal_error("VOID torricelly system type when translating memory access expression");
+         break;
+      case torricelly::torricelly_system_type_type::UNDEFINED:
+         throw blaise_to_torricelly_internal_error("UNDEFINED torricelly system type when translating memory access expression");
+         break;
+      default:
+         throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly system type when translating memory access expression");
+      }
+   }
+   break;
+   case torricelly_type_type::STRUCTURED:
+      throw blaise_to_torricelly_internal_error("Unsupported structured type");
+      break;
+   default:
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown memory location type");
+   }
+   auto instruction = make_torricelly_instruction(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(instruction);
    max_stack_size = 1;
 }
