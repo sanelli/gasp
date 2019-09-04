@@ -34,9 +34,9 @@ std::shared_ptr<blaise_ast_expression_integer_value> blaise_ast_expression_utili
    return std::static_pointer_cast<blaise_ast_expression_integer_value>(expression);
 }
 
-std::shared_ptr<blaise_ast_expression_memory_access> blaise_ast_expression_utility::as_memory_access(std::shared_ptr<blaise_ast_expression> expression)
+std::shared_ptr<blaise_ast_expression_generic_memory_access> blaise_ast_expression_utility::as_memory_access(std::shared_ptr<blaise_ast_expression> expression)
 {
-   return std::static_pointer_cast<blaise_ast_expression_memory_access>(expression);
+   return std::static_pointer_cast<blaise_ast_expression_generic_memory_access>(expression);
 }
 
 std::shared_ptr<blaise_ast_expression_unary> blaise_ast_expression_utility::as_unary(std::shared_ptr<blaise_ast_expression> expression)
@@ -62,4 +62,14 @@ std::shared_ptr<blaise_ast_expression_cast> blaise_ast_expression_utility::as_ca
 std::shared_ptr<blaise_ast_expression_ternary> blaise_ast_expression_utility::as_ternary(std::shared_ptr<blaise_ast_expression> expression)
 {
    return std::static_pointer_cast<blaise_ast_expression_ternary>(expression);
+}
+
+std::shared_ptr<blaise_ast_expression_memory_access> blaise_ast_expression_utility::as_variable_memory_access(std::shared_ptr<blaise_ast_expression_generic_memory_access> expression)
+{
+   return std::static_pointer_cast<blaise_ast_expression_memory_access>(expression);
+}
+
+std::shared_ptr<blaise_ast_expression_array_access> blaise_ast_expression_utility::as_array_memory_access(std::shared_ptr<blaise_ast_expression_generic_memory_access> expression)
+{
+   return std::static_pointer_cast<blaise_ast_expression_array_access>(expression);
 }
