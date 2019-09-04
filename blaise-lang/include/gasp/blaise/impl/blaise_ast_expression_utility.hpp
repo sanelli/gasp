@@ -9,6 +9,7 @@ namespace gasp::blaise::ast
 
 class blaise_ast_expression_utility
 {
+public:
    static std::shared_ptr<blaise_ast_expression_boolean_value> as_boolean_literal(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_string_value> as_string_literal(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_char_value> as_char_literal(std::shared_ptr<blaise_ast_expression> expression);
