@@ -47,6 +47,10 @@ enum class torricelly_inst_code : unsigned short {
 
    REMINDER_INTEGER,
 
+   NEGATE_INTEGER,
+   NEGATE_FLOAT,
+   NEGATE_DOUBLE,
+
    CMP_INTEGER,
    CMP_BOOLEAN,
    CMP_CHAR,
@@ -70,6 +74,10 @@ enum class torricelly_inst_code : unsigned short {
    CAST_FLOAT_DOUBLE,
    CAST_DOUBLE_INT,
    CAST_DOUBLE_FLOAT,
+
+   NOT,
+   AND,
+   OR,
 
    INVOKE,
    RET

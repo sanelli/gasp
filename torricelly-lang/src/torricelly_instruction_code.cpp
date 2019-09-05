@@ -41,6 +41,9 @@ const char *torricelly::to_string(torricelly_inst_code code)
    case torricelly_inst_code::DIVIDE_FLOAT: return "fdiv";
    case torricelly_inst_code::DIVIDE_DOUBLE: return "ddiv";
    case torricelly_inst_code::REMINDER_INTEGER: return "irem";
+   case torricelly_inst_code::NEGATE_INTEGER: return "ineg";
+   case torricelly_inst_code::NEGATE_FLOAT: return "fneg";
+   case torricelly_inst_code::NEGATE_DOUBLE: return "dneg";
    case torricelly_inst_code::CMP_INTEGER: return "icmp";
    case torricelly_inst_code::CMP_BOOLEAN: return "bcmp";
    case torricelly_inst_code::CMP_CHAR: return "ccmp";
@@ -62,6 +65,9 @@ const char *torricelly::to_string(torricelly_inst_code code)
    case torricelly_inst_code::CAST_FLOAT_DOUBLE: return "ftod";
    case torricelly_inst_code::CAST_DOUBLE_INT: return "dtoi";
    case torricelly_inst_code::CAST_DOUBLE_FLOAT: return "dtof";
+   case torricelly_inst_code::NOT: return "not";
+   case torricelly_inst_code::AND: return "and";
+   case torricelly_inst_code::OR: return "or";
    case torricelly_inst_code::INVOKE: return "invoke";
    case torricelly_inst_code::RET: return "ret";
    default: 
