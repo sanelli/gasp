@@ -6,6 +6,7 @@
 #include <string>
 
 #include <gasp/blaise/ast.hpp>
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 #include <gasp/common/internal_error.hpp>
@@ -74,7 +75,11 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    case ast::blaise_ast_expression_type::TERNARY:
       break;
    case ast::blaise_ast_expression_type::UNARY:
-      break;
+   {
+      auto unary_expression = ast::blaise_ast_expression_utility::as_unary(expression);
+      translate_unary_expression(torricelly_subroutine, variables_mapping, unary_expression, max_stack_size);
+   }
+   break;
    default:
       throw blaise_to_torricelly_internal_error("Unknown or unsupported expression type found during translation.");
    }
@@ -215,4 +220,54 @@ void blaise_to_torricelly::translator::translate_variable_access_expression(std:
    auto instruction = make_torricelly_instruction(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
    max_stack_size = 1;
+}
+
+void blaise_to_torricelly::translator::translate_unary_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_unary> expression, unsigned int &max_stack_size) const
+{
+   translate_expression(torricelly_subroutine, variables_mapping, expression->operand(), max_stack_size);
+   auto instruction_code = torricelly_inst_code::NOOP;
+
+   switch (expression->op())
+   {
+   case gasp::blaise::blaise_token_type::LOGICAL_NOT:
+      instruction_code = torricelly_inst_code::NOT;
+      break;
+   case gasp::blaise::blaise_token_type::MINUS:
+   {
+      auto torricelly_type = translate_type(expression->result_type());
+      switch (torricelly_type->type_type())
+      {
+      case torricelly_type_type::SYSTEM:
+      {
+         auto memory_location_system_type = torricelly_type_utility::as_system_type(torricelly_type);
+         switch (memory_location_system_type->system_type())
+         {
+         case torricelly::torricelly_system_type_type::DOUBLE:
+            instruction_code = torricelly_inst_code::NEGATE_DOUBLE;
+            break;
+         case torricelly::torricelly_system_type_type::FLOAT:
+            instruction_code = torricelly_inst_code::NEGATE_FLOAT;
+            break;
+         case torricelly::torricelly_system_type_type::INTEGER:
+            instruction_code = torricelly_inst_code::NEGATE_INTEGER;
+            break;
+         default:
+            throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly system type for MINUS blaise unary operator.");
+         }
+      }
+      break;
+      case torricelly_type_type::STRUCTURED:
+         throw blaise_to_torricelly_internal_error("Unsupported structured type for MINUS blaise unary operator.");
+         break;
+      default:
+         throw blaise_to_torricelly_internal_error("Unexpected or unknown memory location type for MINUS blaise unary operator.");
+      }
+   }
+   break;
+   default:
+      throw blaise_to_torricelly_error(expression->line(), expression->column(), "Unknown or unexpected unary operator.");
+   }
+
+   auto instruction = make_torricelly_instruction(instruction_code);
+   torricelly_subroutine->append_instruction(instruction);
 }
