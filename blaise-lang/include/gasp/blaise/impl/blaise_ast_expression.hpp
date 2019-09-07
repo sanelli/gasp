@@ -91,6 +91,8 @@ public:
    typename std::vector<std::shared_ptr<blaise_ast_expression>>::const_iterator begin_actual_parameters() const;
    typename std::vector<std::shared_ptr<blaise_ast_expression>>::const_iterator end_actual_parameters() const;
    std::shared_ptr<blaise_ast_subroutine> subroutine() const;
+   unsigned int count_parameters() const;
+   std::shared_ptr<blaise_ast_expression> get_parameter(unsigned int index) const;
    friend sanelli::memory;
 };
 std::shared_ptr<blaise_ast_expression_subroutine_call> make_blaise_ast_expression_subroutine_call(

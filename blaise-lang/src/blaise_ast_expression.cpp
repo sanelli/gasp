@@ -93,6 +93,9 @@ blaise_ast_expression_subroutine_call::blaise_ast_expression_subroutine_call(
 typename vector<shared_ptr<blaise_ast_expression>>::const_iterator blaise_ast_expression_subroutine_call::begin_actual_parameters() const { return _expressions.cbegin(); }
 typename vector<shared_ptr<blaise_ast_expression>>::const_iterator blaise_ast_expression_subroutine_call::end_actual_parameters() const { return _expressions.cend(); };
 std::shared_ptr<blaise_ast_subroutine> blaise_ast_expression_subroutine_call::subroutine() const { return _subroutine; }
+unsigned int  blaise_ast_expression_subroutine_call::count_parameters() const { return _expressions.size(); }
+std::shared_ptr<blaise_ast_expression>  blaise_ast_expression_subroutine_call::get_parameter(unsigned int index) const{ return _expressions.at(index); }
+
 shared_ptr<blaise_ast_expression_subroutine_call> gasp::blaise::ast::make_blaise_ast_expression_subroutine_call(
    token<blaise_token_type> subroutine_name_token,
    shared_ptr<blaise_ast_subroutine> subroutine,
