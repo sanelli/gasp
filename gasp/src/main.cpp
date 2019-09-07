@@ -190,14 +190,16 @@ int main(int argc, char *argv[])
    try
    {
       tokenizer.tokenize(program, context);
+      cout << "-- TOKENS -------------------------------------------------------" << endl;
       cout << context << endl;
       parser.parse(context);
       gasp::blaise_to_torricelly::translator translator(context.module());
       translator.execute(modules);
 
+      cout << "-- TORRICELLY -------------------------------------------------------" << endl;
       for(auto module : modules)
          torricelly_output << module;
-      
+
       return EXIT_SUCCESS;
    }
    catch (sanelli::tokenizer_error &error)
