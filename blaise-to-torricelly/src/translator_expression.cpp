@@ -35,7 +35,11 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    }
    break;
    case ast::blaise_ast_expression_type::CAST:
-      break;
+   {
+      auto cast_expression = ast::blaise_ast_expression_utility::as_cast(expression);
+      translate_cast_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, cast_expression, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_expression_type::FUNCTION_CALL:
    {
       auto subroutine_call_expression = ast::blaise_ast_expression_utility::as_subroutine_call(expression);
@@ -472,11 +476,11 @@ void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_
    max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
 }
 
-void blaise_to_torricelly::translator::translate_subroutine_call_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, 
-   const std::map<std::string, unsigned int> &module_variables_mapping, 
-   std::map<std::string, unsigned int> &variables_mapping, 
-   std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_subroutine_call> expression, 
-   unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_subroutine_call_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                                            const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                                            std::map<std::string, unsigned int> &variables_mapping,
+                                                                            std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_subroutine_call> expression,
+                                                                            unsigned int &max_stack_size) const
 {
    bool isNative = expression->subroutine()->is(blaise::ast::blaise_ast_subroutine_flags::NATIVE);
    if (isNative)
@@ -489,7 +493,8 @@ void blaise_to_torricelly::translator::translate_subroutine_call_expression(std:
    max_stack_size = std::max(max_stack_size, subroutine->count_parameters());
 
    // Push parameters on the stack form right to left
-   for(auto index = expression->count_parameters()-1; index >=0; --index) { 
+   for (auto index = expression->count_parameters() - 1; index >= 0; --index)
+   {
       auto parameter_expression = expression->get_parameter(index);
       auto parameter_max_size = 0U;
       translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, parameter_expression, parameter_max_size);
@@ -499,11 +504,92 @@ void blaise_to_torricelly::translator::translate_subroutine_call_expression(std:
    // Find the subroutine to call index
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
    auto subroutine_name_it = module_variables_mapping.find(subroutine_mangled_name);
-   if(subroutine_name_it == module_variables_mapping.end())
+   if (subroutine_name_it == module_variables_mapping.end())
       throw blaise_to_torricelly_internal_error("Cannot find the subroutine in the variables definition.");
    auto subroutine_name_index = subroutine_name_it->second;
 
    // INVOKE instruction
    auto invoke_instruction = make_torricelly_instruction(torricelly_inst_code::INVOKE, subroutine_name_index, torricelly_inst_ref_type::MODULE);
    torricelly_subroutine->append_instruction(invoke_instruction);
+}
+
+void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                                 std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_cast> expression, unsigned int &max_stack_size) const
+{
+
+   auto operand_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, expression->operand(), operand_max_stack_size);
+
+   max_stack_size = std::max(1U, operand_max_stack_size);
+
+   auto source_type = translate_type(expression->operand()->result_type());
+   auto target_type = translate_type(expression->result_type());
+
+   if (source_type->type_type() != torricelly_type_type::SYSTEM)
+      throw blaise_to_torricelly_internal_error("Cannot create a cast expression where the source type is not a system type.");
+   if (target_type->type_type() != torricelly_type_type::SYSTEM)
+      throw blaise_to_torricelly_internal_error("Cannot create a cast expression where the target type is not a system type.");
+
+   auto source_system_type = torricelly_type_utility::as_system_type(source_type);
+   auto target_system_type = torricelly_type_utility::as_system_type(target_type);
+
+   auto instruction_code = torricelly_inst_code::NOOP;
+   switch (source_system_type->system_type())
+   {
+   case torricelly::torricelly_system_type_type::INTEGER:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
+         instruction_code = torricelly_inst_code::CAST_INT_BOOLEAN;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::CHAR)
+         instruction_code = torricelly_inst_code::CAST_INT_CHAR;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
+         instruction_code = torricelly_inst_code::CAST_INT_FLOAT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
+         instruction_code = torricelly_inst_code::CAST_INT_DOUBLE;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from FLOAT type.");
+   }
+   break;
+   case torricelly::torricelly_system_type_type::BOOLEAN:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_BOOLEAN_INT;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from BOOLEAN type.");
+   }
+   break;
+   case torricelly::torricelly_system_type_type::CHAR:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_CHAR_INT;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from CHAR type.");
+   }
+   break;
+   case torricelly::torricelly_system_type_type::FLOAT:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_FLOAT_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
+         instruction_code = torricelly_inst_code::CAST_FLOAT_DOUBLE;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from FLOAT type.");
+   }
+   break;
+   case torricelly::torricelly_system_type_type::DOUBLE:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_DOUBLE_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
+         instruction_code = torricelly_inst_code::CAST_DOUBLE_FLOAT;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from FLOAT type.");
+   }
+   break;
+   default:
+      throw blaise_to_torricelly_internal_error("Source system type cannot be casted to any other type.");
+   }
+
+   auto cast_instruction = make_torricelly_instruction(instruction_code);
+   torricelly_subroutine->append_instruction(cast_instruction);
 }
