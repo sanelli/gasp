@@ -90,6 +90,30 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       max_stack_size = std::max(max_stack_size, instruction_max_stack_size);
    }
 
+   // If it is not a procedure (i.e. return type is not void) we need to push on the stack
+   // a variable whose name is the plain name of subroutine itself
+   if (!subroutine->return_type()->equals(blaise::ast::make_plain_type(blaise::ast::blaise_ast_system_type::VOID)))
+   {
+      auto return_variable_it = variables_mapping.find(subroutine->name());
+      if(return_variable_it == variables_mapping.end())
+         throw blaise_to_torricelly_internal_error("Subroutine with a non VOID return type does not contain a variable names as the subroutine");
+      auto return_variable_index = return_variable_it->second;
+
+      // LOAD_XXX [subroutine_name]
+      auto load_instruction_code = compute_instruction_code(subroutine->return_type(), torricelly_inst_code::LOAD_INTEGER,
+         torricelly_inst_code::LOAD_FLOAT,torricelly_inst_code::LOAD_DOUBLE,torricelly_inst_code::LOAD_CHAR,
+         torricelly_inst_code::LOAD_BOOLEAN);
+      auto load_instruction = make_torricelly_instruction(load_instruction_code, return_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(load_instruction);
+
+      // Maximum stack size must be at least one for subroutines returning values
+      max_stack_size = std::max(1U, max_stack_size);
+   }
+
+   // Add the final RET instruction
+   auto ret_instruction = make_torricelly_instruction(torricelly_inst_code::RET);
+   torricelly_subroutine->append_instruction(ret_instruction);
+
    return torricelly_subroutine;
 }
 

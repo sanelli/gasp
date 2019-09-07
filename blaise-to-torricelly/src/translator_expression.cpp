@@ -35,6 +35,10 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    case ast::blaise_ast_expression_type::CAST:
       break;
    case ast::blaise_ast_expression_type::FUNCTION_CALL:
+   {
+      auto subroutine_call_expression = ast::blaise_ast_expression_utility::as_subroutine_call(expression);
+      translate_subroutine_call_expression(torricelly_subroutine, variables_mapping, subroutine_call_expression, max_stack_size);
+   }
       break;
    case ast::blaise_ast_expression_type::IDENTIFIER:
    {
@@ -464,4 +468,10 @@ void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_
    torricelly_subroutine->append_instruction(on_done_noop);
 
    max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
+}
+
+
+void blaise_to_torricelly::translator::translate_subroutine_call_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_subroutine_call> expression, unsigned int &max_stack_size) const{
+
+
 }
