@@ -60,6 +60,13 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       auto initial_value = get_type_initial_value(parameter->type());
       auto torricelly_index = torricelly_subroutine->add_variable(torricelly_type, initial_value, true);
       variables_mapping.insert(std::make_pair(parameter->name(), torricelly_index));
+
+      auto store_instruction_code = compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
+         torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE, 
+         torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN
+         );
+      auto store_instruction = make_torricelly_instruction(store_instruction_code, torricelly_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(store_instruction);
    }
 
    for (auto index = 0UL; index < subroutine->count_constants(); ++index)
@@ -81,7 +88,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    }
 
    auto statements_count = subroutine->get_statements_count();
-   unsigned int max_stack_size = 1;
+    unsigned int max_stack_size = subroutine->count_parameters();
    for (auto index = 0UL; index < statements_count; ++index)
    {
       auto statement = subroutine->get_statement(index);
