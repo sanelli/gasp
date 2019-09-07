@@ -233,6 +233,8 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
          return "f";
       case blaise::ast::blaise_ast_system_type::INTEGER:
          return "i";
+      case blaise::ast::blaise_ast_system_type::DOUBLE:
+         return "d";
       default:
          throw blaise_to_torricelly_internal_error("Mangling not implemeneted for system type");
       }
