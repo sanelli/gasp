@@ -178,8 +178,26 @@ int main(int argc, char *argv[])
       begin
          duplicate := 2 * i;
       end;
+      function abs(i: integer) : integer
+      begin
+         abs := if i < 0 then -i else i;
+      end;
+      function abs(f: float) : float
+      begin
+         abs := if f < 0 then -f else f;
+      end;
+      function abs(d: double) : double
+      begin
+         abs := if d < 0 then -d else d;
+      end;
+      function average(a: float, b: float, c: floamt) : float
+      begin
+         average := (a + b + c) / 3;
+      end;
       var
          i,j,k: integer;
+         d: double;
+         f1,f2: float;
       begin
          i := 0;
          j := 1;
