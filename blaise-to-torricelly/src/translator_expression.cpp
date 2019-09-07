@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <map>
 #include <string>
+#include <functional>
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
@@ -77,7 +78,11 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    }
    break;
    case ast::blaise_ast_expression_type::TERNARY:
-      break;
+   {
+      auto ternary_expression = ast::blaise_ast_expression_utility::as_ternary(expression);
+      translate_ternary_expression(torricelly_subroutine, variables_mapping, ternary_expression, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_expression_type::UNARY:
    {
       auto unary_expression = ast::blaise_ast_expression_utility::as_unary(expression);
@@ -411,4 +416,52 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
    default:
       throw blaise_to_torricelly_error(expression->line(), expression->column(), "Unknown or unexpected binary operator.");
    }
+}
+
+void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_ternary> expression, unsigned int &max_stack_size) const
+{
+   //          <condition>
+   //          LOAD_BOOLEAN [true]
+   //          CMP_BOOLEAN
+   //          JUMP_EQ_ZERO [on_true]
+   //          <else_instructions>
+   //          JUMP [done]
+   // on_true: NOOP
+   //          <then_instructions>
+   // done:    NOOP
+
+   auto condition_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, variables_mapping, expression->condition(), condition_max_stack_size);
+
+   auto on_true_label = torricelly_subroutine->next_label();
+   auto on_done_label = torricelly_subroutine->next_label();
+
+   auto true_value_index = torricelly_subroutine->add_variable(make_torricelly_system_type(torricelly_system_type_type::BOOLEAN), torricelly_value::make(true));
+   auto load_true_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_true_instruction);
+
+   auto comparison_instruction = make_torricelly_instruction(torricelly_inst_code::CMP_BOOLEAN);
+   torricelly_subroutine->append_instruction(comparison_instruction);
+
+   auto jump_eq_zero_instrution = make_torricelly_instruction(torricelly_inst_code::JUMP_EQ_ZERO, on_true_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
+
+   auto else_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, variables_mapping, expression->else_expression(), condition_max_stack_size);
+
+   auto jump_to_done = make_torricelly_instruction(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_to_done);
+
+   auto on_true_noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   on_true_noop->set_label(on_true_label);
+   torricelly_subroutine->append_instruction(on_true_noop);
+
+   auto then_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, variables_mapping, expression->then_expression(), then_max_stack_size);
+
+   auto on_done_noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   on_done_noop->set_label(on_done_label);
+   torricelly_subroutine->append_instruction(on_done_noop);
+
+   max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
 }
