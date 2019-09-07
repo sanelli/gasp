@@ -4,12 +4,7 @@ namespace gasp::torricelly {
 
 enum class torricelly_inst_code : unsigned short {
    NOOP = 0x0001,
-
-   PUSH_INTEGER,
-   PUSH_BOOLEAN,
-   PUSH_CHAR,
-   PUSH_FLOAT,
-   PUSH_DOUBLE,
+   DUP,
 
    POP_INTEGER,
    POP_BOOLEAN,
@@ -63,6 +58,7 @@ enum class torricelly_inst_code : unsigned short {
    JUMP_LTE_ZERO,
    JUMP_GT_ZERO,
    JUMP_GTE_ZERO,
+   JUMP_NOT_ZERO,
 
    CAST_INT_BOOLEAN,
    CAST_INT_CHAR,
