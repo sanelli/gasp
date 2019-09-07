@@ -8,11 +8,7 @@ const char *torricelly::to_string(torricelly_inst_code code)
    switch (code)
    {  
    case torricelly_inst_code::NOOP: return "noop";
-   case torricelly_inst_code::PUSH_INTEGER: return "ipush";
-   case torricelly_inst_code::PUSH_BOOLEAN: return "bpush";
-   case torricelly_inst_code::PUSH_CHAR: return "cpush";
-   case torricelly_inst_code::PUSH_FLOAT: return "fpush";
-   case torricelly_inst_code::PUSH_DOUBLE: return "dpush";
+   case torricelly_inst_code::DUP: return "dup";
    case torricelly_inst_code::POP_INTEGER: return "ipop";
    case torricelly_inst_code::POP_BOOLEAN: return "bpop";
    case torricelly_inst_code::POP_CHAR: return "cpop";
@@ -55,6 +51,7 @@ const char *torricelly::to_string(torricelly_inst_code code)
    case torricelly_inst_code::JUMP_LTE_ZERO: return "jlez";
    case torricelly_inst_code::JUMP_GT_ZERO: return "jgz";
    case torricelly_inst_code::JUMP_GTE_ZERO: return "jgez";
+   case torricelly_inst_code::JUMP_NOT_ZERO: return "jnz";
    case torricelly_inst_code::CAST_INT_BOOLEAN: return "itob";
    case torricelly_inst_code::CAST_INT_CHAR: return "itoc";
    case torricelly_inst_code::CAST_INT_FLOAT: return "itof";
@@ -83,12 +80,7 @@ bool torricelly_inst_code_helper::accept_parameter(torricelly_inst_code code)
 bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
 {
    switch (code)
-   {  
-   case torricelly_inst_code::PUSH_INTEGER: 
-   case torricelly_inst_code::PUSH_BOOLEAN:
-   case torricelly_inst_code::PUSH_CHAR:
-   case torricelly_inst_code::PUSH_FLOAT:
-   case torricelly_inst_code::PUSH_DOUBLE:
+   { 
    case torricelly_inst_code::LOAD_INTEGER:
    case torricelly_inst_code::LOAD_BOOLEAN:
    case torricelly_inst_code::LOAD_CHAR:
