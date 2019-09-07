@@ -12,6 +12,7 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
+#include <gasp/torricelly/torricelly_io.hpp>
 
 using namespace std;
 
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
    blaise_parser parser;
    blaise_parser_context context;
    std::vector<std::shared_ptr<torricelly_module>> modules;
+   torricelly_text_output torricelly_output(std::cout);
 
    stringstream program;
 
@@ -192,6 +194,9 @@ int main(int argc, char *argv[])
       parser.parse(context);
       gasp::blaise_to_torricelly::translator translator(context.module());
       translator.execute(modules);
+
+      for(auto module : modules)
+         torricelly_output << module;
       
       return EXIT_SUCCESS;
    }
