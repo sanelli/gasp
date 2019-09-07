@@ -108,6 +108,7 @@ bool torricelly_inst_code_helper::accept_label(torricelly_inst_code code)
    case torricelly_inst_code::JUMP_LTE_ZERO:
    case torricelly_inst_code::JUMP_GT_ZERO:
    case torricelly_inst_code::JUMP_GTE_ZERO:
+   case torricelly_inst_code::JUMP_NOT_ZERO:
       return true;
    default: 
       return false;
