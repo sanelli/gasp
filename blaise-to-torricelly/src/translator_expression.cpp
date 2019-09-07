@@ -26,7 +26,11 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    switch (expression->expression_type())
    {
    case ast::blaise_ast_expression_type::BINARY:
-      break;
+   {
+      auto binary_expression = ast::blaise_ast_expression_utility::as_binary(expression);
+      translate_binary_expression(torricelly_subroutine, variables_mapping, binary_expression, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_expression_type::CAST:
       break;
    case ast::blaise_ast_expression_type::FUNCTION_CALL:
@@ -233,41 +237,111 @@ void blaise_to_torricelly::translator::translate_unary_expression(std::shared_pt
       instruction_code = torricelly_inst_code::NOT;
       break;
    case gasp::blaise::blaise_token_type::MINUS:
-   {
-      auto torricelly_type = translate_type(expression->result_type());
-      switch (torricelly_type->type_type())
-      {
-      case torricelly_type_type::SYSTEM:
-      {
-         auto memory_location_system_type = torricelly_type_utility::as_system_type(torricelly_type);
-         switch (memory_location_system_type->system_type())
-         {
-         case torricelly::torricelly_system_type_type::DOUBLE:
-            instruction_code = torricelly_inst_code::NEGATE_DOUBLE;
-            break;
-         case torricelly::torricelly_system_type_type::FLOAT:
-            instruction_code = torricelly_inst_code::NEGATE_FLOAT;
-            break;
-         case torricelly::torricelly_system_type_type::INTEGER:
-            instruction_code = torricelly_inst_code::NEGATE_INTEGER;
-            break;
-         default:
-            throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly system type for MINUS blaise unary operator.");
-         }
-      }
+      instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::NEGATE_INTEGER, torricelly_inst_code::NEGATE_FLOAT, torricelly_inst_code::NEGATE_DOUBLE);
       break;
-      case torricelly_type_type::STRUCTURED:
-         throw blaise_to_torricelly_internal_error("Unsupported structured type for MINUS blaise unary operator.");
-         break;
+   default:
+      throw blaise_to_torricelly_internal_error("Unknown or unexpected unary operator");
+   }
+   auto instruction = make_torricelly_instruction(instruction_code);
+   torricelly_subroutine->append_instruction(instruction);
+}
+
+torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(std::shared_ptr<gasp::blaise::ast::blaise_ast_type> blaise_type, torricelly_inst_code integer_op, torricelly_inst_code float_op, torricelly_inst_code double_op) const
+{
+   auto torricelly_type = translate_type(blaise_type);
+   switch (torricelly_type->type_type())
+   {
+   case torricelly_type_type::SYSTEM:
+   {
+      auto memory_location_system_type = torricelly_type_utility::as_system_type(torricelly_type);
+      switch (memory_location_system_type->system_type())
+      {
+      case torricelly::torricelly_system_type_type::DOUBLE:
+         return double_op;
+      case torricelly::torricelly_system_type_type::FLOAT:
+         return float_op;
+      case torricelly::torricelly_system_type_type::INTEGER:
+         return integer_op;
       default:
-         throw blaise_to_torricelly_internal_error("Unexpected or unknown memory location type for MINUS blaise unary operator.");
+         throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly system type for PLUS binary operator.");
       }
+   }
+   case torricelly_type_type::STRUCTURED:
+      throw blaise_to_torricelly_internal_error("Unsupported structured type.");
+      break;
+   default:
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown type.");
+   }
+}
+
+void blaise_to_torricelly::translator::translate_binary_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_binary> expression, unsigned int &max_stack_size) const
+{
+   auto left_expression_max_stack_size = 0U;
+   auto right_expression_max_stack_size = 0U;
+
+   translate_expression(torricelly_subroutine, variables_mapping, expression->left(), left_expression_max_stack_size);
+   translate_expression(torricelly_subroutine, variables_mapping, expression->right(), right_expression_max_stack_size);
+   switch (expression->op())
+   {
+   case gasp::blaise::blaise_token_type::LOGICAL_AND:
+   {
+      auto instruction = make_torricelly_instruction(torricelly_inst_code::AND);
+      torricelly_subroutine->append_instruction(instruction);
+   }
+   break;
+   case gasp::blaise::blaise_token_type::LOGICAL_OR:
+   {
+      auto instruction = make_torricelly_instruction(torricelly_inst_code::OR);
+      torricelly_subroutine->append_instruction(instruction);
+   }
+   break;
+   case gasp::blaise::blaise_token_type::LESS_THAN:
+      break;
+   case gasp::blaise::blaise_token_type::LESS_THAN_OR_EQUAL_TO:
+      break;
+   case gasp::blaise::blaise_token_type::EQUAL_TO:
+      break;
+   case gasp::blaise::blaise_token_type::NOT_EQUAL_TO:
+      break;
+   case gasp::blaise::blaise_token_type::GREAT_THAN_OR_EQUAL_TO:
+      break;
+   case gasp::blaise::blaise_token_type::GREAT_THAN:
+      break;
+   case gasp::blaise::blaise_token_type::PLUS:
+   {
+      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::ADD_INTEGER, torricelly_inst_code::ADD_FLOAT, torricelly_inst_code::ADD_DOUBLE);
+      auto instruction = make_torricelly_instruction(instruction_code);
+      torricelly_subroutine->append_instruction(instruction);
+   }
+   break;
+   case gasp::blaise::blaise_token_type::MINUS:
+   {
+      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::SUBTRACT_INTEGER, torricelly_inst_code::SUBTRACT_FLOAT, torricelly_inst_code::SUBTRACT_DOUBLE);
+      auto instruction = make_torricelly_instruction(instruction_code);
+      torricelly_subroutine->append_instruction(instruction);
+   }
+   break;
+   case gasp::blaise::blaise_token_type::MULTIPLY:
+   {
+      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::MULTIPLY_INTEGER, torricelly_inst_code::MULTIPLY_FLOAT, torricelly_inst_code::MULTIPLY_DOUBLE);
+      auto instruction = make_torricelly_instruction(instruction_code);
+      torricelly_subroutine->append_instruction(instruction);
+   }
+   break;
+   case gasp::blaise::blaise_token_type::DIVIDE:
+   {
+      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::DIVIDE_INTEGER, torricelly_inst_code::DIVIDE_FLOAT, torricelly_inst_code::DIVIDE_DOUBLE);
+      auto instruction = make_torricelly_instruction(instruction_code);
+      torricelly_subroutine->append_instruction(instruction);
+   }
+   break;
+   case gasp::blaise::blaise_token_type::REMAINDER:
+   {
+      auto instruction = make_torricelly_instruction(torricelly_inst_code::REMINDER_INTEGER);
+      torricelly_subroutine->append_instruction(instruction);
    }
    break;
    default:
-      throw blaise_to_torricelly_error(expression->line(), expression->column(), "Unknown or unexpected unary operator.");
+      throw blaise_to_torricelly_error(expression->line(), expression->column(), "Unknown or unexpected binary operator.");
    }
-
-   auto instruction = make_torricelly_instruction(instruction_code);
-   torricelly_subroutine->append_instruction(instruction);
 }
