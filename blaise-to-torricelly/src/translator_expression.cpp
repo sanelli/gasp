@@ -171,56 +171,15 @@ void blaise_to_torricelly::translator::translate_memory_access_expression(std::s
 void blaise_to_torricelly::translator::translate_variable_access_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_memory_access> expression, unsigned int &max_stack_size) const
 {
    auto memory_location = expression->memory_location();
-   auto memory_location_type = translate_type(memory_location->type());
 
    auto memory_location_index_it = variables_mapping.find(memory_location->name());
    if (memory_location_index_it == variables_mapping.end())
       throw blaise_to_torricelly_error(expression->line(), expression->column(), sanelli::make_string("Cannot find variable '", memory_location->name(), "'."));
 
    auto memory_location_index = memory_location_index_it->second;
-   auto instruction_code = torricelly_inst_code::NOOP;
-   switch (memory_location_type->type_type())
-   {
-   case torricelly_type_type::SYSTEM:
-   {
-      auto memory_location_system_type = torricelly_type_utility::as_system_type(memory_location_type);
-      switch (memory_location_system_type->system_type())
-      {
-      case torricelly::torricelly_system_type_type::BOOLEAN:
-         instruction_code = torricelly_inst_code::LOAD_BOOLEAN;
-         break;
-      case torricelly::torricelly_system_type_type::CHAR:
-         instruction_code = torricelly_inst_code::LOAD_CHAR;
-         break;
-      case torricelly::torricelly_system_type_type::DOUBLE:
-         instruction_code = torricelly_inst_code::LOAD_DOUBLE;
-         break;
-      case torricelly::torricelly_system_type_type::FLOAT:
-         instruction_code = torricelly_inst_code::LOAD_FLOAT;
-         break;
-      case torricelly::torricelly_system_type_type::INTEGER:
-         instruction_code = torricelly_inst_code::LOAD_INTEGER;
-         break;
-      case torricelly::torricelly_system_type_type::STRING_LITERAL:
-         throw blaise_to_torricelly_internal_error("STRING_LITERAL torricelly system type when translating memory access expression");
-         break;
-      case torricelly::torricelly_system_type_type::VOID:
-         throw blaise_to_torricelly_internal_error("VOID torricelly system type when translating memory access expression");
-         break;
-      case torricelly::torricelly_system_type_type::UNDEFINED:
-         throw blaise_to_torricelly_internal_error("UNDEFINED torricelly system type when translating memory access expression");
-         break;
-      default:
-         throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly system type when translating memory access expression");
-      }
-   }
-   break;
-   case torricelly_type_type::STRUCTURED:
-      throw blaise_to_torricelly_internal_error("Unsupported structured type");
-      break;
-   default:
-      throw blaise_to_torricelly_internal_error("Unexpected or unknown memory location type");
-   }
+   auto instruction_code = compute_instruction_code(memory_location->type(), torricelly_inst_code::LOAD_INTEGER,
+                                                    torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
+                                                    torricelly_inst_code::LOAD_BOOLEAN);
    auto instruction = make_torricelly_instruction(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
    max_stack_size = 1;
@@ -262,8 +221,18 @@ torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(
          return float_op;
       case torricelly::torricelly_system_type_type::INTEGER:
          return integer_op;
+      case torricelly::torricelly_system_type_type::BOOLEAN:
+         throw blaise_to_torricelly_internal_error("BOOLEAN torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::CHAR:
+         throw blaise_to_torricelly_internal_error("CHAR torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::STRING_LITERAL:
+         throw blaise_to_torricelly_internal_error("STRING_LITERAL torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::VOID:
+         throw blaise_to_torricelly_internal_error("VOID torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::UNDEFINED:
+         throw blaise_to_torricelly_internal_error("UNDEFINED torricelly type unsupported.");
       default:
-         throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly system type for PLUS binary operator.");
+         throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly");
       }
    }
    case torricelly_type_type::STRUCTURED:
@@ -274,6 +243,66 @@ torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(
    }
 }
 
+torricelly::torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(std::shared_ptr<gasp::blaise::ast::blaise_ast_type> blaise_type, torricelly::torricelly_inst_code integer_op, torricelly::torricelly_inst_code float_op, torricelly::torricelly_inst_code double_op,
+                                                                                            torricelly::torricelly_inst_code char_op, torricelly::torricelly_inst_code boolean_op) const
+{
+   auto torricelly_type = translate_type(blaise_type);
+   switch (torricelly_type->type_type())
+   {
+   case torricelly_type_type::SYSTEM:
+   {
+      auto memory_location_system_type = torricelly_type_utility::as_system_type(torricelly_type);
+      switch (memory_location_system_type->system_type())
+      {
+      case torricelly::torricelly_system_type_type::DOUBLE:
+         return double_op;
+      case torricelly::torricelly_system_type_type::FLOAT:
+         return float_op;
+      case torricelly::torricelly_system_type_type::INTEGER:
+         return integer_op;
+      case torricelly::torricelly_system_type_type::BOOLEAN:
+         return boolean_op;
+      case torricelly::torricelly_system_type_type::CHAR:
+         return char_op;
+      case torricelly::torricelly_system_type_type::STRING_LITERAL:
+         throw blaise_to_torricelly_internal_error("STRING_LITERAL torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::VOID:
+         throw blaise_to_torricelly_internal_error("VOID torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::UNDEFINED:
+         throw blaise_to_torricelly_internal_error("UNDEFINED torricelly type unsupported.");
+      default:
+         throw blaise_to_torricelly_internal_error("Unexpected or unknown torricelly");
+      }
+   }
+   case torricelly_type_type::STRUCTURED:
+      throw blaise_to_torricelly_internal_error("Unsupported structured type.");
+      break;
+   default:
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown type.");
+   }
+}
+
+torricelly_inst_code blaise_to_torricelly::translator::get_jump_for_comparison_token(gasp::blaise::blaise_token_type token_type) const
+{
+   switch (token_type)
+   {
+   case gasp::blaise::blaise_token_type::LESS_THAN:
+      return torricelly_inst_code::JUMP_LT_ZERO;
+   case gasp::blaise::blaise_token_type::EQUAL_TO:
+      return torricelly_inst_code::JUMP_EQ_ZERO;
+   case gasp::blaise::blaise_token_type::GREAT_THAN:
+      return torricelly_inst_code::JUMP_GT_ZERO;
+   case gasp::blaise::blaise_token_type::GREAT_THAN_OR_EQUAL_TO:
+      return torricelly_inst_code::JUMP_GTE_ZERO;
+   case gasp::blaise::blaise_token_type::LESS_THAN_OR_EQUAL_TO:
+      return torricelly_inst_code::JUMP_LTE_ZERO;
+   case gasp::blaise::blaise_token_type::NOT_EQUAL_TO:
+      return torricelly_inst_code::JUMP_NOT_ZERO;
+   default:
+      throw blaise_to_torricelly_internal_error("Cannot get blaise token type integer comparin value: unsupported token type.");
+   }
+}
+
 void blaise_to_torricelly::translator::translate_binary_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_binary> expression, unsigned int &max_stack_size) const
 {
    auto left_expression_max_stack_size = 0U;
@@ -281,7 +310,11 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
 
    translate_expression(torricelly_subroutine, variables_mapping, expression->left(), left_expression_max_stack_size);
    translate_expression(torricelly_subroutine, variables_mapping, expression->right(), right_expression_max_stack_size);
-   switch (expression->op())
+
+   max_stack_size = 1 + std::max(left_expression_max_stack_size, right_expression_max_stack_size);
+
+   auto token_type = expression->op();
+   switch (token_type)
    {
    case gasp::blaise::blaise_token_type::LOGICAL_AND:
    {
@@ -296,17 +329,51 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
    }
    break;
    case gasp::blaise::blaise_token_type::LESS_THAN:
-      break;
-   case gasp::blaise::blaise_token_type::LESS_THAN_OR_EQUAL_TO:
-      break;
    case gasp::blaise::blaise_token_type::EQUAL_TO:
-      break;
-   case gasp::blaise::blaise_token_type::NOT_EQUAL_TO:
-      break;
-   case gasp::blaise::blaise_token_type::GREAT_THAN_OR_EQUAL_TO:
-      break;
    case gasp::blaise::blaise_token_type::GREAT_THAN:
-      break;
+   case gasp::blaise::blaise_token_type::GREAT_THAN_OR_EQUAL_TO:
+   case gasp::blaise::blaise_token_type::LESS_THAN_OR_EQUAL_TO:
+   case gasp::blaise::blaise_token_type::NOT_EQUAL_TO:
+   {
+      //          CMP_XXX
+      //          JUMP_XXX_ZERO [on_true]
+      //          PUSH_BOOLEAN [false]
+      //          JUMP [done]
+      // on_true: PUSH_BOOLEAN [true]
+      // done:    NOOP
+
+      auto comparison_instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::CMP_INTEGER,
+                                                                  torricelly_inst_code::CMP_FLOAT, torricelly_inst_code::CMP_DOUBLE, torricelly_inst_code::CMP_CHAR,
+                                                                  torricelly_inst_code::CMP_BOOLEAN);
+      auto on_true_label = torricelly_subroutine->next_label();
+      auto on_done_label = torricelly_subroutine->next_label();
+
+      auto true_value_index = torricelly_subroutine->add_variable(make_torricelly_system_type(torricelly_system_type_type::BOOLEAN), torricelly_value::make(true));
+      auto false_value_index = torricelly_subroutine->add_variable(make_torricelly_system_type(torricelly_system_type_type::BOOLEAN), torricelly_value::make(false));
+
+      auto comparison_instruction = make_torricelly_instruction(comparison_instruction_code);
+      torricelly_subroutine->append_instruction(comparison_instruction);
+
+      auto jump_instruction_code = get_jump_for_comparison_token(token_type);
+      auto jump_instruction = make_torricelly_instruction(jump_instruction_code, on_true_label, torricelly_inst_ref_type::LABEL);
+      torricelly_subroutine->append_instruction(jump_instruction);
+
+      auto load_false_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, false_value_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(load_false_instruction);
+
+      auto jump_to_done_instruction = make_torricelly_instruction(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
+      torricelly_subroutine->append_instruction(jump_to_done_instruction);
+
+      auto load_true_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
+      load_true_instruction->set_label(on_true_label);
+      torricelly_subroutine->append_instruction(load_true_instruction);
+
+      auto noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
+      noop->set_label(on_done_label);
+      torricelly_subroutine->append_instruction(noop);
+   }
+
+   break;
    case gasp::blaise::blaise_token_type::PLUS:
    {
       auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::ADD_INTEGER, torricelly_inst_code::ADD_FLOAT, torricelly_inst_code::ADD_DOUBLE);
