@@ -381,7 +381,7 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
       // on_true: PUSH_BOOLEAN [true]
       // done:    NOOP
 
-      auto comparison_instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::CMP_INTEGER,
+      auto comparison_instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::CMP_INTEGER,
                                                                   torricelly_inst_code::CMP_FLOAT, torricelly_inst_code::CMP_DOUBLE, torricelly_inst_code::CMP_CHAR,
                                                                   torricelly_inst_code::CMP_BOOLEAN);
       auto on_true_label = torricelly_subroutine->next_label();
@@ -415,28 +415,28 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
    break;
    case gasp::blaise::blaise_token_type::PLUS:
    {
-      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::ADD_INTEGER, torricelly_inst_code::ADD_FLOAT, torricelly_inst_code::ADD_DOUBLE);
+      auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::ADD_INTEGER, torricelly_inst_code::ADD_FLOAT, torricelly_inst_code::ADD_DOUBLE);
       auto instruction = make_torricelly_instruction(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::MINUS:
    {
-      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::SUBTRACT_INTEGER, torricelly_inst_code::SUBTRACT_FLOAT, torricelly_inst_code::SUBTRACT_DOUBLE);
+      auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::SUBTRACT_INTEGER, torricelly_inst_code::SUBTRACT_FLOAT, torricelly_inst_code::SUBTRACT_DOUBLE);
       auto instruction = make_torricelly_instruction(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::MULTIPLY:
    {
-      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::MULTIPLY_INTEGER, torricelly_inst_code::MULTIPLY_FLOAT, torricelly_inst_code::MULTIPLY_DOUBLE);
+      auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::MULTIPLY_INTEGER, torricelly_inst_code::MULTIPLY_FLOAT, torricelly_inst_code::MULTIPLY_DOUBLE);
       auto instruction = make_torricelly_instruction(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::DIVIDE:
    {
-      auto instruction_code = compute_instruction_code(expression->result_type(), torricelly_inst_code::DIVIDE_INTEGER, torricelly_inst_code::DIVIDE_FLOAT, torricelly_inst_code::DIVIDE_DOUBLE);
+      auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::DIVIDE_INTEGER, torricelly_inst_code::DIVIDE_FLOAT, torricelly_inst_code::DIVIDE_DOUBLE);
       auto instruction = make_torricelly_instruction(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
@@ -537,7 +537,7 @@ void blaise_to_torricelly::translator::translate_subroutine_call_expression(std:
    SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression::Getting index for subroutine with mangled name '"<< subroutine_mangled_name << "'" << std::endl);
    auto subroutine_name_it = module_variables_mapping.find(subroutine_mangled_name);
    if (subroutine_name_it == module_variables_mapping.end())
-      throw blaise_to_torricelly_internal_error("Cannot find the subroutine in the variables definition.");
+      throw blaise_to_torricelly_internal_error("Cannot find the subroutine in the modules variables definition.");
    auto subroutine_name_index = subroutine_name_it->second;
 
    // INVOKE instruction
