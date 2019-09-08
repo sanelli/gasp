@@ -13,3 +13,4 @@
 #include <gasp/blaise/impl/blaise_ast_utility.hpp>
 #include <gasp/blaise/impl/blaise_ast_io.hpp>
 #include <gasp/blaise/impl/blaise_ast_identifier.hpp>
+#include <gasp/blaise/impl/blaise_ast_identifier_utility.hpp>

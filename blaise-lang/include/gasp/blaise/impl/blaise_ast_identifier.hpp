@@ -2,10 +2,6 @@
 
 #include <memory>
 
-
-
-
-
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/blaise_ast_variable.hpp>
 #include <gasp/blaise/impl/blaise_ast_expression.hpp>

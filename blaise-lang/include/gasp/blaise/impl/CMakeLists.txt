@@ -13,4 +13,5 @@ target_sources(gasp-blaise-lang
         blaise_ast_utility.hpp
         blaise_ast_io.hpp
         blaise_ast_identifier.hpp
+        blaise_ast_identifier_utility.hpp
 )
