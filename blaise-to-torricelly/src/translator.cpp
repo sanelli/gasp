@@ -31,6 +31,8 @@ void blaise_to_torricelly::translator::execute(std::vector<std::shared_ptr<gasp:
 
 std::shared_ptr<gasp::torricelly::torricelly_module> blaise_to_torricelly::translator::translate_module(std::shared_ptr<blaise::ast::blaise_ast_module> blaise_module) const
 {
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_module" << std::endl);
+
    auto mangled_module_name = get_mangled_module_name(blaise_module->name());
    auto torricelly_module = make_torricelly_module(mangled_module_name);
    std::map<std::string, unsigned int> module_variables_mapping;
@@ -39,11 +41,14 @@ std::shared_ptr<gasp::torricelly::torricelly_module> blaise_to_torricelly::trans
       auto subroutine = blaise_module->get_subroutine(subroutine_index);
       auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
       auto variable_index = torricelly_module->add_variable(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
-                                      torricelly_value::make(subroutine_mangled_name));
+                                                            torricelly_value::make(subroutine_mangled_name));
       module_variables_mapping[subroutine_mangled_name] = variable_index;
       auto torricelly_subroutine = translate_subroutine(torricelly_module, module_variables_mapping, subroutine);
       torricelly_module->add_subroutine(torricelly_subroutine);
    }
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_module" << std::endl);
+
    return torricelly_module;
 }
 
@@ -51,6 +56,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
                                                                                                                 const std::map<std::string, unsigned int> &module_variables_mapping,
                                                                                                                 std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine) const
 {
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine" << std::endl);
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
    auto return_type = translate_type(subroutine->return_type());
    auto torricelly_subroutine = make_torricelly_subroutine(subroutine_mangled_name, return_type);
@@ -91,12 +98,13 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    }
 
    auto statements_count = subroutine->get_statements_count();
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine :: translating " << statements_count << " statements." << std::endl);
    unsigned int max_stack_size = subroutine->count_parameters();
    for (auto index = 0UL; index < statements_count; ++index)
    {
       auto statement = subroutine->get_statement(index);
       unsigned int instruction_max_stack_size = 0U;
-      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping,statement, instruction_max_stack_size);
+      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement, instruction_max_stack_size);
       max_stack_size = std::max(max_stack_size, instruction_max_stack_size);
    }
 
@@ -123,6 +131,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    // Add the final RET instruction
    auto ret_instruction = make_torricelly_instruction(torricelly_inst_code::RET);
    torricelly_subroutine->append_instruction(ret_instruction);
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine" << std::endl);
 
    return torricelly_subroutine;
 }

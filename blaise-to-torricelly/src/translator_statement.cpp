@@ -23,6 +23,9 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
                                                            std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement,
                                                            unsigned int &max_stack_size) const
 {
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_statement" << std::endl);
+
    max_stack_size = 0U;
    switch (statement->type())
    {
@@ -53,6 +56,7 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    default:
       throw blaise_to_torricelly_internal_error("Unknown statement type");
    }
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_statement" << std::endl);
 }
 
 void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
@@ -61,6 +65,8 @@ void blaise_to_torricelly::translator::translate_compound_statement(std::shared_
                                                                     std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
                                                                     unsigned int &max_stack_size) const
 {
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_compound_statement" << std::endl);
+
    max_stack_size = 0U;
    auto statement_count = statement->get_statements_count();
    for (auto index = 0; index < statement_count; ++index)
@@ -70,10 +76,14 @@ void blaise_to_torricelly::translator::translate_compound_statement(std::shared_
       translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, inner_statement, statement_max_stack_size);
       max_stack_size = std::max(max_stack_size, statement_max_stack_size);
    }
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_compound_statement" << std::endl);
 }
 
 void blaise_to_torricelly::translator::translate_assignment_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_assignment> statement, unsigned int &max_stack_size) const
 {
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_assignment_statement" << std::endl);
+
    auto expression_max_stack_size = 0U;
    translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->expression(), expression_max_stack_size);
 
@@ -107,4 +117,6 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
                                                           torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
    auto store_instruction = make_torricelly_instruction(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(store_instruction);
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_assignment_statement" << std::endl);
 }
