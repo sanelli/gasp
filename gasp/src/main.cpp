@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
       begin
          abs := if d < 0 then -d else d;
       end;
-      function average(a: float, b: float, c: floamt) : float
+      function average(a: float, b: float, c: float) : float
       begin
          average := (a + b + c) / 3;
       end;
