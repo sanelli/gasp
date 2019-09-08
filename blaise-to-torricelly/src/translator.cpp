@@ -57,7 +57,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
                                                                                                                 std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine) const
 {
 
-   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine" << std::endl);
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine '" << subroutine->name() << "'." << std::endl);
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
    auto return_type = translate_type(subroutine->return_type());
    auto torricelly_subroutine = make_torricelly_subroutine(subroutine_mangled_name, return_type);
@@ -98,7 +98,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    }
 
    auto statements_count = subroutine->get_statements_count();
-   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine :: translating " << statements_count << " statements." << std::endl);
+   SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] translate_subroutine :: translating " << statements_count << " statements." << std::endl);
    unsigned int max_stack_size = subroutine->count_parameters();
    for (auto index = 0UL; index < statements_count; ++index)
    {
