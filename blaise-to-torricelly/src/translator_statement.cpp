@@ -44,7 +44,11 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    case ast::blaise_ast_statement_type::SUBROUTINE_CALL:
       break;
    case ast::blaise_ast_statement_type::IF:
-      break;
+   {
+      auto if_statement = ast::blaise_ast_statement_utility::as_if(statement);
+      translate_if_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, if_statement, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_statement_type::FOR_LOOP:
       break;
    case ast::blaise_ast_statement_type::DO_WHILE_LOOP:
@@ -119,4 +123,26 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
    torricelly_subroutine->append_instruction(store_instruction);
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_assignment_statement" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_if> statement, unsigned int &max_stack_size) const
+{
+   // <condition>
+   // LOAD_BOOLEAN [true]
+   // CMP_BOOLEAN
+   // JMP_EQ_ZERO [on_true]
+   // <else_statement>
+   // JUMP [on_done]
+   // [on_true]: NOOP
+   // <then_statement>
+   // [on_done]: NOOP
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_if_statement" << std::endl);
+
+   auto condition_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+
+   // TODO:
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_if_statement" << std::endl);
 }
