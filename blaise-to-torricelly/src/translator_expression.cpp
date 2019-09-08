@@ -520,16 +520,21 @@ void blaise_to_torricelly::translator::translate_subroutine_call_expression(std:
    max_stack_size = std::max(max_stack_size, subroutine->count_parameters());
 
    // Push parameters on the stack form right to left
-   for (auto index = expression->count_parameters() - 1; index >= 0; --index)
+   for (signed int index = expression->count_parameters() - 1; index >= 0; --index)
    {
+      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression [BEGIN] translating parameter at "<< index << std::endl);
+
       auto parameter_expression = expression->get_parameter(index);
       auto parameter_max_size = 0U;
       translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, parameter_expression, parameter_max_size);
       max_stack_size = std::max(max_stack_size, parameter_max_size);
+
+      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression [END] translating parameter at "<< index << std::endl);
    }
 
    // Find the subroutine to call index
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
+   SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression::Getting index for subroutine with mangled name '"<< subroutine_mangled_name << "'" << std::endl);
    auto subroutine_name_it = module_variables_mapping.find(subroutine_mangled_name);
    if (subroutine_name_it == module_variables_mapping.end())
       throw blaise_to_torricelly_internal_error("Cannot find the subroutine in the variables definition.");
