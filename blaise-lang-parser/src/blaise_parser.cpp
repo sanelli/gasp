@@ -49,7 +49,8 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    // TODO: match constants
    parse_variables_declaration(context);
 
-   parse_compound_statement(context);
+   auto compound_statement = parse_compound_statement(context);
+   main_subroutine->push_back(compound_statement);
 
    match_token(context, blaise_token_type::PERIOD);
 
