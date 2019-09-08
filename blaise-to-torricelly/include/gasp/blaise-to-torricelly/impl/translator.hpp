@@ -20,11 +20,12 @@ class translator
    std::string get_mangled_type_name(std::shared_ptr<gasp::blaise::ast::blaise_ast_type> type) const;
 
    std::shared_ptr<gasp::torricelly::torricelly_module> translate_module(std::shared_ptr<blaise::ast::blaise_ast_module> module) const;
-   std::shared_ptr<gasp::torricelly::torricelly_subroutine> translate_subroutine(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine) const;
+   std::shared_ptr<gasp::torricelly::torricelly_subroutine> translate_subroutine(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, 
+      const std::map<std::string, unsigned int> &module_variables_mapping, std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine) const;
    std::shared_ptr<gasp::torricelly::torricelly_type> translate_type(std::shared_ptr<blaise::ast::blaise_ast_type> type) const;
 
-   void translate_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement, unsigned int &max_stack_size) const;
-   void translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement, unsigned int &max_stack_size) const;
+   void translate_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement, unsigned int &max_stack_size) const;
+   void translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement, unsigned int &max_stack_size) const;
 
    void translate_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, 
             std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> expression, unsigned int &max_stack_size) const;

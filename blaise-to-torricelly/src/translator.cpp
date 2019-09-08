@@ -33,19 +33,23 @@ std::shared_ptr<gasp::torricelly::torricelly_module> blaise_to_torricelly::trans
 {
    auto mangled_module_name = get_mangled_module_name(blaise_module->name());
    auto torricelly_module = make_torricelly_module(mangled_module_name);
+   std::map<std::string, unsigned int> module_variables_mapping;
    for (auto subroutine_index = 0; subroutine_index < blaise_module->count_subroutines(); ++subroutine_index)
    {
       auto subroutine = blaise_module->get_subroutine(subroutine_index);
       auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
-      torricelly_module->add_variable(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
+      auto variable_index = torricelly_module->add_variable(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
                                       torricelly_value::make(subroutine_mangled_name));
-      auto torricelly_subroutine = translate_subroutine(torricelly_module, subroutine);
+      module_variables_mapping[subroutine_mangled_name] = variable_index;
+      auto torricelly_subroutine = translate_subroutine(torricelly_module, module_variables_mapping, subroutine);
       torricelly_module->add_subroutine(torricelly_subroutine);
    }
    return torricelly_module;
 }
 
-std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::translator::translate_subroutine(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine) const
+std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::translator::translate_subroutine(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,
+                                                                                                                const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                                                                                std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine) const
 {
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
    auto return_type = translate_type(subroutine->return_type());
@@ -62,9 +66,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       variables_mapping.insert(std::make_pair(parameter->name(), torricelly_index));
 
       auto store_instruction_code = compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
-         torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE, 
-         torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN
-         );
+                                                             torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
+                                                             torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
       auto store_instruction = make_torricelly_instruction(store_instruction_code, torricelly_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(store_instruction);
    }
@@ -88,12 +91,12 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    }
 
    auto statements_count = subroutine->get_statements_count();
-    unsigned int max_stack_size = subroutine->count_parameters();
+   unsigned int max_stack_size = subroutine->count_parameters();
    for (auto index = 0UL; index < statements_count; ++index)
    {
       auto statement = subroutine->get_statement(index);
       unsigned int instruction_max_stack_size = 0U;
-      translate_statement(torricelly_subroutine, variables_mapping, statement, instruction_max_stack_size);
+      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping,statement, instruction_max_stack_size);
       max_stack_size = std::max(max_stack_size, instruction_max_stack_size);
    }
 
@@ -102,14 +105,14 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    if (!subroutine->return_type()->equals(blaise::ast::make_plain_type(blaise::ast::blaise_ast_system_type::VOID)))
    {
       auto return_variable_it = variables_mapping.find(subroutine->name());
-      if(return_variable_it == variables_mapping.end())
+      if (return_variable_it == variables_mapping.end())
          throw blaise_to_torricelly_internal_error("Subroutine with a non VOID return type does not contain a variable names as the subroutine");
       auto return_variable_index = return_variable_it->second;
 
       // LOAD_XXX [subroutine_name]
       auto load_instruction_code = compute_instruction_code(subroutine->return_type(), torricelly_inst_code::LOAD_INTEGER,
-         torricelly_inst_code::LOAD_FLOAT,torricelly_inst_code::LOAD_DOUBLE,torricelly_inst_code::LOAD_CHAR,
-         torricelly_inst_code::LOAD_BOOLEAN);
+                                                            torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
+                                                            torricelly_inst_code::LOAD_BOOLEAN);
       auto load_instruction = make_torricelly_instruction(load_instruction_code, return_variable_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(load_instruction);
 

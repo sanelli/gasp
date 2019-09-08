@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <map>
 #include <string>
+#include <cmath>
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
@@ -17,6 +18,7 @@ using namespace gasp::torricelly;
 using namespace gasp::blaise;
 
 void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                           const std::map<std::string, unsigned int> &module_variables_mapping,
                                                            std::map<std::string, unsigned int> &variables_mapping,
                                                            std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement,
                                                            unsigned int &max_stack_size) const
@@ -27,7 +29,7 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    case ast::blaise_ast_statement_type::COMPOUND:
    {
       auto compound_statement = ast::blaise_ast_statement_utility::as_compound(statement);
-      translate_compound_statement(torricelly_subroutine, variables_mapping, compound_statement, max_stack_size);
+      translate_compound_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, compound_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::ASSIGNEMENT:
@@ -50,8 +52,20 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
 }
 
 void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                                    const std::map<std::string, unsigned int> &module_variables_mapping,
                                                                     std::map<std::string, unsigned int> &variables_mapping,
                                                                     std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
                                                                     unsigned int &max_stack_size) const
 {
+   max_stack_size = 0U;
+   auto statement_count = statement->get_statements_count();
+   for (auto index = 0; index < statement_count; ++index)
+   {
+      auto inner_statement = statement->get_statement(index);
+      auto statement_max_stack_size = 0U;
+      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, inner_statement,statement_max_stack_size);
+      max_stack_size = std::max(max_stack_size, statement_max_stack_size);
+   }
 }
+
+
