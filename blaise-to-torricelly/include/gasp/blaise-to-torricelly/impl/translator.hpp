@@ -51,6 +51,7 @@ class translator
                                                              torricelly::torricelly_inst_code char_op, torricelly::torricelly_inst_code boolean_op) const;
    torricelly::torricelly_inst_code get_jump_for_comparison_token(gasp::blaise::blaise_token_type token_type) const;
    gasp::torricelly::torricelly_value get_type_initial_value(std::shared_ptr<blaise::ast::blaise_ast_type> type) const;
+   unsigned int add_temporary(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const;
 
 public:
    translator(std::shared_ptr<blaise::ast::blaise_ast_module> blaise_module);
