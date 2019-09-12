@@ -69,7 +69,11 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
    break;
    case ast::blaise_ast_statement_type::REPEAT_UNTIL_LOOP:
-      break;
+   {
+      auto repeatuntil_statement = ast::blaise_ast_statement_utility::as_repeat_until_loop(statement);
+      translate_repeat_until_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, repeatuntil_statement, max_stack_size);
+   }
+   break;
    default:
       throw blaise_to_torricelly_internal_error("Unknown statement type");
    }
@@ -285,4 +289,35 @@ void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_
    max_stack_size = std::max({1U, condition_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_do_while_statement" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_repeat_until_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_repeatuntil_loop> statement, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_repeat_until_statement" << std::endl);
+
+   // [start]: NOOP
+   // <body>
+   // <condition>
+   // LOAD_BOOLEAN [true]
+   // CMP_BOOLEAN
+   // JMP_NOT_ZERO [start]
+
+   auto on_start_label = torricelly_subroutine->next_label();
+
+   auto start_noop_instruction = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   start_noop_instruction->set_label(on_start_label);
+   torricelly_subroutine->append_instruction(start_noop_instruction);
+
+   auto body_max_stack_size = 0U;
+   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
+
+   auto condition_max_stack_size = 0U;
+   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+
+   auto jump_eq_zero_instrution = make_torricelly_instruction(torricelly_inst_code::JUMP_NOT_ZERO, on_start_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
+
+   max_stack_size = std::max({1U, condition_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_repeat_until_statement" << std::endl);
 }
