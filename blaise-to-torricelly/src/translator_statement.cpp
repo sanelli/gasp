@@ -56,13 +56,13 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    break;
    case ast::blaise_ast_statement_type::FOR_LOOP:
       break;
-   case ast::blaise_ast_statement_type::DO_WHILE_LOOP:
+   case ast::blaise_ast_statement_type::WHILE_LOOP:
    {
       auto whileloop_statement = ast::blaise_ast_statement_utility::as_while_loop(statement);
       translate_while_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, whileloop_statement, max_stack_size);
    }
    break;
-   case ast::blaise_ast_statement_type::WHILE_LOOP:
+   case ast::blaise_ast_statement_type::DO_WHILE_LOOP:
    {
       auto dowhileloop_statement = ast::blaise_ast_statement_utility::as_do_while_loop(statement);
       translate_do_while_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, dowhileloop_statement, max_stack_size);

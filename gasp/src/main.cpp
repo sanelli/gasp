@@ -199,10 +199,27 @@ int main(int argc, char *argv[])
          i,j,k: integer;
          d: double;
          f1,f2: float;
+         b: boolean;
       begin
          i := 0;
          j := 1;
          k := duplicate(j);
+         b := true;
+         while b begin
+            b := false;
+         end
+         repeat begin
+          b:= true;
+         end until b;
+         do begin
+           b := false;
+         end while b;
+         if b then
+         begin
+           f1 := 2;
+         end else begin
+           f1 := 1;
+         end
       end.
    )___";
 
