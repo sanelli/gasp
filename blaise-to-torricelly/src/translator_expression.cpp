@@ -446,6 +446,8 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
 
 void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_ternary> expression, unsigned int &max_stack_size) const
 {
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_ternary_expression" << std::endl);
+
    //          <condition>
    //          LOAD_BOOLEAN [true]
    //          CMP_BOOLEAN
@@ -457,18 +459,10 @@ void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_
    // done:    NOOP
 
    auto condition_max_stack_size = 0U;
-   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, expression->condition(), condition_max_stack_size);
+   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, expression->condition(), condition_max_stack_size);
 
    auto on_true_label = torricelly_subroutine->next_label();
    auto on_done_label = torricelly_subroutine->next_label();
-
-   auto true_value_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(true));
-
-   auto load_true_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
-   torricelly_subroutine->append_instruction(load_true_instruction);
-
-   auto comparison_instruction = make_torricelly_instruction(torricelly_inst_code::CMP_BOOLEAN);
-   torricelly_subroutine->append_instruction(comparison_instruction);
 
    auto jump_eq_zero_instrution = make_torricelly_instruction(torricelly_inst_code::JUMP_EQ_ZERO, on_true_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
@@ -491,6 +485,8 @@ void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_
    torricelly_subroutine->append_instruction(on_done_noop);
 
    max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_ternary_expression" << std::endl);
 }
 
 void blaise_to_torricelly::translator::translate_subroutine_call_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
@@ -514,19 +510,19 @@ void blaise_to_torricelly::translator::translate_subroutine_call_expression(std:
    // Push parameters on the stack form right to left
    for (signed int index = expression->count_parameters() - 1; index >= 0; --index)
    {
-      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression [BEGIN] translating parameter at "<< index << std::endl);
+      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression [BEGIN] translating parameter at " << index << std::endl);
 
       auto parameter_expression = expression->get_parameter(index);
       auto parameter_max_size = 0U;
       translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, parameter_expression, parameter_max_size);
       max_stack_size = std::max(max_stack_size, parameter_max_size);
 
-      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression [END] translating parameter at "<< index << std::endl);
+      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression [END] translating parameter at " << index << std::endl);
    }
 
    // Find the subroutine to call index
    auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
-   SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression::Getting index for subroutine with mangled name '"<< subroutine_mangled_name << "'" << std::endl);
+   SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call_expression::Getting index for subroutine with mangled name '" << subroutine_mangled_name << "'" << std::endl);
    auto subroutine_name_it = module_variables_mapping.find(subroutine_mangled_name);
    if (subroutine_name_it == module_variables_mapping.end())
       throw blaise_to_torricelly_internal_error("Cannot find the subroutine in the modules variables definition.");

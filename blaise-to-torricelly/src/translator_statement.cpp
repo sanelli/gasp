@@ -140,9 +140,32 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_if_statement" << std::endl);
 
    auto condition_max_stack_size = 0U;
-   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
 
-   // TODO:
+   auto on_true_label = torricelly_subroutine->next_label();
+   auto on_done_label = torricelly_subroutine->next_label();
+
+   auto jump_eq_zero_instrution = make_torricelly_instruction(torricelly_inst_code::JUMP_EQ_ZERO, on_true_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
+
+   auto else_max_stack_size = 0U;
+   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->else_statement(), else_max_stack_size);
+
+   auto jump_to_done = make_torricelly_instruction(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_to_done);
+
+   auto on_true_noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   on_true_noop->set_label(on_true_label);
+   torricelly_subroutine->append_instruction(on_true_noop);
+
+   auto then_max_stack_size = 0U;
+   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->then_statement(), then_max_stack_size);
+
+   auto on_done_noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   on_done_noop->set_label(on_done_label);
+   torricelly_subroutine->append_instruction(on_done_noop);
+
+   max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_if_statement" << std::endl);
 }

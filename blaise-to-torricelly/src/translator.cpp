@@ -268,9 +268,26 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
 
 unsigned int blaise_to_torricelly::translator::add_temporary(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const
 {
-   if(initial_value.type() != gasp::torricelly::torricelly_type_type::SYSTEM)
+   if (initial_value.type() != gasp::torricelly::torricelly_type_type::SYSTEM)
       throw blaise_to_torricelly_internal_error("Unsupported type. Cannot create a new variable of the required type. Only system types are supported.");
    auto variable_index = torricelly_subroutine->add_variable(make_torricelly_system_type(initial_value.system_type()), initial_value);
    variables_mapping[sanelli::make_string("^temp", variable_index)] = variable_index;
    return variable_index;
+}
+
+void blaise_to_torricelly::translator::translate_condition(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                           std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> expression, unsigned int &max_stack_size) const
+{
+   auto condition_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, expression, condition_max_stack_size);
+
+   max_stack_size = std::max(1U, condition_max_stack_size);
+
+   auto true_value_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(true));
+
+   auto load_true_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_true_instruction);
+
+   auto comparison_instruction = make_torricelly_instruction(torricelly_inst_code::CMP_BOOLEAN);
+   torricelly_subroutine->append_instruction(comparison_instruction);
 }
