@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <cmath>
+#include <functional>
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
