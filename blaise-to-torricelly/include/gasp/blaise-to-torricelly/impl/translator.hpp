@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <functional>
 
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
@@ -28,6 +29,7 @@ class translator
    void translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement, unsigned int &max_stack_size) const;
    void translate_assignment_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_assignment> statement, unsigned int &max_stack_size) const;
    void translate_if_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_if> statement, unsigned int &max_stack_size) const;
+   void translate_subroutine_call_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_subroutine_call> statement, unsigned int &max_stack_size) const;
 
    void translate_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping,
                              std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> expression, unsigned int &max_stack_size) const;
@@ -54,7 +56,12 @@ class translator
    unsigned int add_temporary(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const;
    void translate_condition(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping,
                             std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> expression, unsigned int &max_stack_size) const;
-
+   void translate_subroutine_call(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, 
+                                             const std::map<std::string, unsigned int> &module_variables_mapping,
+                                             std::map<std::string, unsigned int> &variables_mapping, 
+                                             std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine, 
+                                             std::function<std::shared_ptr<gasp::blaise::ast::blaise_ast_expression>(unsigned int)> get_parameter,
+                                             unsigned int &max_stack_size) const;
 public:
    translator(std::shared_ptr<blaise::ast::blaise_ast_module> blaise_module);
    std::shared_ptr<blaise::ast::blaise_ast_module> blaise_module() const;

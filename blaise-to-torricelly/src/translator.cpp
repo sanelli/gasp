@@ -291,3 +291,51 @@ void blaise_to_torricelly::translator::translate_condition(std::shared_ptr<gasp:
    auto comparison_instruction = make_torricelly_instruction(torricelly_inst_code::CMP_BOOLEAN);
    torricelly_subroutine->append_instruction(comparison_instruction);
 }
+
+void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, 
+                                                                 const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                                 std::map<std::string, unsigned int> &variables_mapping,
+                                                                 std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine,
+                                                                 std::function<std::shared_ptr<gasp::blaise::ast::blaise_ast_expression>(unsigned int)> get_parameter,
+                                                                 unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine_call" << std::endl);
+
+   bool isNative = subroutine->is(blaise::ast::blaise_ast_subroutine_flags::NATIVE);
+   if (isNative)
+   {
+      throw blaise_to_torricelly_internal_error("NATIVE subroutine calls not supported");
+   }
+
+   auto number_of_parameters = subroutine->count_parameters();
+
+   max_stack_size = subroutine->return_type()->equals(blaise::ast::make_plain_type(blaise::ast::blaise_ast_system_type::VOID)) ? 0U : 1U;
+   max_stack_size = std::max(max_stack_size, number_of_parameters);
+
+      // Push parameters on the stack form right to left
+   for (signed int index = number_of_parameters - 1; index >= 0; --index)
+   {
+      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call [BEGIN] translating parameter at " << index << std::endl);
+
+      auto parameter_expression = get_parameter(index);
+      auto parameter_max_size = 0U;
+      translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, parameter_expression, parameter_max_size);
+      max_stack_size = std::max(max_stack_size, parameter_max_size);
+
+      SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call [END] translating parameter at " << index << std::endl);
+   }
+
+    // Find the subroutine to call index
+   auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
+   SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call::Getting index for subroutine with mangled name '" << subroutine_mangled_name << "'" << std::endl);
+   auto subroutine_name_it = module_variables_mapping.find(subroutine_mangled_name);
+   if (subroutine_name_it == module_variables_mapping.end())
+      throw blaise_to_torricelly_internal_error("Cannot find the subroutine in the modules variables definition.");
+   auto subroutine_name_index = subroutine_name_it->second;
+
+   // INVOKE instruction
+   auto invoke_instruction = make_torricelly_instruction(torricelly_inst_code::INVOKE, subroutine_name_index, torricelly_inst_ref_type::MODULE);
+   torricelly_subroutine->append_instruction(invoke_instruction);
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call" << std::endl);
+}

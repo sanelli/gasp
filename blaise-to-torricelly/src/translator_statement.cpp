@@ -42,7 +42,11 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
    break;
    case ast::blaise_ast_statement_type::SUBROUTINE_CALL:
-      break;
+   {
+      auto assignment_statement = ast::blaise_ast_statement_utility::as_subroutine_call(statement);
+      translate_subroutine_call_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, assignment_statement, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_statement_type::IF:
    {
       auto if_statement = ast::blaise_ast_statement_utility::as_if(statement);
@@ -168,4 +172,34 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_if_statement" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_subroutine_call> statement, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine_call_statement" << std::endl);
+
+  auto subroutine = statement->subroutine();
+  auto subroutine_max_stack_size = 0U;
+  translate_subroutine_call(torricelly_subroutine, module_variables_mapping, variables_mapping,
+      subroutine,
+      [statement](unsigned int index) { return statement->actual_parameter(index); },
+      subroutine_max_stack_size);
+
+   auto returns_void = subroutine->return_type()->equals(blaise::ast::make_plain_type(blaise::ast::blaise_ast_system_type::VOID));
+
+   max_stack_size = returns_void ? 0U : 1U;
+   auto number_of_parameters = subroutine->count_parameters();
+   max_stack_size = std::max(max_stack_size, number_of_parameters);
+
+   // If not returning void we gotta pop up what's left on the stack;
+   if(!returns_void) { 
+      auto pop_instruction_code = compute_instruction_code(subroutine->return_type(), torricelly_inst_code::POP_INTEGER,
+                                                                  torricelly_inst_code::POP_FLOAT, torricelly_inst_code::POP_DOUBLE, 
+                                                                  torricelly_inst_code::POP_CHAR, torricelly_inst_code::POP_CHAR);
+
+      auto pop_instruction = make_torricelly_instruction(pop_instruction_code);
+      torricelly_subroutine->append_instruction(pop_instruction);
+   }
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call_statement" << std::endl);
 }
