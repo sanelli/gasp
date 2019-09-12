@@ -47,7 +47,7 @@ std::shared_ptr<blaise_ast_statement_for_loop> blaise_ast_statement_utility::bla
 
    return std::static_pointer_cast<blaise_ast_statement_for_loop>(statement);
 }
-std::shared_ptr<blaise_ast_statement_dowhile_loop> as_do_while_loop(std::shared_ptr<blaise_ast_statement> statement)
+std::shared_ptr<blaise_ast_statement_dowhile_loop> blaise_ast_statement_utility::as_do_while_loop(std::shared_ptr<blaise_ast_statement> statement)
 {
    if (statement->type() != blaise_ast_statement_type::DO_WHILE_LOOP)
       throw blaise_ast_error(statement->line(), statement->column(), "Cannot convert statetemt into do-while loop statement");
