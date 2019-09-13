@@ -16,7 +16,9 @@ namespace gasp::blaise::ast {
 class blaise_ast_module;
 
 enum class blaise_ast_subroutine_flags : unsigned char {
-   NATIVE = 1 << 0
+   NOTHING = 0
+   NATIVE = 1 << 0,
+   MAIN = 1 << 1 
 };
 
 class blaise_ast_subroutine {
@@ -60,7 +62,6 @@ public:
    void reset(blaise_ast_subroutine_flags flag);
 
    // Signature
-   // Check if the 
    bool signature_match_exactly(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
    bool signature_match_with_cast(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
    std::string signature_as_string() const;
