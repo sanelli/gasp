@@ -15,13 +15,14 @@ namespace gasp::torricelly {
 
 enum class torricelly_subroutine_flag : unsigned short {
    NOTHING = 0,
-   STATIC = 1 << 1,
-   VIRTUAL = 1 << 2,
-   OVERRIDE = 1 << 3,
-   FINAL = 1 << 4,
-   PUBLIC = 1 << 5,
-   PRIVATE = 1 << 6,
-   PROTECTED = 1 << 7
+   MAIN = 1 << 1
+   STATIC = 1 << 2,
+   VIRTUAL = 1 << 3,
+   OVERRIDE = 1 << 4,
+   FINAL = 1 << 5,
+   PUBLIC = 1 << 6,
+   PRIVATE = 1 << 7,
+   PROTECTED = 1 << 8
 };
 
 torricelly_subroutine_flag operator|(torricelly_subroutine_flag value1, torricelly_subroutine_flag value2);
