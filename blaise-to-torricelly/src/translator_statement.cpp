@@ -55,7 +55,11 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
    break;
    case ast::blaise_ast_statement_type::FOR_LOOP:
-      break;
+   {
+      auto for_statement = ast::blaise_ast_statement_utility::as_for_loop(statement);
+      translate_for_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, for_statement, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_statement_type::WHILE_LOOP:
    {
       auto whileloop_statement = ast::blaise_ast_statement_utility::as_while_loop(statement);
@@ -320,4 +324,105 @@ void blaise_to_torricelly::translator::translate_repeat_until_statement(std::sha
    max_stack_size = std::max({1U, condition_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_repeat_until_statement" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_for_loop> statement, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_for_statement" << std::endl);
+
+   // <from_expression>
+   // STORE_INTEGER [index_variable]
+   // <to_expression>
+   // STORE_INTEGER [upper_limit_variable]
+   // <step_expression>
+   // STORE_INTEGER [step_variable]
+   // [begin] NOOP
+   // LOAD_INTEGER [index_variable]
+   // LOAD_INTEGER [upper_limit_variable]
+   // CMP_INTEGER
+   // JUMP_GT [done]
+   // <body>
+   // LOAD_INTEGER [step_variable]
+   // LOAD_INTEGER [index_variable]
+   // ADD_INTEGER
+   // STORE_INTEGER [index_variable]
+   // JUMP [begin]
+   // [done] NOOP
+
+   // Get the loop variable index
+   auto variable_identifier = blaise::ast::blaise_ast_identifier_utility::as_variable_identifier(statement->variable())->variable();
+   auto variable_index_index_it = variables_mapping.find(variable_identifier->name());
+   if (variable_index_index_it == variables_mapping.end())
+      throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Cannot find variable '", variable_identifier->name(), "'."));
+   auto variable_indexer_index = variable_index_index_it->second;
+
+   // create the required temporaries
+   auto upper_limit_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(0));
+   auto step_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(1));
+
+   // get all the required labels
+   auto start_label = torricelly_subroutine->next_label();
+   auto done_label = torricelly_subroutine->next_label();
+
+   // Initialize all variables involved
+   auto from_expression_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->from_expression(), from_expression_max_stack_size);
+   auto initialize_indexer_inst = make_torricelly_instruction(torricelly_inst_code::STORE_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(initialize_indexer_inst);
+
+   auto upper_limit_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->to_expression(), upper_limit_max_stack_size);
+   auto initialize_upper_limit_inst = make_torricelly_instruction(torricelly_inst_code::STORE_INTEGER, upper_limit_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(initialize_upper_limit_inst);
+
+   auto step_expression_max_stack_size = 0U;
+   if (statement->step_expression() != nullptr)
+   {
+      translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->step_expression(), step_expression_max_stack_size);
+      auto initialize_upper_limit_inst = make_torricelly_instruction(torricelly_inst_code::STORE_INTEGER, step_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(initialize_upper_limit_inst);
+   }
+
+   // Add loop header
+   auto loop_header_inst = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   loop_header_inst->set_label(start_label);
+   torricelly_subroutine->append_instruction(loop_header_inst);
+
+   // Perform check of boundaries
+   auto load_indexer_inst = make_torricelly_instruction(torricelly_inst_code::LOAD_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_indexer_inst);
+   auto load_upper_limit_inst = make_torricelly_instruction(torricelly_inst_code::LOAD_INTEGER, upper_limit_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_upper_limit_inst);
+   auto compare_inst = make_torricelly_instruction(torricelly_inst_code::CMP_INTEGER);
+   torricelly_subroutine->append_instruction(compare_inst);
+   auto jump_condition_inst = make_torricelly_instruction(torricelly_inst_code::JUMP_GT_ZERO, done_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_condition_inst);
+
+   // execute the body
+   auto body_max_stack_size = 0U;
+   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
+
+   // Increment the indexer
+   load_indexer_inst = make_torricelly_instruction(torricelly_inst_code::LOAD_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_indexer_inst);
+   auto load_step_inst = make_torricelly_instruction(torricelly_inst_code::LOAD_INTEGER, step_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_step_inst);
+   auto add_inst = make_torricelly_instruction(torricelly_inst_code::ADD_INTEGER);
+   torricelly_subroutine->append_instruction(add_inst);
+   auto store_indexer_inst = make_torricelly_instruction(torricelly_inst_code::STORE_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(store_indexer_inst);
+   
+   // Jump to header
+   auto jump_to_header_inst = make_torricelly_instruction(torricelly_inst_code::JUMP, start_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_to_header_inst);
+
+   // done 
+   auto done_inst = make_torricelly_instruction(torricelly_inst_code::NOOP);
+   done_inst->set_label(done_label);
+   torricelly_subroutine->append_instruction(done_inst);
+
+   // COmpute max stack size from everything that happened in the loop
+   max_stack_size = std::max({2U, from_expression_max_stack_size, upper_limit_max_stack_size, step_expression_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_for_statement" << std::endl);
 }
