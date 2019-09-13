@@ -16,7 +16,7 @@ namespace gasp::blaise::ast {
 class blaise_ast_module;
 
 enum class blaise_ast_subroutine_flags : unsigned char {
-   NOTHING = 0
+   NOTHING = 0,
    NATIVE = 1 << 0,
    MAIN = 1 << 1 
 };

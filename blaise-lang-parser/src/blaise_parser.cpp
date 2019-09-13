@@ -34,6 +34,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    auto module = ast::make_blaise_ast_module(identifier, identifier.value(), ast::blaise_ast_module_type::PROGRAM);
    module->self(module);
    auto main_subroutine = module->add_subroutine(context.peek_token());
+   main_subroutine->set(blaise::ast::blaise_ast_subroutine_flags::MAIN);
 
    context.module(module);
    context.main_subroutine(main_subroutine);
