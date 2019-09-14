@@ -28,7 +28,7 @@ std::shared_ptr<torricelly_subroutine> torricelly_module::get_subroutine(unsigne
 {
    return _subroutines.at(index - 1);
 }
-std::shared_ptr<torricelly_subroutine> torricelly_module::get_main(unsigned int index) const
+std::shared_ptr<torricelly_subroutine> torricelly_module::get_main() const
 {
    std::shared_ptr<torricelly_subroutine> result = nullptr;
    for (const auto subroutine : _subroutines)
