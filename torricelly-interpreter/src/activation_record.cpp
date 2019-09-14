@@ -44,12 +44,24 @@ torricelly_activation_record_variable torricelly_activation_record::load(unsigne
 {
    auto it = _variables.find(index);
    if (it == _variables.end())
-            throw torricelly_interpreter_error(sanelli::make_string("Cannot get variable at ", _ip,"."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get variable at ", index, "."));
    return it->second;
 }
 void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_variable variable)
 {
    _variables[index] = variable;
+}
+
+void torricelly_activation_record::register_module_variable(unsigned int index, torricelly_activation_record_variable *variable)
+{
+   _module_variables[index] = variable;
+}
+torricelly_activation_record_variable *torricelly_activation_record::load_module_variable(unsigned int index)
+{
+   auto it = _module_variables.find(index);
+   if (it == _module_variables.end())
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get module variable at ", index, "."));
+   return it->second;
 }
 
 std::shared_ptr<torricelly_activation_record> gasp::torricelly::interpreter::make_torricelly_activation_record(std::shared_ptr<torricelly_subroutine> subroutine)

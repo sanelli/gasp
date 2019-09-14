@@ -17,6 +17,8 @@ class torricelly_activation_record
    std::shared_ptr<torricelly_subroutine> _subroutine;
    std::stack<torricelly_activation_record_variable> _stack;
    std::map<unsigned int, torricelly_activation_record_variable> _variables;
+   std::map<unsigned int, torricelly_activation_record_variable*> _module_variables;
+
    unsigned int _ip; // instruction pointer
    torricelly_activation_record(std::shared_ptr<torricelly_subroutine> subroutine);
 
@@ -35,6 +37,10 @@ class torricelly_activation_record
    // Variables management
    torricelly_activation_record_variable load(unsigned int index);
    void store(unsigned int index, torricelly_activation_record_variable variable);
+
+   // Module variables management
+   void register_module_variable(unsigned int index, torricelly_activation_record_variable* variable);
+   torricelly_activation_record_variable* load_module_variable(unsigned int index);
 
    friend sanelli::memory;
 };
