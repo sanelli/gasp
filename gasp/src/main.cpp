@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
    // )___";
 
    program << R"___(
-      program hello_world;
+      program hello_world(p1: integer, p2: float);
       function duplicate(i: integer) : integer
       begin
          duplicate := 2 * i;
