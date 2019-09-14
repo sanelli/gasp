@@ -20,7 +20,8 @@ union torricelly_activation_record_variable_union {
    ~torricelly_activation_record_variable_union();
 };
 
-enum class torricelly_activation_record_variable_type {
+enum class torricelly_activation_record_variable_type
+{
    UNDEFINED,
    VOID,
    INTEGER,
@@ -44,7 +45,17 @@ class torricelly_activation_record_variable
    torricelly_activation_record_variable(float f);
    torricelly_activation_record_variable(double d);
    torricelly_activation_record_variable(std::shared_ptr<void> p);
+
+   void copy_value_from(const torricelly_activation_record_variable &other);
+
 public:
+   torricelly_activation_record_variable();
+   ~torricelly_activation_record_variable();
+   torricelly_activation_record_variable(const torricelly_activation_record_variable &other);
+   torricelly_activation_record_variable(torricelly_activation_record_variable &&other);
+   torricelly_activation_record_variable &operator=(const torricelly_activation_record_variable &other);
+   torricelly_activation_record_variable &operator=(torricelly_activation_record_variable &&other);
+
    torricelly_activation_record_variable_type type() const;
    bool match(std::shared_ptr<torricelly::torricelly_type> torricelly_type) const;
 
@@ -62,7 +73,9 @@ public:
    void set_double(double d);
    void set_pointer(std::shared_ptr<void> p);
 
-   static torricelly_activation_record_variable make(const torricelly_value& value);
+   static torricelly_activation_record_variable make(const torricelly_value &value);
+
+   friend sanelli::memory;
 };
 
 } // namespace gasp::torricelly::interpreter

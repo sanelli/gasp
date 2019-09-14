@@ -10,8 +10,8 @@ using namespace gasp;
 using namespace gasp::torricelly;
 using namespace gasp::torricelly::interpreter;
 
-torricelly_activation_record_variable_union::torricelly_activation_record_variable_union(){}
-torricelly_activation_record_variable_union::~torricelly_activation_record_variable_union(){}
+torricelly_activation_record_variable_union::torricelly_activation_record_variable_union() {}
+torricelly_activation_record_variable_union::~torricelly_activation_record_variable_union() {}
 
 std::string gasp::torricelly::interpreter::to_string(torricelly_activation_record_variable_type type)
 {
@@ -38,12 +38,123 @@ std::string gasp::torricelly::interpreter::to_string(torricelly_activation_recor
    }
 }
 
+torricelly_activation_record_variable::torricelly_activation_record_variable() : _type(torricelly_activation_record_variable_type::UNDEFINED) {}
 torricelly_activation_record_variable::torricelly_activation_record_variable(int i) : _type(torricelly_activation_record_variable_type::INTEGER) { _value._integer = i; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(char c): _type(torricelly_activation_record_variable_type::CHAR) { _value._char = c; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(bool b): _type(torricelly_activation_record_variable_type::BOOLEAN) { _value._boolean = b; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(float f): _type(torricelly_activation_record_variable_type::FLOAT) { _value._float = f; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(double d): _type(torricelly_activation_record_variable_type::DOUBLE) { _value._double = d; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p): _type(torricelly_activation_record_variable_type::POINTER) { _value._pointer = p; }
+torricelly_activation_record_variable::torricelly_activation_record_variable(char c) : _type(torricelly_activation_record_variable_type::CHAR) { _value._char = c; }
+torricelly_activation_record_variable::torricelly_activation_record_variable(bool b) : _type(torricelly_activation_record_variable_type::BOOLEAN) { _value._boolean = b; }
+torricelly_activation_record_variable::torricelly_activation_record_variable(float f) : _type(torricelly_activation_record_variable_type::FLOAT) { _value._float = f; }
+torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE) { _value._double = d; }
+torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p) : _type(torricelly_activation_record_variable_type::POINTER) { _value._pointer = p; }
+
+torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other) : _type(other._type)
+{
+   copy_value_from(other);
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(torricelly_activation_record_variable &&other)
+    : _type(std::move(other._type))
+{
+   switch (_type)
+   {
+   case torricelly_activation_record_variable_type::UNDEFINED:
+   case torricelly_activation_record_variable_type::VOID:
+      break;
+   case torricelly_activation_record_variable_type::INTEGER:
+      _value._integer = std::move(other._value._integer);
+      break;
+   case torricelly_activation_record_variable_type::CHAR:
+      _value._char = std::move(other._value._char);
+      break;
+   case torricelly_activation_record_variable_type::BOOLEAN:
+      _value._boolean = std::move(other._value._boolean);
+      break;
+   case torricelly_activation_record_variable_type::FLOAT:
+      _value._float = std::move(other._value._float);
+      break;
+   case torricelly_activation_record_variable_type::DOUBLE:
+      _value._double = std::move(other._value._double);
+      break;
+   case torricelly_activation_record_variable_type::POINTER:
+      _value._pointer = std::move(other._value._pointer);
+      break;
+   default:
+      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+   }
+}
+torricelly_activation_record_variable &torricelly_activation_record_variable::operator=(const torricelly_activation_record_variable &other)
+{
+   if (this == &other)
+      return *this;
+   _type = other._type;
+   copy_value_from(other);
+   return *this;
+}
+torricelly_activation_record_variable &torricelly_activation_record_variable::operator=(torricelly_activation_record_variable &&other)
+{
+   _type = std::move(other._type);
+   switch (_type)
+   {
+   case torricelly_activation_record_variable_type::UNDEFINED:
+   case torricelly_activation_record_variable_type::VOID:
+      break;
+   case torricelly_activation_record_variable_type::INTEGER:
+      _value._integer = std::move(other._value._integer);
+      break;
+   case torricelly_activation_record_variable_type::CHAR:
+      _value._char = std::move(other._value._char);
+      break;
+   case torricelly_activation_record_variable_type::BOOLEAN:
+      _value._boolean = std::move(other._value._boolean);
+      break;
+   case torricelly_activation_record_variable_type::FLOAT:
+      _value._float = std::move(other._value._float);
+      break;
+   case torricelly_activation_record_variable_type::DOUBLE:
+      _value._double = std::move(other._value._double);
+      break;
+   case torricelly_activation_record_variable_type::POINTER:
+      _value._pointer = std::move(other._value._pointer);
+      break;
+   default:
+      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+   }
+   return *this;
+}
+
+torricelly_activation_record_variable::~torricelly_activation_record_variable()
+{
+   if (_type == torricelly_activation_record_variable_type::POINTER)
+      _value._pointer.reset();
+}
+
+void torricelly_activation_record_variable::copy_value_from(const torricelly_activation_record_variable &other)
+{
+   switch (_type)
+   {
+   case torricelly_activation_record_variable_type::UNDEFINED:
+   case torricelly_activation_record_variable_type::VOID:
+      break;
+   case torricelly_activation_record_variable_type::INTEGER:
+      _value._integer = other._value._integer;
+      break;
+   case torricelly_activation_record_variable_type::CHAR:
+      _value._char = other._value._char;
+      break;
+   case torricelly_activation_record_variable_type::BOOLEAN:
+      _value._boolean = other._value._boolean;
+      break;
+   case torricelly_activation_record_variable_type::FLOAT:
+      _value._float = other._value._float;
+      break;
+   case torricelly_activation_record_variable_type::DOUBLE:
+      _value._double = other._value._double;
+      break;
+   case torricelly_activation_record_variable_type::POINTER:
+      _value._pointer = other._value._pointer;
+      break;
+   default:
+      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+   }
+}
 
 torricelly_activation_record_variable_type torricelly_activation_record_variable::type() const { return _type; }
 bool torricelly_activation_record_variable::match(std::shared_ptr<torricelly::torricelly_type> torricelly_type) const
@@ -66,7 +177,7 @@ bool torricelly_activation_record_variable::match(std::shared_ptr<torricelly::to
       case torricelly_system_type_type::DOUBLE:
          return _type == torricelly_activation_record_variable_type::DOUBLE;
       case torricelly_system_type_type::CHAR:
-        return _type == torricelly_activation_record_variable_type::CHAR;
+         return _type == torricelly_activation_record_variable_type::CHAR;
       case torricelly_system_type_type::BOOLEAN:
          return _type == torricelly_activation_record_variable_type::BOOLEAN;
       case torricelly_system_type_type::STRING_LITERAL:
@@ -139,7 +250,7 @@ void torricelly_activation_record_variable::set_boolean(bool b)
 {
    if (_type != torricelly_activation_record_variable_type::BOOLEAN)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot set boolean type. variable is of type ", to_string(_type), "."));
-    _value._boolean = b;
+   _value._boolean = b;
 }
 void torricelly_activation_record_variable::set_float(float f)
 {
@@ -176,12 +287,12 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
          return torricelly_activation_record_variable(value.get_integer());
       case torricelly_system_type_type::FLOAT:
          return torricelly_activation_record_variable(value.get_float());
-       case torricelly_system_type_type::DOUBLE:
-        return torricelly_activation_record_variable(value.get_double());
+      case torricelly_system_type_type::DOUBLE:
+         return torricelly_activation_record_variable(value.get_double());
       case torricelly_system_type_type::CHAR:
          return torricelly_activation_record_variable(value.get_char());
       case torricelly_system_type_type::BOOLEAN:
-        return torricelly_activation_record_variable(value.get_boolean());
+         return torricelly_activation_record_variable(value.get_boolean());
       case torricelly_system_type_type::STRING_LITERAL:
       {
          auto string_literal = value.get_string_literal();

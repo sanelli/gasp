@@ -18,7 +18,7 @@ class torricelly_activation_record
    std::stack<torricelly_activation_record_variable> _stack;
    std::map<unsigned int, torricelly_activation_record_variable> _variables;
    unsigned int _ip; // instruction pointer
-   torricelly_activation_record(const std::shared_ptr<torricelly_subroutine> subroutine);
+   torricelly_activation_record(std::shared_ptr<torricelly_subroutine> subroutine);
 
    public:
 
@@ -29,7 +29,8 @@ class torricelly_activation_record
 
    // Instructions management
    unsigned int IP() const;
-   torricelly_instruction next();
+   bool move_next();
+   torricelly_instruction instruction() const;
 
    // Variables management
    torricelly_activation_record_variable load(unsigned int index);
