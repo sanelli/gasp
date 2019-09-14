@@ -14,7 +14,6 @@ union torricelly_activation_record_variable_union {
    bool _boolean;
    float _float;
    double _double;
-   std::shared_ptr<void> _pointer;
 
    torricelly_activation_record_variable_union();
    ~torricelly_activation_record_variable_union();
@@ -38,6 +37,7 @@ class torricelly_activation_record_variable
 {
    torricelly_activation_record_variable_type _type;
    torricelly_activation_record_variable_union _value;
+   std::shared_ptr<void> _pointer;
 
    torricelly_activation_record_variable(int i);
    torricelly_activation_record_variable(char c);

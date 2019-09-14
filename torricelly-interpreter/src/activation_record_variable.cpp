@@ -44,7 +44,7 @@ torricelly_activation_record_variable::torricelly_activation_record_variable(cha
 torricelly_activation_record_variable::torricelly_activation_record_variable(bool b) : _type(torricelly_activation_record_variable_type::BOOLEAN) { _value._boolean = b; }
 torricelly_activation_record_variable::torricelly_activation_record_variable(float f) : _type(torricelly_activation_record_variable_type::FLOAT) { _value._float = f; }
 torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE) { _value._double = d; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p) : _type(torricelly_activation_record_variable_type::POINTER) { _value._pointer = p; }
+torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p) : _type(torricelly_activation_record_variable_type::POINTER) { _pointer = p; }
 
 torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other) : _type(other._type)
 {
@@ -74,7 +74,7 @@ torricelly_activation_record_variable::torricelly_activation_record_variable(tor
       _value._double = std::move(other._value._double);
       break;
    case torricelly_activation_record_variable_type::POINTER:
-      _value._pointer = std::move(other._value._pointer);
+      _pointer = std::move(other._pointer);
       break;
    default:
       throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
@@ -112,7 +112,7 @@ torricelly_activation_record_variable &torricelly_activation_record_variable::op
       _value._double = std::move(other._value._double);
       break;
    case torricelly_activation_record_variable_type::POINTER:
-      _value._pointer = std::move(other._value._pointer);
+      _pointer = std::move(other._pointer);
       break;
    default:
       throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
@@ -120,11 +120,7 @@ torricelly_activation_record_variable &torricelly_activation_record_variable::op
    return *this;
 }
 
-torricelly_activation_record_variable::~torricelly_activation_record_variable()
-{
-   if (_type == torricelly_activation_record_variable_type::POINTER)
-      _value._pointer.reset();
-}
+torricelly_activation_record_variable::~torricelly_activation_record_variable(){ }
 
 void torricelly_activation_record_variable::copy_value_from(const torricelly_activation_record_variable &other)
 {
@@ -149,7 +145,7 @@ void torricelly_activation_record_variable::copy_value_from(const torricelly_act
       _value._double = other._value._double;
       break;
    case torricelly_activation_record_variable_type::POINTER:
-      _value._pointer = other._value._pointer;
+      _pointer = other._pointer;
       break;
    default:
       throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
@@ -230,7 +226,7 @@ std::shared_ptr<void> torricelly_activation_record_variable::get_pointer() const
 {
    if (_type != torricelly_activation_record_variable_type::POINTER)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get integer type. variable is of type ", to_string(_type), "."));
-   return _value._pointer;
+   return _pointer;
 }
 
 void torricelly_activation_record_variable::set_integer(int i)
@@ -268,11 +264,13 @@ void torricelly_activation_record_variable::set_pointer(std::shared_ptr<void> p)
 {
    if (_type != torricelly_activation_record_variable_type::POINTER)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot set pointer type. variable is of type ", to_string(_type), "."));
-   _value._pointer = p;
+   _pointer = p;
 }
 
 torricelly_activation_record_variable torricelly_activation_record_variable::make(const torricelly_value &value)
 {
+   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] torricelly_activation_record_variable::make." << std::endl);
+
    switch (value.type())
    {
    case torricelly_type_type::SYSTEM:
@@ -295,8 +293,11 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
          return torricelly_activation_record_variable(value.get_boolean());
       case torricelly_system_type_type::STRING_LITERAL:
       {
+         SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_activation_record_variable::make :: Creating a new pointer from a string literal." << std::endl);
          auto string_literal = value.get_string_literal();
          auto pointer = std::shared_ptr<std::string>(new std::string(string_literal));
+
+         SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_activation_record_variable::make :: Creating a new pointer from a string literal." << std::endl);
          return torricelly_activation_record_variable(pointer);
       }
       default:
@@ -309,5 +310,7 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
       break;
    default:
       throw torricelly_interpreter_error("Unexpected or unknown toricelly type when creating a new activation record variable.");
+
+      SANELLI_DEBUG("torricelly-interpreter", "[EXIT] torricelly_activation_record_variable::make." << std::endl);
    }
 }

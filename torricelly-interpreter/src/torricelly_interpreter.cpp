@@ -39,7 +39,8 @@ torricelly_interpreter_status torricelly_interpreter::status() const { return _s
 void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torricelly::torricelly_module> module,
                                                     std::shared_ptr<gasp::torricelly::torricelly_subroutine> subroutine)
 {
-   if (_status != torricelly_interpreter_status::RUNNING)
+   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] push_activation_record" << std::endl);
+   if (_status != torricelly_interpreter_status::RUNNING && _status != torricelly_interpreter_status::INITIALIZED && _status != torricelly_interpreter_status::ZERO)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot create a new activation record when the interpreter is in status '", to_string(_status), "'."));
 
    auto activation_record = make_torricelly_activation_record(subroutine);
@@ -73,32 +74,63 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    }
 
    _activation_records.push(activation_record);
+   SANELLI_DEBUG("torricelly-interpreter", "[EXIT] push_activation_record" << std::endl);
 }
 
 void torricelly_interpreter::pop_activation_record()
 {
+   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] pop_activation_record" << std::endl);
    _activation_records.pop();
+   SANELLI_DEBUG("torricelly-interpreter", "[EXIT] pop_activation_record" << std::endl);
 }
 
 void torricelly_interpreter::initialize()
 {
+   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] torricelly_interpreter::initialize" << std::endl);
+
+   if (_status != torricelly_interpreter_status::ZERO)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot execute initialize when status is '", to_string(_status), "'."));
+
    _module_variables_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_variable>>();
+
+   SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Get main subroutine from main module." << std::endl);
    auto main_subroutine = _main_module->get_main();
 
-   for (auto index = 1U; index <= _main_module->get_number_of_variables(); ++index)
-      _module_variables_mapping[_main_module->module_name()]->operator[](index) = torricelly_activation_record_variable::make(_main_module->get_initial_value(index));
+   if (main_subroutine == nullptr)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get main subroutine from module '", _main_module->module_name(), "'."));
 
+   SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Generating module variables." << std::endl);
+
+   for (auto index = 1U; index <= _main_module->get_number_of_variables(); ++index)
+   {
+      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Generating module variable number [" << index << "]" << std::endl);
+
+      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Gettinig initial value at [" << index << "]." << std::endl);
+      auto initial_value = _main_module->get_initial_value(index);
+
+      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Generating module variable number [" << index << "] from initial value" << std::endl);
+      auto variable = torricelly_activation_record_variable::make(initial_value);
+
+      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Assigning variable to variable index [" << index << "]" << std::endl);
+      _module_variables_mapping[_main_module->module_name()]->operator[](index) = variable;
+   }
    push_activation_record(_main_module, main_subroutine);
 
    _status = torricelly_interpreter_status::INITIALIZED;
+
+   SANELLI_DEBUG("torricelly-interpreter", "[EXIT] torricelly_interpreter::initialize" << std::endl);
 }
 void torricelly_interpreter::run()
 {
+   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] run" << std::endl);
    while (_status == torricelly_interpreter_status::RUNNING)
       step();
+   SANELLI_DEBUG("torricelly-interpreter", "[EXIT] run" << std::endl);
 }
 void torricelly_interpreter::step()
 {
+   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] step" << std::endl);
+
    if (_status == torricelly_interpreter_status::INITIALIZED)
       _status = torricelly_interpreter_status::RUNNING;
    if (_status != torricelly_interpreter_status::RUNNING)
@@ -113,6 +145,7 @@ void torricelly_interpreter::step()
    {
       _status = torricelly_interpreter_status::FINISHED;
    }
+   SANELLI_DEBUG("torricelly-interpreter", "[EXIT] step" << std::endl);
 }
 
 torricelly_activation_record_variable torricelly_interpreter::peek_stack() const
