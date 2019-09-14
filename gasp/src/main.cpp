@@ -13,25 +13,27 @@
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 #include <gasp/torricelly/torricelly_io.hpp>
+#include <gasp/torricelly/interpreter.hpp>
 
 using namespace std;
 
+using namespace gasp;
 using namespace gasp::blaise;
 using namespace gasp::torricelly;
 using namespace gasp::blaise_to_torricelly;
-
+using namespace gasp::torricelly::interpreter;
 
 // TODO: Add error codes when I throw errors
 
 int main(int argc, char *argv[])
 {
-   SANELLI_INSTALL_DEBUGGER("blaise-parser"); 
+   SANELLI_INSTALL_DEBUGGER("blaise-parser");
    SANELLI_INSTALL_DEBUGGER("sanelli-parser");
    SANELLI_INSTALL_DEBUGGER("blaise-lang");
    SANELLI_INSTALL_DEBUGGER("sanelli-tokenizer");
    SANELLI_INSTALL_DEBUGGER("torricelly-lang");
    SANELLI_INSTALL_DEBUGGER("blaise-to-torricelly");
-   
+
    cout << "GASP - by Stefano Anelli." << endl;
 
    blaise_tokenizer tokenizer;
@@ -49,76 +51,76 @@ int main(int argc, char *argv[])
    // program <<  R"__(program variable_program;
    // var
    //   true_: boolean;
-   // begin    
+   // begin
    // end.)__";
 
-//    program << R"___(
-// program code0003;
-// var
-//    i, j, k: boolean;
-// begin
-//    i := true;
-//    i := false;
-//    i := true and false;
-//    i := true or false;
-//    i := not true;
+   //    program << R"___(
+   // program code0003;
+   // var
+   //    i, j, k: boolean;
+   // begin
+   //    i := true;
+   //    i := false;
+   //    i := true and false;
+   //    i := true or false;
+   //    i := not true;
 
-//    j := i and true;
-//    j := true and i;
-//    j := i and i;
+   //    j := i and true;
+   //    j := true and i;
+   //    j := i and i;
 
-//    j := i or true;
-//    j := true or i;
-//    j := i or i;
+   //    j := i or true;
+   //    j := true or i;
+   //    j := i or i;
 
-//    j := not i;
-//    k := (i and j) or (i and true) or (j and false);
+   //    j := not i;
+   //    k := (i and j) or (i and true) or (j and false);
 
-//    k := true == true;
-//    k := i == true;
-//    k := true == i;
-//    k := i == j;
+   //    k := true == true;
+   //    k := i == true;
+   //    k := true == i;
+   //    k := i == j;
 
-//    k := true > true;
-//    k := i > true;
-//    k := true > i;
-//    k := i > j;
+   //    k := true > true;
+   //    k := i > true;
+   //    k := true > i;
+   //    k := i > j;
 
-//    k := true >= true;
-//    k := i >= true;
-//    k := true >= i;
-//    k := i >= j;
+   //    k := true >= true;
+   //    k := i >= true;
+   //    k := true >= i;
+   //    k := i >= j;
 
-//    k := true <= true;
-//    k := i <= true;
-//    k := true <= i;
-//    k := i <= j;
+   //    k := true <= true;
+   //    k := i <= true;
+   //    k := true <= i;
+   //    k := i <= j;
 
-//    k := true < true;
-//    k := i < true;
-//    k := true < i;
-//    k := i < j;
+   //    k := true < true;
+   //    k := i < true;
+   //    k := true < i;
+   //    k := i < j;
 
-//    k := true <> true;
-//    k := i <> true;
-//    k := true <> i;
-//    k := i <> j;
-// end.
-//    )___";
+   //    k := true <> true;
+   //    k := i <> true;
+   //    k := true <> i;
+   //    k := i <> j;
+   // end.
+   //    )___";
 
    // program << R"___(
    //    program hello_world;
    //    function native read_integer() : integer;
    //    function native read_float() : float;
-   //    procedure native write(input: string); 
+   //    procedure native write(input: string);
    //    procedure native write(input: integer);
    //    procedure native write(input: float);
    //    procedure native write(input: array<integer>, input_size: integer);
-   //    function duplicate(input : float) : float 
+   //    function duplicate(input : float) : float
    //    begin
    //       duplicate := 2 * input;
    //    end;
-   //    function abs(input : integer) : integer 
+   //    function abs(input : integer) : integer
    //    begin
    //       abs := if input >= 0 then input else -input;
    //    end;
@@ -145,7 +147,7 @@ int main(int argc, char *argv[])
    //       myc := 'A';
    //       myi := cast<integer>(myc);
    //       myi := abs(if myi == 0 then 1 else (myi));
-   //       if a_value then 
+   //       if a_value then
    //          a_value := foo == another_foo;
    //       if myc == 'b' then begin
    //          equals:= false;
@@ -225,17 +227,21 @@ int main(int argc, char *argv[])
 
    try
    {
+      cout << "-- TOKENIZER -------------------------------------------------------" << endl;
       tokenizer.tokenize(program, context);
-      cout << "-- TOKENS -------------------------------------------------------" << endl;
       cout << context << endl;
+      cout << "-- PARSER -------------------------------------------------------" << endl;
       parser.parse(context);
-      gasp::blaise_to_torricelly::translator translator(context.module());
+      cout << "-- TRANSLATOR -------------------------------------------------------" << endl;
+      translator translator(context.module());
       translator.execute(modules);
-
-      cout << "-- TORRICELLY -------------------------------------------------------" << endl;
-      for(auto module : modules)
+      cout << "-- TORRICELLY CODE -------------------------------------------------------" << endl;
+      for (auto module : modules)
          torricelly_output << module;
-
+      cout << "-- INTERPRETER -------------------------------------------------------" << endl;
+      torricelly_interpreter interpreter(modules[0]);
+      interpreter.initialize();
+      interpreter.run();
       return EXIT_SUCCESS;
    }
    catch (sanelli::tokenizer_error &error)
@@ -255,12 +261,14 @@ int main(int argc, char *argv[])
       cerr << "BLAISE_AST_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
       return EXIT_FAILURE;
    }
-   catch (gasp::common::gasp_internal_error& error){
-       cerr << "INTERNAL_ERROR: " << error.what() << endl;
+   catch (gasp::common::gasp_internal_error &error)
+   {
+      cerr << "INTERNAL_ERROR: " << error.what() << endl;
       return EXIT_FAILURE;
    }
-   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error& error){
-       cerr << "BLAISE_TO_TORRICELLI_INTERNAL_ERROR: " << error.what() << endl;
+   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
+   {
+      cerr << "BLAISE_TO_TORRICELLI_INTERNAL_ERROR: " << error.what() << endl;
       return EXIT_FAILURE;
    }
    catch (gasp::blaise_to_torricelly::blaise_to_torricelly_error &error)
@@ -268,12 +276,19 @@ int main(int argc, char *argv[])
       cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
       return EXIT_FAILURE;
    }
-   catch(std::exception &error) { 
-      cerr << "GENERIC_ERROR: "  << error.what() << endl;
+   catch (gasp::torricelly::interpreter::torricelly_interpreter_error &error)
+   {
+      cerr << "TORRICELLY_INTERPRETER_ERROR:" << error.what() << endl;
       return EXIT_FAILURE;
    }
-   catch(...) { 
-      cerr << "UNKNOWN ERROR -- No further information available at this stage"  << endl;
+   catch (std::exception &error)
+   {
+      cerr << "GENERIC_ERROR: " << error.what() << endl;
+      return EXIT_FAILURE;
+   }
+   catch (...)
+   {
+      cerr << "UNKNOWN ERROR -- No further information available at this stage" << endl;
       return EXIT_FAILURE;
    }
 }
