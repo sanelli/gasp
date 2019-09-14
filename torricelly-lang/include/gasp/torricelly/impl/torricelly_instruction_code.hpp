@@ -1,8 +1,10 @@
 #pragma once
 
-namespace gasp::torricelly {
+namespace gasp::torricelly
+{
 
-enum class torricelly_inst_code : unsigned short {
+enum class torricelly_inst_code : unsigned short
+{
    NOOP = 0x0001,
    DUP,
 
@@ -11,7 +13,7 @@ enum class torricelly_inst_code : unsigned short {
    POP_CHAR,
    POP_FLOAT,
    POP_DOUBLE,
-   
+
    LOAD_INTEGER,
    LOAD_BOOLEAN,
    LOAD_CHAR,
@@ -75,19 +77,25 @@ enum class torricelly_inst_code : unsigned short {
    AND,
    OR,
 
-   INVOKE,
-   RET
+   STATIC_INVOKE,
+   NATIVE_INVOKE,
+   VIRTUAL_INVOKE,
+   DYNAMIC_INVOKE,
+   RET,
+
+   HALT
+
 };
 
-
-class torricelly_inst_code_helper {
+class torricelly_inst_code_helper
+{
 public:
    static bool accept_parameter(torricelly_inst_code code);
    static bool accept_reference(torricelly_inst_code code);
    static bool accept_label(torricelly_inst_code code);
 };
 
-const char* to_string(torricelly_inst_code code);
-std::ostream& operator<<(std::ostream& os, torricelly_inst_code code);
+const char *to_string(torricelly_inst_code code);
+std::ostream &operator<<(std::ostream &os, torricelly_inst_code code);
 
-}
+} // namespace gasp::torricelly

@@ -347,7 +347,7 @@ void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr
    auto subroutine_name_index = subroutine_name_it->second;
 
    // INVOKE instruction
-   auto invoke_instruction = torricelly_instruction::make(torricelly_inst_code::INVOKE, subroutine_name_index, torricelly_inst_ref_type::MODULE);
+   auto invoke_instruction = torricelly_instruction::make(torricelly_inst_code::STATIC_INVOKE, subroutine_name_index, torricelly_inst_ref_type::MODULE);
    torricelly_subroutine->append_instruction(invoke_instruction);
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call" << std::endl);
