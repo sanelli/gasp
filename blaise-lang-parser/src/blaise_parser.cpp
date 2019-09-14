@@ -35,6 +35,8 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    module->self(module);
    auto main_subroutine = module->add_subroutine(context.peek_token());
    main_subroutine->set(blaise::ast::blaise_ast_subroutine_flags::MAIN);
+   main_subroutine->return_type(ast::make_plain_type(ast::blaise_ast_system_type::INTEGER));
+   main_subroutine->add_variable(identifier, identifier.value(), ast::make_plain_type(ast::blaise_ast_system_type::INTEGER));
 
    context.module(module);
    context.main_subroutine(main_subroutine);
