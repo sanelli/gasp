@@ -7,6 +7,6 @@ target_link_libraries(gasp gasp-blaise-lang-tokenizer)
 target_link_libraries(gasp gasp-blaise-lang-parser)
 target_link_libraries(gasp gasp-torricelly-lang)
 target_link_libraries(gasp gasp-torricelly-lang-io)
+target_link_libraries(gasp gasp-torricelly-interpreter)
 target_link_libraries(gasp gasp-blaise-to-torricelly)
-
 add_subdirectory(src)
