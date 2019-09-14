@@ -21,12 +21,16 @@ enum class torricelly_interpreter_status : unsigned char {
 
 std::string to_string(const torricelly_interpreter_status status);
 
-
 class torricelly_interpreter
 {
    std::shared_ptr<gasp::torricelly::torricelly_module> _main_module;
    std::stack<std::shared_ptr<torricelly_activation_record>> _activation_records;
    torricelly_interpreter_status _status;
+   std::stack<torricelly_activation_record_variable> _parameters_passing;
+   std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_variable>>> _module_variables_mapping;
+
+   void push_activation_record(std::shared_ptr<gasp::torricelly::torricelly_module> module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> subroutine);
+   void pop_activation_record();
 
 public:
    torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module);
