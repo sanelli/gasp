@@ -36,7 +36,7 @@ class torricelly_subroutine {
    std::shared_ptr<torricelly::torricelly_type> _return_type;
    std::vector<std::shared_ptr<torricelly::torricelly_type>> _variable_types;
    std::vector<torricelly_value> _variable_initial_values;
-   std::vector<std::shared_ptr<torricelly::torricelly_instruction>> _instructions;
+   std::vector<torricelly::torricelly_instruction> _instructions;
    unsigned int _labels_counter;
    std::set<unsigned int> _parameters;
    torricelly_subroutine_flag _flags;
@@ -55,11 +55,11 @@ public:
    unsigned int get_number_of_parameters() const;
    bool is_parameter(unsigned int variable_index) const;
 
-   unsigned int append_instruction(std::shared_ptr<torricelly::torricelly_instruction> instruction);
-   void insert_instruction(unsigned int index, std::shared_ptr<torricelly::torricelly_instruction> instruction);
-   void replace_instruction(unsigned int index, std::shared_ptr<torricelly::torricelly_instruction> instruction);
+   unsigned int append_instruction(torricelly::torricelly_instruction instruction);
+   void insert_instruction(unsigned int index, torricelly::torricelly_instruction instruction);
+   void replace_instruction(unsigned int index, torricelly::torricelly_instruction instruction);
    void remove_instruction(unsigned int index);
-   std::shared_ptr<torricelly::torricelly_instruction> get_instruction(unsigned int index) const;
+   torricelly::torricelly_instruction get_instruction(unsigned int index) const;
    unsigned int get_number_of_instructions() const;
 
    unsigned int next_label();

@@ -8,6 +8,6 @@
 namespace gasp::torricelly {
 
 torricelly_text_output& operator<<(torricelly_text_output& os, torricelly_inst_ref_type inst_ref_type);
-torricelly_text_output& operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_instruction> instruction);
+torricelly_text_output& operator<<(torricelly_text_output& os, const torricelly_instruction& instruction);
 
 }

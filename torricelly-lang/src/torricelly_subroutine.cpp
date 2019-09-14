@@ -51,20 +51,20 @@ unsigned int torricelly_subroutine::get_number_of_parameters() const {
 bool torricelly_subroutine::is_parameter(unsigned int variable_index) const { 
    return _parameters.count(variable_index) > 0; 
 }
-unsigned int torricelly_subroutine::append_instruction(std::shared_ptr<torricelly::torricelly_instruction> instruction) {
+unsigned int torricelly_subroutine::append_instruction(torricelly::torricelly_instruction instruction) {
    _instructions.push_back(instruction);
    return _instructions.size();
 }
-void torricelly_subroutine::insert_instruction(unsigned int index, std::shared_ptr<torricelly::torricelly_instruction> instruction) {
+void torricelly_subroutine::insert_instruction(unsigned int index, torricelly::torricelly_instruction instruction) {
    _instructions.insert(_instructions.begin() + index - 1, instruction);
 }
-void torricelly_subroutine::replace_instruction(unsigned int index, std::shared_ptr<torricelly::torricelly_instruction> instruction) {
+void torricelly_subroutine::replace_instruction(unsigned int index, torricelly::torricelly_instruction instruction) {
    _instructions.at(index - 1) = instruction;
 }
 void torricelly_subroutine::remove_instruction(unsigned int index) { 
    _instructions.erase(_instructions.begin() + index - 1); 
 }
-std::shared_ptr<torricelly::torricelly_instruction> torricelly_subroutine::get_instruction(unsigned int index) const { 
+torricelly::torricelly_instruction torricelly_subroutine::get_instruction(unsigned int index) const { 
    return _instructions.at(index-1); 
 }
 unsigned int torricelly_subroutine::get_number_of_instructions() const { 
@@ -118,15 +118,15 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
    {  
       auto instruction = get_instruction(instruction_index);
       try{
-         instruction->validate();
+         instruction.validate();
       }catch(const torricelly_error& inst_error) { 
          throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " is not valid: ", inst_error.what()));
       }
-      if(instruction->has_label() && instruction->label() > num_of_labels)
+      if(instruction.has_label() && instruction.label() > num_of_labels)
          throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " has an invalid label."));
-      if(instruction->has_parameter_reference()) { 
-         auto ref = instruction->parameter_reference();
-         switch(instruction->ref_type()) { 
+      if(instruction.has_parameter_reference()) { 
+         auto ref = instruction.parameter_reference();
+         switch(instruction.ref_type()) { 
             case torricelly_inst_ref_type::MODULE:
                if(ref > number_of_module_fields)
                   throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " refers to an invalid module variable."));

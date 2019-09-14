@@ -94,7 +94,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       auto store_instruction_code = compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
                                                              torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
                                                              torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
-      auto store_instruction = make_torricelly_instruction(store_instruction_code, torricelly_index, torricelly_inst_ref_type::SUBROUTINE);
+      auto store_instruction = torricelly_instruction::make(store_instruction_code, torricelly_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(store_instruction);
    }
 
@@ -141,7 +141,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       auto load_instruction_code = compute_instruction_code(subroutine->return_type(), torricelly_inst_code::LOAD_INTEGER,
                                                             torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
                                                             torricelly_inst_code::LOAD_BOOLEAN);
-      auto load_instruction = make_torricelly_instruction(load_instruction_code, return_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+      auto load_instruction = torricelly_instruction::make(load_instruction_code, return_variable_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(load_instruction);
 
       // Maximum stack size must be at least one for subroutines returning values
@@ -149,7 +149,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    }
 
    // Add the final RET instruction
-   auto ret_instruction = make_torricelly_instruction(torricelly_inst_code::RET);
+   auto ret_instruction = torricelly_instruction::make(torricelly_inst_code::RET);
    torricelly_subroutine->append_instruction(ret_instruction);
    }
 
@@ -298,10 +298,10 @@ void blaise_to_torricelly::translator::translate_condition(std::shared_ptr<gasp:
 
    auto true_value_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(true));
 
-   auto load_true_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto load_true_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(load_true_instruction);
 
-   auto comparison_instruction = make_torricelly_instruction(torricelly_inst_code::CMP_BOOLEAN);
+   auto comparison_instruction = torricelly_instruction::make(torricelly_inst_code::CMP_BOOLEAN);
    torricelly_subroutine->append_instruction(comparison_instruction);
 }
 
@@ -347,7 +347,7 @@ void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr
    auto subroutine_name_index = subroutine_name_it->second;
 
    // INVOKE instruction
-   auto invoke_instruction = make_torricelly_instruction(torricelly_inst_code::INVOKE, subroutine_name_index, torricelly_inst_ref_type::MODULE);
+   auto invoke_instruction = torricelly_instruction::make(torricelly_inst_code::INVOKE, subroutine_name_index, torricelly_inst_ref_type::MODULE);
    torricelly_subroutine->append_instruction(invoke_instruction);
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call" << std::endl);

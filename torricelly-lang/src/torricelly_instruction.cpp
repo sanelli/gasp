@@ -84,13 +84,3 @@ torricelly_instruction torricelly_instruction::make(const torricelly_inst_code c
 torricelly_instruction torricelly_instruction::make(const torricelly_inst_code code) { 
    return torricelly_instruction(code);
 }
-
-std::shared_ptr<torricelly_instruction> torricelly::make_torricelly_instruction(torricelly_inst_code code)
-{
-   return memory::make_shared<torricelly_instruction>(code);
-}
-
-std::shared_ptr<torricelly_instruction> torricelly::make_torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type)
-{
-   return memory::make_shared<torricelly_instruction>(code, parameter_reference, ref_type);
-}

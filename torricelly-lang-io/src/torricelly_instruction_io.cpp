@@ -15,11 +15,11 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, torri
    }
 }
 
-torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_instruction> instruction){
-   if(instruction->has_label())
-      os << torricelly_inst_ref_type::LABEL << instruction->label() << ": ";
-   os << instruction->code();
-   if(instruction->has_parameter_reference())
-      os <<  " " << instruction->ref_type() << instruction->parameter_reference();
+torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const torricelly_instruction& instruction){
+   if(instruction.has_label())
+      os << torricelly_inst_ref_type::LABEL << instruction.label() << ": ";
+   os << instruction.code();
+   if(instruction.has_parameter_reference())
+      os <<  " " << instruction.ref_type() << instruction.parameter_reference();
    return os;
 }

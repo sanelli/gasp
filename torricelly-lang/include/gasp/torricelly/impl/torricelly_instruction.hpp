@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction_code.hpp>
 
 namespace gasp::torricelly {
@@ -58,10 +57,6 @@ public:
    static torricelly_instruction make(const torricelly_inst_code code, const unsigned int parameter_reference, const torricelly_inst_ref_type ref_type);
    static torricelly_instruction make(const torricelly_inst_code code);
 
-   friend sanelli::memory;
 };
-
-std::shared_ptr<torricelly_instruction> make_torricelly_instruction(torricelly_inst_code code);
-std::shared_ptr<torricelly_instruction> make_torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type);
 
 }

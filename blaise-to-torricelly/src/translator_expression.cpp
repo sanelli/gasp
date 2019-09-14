@@ -113,7 +113,7 @@ void blaise_to_torricelly::translator::translate_literal_integer_expression(std:
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_integer_expression" << std::endl);
    auto variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
 
-   auto instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_INTEGER, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
    max_stack_size = 1;
@@ -127,7 +127,7 @@ void blaise_to_torricelly::translator::translate_literal_float_expression(std::s
    auto initial_value = torricelly_value::make(expression->value());
    auto variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
 
-   auto instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_FLOAT, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_FLOAT, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
    max_stack_size = 1;
@@ -140,7 +140,7 @@ void blaise_to_torricelly::translator::translate_literal_double_expression(std::
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_double_expression" << std::endl);
    auto variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
 
-   auto instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_DOUBLE, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_DOUBLE, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
    max_stack_size = 1;
@@ -152,7 +152,7 @@ void blaise_to_torricelly::translator::translate_literal_char_expression(std::sh
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_char_expression" << std::endl);
    auto variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
 
-   auto instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_CHAR, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_CHAR, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
    max_stack_size = 1;
@@ -164,7 +164,7 @@ void blaise_to_torricelly::translator::translate_literal_boolean_expression(std:
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_boolean_expression" << std::endl);
    auto variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
 
-   auto instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_BOOLEAN, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
    max_stack_size = 1;
@@ -206,7 +206,7 @@ void blaise_to_torricelly::translator::translate_variable_access_expression(std:
    auto instruction_code = compute_instruction_code(memory_location->type(), torricelly_inst_code::LOAD_INTEGER,
                                                     torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
                                                     torricelly_inst_code::LOAD_BOOLEAN);
-   auto instruction = make_torricelly_instruction(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
    max_stack_size = 1;
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_variable_access_expression" << std::endl);
@@ -229,7 +229,7 @@ void blaise_to_torricelly::translator::translate_unary_expression(std::shared_pt
    default:
       throw blaise_to_torricelly_internal_error("Unknown or unexpected unary operator");
    }
-   auto instruction = make_torricelly_instruction(instruction_code);
+   auto instruction = torricelly_instruction::make(instruction_code);
    torricelly_subroutine->append_instruction(instruction);
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_unary_expression" << std::endl);
 }
@@ -348,13 +348,13 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
    {
    case gasp::blaise::blaise_token_type::LOGICAL_AND:
    {
-      auto instruction = make_torricelly_instruction(torricelly_inst_code::AND);
+      auto instruction = torricelly_instruction::make(torricelly_inst_code::AND);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::LOGICAL_OR:
    {
-      auto instruction = make_torricelly_instruction(torricelly_inst_code::OR);
+      auto instruction = torricelly_instruction::make(torricelly_inst_code::OR);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
@@ -381,25 +381,25 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
       auto true_value_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(true));
       auto false_value_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(false));
 
-      auto comparison_instruction = make_torricelly_instruction(comparison_instruction_code);
+      auto comparison_instruction = torricelly_instruction::make(comparison_instruction_code);
       torricelly_subroutine->append_instruction(comparison_instruction);
 
       auto jump_instruction_code = get_jump_for_comparison_token(token_type);
-      auto jump_instruction = make_torricelly_instruction(jump_instruction_code, on_true_label, torricelly_inst_ref_type::LABEL);
+      auto jump_instruction = torricelly_instruction::make(jump_instruction_code, on_true_label, torricelly_inst_ref_type::LABEL);
       torricelly_subroutine->append_instruction(jump_instruction);
 
-      auto load_false_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, false_value_index, torricelly_inst_ref_type::SUBROUTINE);
+      auto load_false_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_BOOLEAN, false_value_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(load_false_instruction);
 
-      auto jump_to_done_instruction = make_torricelly_instruction(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
+      auto jump_to_done_instruction = torricelly_instruction::make(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
       torricelly_subroutine->append_instruction(jump_to_done_instruction);
 
-      auto load_true_instruction = make_torricelly_instruction(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
-      load_true_instruction->set_label(on_true_label);
+      auto load_true_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_BOOLEAN, true_value_index, torricelly_inst_ref_type::SUBROUTINE);
+      load_true_instruction.set_label(on_true_label);
       torricelly_subroutine->append_instruction(load_true_instruction);
 
-      auto noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
-      noop->set_label(on_done_label);
+      auto noop = torricelly_instruction::make(torricelly_inst_code::NOOP);
+      noop.set_label(on_done_label);
       torricelly_subroutine->append_instruction(noop);
    }
 
@@ -407,34 +407,34 @@ void blaise_to_torricelly::translator::translate_binary_expression(std::shared_p
    case gasp::blaise::blaise_token_type::PLUS:
    {
       auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::ADD_INTEGER, torricelly_inst_code::ADD_FLOAT, torricelly_inst_code::ADD_DOUBLE);
-      auto instruction = make_torricelly_instruction(instruction_code);
+      auto instruction = torricelly_instruction::make(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::MINUS:
    {
       auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::SUBTRACT_INTEGER, torricelly_inst_code::SUBTRACT_FLOAT, torricelly_inst_code::SUBTRACT_DOUBLE);
-      auto instruction = make_torricelly_instruction(instruction_code);
+      auto instruction = torricelly_instruction::make(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::MULTIPLY:
    {
       auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::MULTIPLY_INTEGER, torricelly_inst_code::MULTIPLY_FLOAT, torricelly_inst_code::MULTIPLY_DOUBLE);
-      auto instruction = make_torricelly_instruction(instruction_code);
+      auto instruction = torricelly_instruction::make(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::DIVIDE:
    {
       auto instruction_code = compute_instruction_code(expression->left()->result_type(), torricelly_inst_code::DIVIDE_INTEGER, torricelly_inst_code::DIVIDE_FLOAT, torricelly_inst_code::DIVIDE_DOUBLE);
-      auto instruction = make_torricelly_instruction(instruction_code);
+      auto instruction = torricelly_instruction::make(instruction_code);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
    case gasp::blaise::blaise_token_type::REMAINDER:
    {
-      auto instruction = make_torricelly_instruction(torricelly_inst_code::REMINDER_INTEGER);
+      auto instruction = torricelly_instruction::make(torricelly_inst_code::REMINDER_INTEGER);
       torricelly_subroutine->append_instruction(instruction);
    }
    break;
@@ -464,24 +464,24 @@ void blaise_to_torricelly::translator::translate_ternary_expression(std::shared_
    auto on_true_label = torricelly_subroutine->next_label();
    auto on_done_label = torricelly_subroutine->next_label();
 
-   auto jump_eq_zero_instrution = make_torricelly_instruction(torricelly_inst_code::JUMP_EQ_ZERO, on_true_label, torricelly_inst_ref_type::LABEL);
+   auto jump_eq_zero_instrution = torricelly_instruction::make(torricelly_inst_code::JUMP_EQ_ZERO, on_true_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
 
    auto else_max_stack_size = 0U;
    translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, expression->else_expression(), condition_max_stack_size);
 
-   auto jump_to_done = make_torricelly_instruction(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
+   auto jump_to_done = torricelly_instruction::make(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_to_done);
 
-   auto on_true_noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
-   on_true_noop->set_label(on_true_label);
+   auto on_true_noop = torricelly_instruction::make(torricelly_inst_code::NOOP);
+   on_true_noop.set_label(on_true_label);
    torricelly_subroutine->append_instruction(on_true_noop);
 
    auto then_max_stack_size = 0U;
    translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, expression->then_expression(), then_max_stack_size);
 
-   auto on_done_noop = make_torricelly_instruction(torricelly_inst_code::NOOP);
-   on_done_noop->set_label(on_done_label);
+   auto on_done_noop = torricelly_instruction::make(torricelly_inst_code::NOOP);
+   on_done_noop.set_label(on_done_label);
    torricelly_subroutine->append_instruction(on_done_noop);
 
    max_stack_size = std::max({(1 + condition_max_stack_size), then_max_stack_size, else_max_stack_size}, std::less<unsigned int>());
@@ -583,7 +583,7 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
       throw blaise_to_torricelly_internal_error("Source system type cannot be casted to any other type.");
    }
 
-   auto cast_instruction = make_torricelly_instruction(instruction_code);
+   auto cast_instruction = torricelly_instruction::make(instruction_code);
    torricelly_subroutine->append_instruction(cast_instruction);
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_cast_expression" << std::endl);
