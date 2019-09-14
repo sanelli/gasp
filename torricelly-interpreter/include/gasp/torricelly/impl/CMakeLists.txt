@@ -3,4 +3,5 @@ target_sources(gasp-torricelly-interpreter
         torricelly_interpreter.hpp
         activation_record.hpp
         activation_record_variable.hpp
+        torricelly_interpreter_error.hpp
 )
