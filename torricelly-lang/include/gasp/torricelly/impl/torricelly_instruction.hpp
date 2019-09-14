@@ -34,9 +34,16 @@ class torricelly_instruction {
    unsigned int _parameter_reference;
    torricelly_inst_ref_type _ref_type;
    unsigned int _label;
-   torricelly_instruction(torricelly_inst_code code, unsigned int parameter_reference, torricelly_inst_ref_type ref_type);
-   torricelly_instruction(torricelly_inst_code code);
+   torricelly_instruction(const torricelly_inst_code code, const unsigned int parameter_reference, const torricelly_inst_ref_type ref_type);
+   torricelly_instruction(const torricelly_inst_code code);
 public:
+   torricelly_instruction(const torricelly_instruction& other);
+   torricelly_instruction(torricelly_instruction&& other);
+   torricelly_instruction& operator=(torricelly_instruction&& other);
+   torricelly_instruction& operator=(const torricelly_instruction& other);
+
+   ~torricelly_instruction();
+
    torricelly_inst_code code() const;
    bool has_parameter_reference() const;
    unsigned int parameter_reference() const;
@@ -47,6 +54,9 @@ public:
    void set_label(unsigned int label);
 
    void validate() const;
+
+   static torricelly_instruction make(const torricelly_inst_code code, const unsigned int parameter_reference, const torricelly_inst_ref_type ref_type);
+   static torricelly_instruction make(const torricelly_inst_code code);
 
    friend sanelli::memory;
 };
