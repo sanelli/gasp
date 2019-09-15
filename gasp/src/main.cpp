@@ -45,6 +45,10 @@ int main(int argc, char *argv[])
 
    stringstream program;
 
+   std::vector<std::string> parameters;
+   for (int arg_index = 1; arg_index < argc; ++arg_index)
+      parameters.push_back(std::string(argv[arg_index]));
+
    // program << R"__(
    //    variable
    // )__";
@@ -240,7 +244,13 @@ int main(int argc, char *argv[])
       for (auto module : modules)
          torricelly_output << module;
       cout << "-- INTERPRETER -------------------------------------------------------" << endl;
-      torricelly_interpreter interpreter(modules[0]);
+      auto get_parameter = [parameters](unsigned int index) {
+         auto real_index = index-1;
+         return real_index >= 0 && real_index < parameters.size() 
+                  ? parameters.at(real_index)
+                  : std::string(""); 
+      };
+      torricelly_interpreter interpreter(modules[0], get_parameter);
       interpreter.initialize();
       interpreter.run();
       return EXIT_SUCCESS;

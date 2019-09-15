@@ -30,8 +30,8 @@ std::string interpreter::to_string(const torricelly_interpreter_status status)
    }
 }
 
-torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module)
-    : _status(torricelly_interpreter_status::ZERO), _main_module(main_module) {}
+torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
+    : _status(torricelly_interpreter_status::ZERO), _main_module(main_module), _get_parameter(get_parameter) {}
 std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_interpreter::main_module() const { return _main_module; }
 
 torricelly_interpreter_status torricelly_interpreter::status() const { return _status; }
@@ -59,7 +59,18 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-         throw torricelly_interpreter_error("Interpreter does not support yet parameters for the main subroutine coming from the command line");
+          for (auto param_count = subroutine->get_number_of_parameters(); param_count > 0; --param_count) { 
+             auto variable_type = subroutine->get_variable_type(param_count);
+             auto input_string = _get_parameter(param_count);
+             if(input_string.empty())
+             {
+                auto default_value = torricelly_value::get_default_value(variable_type);
+                activation_record->push(torricelly_activation_record_variable::make(default_value));
+             } else {
+                auto value = torricelly_value::get_value_from_string(input_string, variable_type);
+                activation_record->push(torricelly_activation_record_variable::make(value));
+             }
+          }
       }
       else
       {
@@ -92,26 +103,14 @@ void torricelly_interpreter::initialize()
       throw torricelly_interpreter_error(sanelli::make_string("Cannot execute initialize when status is '", to_string(_status), "'."));
 
    _module_variables_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_variable>>();
-
-   SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Get main subroutine from main module." << std::endl);
    auto main_subroutine = _main_module->get_main();
-
    if (main_subroutine == nullptr)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get main subroutine from module '", _main_module->module_name(), "'."));
 
-   SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Generating module variables." << std::endl);
-
    for (auto index = 1U; index <= _main_module->get_number_of_variables(); ++index)
    {
-      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Generating module variable number [" << index << "]" << std::endl);
-
-      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Gettinig initial value at [" << index << "]." << std::endl);
       auto initial_value = _main_module->get_initial_value(index);
-
-      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Generating module variable number [" << index << "] from initial value" << std::endl);
       auto variable = torricelly_activation_record_variable::make(initial_value);
-
-      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_interpreter::initialize:: Assigning variable to variable index [" << index << "]" << std::endl);
       _module_variables_mapping[_main_module->module_name()]->operator[](index) = variable;
    }
    push_activation_record(_main_module, main_subroutine);

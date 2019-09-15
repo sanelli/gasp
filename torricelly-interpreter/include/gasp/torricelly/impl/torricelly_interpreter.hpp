@@ -28,12 +28,13 @@ class torricelly_interpreter
    torricelly_interpreter_status _status;
    std::stack<torricelly_activation_record_variable> _parameters_passing;
    std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_variable>>> _module_variables_mapping;
+   std::function<std::string(unsigned int)> _get_parameter;
 
    void push_activation_record(std::shared_ptr<gasp::torricelly::torricelly_module> module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> subroutine);
    void pop_activation_record();
 
 public:
-   torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module);
+   torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter);
    std::shared_ptr<gasp::torricelly::torricelly_module> main_module() const;
 
    torricelly_interpreter_status status() const;

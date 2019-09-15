@@ -269,8 +269,6 @@ void torricelly_activation_record_variable::set_pointer(std::shared_ptr<void> p)
 
 torricelly_activation_record_variable torricelly_activation_record_variable::make(const torricelly_value &value)
 {
-   SANELLI_DEBUG("torricelly-interpreter", "[ENTER] torricelly_activation_record_variable::make." << std::endl);
-
    switch (value.type())
    {
    case torricelly_type_type::SYSTEM:
@@ -293,11 +291,8 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
          return torricelly_activation_record_variable(value.get_boolean());
       case torricelly_system_type_type::STRING_LITERAL:
       {
-         SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_activation_record_variable::make :: Creating a new pointer from a string literal." << std::endl);
          auto string_literal = value.get_string_literal();
          auto pointer = std::shared_ptr<std::string>(new std::string(string_literal));
-
-         SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] torricelly_activation_record_variable::make :: Creating a new pointer from a string literal." << std::endl);
          return torricelly_activation_record_variable(pointer);
       }
       default:
@@ -310,7 +305,5 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
       break;
    default:
       throw torricelly_interpreter_error("Unexpected or unknown toricelly type when creating a new activation record variable.");
-
-      SANELLI_DEBUG("torricelly-interpreter", "[EXIT] torricelly_activation_record_variable::make." << std::endl);
    }
 }
