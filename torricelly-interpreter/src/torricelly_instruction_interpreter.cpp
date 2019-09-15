@@ -1,5 +1,8 @@
 #include <memory>
+#include <functional>
+
 #include <sanelli/sanelli.hpp>
+
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/interpreter.hpp>
 
@@ -147,10 +150,13 @@ void torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::CAST_DOUBLE_FLOAT:
       break;
    case torricelly_inst_code::NOT:
+      execute_not(instruction);
       break;
    case torricelly_inst_code::AND:
+      execute_and(instruction);
       break;
    case torricelly_inst_code::OR:
+      execute_or(instruction);
       break;
    case torricelly_inst_code::STATIC_INVOKE:
       break;

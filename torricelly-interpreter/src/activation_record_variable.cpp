@@ -120,7 +120,7 @@ torricelly_activation_record_variable &torricelly_activation_record_variable::op
    return *this;
 }
 
-torricelly_activation_record_variable::~torricelly_activation_record_variable(){ }
+torricelly_activation_record_variable::~torricelly_activation_record_variable() {}
 
 void torricelly_activation_record_variable::copy_value_from(const torricelly_activation_record_variable &other)
 {
@@ -307,3 +307,9 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
       throw torricelly_interpreter_error("Unexpected or unknown torricelly type when creating a new activation record variable.");
    }
 }
+
+torricelly_activation_record_variable torricelly_activation_record_variable::make(bool b) { return torricelly_activation_record_variable(b); }
+torricelly_activation_record_variable torricelly_activation_record_variable::make(int i) { return torricelly_activation_record_variable(i); }
+torricelly_activation_record_variable torricelly_activation_record_variable::make(float f) { return torricelly_activation_record_variable(f); }
+torricelly_activation_record_variable torricelly_activation_record_variable::make(double d) { return torricelly_activation_record_variable(d); }
+torricelly_activation_record_variable torricelly_activation_record_variable::make(char c) { return torricelly_activation_record_variable(c); }

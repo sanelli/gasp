@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 
 #include <sanelli/sanelli.hpp>
+
 #include <gasp/torricelly/torricelly.hpp>
 
 namespace gasp::torricelly::interpreter {
@@ -41,6 +43,11 @@ void execute_store_integer(const torricelly::torricelly_instruction& instruction
 void execute_store_float(const torricelly::torricelly_instruction& instruction);
 void execute_store_double(const torricelly::torricelly_instruction& instruction);
 void execute_store_char(const torricelly::torricelly_instruction& instruction);
+
+void inline __execute_binary_boolean(const torricelly::torricelly_instruction &instruction, std::function<bool(bool,bool)> op);
+void execute_and(const torricelly::torricelly_instruction& instruction);
+void execute_or(const torricelly::torricelly_instruction& instruction);
+void execute_not(const torricelly::torricelly_instruction& instruction);
 
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;

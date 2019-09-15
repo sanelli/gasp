@@ -7,4 +7,5 @@ target_sources(gasp-torricelly-interpreter
         torricelly_instruction_interpreter_general.cpp
         torricelly_instruction_interpreter_stack.cpp
         torricelly_instruction_interpreter_memory.cpp
+        torricelly_instruction_interpreter_boolean.cpp
 )

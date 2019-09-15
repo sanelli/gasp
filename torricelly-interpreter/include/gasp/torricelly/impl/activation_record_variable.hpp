@@ -74,6 +74,11 @@ public:
    void set_pointer(std::shared_ptr<void> p);
 
    static torricelly_activation_record_variable make(const torricelly_value &value);
+   static torricelly_activation_record_variable make(bool b);
+   static torricelly_activation_record_variable make(int i);
+   static torricelly_activation_record_variable make(float f);
+   static torricelly_activation_record_variable make(double d);
+   static torricelly_activation_record_variable make(char c);
 
    friend sanelli::memory;
 };
