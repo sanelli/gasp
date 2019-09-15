@@ -39,6 +39,7 @@ public:
    // Variables management
    torricelly_activation_record_variable load(unsigned int index);
    void store(unsigned int index, torricelly_activation_record_variable variable);
+   torricelly_activation_record_variable_type load_type(unsigned int index);
 
    // Module variables management
    void register_module_variable(unsigned int index, torricelly_activation_record_variable *variable);

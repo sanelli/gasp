@@ -35,6 +35,13 @@ void execute_load_float(const torricelly::torricelly_instruction& instruction);
 void execute_load_double(const torricelly::torricelly_instruction& instruction);
 void execute_load_char(const torricelly::torricelly_instruction& instruction);
 
+void inline __execute_store(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_variable_type extpected_type);
+void execute_store_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_store_integer(const torricelly::torricelly_instruction& instruction);
+void execute_store_float(const torricelly::torricelly_instruction& instruction);
+void execute_store_double(const torricelly::torricelly_instruction& instruction);
+void execute_store_char(const torricelly::torricelly_instruction& instruction);
+
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;
 
