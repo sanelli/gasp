@@ -10,7 +10,7 @@ using namespace gasp::torricelly::interpreter;
 torricelly_instruction_interpreter::torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter)
     : _interpreter(interpreter) {}
 
-void torricelly_instruction_interpreter::execute(const torricelly::torricelly_instruction &instruction, unsigned int &next_instruction, bool& is_jump)
+void torricelly_instruction_interpreter::execute(const torricelly::torricelly_instruction &instruction, unsigned int &next_instruction, bool &is_jump)
 {
    // By default we jump to the next instruction
    next_instruction = 0;
@@ -41,24 +41,34 @@ void torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
       execute_pop_double(instruction);
       break;
    case torricelly_inst_code::LOAD_INTEGER:
+      execute_load_integer(instruction);
       break;
    case torricelly_inst_code::LOAD_BOOLEAN:
+      execute_load_boolean(instruction);
       break;
    case torricelly_inst_code::LOAD_CHAR:
+      execute_load_char(instruction);
       break;
    case torricelly_inst_code::LOAD_FLOAT:
+      execute_load_float(instruction);
       break;
    case torricelly_inst_code::LOAD_DOUBLE:
+      execute_load_double(instruction);
       break;
    case torricelly_inst_code::STORE_INTEGER:
+      execute_store_integer(instruction);
       break;
    case torricelly_inst_code::STORE_BOOLEAN:
+      execute_store_boolean(instruction);
       break;
    case torricelly_inst_code::STORE_CHAR:
+      execute_store_char(instruction);
       break;
    case torricelly_inst_code::STORE_FLOAT:
+      execute_store_float(instruction);
       break;
    case torricelly_inst_code::STORE_DOUBLE:
+      execute_store_double(instruction);
       break;
    case torricelly_inst_code::ADD_INTEGER:
       break;
