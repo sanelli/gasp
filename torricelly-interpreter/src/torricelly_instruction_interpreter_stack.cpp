@@ -22,7 +22,7 @@ void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::
       auto top_value = activation_record->peek();
       if (top_value.type() != extpected_type)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
-                                                      sanelli::make_string("Cannot pop a boolean. Top of stack is '", to_string(top_value.type()), "'."));
+                                                      sanelli::make_string("Cannot pop a '", to_string(extpected_type),"'. Top of stack is '", to_string(top_value.type()), "'."));
    }
    activation_record->pop();
 }
