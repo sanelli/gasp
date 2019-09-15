@@ -30,23 +30,17 @@ std::shared_ptr<torricelly_subroutine> torricelly_module::get_subroutine(unsigne
 }
 std::shared_ptr<torricelly_subroutine> torricelly_module::get_main() const
 {
-   SANELLI_DEBUG("torricelly-lang", "[ENTER] torricelly_module::get_main" << std::endl);
    std::shared_ptr<torricelly_subroutine> result = nullptr;
    for (const auto subroutine : _subroutines)
    {
-      SANELLI_DEBUG("torricelly-lang", "[INSIDE] torricelly_module::get_main --> Check if '" << subroutine->name() << "' is main subroutine." << std::endl);
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-          SANELLI_DEBUG("torricelly-lang", "[INSIDE] torricelly_module::get_main --> Found subroutine main '" << subroutine->name() << "'." << std::endl);
-
           if(result != nullptr)
             throw torricelly_error(sanelli::make_string("More than one subroutine in module '", _module_name, "' is marked as MAIN."));
           
           result = subroutine;
        }
    }
-
-   SANELLI_DEBUG("torricelly-lang", "[EXIT] torricelly_module::get_main" << std::endl);
    return result;
 }
 

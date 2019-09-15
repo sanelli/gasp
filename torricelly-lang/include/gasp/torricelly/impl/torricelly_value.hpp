@@ -49,6 +49,9 @@ public:
    static torricelly_value make(float value);
    static torricelly_value make(double value);
    static torricelly_value make(std::string value);
+
+   static torricelly_value get_default_value(std::shared_ptr<torricelly_type> type);
+   static torricelly_value get_value_from_string(const std::string& value, std::shared_ptr<torricelly_type> type);
 };
 
 

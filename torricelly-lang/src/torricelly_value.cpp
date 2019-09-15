@@ -124,3 +124,79 @@ torricelly_value torricelly_value::make(std::string value){
    value_union._string_literal = value;
    return torricelly_value(torricelly_system_type_type::STRING_LITERAL, value_union); 
 }
+
+torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_type> type)
+{
+   switch (type->type_type())
+   {
+   case torricelly_type_type::UNDEFINED:
+      throw torricelly_error("Cannot get default value for undefined type.");
+   case torricelly_type_type::SYSTEM:
+   {
+      auto system_type = std::dynamic_pointer_cast<const toricelly_system_type>(type);
+      switch (system_type->system_type())
+      {
+      case torricelly_system_type_type::UNDEFINED:
+         throw torricelly_error("Cannot get default value for undefined system type.");
+      case torricelly_system_type_type::VOID:
+         throw torricelly_error("Cannot get default value for void system type.");
+      case torricelly_system_type_type::INTEGER:
+         return torricelly_value::make(0);
+      case torricelly_system_type_type::FLOAT:
+         return torricelly_value::make(0.00f);
+      case torricelly_system_type_type::DOUBLE:
+         return torricelly_value::make(0.00);
+      case torricelly_system_type_type::CHAR:
+         return torricelly_value::make('\0');
+      case torricelly_system_type_type::BOOLEAN:
+         return torricelly_value::make(false);
+      case torricelly_system_type_type::STRING_LITERAL:
+         return torricelly_value::make("");
+      default:
+         throw torricelly_error("Cannot get default value for unknwon system type.");
+      }
+   }
+   case torricelly_type_type::STRUCTURED:
+      throw torricelly_error("Cannot get default value for structured type.");
+   default:
+      throw torricelly_error("Cannot get default value for unknown type.");
+   }
+}
+
+torricelly_value torricelly_value::get_value_from_string(const std::string& value, std::shared_ptr<torricelly_type> type)
+{
+   switch (type->type_type())
+   {
+   case torricelly_type_type::UNDEFINED:
+      throw torricelly_error("Cannot get default value for undefined type.");
+   case torricelly_type_type::SYSTEM:
+   {
+      auto system_type = std::dynamic_pointer_cast<const toricelly_system_type>(type);
+      switch (system_type->system_type())
+      {
+      case torricelly_system_type_type::UNDEFINED:
+         throw torricelly_error("Cannot get default value for undefined system type.");
+      case torricelly_system_type_type::VOID:
+         throw torricelly_error("Cannot get default value for void system type.");
+      case torricelly_system_type_type::INTEGER:
+         return torricelly_value::make(stoi(value));
+      case torricelly_system_type_type::FLOAT:
+         return torricelly_value::make(stof(value));
+      case torricelly_system_type_type::DOUBLE:
+         return torricelly_value::make(stod(value));
+      case torricelly_system_type_type::CHAR:
+         return torricelly_value::make(value.length() > 0 ? value[0] : '\0');
+      case torricelly_system_type_type::BOOLEAN:
+         return torricelly_value::make(value == "true");
+      case torricelly_system_type_type::STRING_LITERAL:
+         return torricelly_value::make(value);
+      default:
+         throw torricelly_error("Cannot get default value for unknwon system type.");
+      }
+   }
+   case torricelly_type_type::STRUCTURED:
+      throw torricelly_error("Cannot get default value for structured type.");
+   default:
+      throw torricelly_error("Cannot get default value for unknown type.");
+   }
+}

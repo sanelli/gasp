@@ -28,7 +28,7 @@ const char *torricelly::to_string(torricelly_inst_code code)
    case torricelly_inst_code::LOAD_CHAR:
       return "cload";
    case torricelly_inst_code::LOAD_FLOAT:
-      return "float";
+      return "fload";
    case torricelly_inst_code::LOAD_DOUBLE:
       return "dload";
    case torricelly_inst_code::STORE_INTEGER:
