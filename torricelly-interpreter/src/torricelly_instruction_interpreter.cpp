@@ -1,5 +1,4 @@
 #include <memory>
-#include <functional>
 
 #include <sanelli/sanelli.hpp>
 
@@ -12,6 +11,15 @@ using namespace gasp::torricelly::interpreter;
 
 torricelly_instruction_interpreter::torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter)
     : _interpreter(interpreter) {}
+
+torricelly_activation_record_variable torricelly_instruction_interpreter::pop_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, torricelly_activation_record_variable_type expected_type)
+{
+   auto value = activation_record->pop();
+   if (value.type() != expected_type)
+         throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
+                                                      sanelli::make_string("Cannot pop a '", to_string(expected_type), "'. Top of stack is '", to_string(value.type()), "'."));
+   return value;
+}
 
 void torricelly_instruction_interpreter::execute(const torricelly::torricelly_instruction &instruction, unsigned int &next_instruction, bool &is_jump)
 {
@@ -74,36 +82,52 @@ void torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
       execute_store_double(instruction);
       break;
    case torricelly_inst_code::ADD_INTEGER:
+      execute_add_integer(instruction);
       break;
    case torricelly_inst_code::ADD_FLOAT:
+      execute_add_float(instruction);
       break;
    case torricelly_inst_code::ADD_DOUBLE:
+      execute_add_double(instruction);
       break;
    case torricelly_inst_code::SUBTRACT_INTEGER:
+      execute_sub_integer(instruction);
       break;
    case torricelly_inst_code::SUBTRACT_FLOAT:
+      execute_sub_float(instruction);
       break;
    case torricelly_inst_code::SUBTRACT_DOUBLE:
+      execute_sub_double(instruction);
       break;
    case torricelly_inst_code::MULTIPLY_INTEGER:
+      execute_mul_integer(instruction);
       break;
    case torricelly_inst_code::MULTIPLY_FLOAT:
+      execute_mul_float(instruction);
       break;
    case torricelly_inst_code::MULTIPLY_DOUBLE:
+      execute_mul_double(instruction);
       break;
    case torricelly_inst_code::DIVIDE_INTEGER:
+      execute_div_integer(instruction);
       break;
    case torricelly_inst_code::DIVIDE_FLOAT:
+      execute_div_float(instruction);
       break;
    case torricelly_inst_code::DIVIDE_DOUBLE:
+      execute_div_double(instruction);
       break;
    case torricelly_inst_code::REMINDER_INTEGER:
+      execute_rem_integer(instruction);
       break;
    case torricelly_inst_code::NEGATE_INTEGER:
+      execute_negate_integer(instruction);
       break;
    case torricelly_inst_code::NEGATE_FLOAT:
+      execute_negate_float(instruction);
       break;
    case torricelly_inst_code::NEGATE_DOUBLE:
+      execute_negate_double(instruction);
       break;
    case torricelly_inst_code::CMP_INTEGER:
       break;
