@@ -292,6 +292,11 @@ int main(int argc, char *argv[])
       cerr << "TORRICELLY_INTERPRETER_ERROR:" << error.what() << endl;
       return EXIT_FAILURE;
    }
+   catch (gasp::torricelly::interpreter::torricelly_interpreter_execution_error &error)
+   {
+      cerr << "TORRICELLY_INTERPRETER_EXECUTION_ERROR(" <<  error.subroutine() << ":" << error.ip() << ")" << error.what() << endl;
+      return EXIT_FAILURE;
+   }
    catch (std::exception &error)
    {
       cerr << "GENERIC_ERROR: " << error.what() << endl;

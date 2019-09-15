@@ -21,17 +21,22 @@ void torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
       execute_noop(instruction);
       break;
    case torricelly_inst_code::DUP:
-      //execute_dup(instruction);
+      execute_dup(instruction);
       break;
    case torricelly_inst_code::POP_INTEGER:
+      execute_pop_integer(instruction);
       break;
    case torricelly_inst_code::POP_BOOLEAN:
+      execute_pop_boolean(instruction);
       break;
    case torricelly_inst_code::POP_CHAR:
+      execute_pop_char(instruction);
       break;
    case torricelly_inst_code::POP_FLOAT:
+      execute_pop_float(instruction);
       break;
    case torricelly_inst_code::POP_DOUBLE:
+      execute_pop_double(instruction);
       break;
    case torricelly_inst_code::LOAD_INTEGER:
       break;

@@ -22,6 +22,10 @@ public:
          const std::string& subroutine,
          unsigned int ip,
          const std::string &message) :  runtime_error(message), _subroutine(subroutine), _ip(ip) {}
+
+   std::string subroutine() const { return _subroutine; }
+   unsigned int ip() const { return _ip; }
+
 };
 
 } // namespace gasp::torricelly::interpreter
