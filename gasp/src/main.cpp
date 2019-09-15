@@ -250,9 +250,9 @@ int main(int argc, char *argv[])
                   ? parameters.at(real_index)
                   : std::string(""); 
       };
-      torricelly_interpreter interpreter(modules[0], get_parameter);
-      interpreter.initialize();
-      interpreter.run();
+      auto interpreter = make_torricelly_interpreter(modules[0], get_parameter);
+      interpreter->initialize();
+      interpreter->run();
       return EXIT_SUCCESS;
    }
    catch (sanelli::tokenizer_error &error)

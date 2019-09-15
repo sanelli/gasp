@@ -31,7 +31,9 @@ std::string interpreter::to_string(const torricelly_interpreter_status status)
 }
 
 torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
-    : _status(torricelly_interpreter_status::ZERO), _main_module(main_module), _get_parameter(get_parameter) {}
+    : _status(torricelly_interpreter_status::ZERO), 
+      _main_module(main_module), 
+      _get_parameter(get_parameter) { }
 std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_interpreter::main_module() const { return _main_module; }
 
 torricelly_interpreter_status torricelly_interpreter::status() const { return _status; }
@@ -99,6 +101,8 @@ void torricelly_interpreter::initialize()
 {
    SANELLI_DEBUG("torricelly-interpreter", "[ENTER] torricelly_interpreter::initialize" << std::endl);
 
+   _instruction_interpreter = sanelli::memory::make_shared<torricelly_instruction_interpreter>(shared_from_this());
+
    if (_status != torricelly_interpreter_status::ZERO)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot execute initialize when status is '", to_string(_status), "'."));
 
@@ -152,4 +156,8 @@ torricelly_activation_record_variable torricelly_interpreter::peek_stack() const
    if (_status != torricelly_interpreter_status::FINISHED && _status != torricelly_interpreter_status::HALTED)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get top of the stack in status ", to_string(_status)));
    return _activation_records.top()->peek();
+}
+
+std::shared_ptr<torricelly_interpreter> gasp::torricelly::interpreter::make_torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter) {
+   return sanelli::memory::make_shared<torricelly_interpreter>(main_module, get_parameter);
 }
