@@ -26,11 +26,11 @@ torricelly_activation_record_variable torricelly_activation_record::peek() const
 {
    return _stack.top();
 }
-
-unsigned int torricelly_activation_record::IP() const { return _ip; }
-bool torricelly_activation_record::move_next()
+std::shared_ptr<torricelly_subroutine> torricelly_activation_record::subroutine() const { return _subroutine; }
+unsigned int torricelly_activation_record::ip() const { return _ip; }
+bool torricelly_activation_record::move_next(int delta)
 {
-   ++_ip;
+   _ip += delta;
    return _ip <= _subroutine->get_number_of_instructions();
 }
 torricelly_instruction torricelly_activation_record::instruction() const

@@ -13,7 +13,20 @@ class torricelly_instruction_interpreter {
 private:
 std::shared_ptr<torricelly_interpreter> _interpreter;
 torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter);
-void execute(torricelly::torricelly_instruction instruction);
+void execute(const torricelly::torricelly_instruction& instruction);
+bool validate_during_executions() const;
+
+// General purpose
+void execute_noop(const torricelly::torricelly_instruction& instruction);
+
+// Stack management
+void execute_dup(const torricelly::torricelly_instruction& instruction);
+void inline __execute_pop(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_variable_type extpected_type);
+void execute_pop_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_pop_integer(const torricelly::torricelly_instruction& instruction);
+void execute_pop_float(const torricelly::torricelly_instruction& instruction);
+void execute_pop_double(const torricelly::torricelly_instruction& instruction);
+void execute_pop_char(const torricelly::torricelly_instruction& instruction);
 
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;

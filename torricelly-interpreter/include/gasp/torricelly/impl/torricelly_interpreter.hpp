@@ -50,6 +50,7 @@ public:
    torricelly_activation_record_variable peek_stack() const;
 
    friend sanelli::memory;
+   friend torricelly_instruction_interpreter;
 };
 
 std::shared_ptr<torricelly_interpreter> make_torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter);

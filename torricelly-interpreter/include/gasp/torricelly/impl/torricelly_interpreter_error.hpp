@@ -12,4 +12,16 @@ public:
    torricelly_interpreter_error(const std::string &message) : runtime_error(message) {}
 };
 
+class torricelly_interpreter_execution_error : public std::runtime_error
+{
+   std::string _subroutine;
+   unsigned int _ip;
+
+public:
+   torricelly_interpreter_execution_error( 
+         const std::string& subroutine,
+         unsigned int ip,
+         const std::string &message) :  runtime_error(message), _subroutine(subroutine), _ip(ip) {}
+};
+
 } // namespace gasp::torricelly::interpreter
