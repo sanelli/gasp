@@ -10,7 +10,7 @@ using namespace gasp::torricelly::interpreter;
 void inline torricelly_instruction_interpreter::__execute_load(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
 {
    auto activation_record = _interpreter->_activation_records.top();
-   if (validate_during_executions())
+   if (_validate_during_executions)
    {
       if (instruction.parameter_reference() <= 0U)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
@@ -22,7 +22,7 @@ void inline torricelly_instruction_interpreter::__execute_load(const torricelly:
 
    auto value = activation_record->load(instruction.parameter_reference());
 
-   if (validate_during_executions())
+   if (_validate_during_executions)
    {
       if (value.type() != extpected_type)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
@@ -35,7 +35,7 @@ void inline torricelly_instruction_interpreter::__execute_load(const torricelly:
 void inline torricelly_instruction_interpreter::__execute_store(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
 {
    auto activation_record = _interpreter->_activation_records.top();
-   if (validate_during_executions())
+   if (_validate_during_executions)
    {
       if (instruction.parameter_reference() <= 0U)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
@@ -46,7 +46,7 @@ void inline torricelly_instruction_interpreter::__execute_store(const torricelly
    }
 
    auto value = activation_record->pop();
-   if (validate_during_executions())
+   if (_validate_during_executions)
    {
       auto value_type = value.type();
       auto stored_type = activation_record->load_type(instruction.parameter_reference());

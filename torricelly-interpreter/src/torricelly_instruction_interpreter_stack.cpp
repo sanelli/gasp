@@ -17,7 +17,7 @@ void torricelly_instruction_interpreter::execute_dup(const torricelly::torricell
 void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
 {
    auto activation_record = _interpreter->_activation_records.top();
-   if (validate_during_executions())
+   if (_validate_during_executions)
    {
       auto top_value = activation_record->peek();
       if (top_value.type() != extpected_type)

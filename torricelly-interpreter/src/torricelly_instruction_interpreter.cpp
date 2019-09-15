@@ -10,8 +10,6 @@ using namespace gasp::torricelly::interpreter;
 torricelly_instruction_interpreter::torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter)
     : _interpreter(interpreter) {}
 
-bool torricelly_instruction_interpreter::validate_during_executions() const { return true; }
-
 void torricelly_instruction_interpreter::execute(const torricelly::torricelly_instruction &instruction, unsigned int &next_instruction, bool& is_jump)
 {
    // By default we jump to the next instruction

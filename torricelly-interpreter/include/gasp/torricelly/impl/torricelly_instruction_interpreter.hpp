@@ -14,7 +14,7 @@ private:
 std::shared_ptr<torricelly_interpreter> _interpreter;
 torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter);
 void execute(const torricelly::torricelly_instruction& instruction, unsigned int &next_instruction, bool& is_jump);
-bool validate_during_executions() const;
+const bool _validate_during_executions = true;
 
 // General purpose
 void execute_noop(const torricelly::torricelly_instruction& instruction);
