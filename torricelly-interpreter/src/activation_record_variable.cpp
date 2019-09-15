@@ -187,7 +187,7 @@ bool torricelly_activation_record_variable::match(std::shared_ptr<torricelly::to
       throw torricelly_interpreter_error("Torricelly structured type not supported yet");
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected or unknown toricelly type when matching it with activation record variable.");
+      throw torricelly_interpreter_error("Unexpected or unknown torricelly type when matching it with activation record variable.");
    }
 }
 
@@ -304,6 +304,6 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
       throw torricelly_interpreter_error("Torricelly structured type not supported yet. Cannot create a new activation record.");
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected or unknown toricelly type when creating a new activation record variable.");
+      throw torricelly_interpreter_error("Unexpected or unknown torricelly type when creating a new activation record variable.");
    }
 }

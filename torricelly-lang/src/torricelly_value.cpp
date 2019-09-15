@@ -83,7 +83,7 @@ bool torricelly_value::match(std::shared_ptr<torricelly_type> type) const {
         { throw torricelly_error("Unexpected undefined type");}
       case torricelly_type_type::SYSTEM:
         { 
-         auto system_typed_type = std::dynamic_pointer_cast<toricelly_system_type>(type);
+         auto system_typed_type = std::dynamic_pointer_cast<torricelly_system_type>(type);
          return system_typed_type->system_type() == _system_type;
         }
       case torricelly_type_type::STRUCTURED:
@@ -133,7 +133,7 @@ torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_
       throw torricelly_error("Cannot get default value for undefined type.");
    case torricelly_type_type::SYSTEM:
    {
-      auto system_type = std::dynamic_pointer_cast<const toricelly_system_type>(type);
+      auto system_type = std::dynamic_pointer_cast<const torricelly_system_type>(type);
       switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
@@ -171,7 +171,7 @@ torricelly_value torricelly_value::get_value_from_string(const std::string& valu
       throw torricelly_error("Cannot get default value for undefined type.");
    case torricelly_type_type::SYSTEM:
    {
-      auto system_type = std::dynamic_pointer_cast<const toricelly_system_type>(type);
+      auto system_type = std::dynamic_pointer_cast<const torricelly_system_type>(type);
       switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
