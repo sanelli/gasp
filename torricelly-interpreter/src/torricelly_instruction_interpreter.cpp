@@ -12,8 +12,12 @@ torricelly_instruction_interpreter::torricelly_instruction_interpreter(std::shar
 
 bool torricelly_instruction_interpreter::validate_during_executions() const { return true; }
 
-void torricelly_instruction_interpreter::execute(const torricelly::torricelly_instruction &instruction)
+void torricelly_instruction_interpreter::execute(const torricelly::torricelly_instruction &instruction, unsigned int &next_instruction, bool& is_jump)
 {
+   // By default we jump to the next instruction
+   next_instruction = 0;
+   is_jump = false;
+
    auto code = instruction.code();
    switch (code)
    {

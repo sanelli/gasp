@@ -143,7 +143,12 @@ void torricelly_interpreter::step()
    if (current_activation_record->move_next())
    {
       auto instruction = current_activation_record->instruction();
-      _instruction_interpreter->execute(instruction);
+      auto next_instruction = 0U;
+      auto is_jump = false;
+      _instruction_interpreter->execute(instruction, next_instruction, is_jump);
+
+      if(is_jump)
+         current_activation_record->jump(next_instruction - 1);
    }
    else
    {

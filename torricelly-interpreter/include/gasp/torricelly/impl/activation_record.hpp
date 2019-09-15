@@ -32,7 +32,8 @@ public:
 
    // Instructions management
    unsigned int ip() const;
-   bool move_next(int delta = +1);
+   void jump(unsigned int ip);
+   bool move_next();
    torricelly_instruction instruction() const;
 
    // Variables management
