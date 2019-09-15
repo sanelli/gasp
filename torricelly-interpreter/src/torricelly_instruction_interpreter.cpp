@@ -10,7 +10,7 @@ using namespace gasp::torricelly::interpreter;
 torricelly_instruction_interpreter::torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter)
    : _interpreter(interpreter){}
    
-void torricelly_instruction_interpreter::execute_instruction(std::shared_ptr<torricelly::torricelly_instruction> instruction) 
+void torricelly_instruction_interpreter::execute(torricelly::torricelly_instruction instruction) 
 {
 
 }
