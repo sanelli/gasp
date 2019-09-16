@@ -77,6 +77,13 @@ void execute_mul_double(const torricelly::torricelly_instruction& instruction);
 void execute_div_double(const torricelly::torricelly_instruction& instruction);
 void execute_negate_double(const torricelly::torricelly_instruction& instruction);
 
+// Comparison
+void execute_cmp_integer(const torricelly::torricelly_instruction& instruction);
+void execute_cmp_float(const torricelly::torricelly_instruction& instruction);
+void execute_cmp_double(const torricelly::torricelly_instruction& instruction);
+void execute_cmp_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_cmp_char(const torricelly::torricelly_instruction& instruction);
+
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;
 

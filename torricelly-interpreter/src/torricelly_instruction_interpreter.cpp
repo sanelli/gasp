@@ -16,8 +16,8 @@ torricelly_activation_record_variable torricelly_instruction_interpreter::pop_an
 {
    auto value = activation_record->pop();
    if (value.type() != expected_type)
-         throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
-                                                      sanelli::make_string("Cannot pop a '", to_string(expected_type), "'. Top of stack is '", to_string(value.type()), "'."));
+      throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
+                                                   sanelli::make_string("Cannot pop a '", to_string(expected_type), "'. Top of stack is '", to_string(value.type()), "'."));
    return value;
 }
 
@@ -130,14 +130,19 @@ void torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
       execute_negate_double(instruction);
       break;
    case torricelly_inst_code::CMP_INTEGER:
+      execute_cmp_integer(instruction);
       break;
    case torricelly_inst_code::CMP_BOOLEAN:
+      execute_cmp_boolean(instruction);
       break;
    case torricelly_inst_code::CMP_CHAR:
+      execute_cmp_char(instruction);
       break;
    case torricelly_inst_code::CMP_FLOAT:
+      execute_cmp_float(instruction);
       break;
    case torricelly_inst_code::CMP_DOUBLE:
+      execute_cmp_double(instruction);
       break;
    case torricelly_inst_code::JUMP:
       break;
