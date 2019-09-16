@@ -10,4 +10,5 @@ target_sources(gasp-torricelly-interpreter
         torricelly_instruction_interpreter_boolean.cpp
         torricelly_instruction_interpreter_numeric.cpp
         torricelly_instruction_interpreter_compare.cpp
+        torricelly_instruction_interpreter_cast.cpp
 )

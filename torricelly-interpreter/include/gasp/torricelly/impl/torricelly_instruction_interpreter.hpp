@@ -84,6 +84,18 @@ void execute_cmp_double(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_boolean(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_char(const torricelly::torricelly_instruction& instruction);
 
+// Cast
+void execute_cast_i2b(const torricelly::torricelly_instruction& instruction);
+void execute_cast_i2c(const torricelly::torricelly_instruction& instruction);
+void execute_cast_i2f(const torricelly::torricelly_instruction& instruction);
+void execute_cast_i2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_b2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_c2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_f2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_f2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_d2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_d2f(const torricelly::torricelly_instruction& instruction);
+
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;
 

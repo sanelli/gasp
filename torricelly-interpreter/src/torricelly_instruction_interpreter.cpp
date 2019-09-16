@@ -159,24 +159,34 @@ void torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::JUMP_NOT_ZERO:
       break;
    case torricelly_inst_code::CAST_INT_BOOLEAN:
+      execute_cast_i2b(instruction);
       break;
    case torricelly_inst_code::CAST_INT_CHAR:
+      execute_cast_i2c(instruction);
       break;
    case torricelly_inst_code::CAST_INT_FLOAT:
+      execute_cast_i2f(instruction);
       break;
    case torricelly_inst_code::CAST_INT_DOUBLE:
+      execute_cast_i2d(instruction);
       break;
    case torricelly_inst_code::CAST_BOOLEAN_INT:
+      execute_cast_b2i(instruction);
       break;
    case torricelly_inst_code::CAST_CHAR_INT:
+      execute_cast_c2i(instruction);
       break;
    case torricelly_inst_code::CAST_FLOAT_INT:
+      execute_cast_f2i(instruction);
       break;
    case torricelly_inst_code::CAST_FLOAT_DOUBLE:
+      execute_cast_f2d(instruction);
       break;
    case torricelly_inst_code::CAST_DOUBLE_INT:
+      execute_cast_d2i(instruction);
       break;
    case torricelly_inst_code::CAST_DOUBLE_FLOAT:
+      execute_cast_d2f(instruction);
       break;
    case torricelly_inst_code::NOT:
       execute_not(instruction);
