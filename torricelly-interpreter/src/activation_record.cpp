@@ -40,6 +40,10 @@ torricelly_instruction torricelly_activation_record::instruction() const
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get instruction at ", _ip, " (maximum numer of instrutions is ", _subroutine->get_number_of_instructions(), ")."));
    return _subroutine->get_instruction(_ip);
 }
+unsigned int torricelly_activation_record::get_instruction_address(unsigned int label)
+{
+   return _subroutine->get_instruction_address(label);
+}
 
 torricelly_activation_record_variable torricelly_activation_record::load(unsigned int index)
 {

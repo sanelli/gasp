@@ -16,10 +16,11 @@ class torricelly_instruction_interpreter {
 private:
 std::shared_ptr<torricelly_interpreter> _interpreter;
 torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter);
-void execute(const torricelly::torricelly_instruction& instruction, unsigned int &next_instruction, bool& is_jump);
+bool execute(const torricelly::torricelly_instruction& instruction, unsigned int &next_instruction, bool& is_jump);
 const bool _validate_during_executions = true;
 
 torricelly_activation_record_variable pop_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, torricelly_activation_record_variable_type expected_type);
+unsigned int get_paramter_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, const torricelly::torricelly_instruction& instruction, const torricelly_inst_ref_type ref_type);
 
 // General purpose
 void execute_noop(const torricelly::torricelly_instruction& instruction);
@@ -95,6 +96,16 @@ void execute_cast_f2i(const torricelly::torricelly_instruction& instruction);
 void execute_cast_f2d(const torricelly::torricelly_instruction& instruction);
 void execute_cast_d2i(const torricelly::torricelly_instruction& instruction);
 void execute_cast_d2f(const torricelly::torricelly_instruction& instruction);
+
+// Jumps
+bool __execute_jump(const torricelly::torricelly_instruction& instruction, unsigned int& next_address, std::function<bool(int)> condition);
+bool execute_jump(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
+bool execute_jump_lt(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
+bool execute_jump_lte(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
+bool execute_jump_eq(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
+bool execute_jump_neq(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
+bool execute_jump_gte(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
+bool execute_jump_gt(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
 
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;

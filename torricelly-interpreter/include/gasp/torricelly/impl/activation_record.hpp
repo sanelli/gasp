@@ -35,6 +35,7 @@ public:
    void jump(unsigned int ip);
    bool move_next();
    torricelly_instruction instruction() const;
+   unsigned int get_instruction_address(unsigned int label);
 
    // Variables management
    torricelly_activation_record_variable load(unsigned int index);

@@ -41,6 +41,10 @@ class torricelly_subroutine {
    unsigned int _max_stack_size;
    std::set<unsigned int> _parameters;
    torricelly_subroutine_flag _flags;
+   std::map<unsigned int, unsigned int> _labels_map;
+   
+   void make_labels_map();
+
    torricelly_subroutine(const std::string& name, std::shared_ptr<torricelly::torricelly_type> return_type);
 public:
    std::string name() const;
@@ -65,6 +69,7 @@ public:
 
    unsigned int next_label();
    unsigned int get_number_of_labels() const;
+   unsigned int get_instruction_address(unsigned int) const;
 
    unsigned int max_stack_size() const;
    void max_stack_size(unsigned int);

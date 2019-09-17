@@ -90,6 +90,25 @@ unsigned int torricelly_subroutine::next_label()
    return ++_labels_counter;
 }
 
+void torricelly_subroutine::make_labels_map()
+{
+   _labels_map.clear();
+   for (auto address = 1; address < _instructions.size(); ++address)
+   {
+      auto instruction = get_instruction(address);
+      if (instruction.has_label())
+         _labels_map[instruction.label()] = address;
+   }
+}
+
+unsigned int torricelly_subroutine::get_instruction_address(unsigned int label) const
+{
+   auto it = _labels_map.find(label);
+   if(it == _labels_map.end())
+      throw torricelly_error(sanelli::make_string("Cannot get address for subroutine '", name(), "' of label '",label,"'."));
+   return it->second;
+}
+
 unsigned int torricelly_subroutine::get_number_of_labels() const { return _labels_counter; }
 
 unsigned int torricelly_subroutine::max_stack_size() const { return _max_stack_size; }
