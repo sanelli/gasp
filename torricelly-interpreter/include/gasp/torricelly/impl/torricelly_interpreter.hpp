@@ -17,7 +17,8 @@ enum class torricelly_interpreter_status : unsigned char {
    INITIALIZED,
    RUNNING,
    HALTED,
-   FINISHED
+   FINISHED,
+   MALFORMED_SUBROUTINE_ENDING
 };
 
 std::string to_string(const torricelly_interpreter_status status);
@@ -31,6 +32,7 @@ class torricelly_interpreter : public std::enable_shared_from_this<torricelly_in
    std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_variable>>> _module_variables_mapping;
    std::function<std::string(unsigned int)> _get_parameter;
    std::shared_ptr<torricelly_instruction_interpreter> _instruction_interpreter;
+   torricelly_activation_record_variable _return_value;
 
    // Need to force the creation of shared pointer in order to be able to use share_from_this feature
    torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter);
@@ -46,6 +48,7 @@ public:
    void initialize();
    void run();
    void step();
+   torricelly_activation_record_variable return_value() const;
 
    torricelly_activation_record_variable peek_stack() const;
 

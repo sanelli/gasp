@@ -231,6 +231,7 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::DYNAMIC_INVOKE:
       break;
    case torricelly_inst_code::RET:
+      return false;
       break;
    case torricelly_inst_code::HALT:
       break;

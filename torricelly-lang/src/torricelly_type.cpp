@@ -28,6 +28,12 @@ std::shared_ptr<torricelly_system_type> torricelly_type_utility::as_system_type(
    return std::static_pointer_cast<torricelly_system_type>(type);
 }
 
+bool torricelly_type_utility::is_void(std::shared_ptr<torricelly_type> type) { 
+   if(type->type_type() != torricelly_type_type::SYSTEM) return false;
+   auto system_type = torricelly_type_utility::as_system_type(type);
+   return system_type->system_type() == torricelly_system_type_type::VOID;
+}
+
 std::shared_ptr<torricelly_system_type> torricelly::make_torricelly_system_type(torricelly_system_type_type system_type)
 {
    return memory::make_shared<torricelly_system_type>(system_type);

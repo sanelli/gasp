@@ -31,9 +31,9 @@ std::string interpreter::to_string(const torricelly_interpreter_status status)
 }
 
 torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
-    : _status(torricelly_interpreter_status::ZERO), 
-      _main_module(main_module), 
-      _get_parameter(get_parameter) { }
+    : _status(torricelly_interpreter_status::ZERO),
+      _main_module(main_module),
+      _get_parameter(get_parameter) {}
 std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_interpreter::main_module() const { return _main_module; }
 
 torricelly_interpreter_status torricelly_interpreter::status() const { return _status; }
@@ -61,18 +61,21 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-          for (auto param_count = subroutine->count_parameters(); param_count > 0; --param_count) { 
-             auto variable_type = subroutine->get_local_type(param_count);
-             auto input_string = _get_parameter(param_count);
-             if(input_string.empty())
-             {
-                auto default_value = torricelly_value::get_default_value(variable_type);
-                activation_record->push(torricelly_activation_record_variable::make(default_value));
-             } else {
-                auto value = torricelly_value::get_value_from_string(input_string, variable_type);
-                activation_record->push(torricelly_activation_record_variable::make(value));
-             }
-          }
+         for (auto param_count = subroutine->count_parameters(); param_count > 0; --param_count)
+         {
+            auto variable_type = subroutine->get_local_type(param_count);
+            auto input_string = _get_parameter(param_count);
+            if (input_string.empty())
+            {
+               auto default_value = torricelly_value::get_default_value(variable_type);
+               activation_record->push(torricelly_activation_record_variable::make(default_value));
+            }
+            else
+            {
+               auto value = torricelly_value::get_value_from_string(input_string, variable_type);
+               activation_record->push(torricelly_activation_record_variable::make(value));
+            }
+         }
       }
       else
       {
@@ -145,14 +148,29 @@ void torricelly_interpreter::step()
       auto instruction = current_activation_record->instruction();
       auto next_instruction = 0U;
       auto is_jump = false;
-      _instruction_interpreter->execute(instruction, next_instruction, is_jump);
+      bool continue_inside_subroutine = _instruction_interpreter->execute(instruction, next_instruction, is_jump);
 
-      if(is_jump)
+      if (!continue_inside_subroutine)
+      {
+         // If getting back to entry point return whatever on the stack
+         if (_activation_records.size() == 1)
+         {
+            if (!torricelly_type_utility::is_void(current_activation_record->subroutine()->return_type()))
+               // TODO: Check that the type matches with the expected return type
+               _return_value = current_activation_record->peek();
+            else
+               _return_value = torricelly_activation_record_variable::make(0);
+         }
+         _activation_records.pop();
+         _status = torricelly_interpreter_status::FINISHED;
+      }
+
+      if (is_jump)
          current_activation_record->jump(next_instruction - 1);
    }
    else
    {
-      _status = torricelly_interpreter_status::FINISHED;
+      _status = torricelly_interpreter_status::MALFORMED_SUBROUTINE_ENDING;
    }
    SANELLI_DEBUG("torricelly-interpreter", "[EXIT] step" << std::endl);
 }
@@ -164,6 +182,7 @@ torricelly_activation_record_variable torricelly_interpreter::peek_stack() const
    return _activation_records.top()->peek();
 }
 
-std::shared_ptr<torricelly_interpreter> gasp::torricelly::interpreter::make_torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter) {
+std::shared_ptr<torricelly_interpreter> gasp::torricelly::interpreter::make_torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
+{
    return sanelli::memory::make_shared<torricelly_interpreter>(main_module, get_parameter);
 }
