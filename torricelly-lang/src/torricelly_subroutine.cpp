@@ -27,31 +27,31 @@ torricelly_subroutine_flag torricelly_subroutine::get_flags() const
 {
    return _flags;
 }
-unsigned int torricelly_subroutine::add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter)
+unsigned int torricelly_subroutine::add_local(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter)
 {
-   _variable_types.push_back(type);
-   _variable_initial_values.push_back(initial_value);
+   _local_types.push_back(type);
+   _local_initial_values.push_back(initial_value);
    if (is_parameter)
-      _parameters.insert(_variable_types.size());
-   return _variable_types.size();
+      _parameters.insert(_local_types.size());
+   return _local_types.size();
 }
-std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::get_variable_type(unsigned int index) const
+std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::get_local_type(unsigned int index) const
 {
-   if (index > _variable_types.size())
+   if (index > _local_types.size())
       throw torricelly_error(sanelli::make_string("Cannot access variable type at index ", index, "."));
-   return _variable_types.at(index - 1);
+   return _local_types.at(index - 1);
 }
-torricelly_value torricelly_subroutine::get_initial_value(unsigned int index) const
+torricelly_value torricelly_subroutine::get_local_initial_value(unsigned int index) const
 {
-   if (index > _variable_initial_values.size())
+   if (index > _local_initial_values.size())
       throw torricelly_error(sanelli::make_string("Cannot access variable initial value at index ", index, "."));
-   return _variable_initial_values.at(index - 1);
+   return _local_initial_values.at(index - 1);
 }
-unsigned int torricelly_subroutine::get_number_of_variables() const
+unsigned int torricelly_subroutine::count_locals() const
 {
-   return _variable_types.size();
+   return _local_types.size();
 }
-unsigned int torricelly_subroutine::get_number_of_parameters() const
+unsigned int torricelly_subroutine::count_parameters() const
 {
    return _parameters.size();
 }
@@ -92,9 +92,11 @@ unsigned int torricelly_subroutine::next_label()
 
 unsigned int torricelly_subroutine::get_number_of_labels() const { return _labels_counter; }
 
+unsigned int torricelly_subroutine::max_stack_size() const { return _max_stack_size; }
+void torricelly_subroutine::max_stack_size(unsigned int value) { _max_stack_size = value; };
+
 void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
 {
-
    // Check flags
    if (is(torricelly_subroutine_flag::STATIC) && is(torricelly_subroutine_flag::VIRTUAL))
       throw torricelly_error(sanelli::make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::STATIC, "' and '", torricelly_subroutine_flag::VIRTUAL, "'"));
@@ -114,19 +116,19 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
       throw torricelly_error(sanelli::make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::PRIVATE, "' and '", torricelly_subroutine_flag::PROTECTED, "'"));
 
    // Check variables count
-   const unsigned int num_of_par = get_number_of_parameters();
-   const unsigned int num_of_var = get_number_of_variables();
+   const unsigned int num_of_par = count_parameters();
+   const unsigned int num_of_locals = count_locals();
    const unsigned int num_of_labels = get_number_of_labels();
-   if (num_of_par > num_of_var)
-      throw torricelly_error(sanelli::make_string("The number of parameters (", num_of_par, ") is greater than the number of variables (", num_of_var, ")"));
+   if (num_of_par > num_of_locals)
+      throw torricelly_error(sanelli::make_string("The number of parameters (", num_of_par, ") is greater than the number of variables (", num_of_locals, ")"));
 
    // Check all variables matches their initial values
-   for (auto variable_index = 1; variable_index <= num_of_var; ++variable_index)
+   for (auto local_index = 1; local_index <= num_of_locals; ++local_index)
    {
-      auto initial_value = get_initial_value(variable_index);
-      auto variable_type = get_variable_type(variable_index);
-      if (!initial_value.match(variable_type))
-         throw torricelly_error(sanelli::make_string("Variable at index ", variable_index, " has type ", variable_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", initial_value.system_type(), "> in  subroutine '", name(), "'"));
+      auto initial_value = get_local_initial_value(local_index);
+      auto local_type = get_local_type(local_index);
+      if (!initial_value.match(local_type))
+         throw torricelly_error(sanelli::make_string("Local at index ", local_index, " has type ", local_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", initial_value.system_type(), "> in  subroutine '", name(), "'"));
    }
 
    // Check instructions
@@ -151,13 +153,13 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
          {
          case torricelly_inst_ref_type::MODULE:
             if (ref > number_of_module_fields)
-               throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " refers to an invalid module variable."));
-            // TODO: Check if instruction match type of module variable
+               throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " refers to an invalid module local."));
+            // TODO: Check if instruction match type of module local
             break;
          case torricelly_inst_ref_type::SUBROUTINE:
-            if (ref > num_of_var)
-               throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " refers to an invalid subroutine variable."));
-            // TODO: Check if instruction match type of module variable
+            if (ref > num_of_locals)
+               throw torricelly_error(sanelli::make_string("Instruction at ", instruction_index, " refers to an invalid subroutine local."));
+            // TODO: Check if instruction match type of module local
             break;
          case torricelly_inst_ref_type::LABEL:
             if (ref > num_of_labels)

@@ -15,8 +15,8 @@ class torricelly_module
 {
    std::string _module_name;
    std::vector<std::shared_ptr<torricelly_subroutine>> _subroutines;
-   std::vector<std::shared_ptr<torricelly::torricelly_type>> _variable_types;
-   std::vector<torricelly_value> _variable_initial_values;
+   std::vector<std::shared_ptr<torricelly::torricelly_type>> _local_types;
+   std::vector<torricelly_value> _local_initial_values;
 
    torricelly_module(const std::string &module_name);
    
@@ -28,10 +28,10 @@ public:
    std::shared_ptr<torricelly_subroutine> get_subroutine(unsigned int index) const;
    std::shared_ptr<torricelly_subroutine> get_main() const;
 
-   unsigned int add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value);
-   std::shared_ptr<torricelly::torricelly_type> get_variable_type(unsigned int index) const;
-   torricelly_value get_initial_value(unsigned int index) const;
-   unsigned int get_number_of_variables() const;
+   unsigned int add_local(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value);
+   std::shared_ptr<torricelly::torricelly_type> get_local_type(unsigned int index) const;
+   torricelly_value get_local_initial_value(unsigned int index) const;
+   unsigned int count_locals() const;
    unsigned int get_variable_with_string_literal(const std::string& string_literal) const;
 
    void validate() const;

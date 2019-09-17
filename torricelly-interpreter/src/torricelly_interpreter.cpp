@@ -48,21 +48,21 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    auto activation_record = make_torricelly_activation_record(subroutine);
 
    // Add module variables
-   for (auto index = 1U; index <= subroutine->get_number_of_variables(); ++index)
-      activation_record->store(index - 1, torricelly_activation_record_variable::make(subroutine->get_initial_value(index)));
+   for (auto index = 1U; index <= subroutine->count_locals(); ++index)
+      activation_record->store(index - 1, torricelly_activation_record_variable::make(subroutine->get_local_initial_value(index)));
 
    // Add subroutine variables
    auto mapping = _module_variables_mapping[module->module_name()];
-   for (auto index = 1U; index <= module->get_number_of_variables(); ++index)
+   for (auto index = 1U; index <= module->count_locals(); ++index)
       activation_record->register_module_variable(index - 1, &(mapping->operator[](index)));
 
    // Push parameters on the stack
-   if (subroutine->get_number_of_parameters() > 0)
+   if (subroutine->count_parameters() > 0)
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-          for (auto param_count = subroutine->get_number_of_parameters(); param_count > 0; --param_count) { 
-             auto variable_type = subroutine->get_variable_type(param_count);
+          for (auto param_count = subroutine->count_parameters(); param_count > 0; --param_count) { 
+             auto variable_type = subroutine->get_local_type(param_count);
              auto input_string = _get_parameter(param_count);
              if(input_string.empty())
              {
@@ -76,7 +76,7 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
       }
       else
       {
-         for (auto param_count = subroutine->get_number_of_parameters(); param_count > 0; --param_count)
+         for (auto param_count = subroutine->count_parameters(); param_count > 0; --param_count)
             _parameters_passing.push(_activation_records.top()->pop());
          while (!_parameters_passing.empty())
          {
@@ -111,9 +111,9 @@ void torricelly_interpreter::initialize()
    if (main_subroutine == nullptr)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get main subroutine from module '", _main_module->module_name(), "'."));
 
-   for (auto index = 1U; index <= _main_module->get_number_of_variables(); ++index)
+   for (auto index = 1U; index <= _main_module->count_locals(); ++index)
    {
-      auto initial_value = _main_module->get_initial_value(index);
+      auto initial_value = _main_module->get_local_initial_value(index);
       auto variable = torricelly_activation_record_variable::make(initial_value);
       _module_variables_mapping[_main_module->module_name()]->operator[](index) = variable;
    }

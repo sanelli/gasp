@@ -34,10 +34,11 @@ std::string to_string(torricelly_subroutine_flag flag);
 class torricelly_subroutine {
    std::string _name;
    std::shared_ptr<torricelly::torricelly_type> _return_type;
-   std::vector<std::shared_ptr<torricelly::torricelly_type>> _variable_types;
-   std::vector<torricelly_value> _variable_initial_values;
+   std::vector<std::shared_ptr<torricelly::torricelly_type>> _local_types;
+   std::vector<torricelly_value> _local_initial_values;
    std::vector<torricelly::torricelly_instruction> _instructions;
    unsigned int _labels_counter;
+   unsigned int _max_stack_size;
    std::set<unsigned int> _parameters;
    torricelly_subroutine_flag _flags;
    torricelly_subroutine(const std::string& name, std::shared_ptr<torricelly::torricelly_type> return_type);
@@ -48,12 +49,12 @@ public:
    torricelly_subroutine_flag get_flags() const;
    bool is(torricelly_subroutine_flag flag) const;
 
-   unsigned int add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter = false);
-   std::shared_ptr<torricelly::torricelly_type> get_variable_type(unsigned int index) const;
-   torricelly_value get_initial_value(unsigned int index) const;
-   unsigned int get_number_of_variables() const;
-   unsigned int get_number_of_parameters() const;
-   bool is_parameter(unsigned int variable_index) const;
+   unsigned int add_local(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value, bool is_parameter = false);
+   std::shared_ptr<torricelly::torricelly_type> get_local_type(unsigned int index) const;
+   torricelly_value get_local_initial_value(unsigned int index) const;
+   unsigned int count_locals() const;
+   unsigned int count_parameters() const;
+   bool is_parameter(unsigned int local_index) const;
 
    unsigned int append_instruction(torricelly::torricelly_instruction instruction);
    void insert_instruction(unsigned int index, torricelly::torricelly_instruction instruction);
@@ -64,6 +65,9 @@ public:
 
    unsigned int next_label();
    unsigned int get_number_of_labels() const;
+
+   unsigned int max_stack_size() const;
+   void max_stack_size(unsigned int);
 
    void validate(unsigned int number_of_module_fields) const;
 

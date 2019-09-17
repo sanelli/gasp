@@ -44,28 +44,28 @@ std::shared_ptr<torricelly_subroutine> torricelly_module::get_main() const
    return result;
 }
 
-unsigned int torricelly_module::add_variable(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value)
+unsigned int torricelly_module::add_local(std::shared_ptr<torricelly::torricelly_type> type, torricelly_value initial_value)
 {
-   _variable_types.push_back(type);
-   _variable_initial_values.push_back(initial_value);
-   return _variable_types.size();
+   _local_types.push_back(type);
+   _local_initial_values.push_back(initial_value);
+   return _local_types.size();
 }
-std::shared_ptr<torricelly::torricelly_type> torricelly_module::get_variable_type(unsigned int index) const
+std::shared_ptr<torricelly::torricelly_type> torricelly_module::get_local_type(unsigned int index) const
 {
-   return _variable_types.at(index - 1);
+   return _local_types.at(index - 1);
 }
-torricelly_value torricelly_module::get_initial_value(unsigned int index) const
+torricelly_value torricelly_module::get_local_initial_value(unsigned int index) const
 {
-   return _variable_initial_values.at(index - 1);
+   return _local_initial_values.at(index - 1);
 }
 
-unsigned int torricelly_module::get_number_of_variables() const
+unsigned int torricelly_module::count_locals() const
 {
-   return _variable_types.size();
+   return _local_types.size();
 }
 unsigned int torricelly_module::get_variable_with_string_literal(const std::string &string_literal) const
 {
-   return static_cast<unsigned int>(sanelli::indexof_if(_variable_initial_values.begin(), _variable_initial_values.end(),
+   return static_cast<unsigned int>(sanelli::indexof_if(_local_initial_values.begin(), _local_initial_values.end(),
                                                         [string_literal](const torricelly_value &value) { return value.is(torricelly_system_type_type::STRING_LITERAL) &&
                                                                                                                  (string_literal == value.get_string_literal()); }));
 }
@@ -77,11 +77,11 @@ void torricelly_module::validate() const
       throw torricelly_error("Invalid module name");
 
    // Match variable with types
-   auto num_of_vars = get_number_of_variables();
+   auto num_of_vars = count_locals();
    for (auto variable_index = 1; variable_index < num_of_vars; ++variable_index)
    {
-      auto initial_value = get_initial_value(variable_index);
-      auto variable_type = get_variable_type(variable_index);
+      auto initial_value = get_local_initial_value(variable_index);
+      auto variable_type = get_local_type(variable_index);
       if (!initial_value.match(variable_type))
          throw torricelly_error(sanelli::make_string("Variable at index ", variable_index + 1, " has type ", variable_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", initial_value.system_type(), "> in module '", module_name(), "'."));
    }

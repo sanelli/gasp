@@ -12,19 +12,23 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const
    os << ".subroutine " << subroutine->name() << std::endl;
    os << "   .flags" << subroutine->get_flags() << std::endl;
    os << "   .returns " << subroutine->return_type() << std::endl;
-   os << "   .variables " << subroutine->get_number_of_variables() << std::endl;
-   for (auto variable_index = 1u; variable_index <= subroutine->get_number_of_variables(); ++variable_index)
+   os << "   .stacksize " << subroutine->max_stack_size() << std::endl;
+   os << "   .locals " << subroutine->count_locals() << std::endl;
+   for (auto local_index = 1u; local_index <= subroutine->count_locals(); ++local_index)
    {
-      os << "      .variable "
-         << torricelly_inst_ref_type::SUBROUTINE << variable_index << " "
-         << subroutine->get_variable_type(variable_index) << " "
-         << subroutine->get_initial_value(variable_index)
-         << (subroutine->is_parameter(variable_index) ? " [parameter]" : "")
+      os << "      .local "   
+         << (subroutine->is_parameter(local_index) ? " .parameter" : "")
+         << torricelly_inst_ref_type::SUBROUTINE << local_index << " "
+         << subroutine->get_local_type(local_index) << " "
+         << subroutine->get_local_initial_value(local_index)
          << std::endl;
    }
 
    for (auto instruction_index = 1u; instruction_index <= subroutine->get_number_of_instructions(); ++instruction_index)
       os << subroutine->get_instruction(instruction_index) << std::endl;
+   
+   os << ".end subroutine" << std::endl;
+
    return os;
 }
 
