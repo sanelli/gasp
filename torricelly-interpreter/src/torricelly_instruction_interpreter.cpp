@@ -234,6 +234,7 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
       return false;
       break;
    case torricelly_inst_code::HALT:
+      _interpreter->_status = torricelly_interpreter_status::HALTED;
       break;
    default:
       throw torricelly_interpreter_error(sanelli::make_string("Cannot interpret instrution code '", to_string(code), "'."));
