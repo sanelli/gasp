@@ -56,12 +56,12 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    for (auto index = 1U; index <= module->count_locals(); ++index)
       activation_record->register_module_variable(index - 1, &(mapping->operator[](index)));
 
-   // Push parameters on the stack
+   // Push parameters on the stack from left to right
    if (subroutine->count_parameters() > 0)
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-         for (auto param_count = subroutine->count_parameters(); param_count > 0; --param_count)
+         for (auto param_count = 1U; param_count <= subroutine->count_parameters(); ++param_count)
          {
             auto variable_type = subroutine->get_local_type(param_count);
             auto input_string = _get_parameter(param_count);

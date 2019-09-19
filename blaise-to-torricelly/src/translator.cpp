@@ -83,7 +83,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
 
    std::map<std::string, unsigned int> variables_mapping;
 
-   for (auto index = 0UL; index < subroutine->count_parameters(); ++index)
+   // Crate locals and add STORE from right to left
+   for (auto index = subroutine->count_parameters() - 1; index >= 0 ; --index)
    {
       auto parameter = subroutine->get_parameter(index);
       auto torricelly_type = translate_type(parameter->type());
@@ -327,8 +328,8 @@ void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr
    max_stack_size = subroutine->return_type()->equals(blaise::ast::make_plain_type(blaise::ast::blaise_ast_system_type::VOID)) ? 0U : 1U;
    max_stack_size = std::max(max_stack_size, number_of_parameters);
 
-   // Push parameters on the stack form right to left
-   for (signed int index = number_of_parameters - 1; index >= 0; --index)
+   // Push parameters on the stack form left to right
+   for (signed int index = 0; index < number_of_parameters; ++index)
    {
       SANELLI_DEBUG("blaise-to-torricelly", "translate_subroutine_call [BEGIN] translating parameter at " << index << std::endl);
 
