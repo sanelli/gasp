@@ -67,14 +67,17 @@ unsigned int torricelly_subroutine::append_instruction(torricelly::torricelly_in
 void torricelly_subroutine::insert_instruction(unsigned int index, torricelly::torricelly_instruction instruction)
 {
    _instructions.insert(_instructions.begin() + index - 1, instruction);
+   make_labels_map();
 }
 void torricelly_subroutine::replace_instruction(unsigned int index, torricelly::torricelly_instruction instruction)
 {
    _instructions.at(index - 1) = instruction;
+   make_labels_map();
 }
 void torricelly_subroutine::remove_instruction(unsigned int index)
 {
    _instructions.erase(_instructions.begin() + index - 1);
+   make_labels_map();
 }
 torricelly::torricelly_instruction torricelly_subroutine::get_instruction(unsigned int index) const
 {
@@ -104,8 +107,8 @@ void torricelly_subroutine::make_labels_map()
 unsigned int torricelly_subroutine::get_instruction_address(unsigned int label) const
 {
    auto it = _labels_map.find(label);
-   if(it == _labels_map.end())
-      throw torricelly_error(sanelli::make_string("Cannot get address for subroutine '", name(), "' of label '",label,"'."));
+   if (it == _labels_map.end())
+      throw torricelly_error(sanelli::make_string("Cannot get address for subroutine '", name(), "' of label '", label, "'."));
    return it->second;
 }
 
