@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stdexcept>
 
 #include <sanelli/sanelli.hpp>
 
@@ -123,7 +124,8 @@ bool gasp_module_tokenizer::run(int argc, char *argv[])
    try
    {
       tokenizer.tokenize(_input, tokens);
-      for(const auto& token : tokens) { 
+      for (const auto &token : tokens)
+      {
          _output << token << std::endl;
       }
       return true;

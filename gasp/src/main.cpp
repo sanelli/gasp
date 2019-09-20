@@ -6,7 +6,11 @@
 
 #include <map>
 #include <memory>
+#include <stdexcept>
+
 #include <sanelli/sanelli.hpp>
+
+#include <gasp/common/gasp_error.hpp>
 
 #include <gasp/module/gasp_module.hpp>
 #include <gasp/module/gasp_module_tokenizer.hpp>
@@ -67,20 +71,41 @@ int main(int argc, char *argv[])
       if (it->first == expected_module)
       {
          module = std::move(it->second);
-         modules.clear();
          break;
       }
    }
 
-   if(module == nullptr) { 
+   // Either I found the module or not I do nto need to waste
+   // memory with something I will never user.
+   modules.clear();
+
+   if (module == nullptr)
+   {
       std::cerr << "Cannot find module '" << expected_module << "'. Available modules are:" << std::endl;
       print_available_modules(modules);
       return EXIT_FAILURE;
    }
 
-   auto success = module->run(argc, argv);
-
-   return success ? EXIT_SUCCESS : EXIT_FAILURE;
+   try
+   {
+      auto success = module->run(argc, argv);
+      return success ? EXIT_SUCCESS : EXIT_FAILURE;
+   }
+   catch (const gasp::common::gasp_error &e)
+   {
+      std::cerr << "Error while executing module '" << module->name() << "': " << e.what() << std::endl;
+      return EXIT_FAILURE;
+   }
+   catch (const std::exception &e)
+   {
+      std::cerr << "Unexpected error while executing module '" << module->name() << "': " << e.what() << std::endl;
+      return EXIT_FAILURE;
+   }
+   catch (...)
+   {
+      std::cerr << "An unexpected error occurred. No futher details available." << std::endl;
+      return EXIT_FAILURE;
+   }
 
    // cout << "GASP - by Stefano Anelli." << endl;
 
