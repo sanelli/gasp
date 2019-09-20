@@ -1,4 +1,4 @@
-add_library(gasp-torricelly-lang SHARED "")
+add_library(gasp-torricelly-lang STATIC "")
 set_target_properties(gasp-torricelly-lang PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(gasp-torricelly-lang gasp-common)
 target_link_libraries(gasp-torricelly-lang libsanelli)

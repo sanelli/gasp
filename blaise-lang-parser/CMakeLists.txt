@@ -1,4 +1,4 @@
-add_library(gasp-blaise-lang-parser SHARED "")
+add_library(gasp-blaise-lang-parser STATIC "")
 set_target_properties(gasp-blaise-lang-parser PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(gasp-blaise-lang-parser gasp-common)
 target_link_libraries(gasp-blaise-lang-parser libsanelli)

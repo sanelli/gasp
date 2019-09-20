@@ -1,4 +1,4 @@
-add_library(gasp-blaise-lang-tokenizer SHARED "")
+add_library(gasp-blaise-lang-tokenizer STATIC "")
 set_target_properties(gasp-blaise-lang-tokenizer PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(gasp-blaise-lang-tokenizer gasp-common)
 target_link_libraries(gasp-blaise-lang-tokenizer libsanelli)
