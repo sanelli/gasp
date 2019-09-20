@@ -28,6 +28,23 @@ std::shared_ptr<torricelly_subroutine> torricelly_module::get_subroutine(unsigne
 {
    return _subroutines.at(index - 1);
 }
+
+std::shared_ptr<torricelly_subroutine> torricelly_module::get_subroutine(const std::string name) const
+{
+   std::shared_ptr<torricelly_subroutine> result = nullptr;
+   for (const auto subroutine : _subroutines)
+   {
+      if (subroutine->name() == name)
+      {
+         if (result != nullptr)
+            throw torricelly_error(sanelli::make_string("More than one subroutine in module '", _module_name, "' has name ", name, "."));
+
+         result = subroutine;
+      }
+   }
+   return result;
+}
+
 std::shared_ptr<torricelly_subroutine> torricelly_module::get_main() const
 {
    std::shared_ptr<torricelly_subroutine> result = nullptr;
@@ -35,11 +52,11 @@ std::shared_ptr<torricelly_subroutine> torricelly_module::get_main() const
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-          if(result != nullptr)
+         if (result != nullptr)
             throw torricelly_error(sanelli::make_string("More than one subroutine in module '", _module_name, "' is marked as MAIN."));
-          
-          result = subroutine;
-       }
+
+         result = subroutine;
+      }
    }
    return result;
 }

@@ -14,15 +14,17 @@ namespace gasp::torricelly::interpreter
 
 class torricelly_activation_record
 {
+   std::shared_ptr<torricelly_module> _module;
    std::shared_ptr<torricelly_subroutine> _subroutine;
    std::stack<torricelly_activation_record_variable> _stack;
    std::map<unsigned int, torricelly_activation_record_variable> _variables;
    std::map<unsigned int, torricelly_activation_record_variable *> _module_variables;
 
    unsigned int _ip; // instruction pointer
-   torricelly_activation_record(std::shared_ptr<torricelly_subroutine> subroutine);
+   torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine);
 
 public:
+   std::shared_ptr<torricelly_module> module() const;
    std::shared_ptr<torricelly_subroutine> subroutine() const;
 
    // Stack management
@@ -49,6 +51,6 @@ public:
    friend sanelli::memory;
 };
 
-std::shared_ptr<torricelly_activation_record> make_torricelly_activation_record(const std::shared_ptr<torricelly_subroutine> subroutine);
+std::shared_ptr<torricelly_activation_record> make_torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine);
 
 } // namespace gasp::torricelly::interpreter

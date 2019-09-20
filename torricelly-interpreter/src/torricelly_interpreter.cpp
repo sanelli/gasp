@@ -45,7 +45,7 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    if (_status != torricelly_interpreter_status::RUNNING && _status != torricelly_interpreter_status::INITIALIZED && _status != torricelly_interpreter_status::ZERO)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot create a new activation record when the interpreter is in status '", to_string(_status), "'."));
 
-   auto activation_record = make_torricelly_activation_record(subroutine);
+   auto activation_record = make_torricelly_activation_record(module, subroutine);
 
    // Add module variables
    for (auto index = 1U; index <= subroutine->count_locals(); ++index)

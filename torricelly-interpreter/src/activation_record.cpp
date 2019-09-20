@@ -10,7 +10,8 @@ using namespace gasp;
 using namespace gasp::torricelly;
 using namespace gasp::torricelly::interpreter;
 
-torricelly_activation_record::torricelly_activation_record(const std::shared_ptr<torricelly_subroutine> subroutine) : _ip(0), _subroutine(subroutine) {}
+torricelly_activation_record::torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine) 
+   : _ip(0), _subroutine(subroutine), _module(module) {}
 
 void torricelly_activation_record::push(const torricelly_activation_record_variable value)
 {
@@ -26,6 +27,7 @@ torricelly_activation_record_variable torricelly_activation_record::peek() const
 {
    return _stack.top();
 }
+std::shared_ptr<torricelly_module> torricelly_activation_record::module() const { return _module; }
 std::shared_ptr<torricelly_subroutine> torricelly_activation_record::subroutine() const { return _subroutine; }
 unsigned int torricelly_activation_record::ip() const { return _ip; }
 void torricelly_activation_record::jump(unsigned int ip){ _ip = ip; }
@@ -75,7 +77,7 @@ torricelly_activation_record_variable *torricelly_activation_record::load_module
    return it->second;
 }
 
-std::shared_ptr<torricelly_activation_record> gasp::torricelly::interpreter::make_torricelly_activation_record(std::shared_ptr<torricelly_subroutine> subroutine)
+std::shared_ptr<torricelly_activation_record> gasp::torricelly::interpreter::make_torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine)
 {
-   return sanelli::memory::make_shared<torricelly_activation_record>(subroutine);
+   return sanelli::memory::make_shared<torricelly_activation_record>(module, subroutine);
 }

@@ -107,6 +107,9 @@ bool execute_jump_neq(const torricelly::torricelly_instruction& instruction, uns
 bool execute_jump_gte(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
 bool execute_jump_gt(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
 
+// Invoke
+void execute_static_invoke(const torricelly::torricelly_instruction& instruction);
+
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;
 
