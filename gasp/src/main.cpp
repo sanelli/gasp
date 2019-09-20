@@ -1,29 +1,42 @@
-#include <cstdlib>
-#include <iostream>
-#include <vector>
-#include <sstream>
-#include <memory>
+// #include <cstdlib>
+// #include <iostream>
+// #include <vector>
+// #include <sstream>
+// #include <memory>
 
+#include <map>
+#include <memory>
 #include <sanelli/sanelli.hpp>
 
-#include <gasp/common/internal_error.hpp>
-#include <gasp/blaise/tokenizer/tokenizer.hpp>
-#include <gasp/blaise/parser/parser.hpp>
-#include <gasp/blaise/ast.hpp>
-#include <gasp/torricelly/torricelly.hpp>
-#include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
-#include <gasp/torricelly/torricelly_io.hpp>
-#include <gasp/torricelly/interpreter.hpp>
+#include <gasp/module/gasp_module.hpp>
+#include <gasp/module/gasp_module_tokenizer.hpp>
 
-using namespace std;
+// #include <gasp/common/internal_error.hpp>
+// #include <gasp/blaise/tokenizer/tokenizer.hpp>
+// #include <gasp/blaise/parser/parser.hpp>
+// #include <gasp/blaise/ast.hpp>
+// #include <gasp/torricelly/torricelly.hpp>
+// #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
+// #include <gasp/torricelly/torricelly_io.hpp>
+// #include <gasp/torricelly/interpreter.hpp>
 
-using namespace gasp;
-using namespace gasp::blaise;
-using namespace gasp::torricelly;
-using namespace gasp::blaise_to_torricelly;
-using namespace gasp::torricelly::interpreter;
+// using namespace std;
+
+// using namespace gasp;
+// using namespace gasp::blaise;
+// using namespace gasp::torricelly;
+// using namespace gasp::blaise_to_torricelly;
+// using namespace gasp::torricelly::interpreter;
 
 // TODO: Add error codes when I throw errors
+
+void print_available_modules(const std::map<std::string, std::unique_ptr<gasp::module::gasp_module>> &modules)
+{
+   for (auto it = modules.begin(); it != modules.end(); ++it)
+   {
+      std::cerr << "   * " << it->first << " : " << it->second->description() << std::endl;
+   }
+}
 
 int main(int argc, char *argv[])
 {
@@ -35,19 +48,53 @@ int main(int argc, char *argv[])
    SANELLI_INSTALL_DEBUGGER("blaise-to-torricelly");
    SANELLI_INSTALL_DEBUGGER("torricelly-interpreter");
 
-   cout << "GASP - by Stefano Anelli." << endl;
+   std::map<std::string, std::unique_ptr<gasp::module::gasp_module>> modules;
 
-   blaise_tokenizer tokenizer;
-   blaise_parser parser;
-   blaise_parser_context context;
-   std::vector<std::shared_ptr<torricelly_module>> modules;
-   torricelly_text_output torricelly_output(std::cout);
+   auto tokenizer_module = std::make_unique<gasp::module::gasp_module_tokenizer>();
+   modules[tokenizer_module->name()] = std::move(tokenizer_module);
 
-   stringstream program;
+   if (argc < 2)
+   {
+      std::cerr << "No module selected. Available modules are: " << std::endl;
+      print_available_modules(modules);
+      return EXIT_FAILURE;
+   }
 
-   std::vector<std::string> parameters;
-   for (int arg_index = 1; arg_index < argc; ++arg_index)
-      parameters.push_back(std::string(argv[arg_index]));
+   auto expected_module = std::string(argv[1]);
+   std::unique_ptr<gasp::module::gasp_module> module = nullptr;
+   for (auto it = modules.begin(); it != modules.end(); ++it)
+   {
+      if (it->first == expected_module)
+      {
+         module = std::move(it->second);
+         modules.clear();
+         break;
+      }
+   }
+
+   if(module == nullptr) { 
+      std::cerr << "Cannot find module '" << expected_module << "'. Available modules are:" << std::endl;
+      print_available_modules(modules);
+      return EXIT_FAILURE;
+   }
+
+   auto success = module->run(argc, argv);
+
+   return success ? EXIT_SUCCESS : EXIT_FAILURE;
+
+   // cout << "GASP - by Stefano Anelli." << endl;
+
+   // blaise_tokenizer tokenizer;
+   // blaise_parser parser;
+   // blaise_parser_context context;
+   // std::vector<std::shared_ptr<torricelly_module>> modules;
+   // torricelly_text_output torricelly_output(std::cout);
+
+   // stringstream program;
+
+   // std::vector<std::string> parameters;
+   // for (int arg_index = 1; arg_index < argc; ++arg_index)
+   //    parameters.push_back(std::string(argv[arg_index]));
 
    // program << R"__(
    //    variable
@@ -180,131 +227,131 @@ int main(int argc, char *argv[])
    //    end.
    // )___";
 
-   program << R"___(
-      program hello_world(p1: integer, p2: float);
-      function duplicate(i: integer) : integer
-      begin
-         duplicate := 2 * i;
-      end;
-      function abs(i: integer) : integer
-      begin
-         abs := if i < 0 then -i else i;
-      end;
-      function abs(f: float) : float
-      begin
-         abs := if f < 0 then -f else f;
-      end;
-      function abs(d: double) : double
-      begin
-         abs := if d < 0 then -d else d;
-      end;
-      function average(a: float, b: float, c: float) : float
-      begin
-         average := (a + b + c) / 3;
-      end;
-      var
-         i,j,k: integer;
-         d: double;
-         f1,f2: float;
-         b: boolean;
-      begin
-         i := 0;
-         j := 1;
-         k := duplicate(j);
-         b := true;
-         while b begin
-            b := false;
-         end
-         repeat begin
-          b:= true;
-         end until b;
-         do begin
-           b := false;
-         end while b;
-         if b then
-         begin
-           f1 := 2;
-         end else begin
-           f1 := 1;
-         end
-      end.
-   )___";
+   // program << R"___(
+   //    program hello_world(p1: integer, p2: float);
+   //    function duplicate(i: integer) : integer
+   //    begin
+   //       duplicate := 2 * i;
+   //    end;
+   //    function abs(i: integer) : integer
+   //    begin
+   //       abs := if i < 0 then -i else i;
+   //    end;
+   //    function abs(f: float) : float
+   //    begin
+   //       abs := if f < 0 then -f else f;
+   //    end;
+   //    function abs(d: double) : double
+   //    begin
+   //       abs := if d < 0 then -d else d;
+   //    end;
+   //    function average(a: float, b: float, c: float) : float
+   //    begin
+   //       average := (a + b + c) / 3;
+   //    end;
+   //    var
+   //       i,j,k: integer;
+   //       d: double;
+   //       f1,f2: float;
+   //       b: boolean;
+   //    begin
+   //       i := 0;
+   //       j := 1;
+   //       k := duplicate(j);
+   //       b := true;
+   //       while b begin
+   //          b := false;
+   //       end
+   //       repeat begin
+   //        b:= true;
+   //       end until b;
+   //       do begin
+   //         b := false;
+   //       end while b;
+   //       if b then
+   //       begin
+   //         f1 := 2;
+   //       end else begin
+   //         f1 := 1;
+   //       end
+   //    end.
+   // )___";
 
-   try
-   {
-      cout << "-- TOKENIZER -------------------------------------------------------" << endl;
-      tokenizer.tokenize(program, context);
-      cout << context << endl;
-      cout << "-- PARSER -------------------------------------------------------" << endl;
-      parser.parse(context);
-      cout << "-- TRANSLATOR -------------------------------------------------------" << endl;
-      translator translator(context.module());
-      translator.execute(modules);
-      cout << "-- TORRICELLY CODE -------------------------------------------------------" << endl;
-      for (auto module : modules)
-         torricelly_output << module;
-      cout << "-- INTERPRETER -------------------------------------------------------" << endl;
-      auto get_parameter = [parameters](unsigned int index) {
-         auto real_index = index-1;
-         return real_index >= 0 && real_index < parameters.size() 
-                  ? parameters.at(real_index)
-                  : std::string(""); 
-      };
-      auto interpreter = make_torricelly_interpreter(modules[0], get_parameter);
-      interpreter->initialize();
-      interpreter->run();
-      return EXIT_SUCCESS;
-   }
-   catch (sanelli::tokenizer_error &error)
-   {
-      cerr << "TOKENIZER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
-      cerr << context << endl;
+   // try
+   // {
+   //    cout << "-- TOKENIZER -------------------------------------------------------" << endl;
+   //    tokenizer.tokenize(program, context);
+   //    cout << context << endl;
+   //    cout << "-- PARSER -------------------------------------------------------" << endl;
+   //    parser.parse(context);
+   //    cout << "-- TRANSLATOR -------------------------------------------------------" << endl;
+   //    translator translator(context.module());
+   //    translator.execute(modules);
+   //    cout << "-- TORRICELLY CODE -------------------------------------------------------" << endl;
+   //    for (auto module : modules)
+   //       torricelly_output << module;
+   //    cout << "-- INTERPRETER -------------------------------------------------------" << endl;
+   //    auto get_parameter = [parameters](unsigned int index) {
+   //       auto real_index = index-1;
+   //       return real_index >= 0 && real_index < parameters.size()
+   //                ? parameters.at(real_index)
+   //                : std::string("");
+   //    };
+   //    auto interpreter = make_torricelly_interpreter(modules[0], get_parameter);
+   //    interpreter->initialize();
+   //    interpreter->run();
+   //    return EXIT_SUCCESS;
+   // }
+   // catch (sanelli::tokenizer_error &error)
+   // {
+   //    cerr << "TOKENIZER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+   //    cerr << context << endl;
 
-      return EXIT_FAILURE;
-   }
-   catch (sanelli::parser_error &error)
-   {
-      cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (gasp::blaise::ast::blaise_ast_error &error)
-   {
-      cerr << "BLAISE_AST_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (gasp::common::gasp_internal_error &error)
-   {
-      cerr << "INTERNAL_ERROR: " << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
-   {
-      cerr << "BLAISE_TO_TORRICELLI_INTERNAL_ERROR: " << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_error &error)
-   {
-      cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (gasp::torricelly::interpreter::torricelly_interpreter_error &error)
-   {
-      cerr << "TORRICELLY_INTERPRETER_ERROR:" << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (gasp::torricelly::interpreter::torricelly_interpreter_execution_error &error)
-   {
-      cerr << "TORRICELLY_INTERPRETER_EXECUTION_ERROR(" <<  error.subroutine() << ":" << error.ip() << ")" << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (std::exception &error)
-   {
-      cerr << "GENERIC_ERROR: " << error.what() << endl;
-      return EXIT_FAILURE;
-   }
-   catch (...)
-   {
-      cerr << "UNKNOWN ERROR -- No further information available at this stage" << endl;
-      return EXIT_FAILURE;
-   }
+   //    return EXIT_FAILURE;
+   // }
+   // catch (sanelli::parser_error &error)
+   // {
+   //    cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (gasp::blaise::ast::blaise_ast_error &error)
+   // {
+   //    cerr << "BLAISE_AST_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (gasp::common::gasp_internal_error &error)
+   // {
+   //    cerr << "INTERNAL_ERROR: " << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
+   // {
+   //    cerr << "BLAISE_TO_TORRICELLI_INTERNAL_ERROR: " << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (gasp::blaise_to_torricelly::blaise_to_torricelly_error &error)
+   // {
+   //    cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (gasp::torricelly::interpreter::torricelly_interpreter_error &error)
+   // {
+   //    cerr << "TORRICELLY_INTERPRETER_ERROR:" << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (gasp::torricelly::interpreter::torricelly_interpreter_execution_error &error)
+   // {
+   //    cerr << "TORRICELLY_INTERPRETER_EXECUTION_ERROR(" <<  error.subroutine() << ":" << error.ip() << ")" << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (std::exception &error)
+   // {
+   //    cerr << "GENERIC_ERROR: " << error.what() << endl;
+   //    return EXIT_FAILURE;
+   // }
+   // catch (...)
+   // {
+   //    cerr << "UNKNOWN ERROR -- No further information available at this stage" << endl;
+   //    return EXIT_FAILURE;
+   // }
 }
