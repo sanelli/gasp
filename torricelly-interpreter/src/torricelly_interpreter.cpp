@@ -37,7 +37,7 @@ torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly:
 std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_interpreter::main_module() const { return _main_module; }
 
 torricelly_interpreter_status torricelly_interpreter::status() const { return _status; }
-
+torricelly_activation_record_variable torricelly_interpreter::return_value() const { return _return_value; }
 void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torricelly::torricelly_module> module,
                                                     std::shared_ptr<gasp::torricelly::torricelly_subroutine> subroutine)
 {
