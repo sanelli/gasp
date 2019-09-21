@@ -10,6 +10,7 @@
 #include <gasp/module/gasp_module_tokenize.hpp>
 #include <gasp/module/gasp_module_compile.hpp>
 #include <gasp/module/gasp_module_execute.hpp>
+#include <gasp/module/gasp_module_blaise_sample.hpp>
 
 // TODO: Add error codes when I throw errors
 
@@ -36,9 +37,12 @@ int main(int argc, char *argv[])
    auto tokenize_module = std::make_unique<gasp::module::gasp_module_tokenize>();
    auto compile_module = std::make_unique<gasp::module::gasp_module_compile>();
    auto execute_module = std::make_unique<gasp::module::gasp_module_execute>();
+   auto blaise_sample_module = std::make_unique<gasp::module::gasp_module_blaise_sample>();
+
    modules[tokenize_module->name()] = std::move(tokenize_module);
    modules[compile_module->name()] = std::move(compile_module);
    modules[execute_module->name()] = std::move(execute_module);
+   modules[blaise_sample_module->name()] = std::move(blaise_sample_module);
 
    if (argc < 2)
    {

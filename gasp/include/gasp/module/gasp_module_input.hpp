@@ -32,9 +32,6 @@ protected:
 
 public:
    gasp_module_input();
-   virtual std::string name() const = 0;
-   virtual std::string description() const = 0;
-   virtual bool run(int argc, char* argv[]) = 0;
    virtual ~gasp_module_input();
 };
 
