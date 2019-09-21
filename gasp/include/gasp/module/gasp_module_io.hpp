@@ -2,39 +2,32 @@
 
 #include <string>
 #include <fstream>
+#include <map>
 
-#include <gasp/module/gasp_module.hpp>
+#include <gasp/module/gasp_module_input.hpp>
 
 namespace gasp::module
 {
 
-class gasp_module_io : public gasp_module
+class gasp_module_io : public gasp_module_input
 {
-   bool _has_help_flag;
-   std::ifstream _input;
    std::ofstream _output;
-   bool _input_from_file;
    bool _output_from_file;
-   std::string _format;
+   std::string _output_format;
 
 protected:
-   void parse_command_line(int argc, char* argv[]);
-   virtual bool parse_command_line_hook(int& arg_index, int argc, char* argv[]);
+   bool parse_command_line_hook(int &arg_index, int argc, char *argv[], std::map<std::string, bool> &map) override;
+   void post_command_line_parse(const std::map<std::string, bool> &flags) override;
 
-   bool is_help() const;
-   std::string help() const;
-   virtual std::string extended_help() const;
-   bool input_from_file() const;
-   std::ifstream& input();
+   std::string extended_help() const override;
+
    bool output_from_file() const;
-   std::ofstream& output();
-   std::string format() const;
+   std::ofstream &output();
+   std::string output_format() const;
+   void set_output_format(std::string format);
 
 public:
    gasp_module_io();
-   virtual std::string name() const = 0;
-   virtual std::string description() const = 0;
-   virtual bool run(int argc, char* argv[]) = 0;
    virtual ~gasp_module_io();
 };
 

@@ -27,6 +27,8 @@ bool gasp_module_tokenize::run(int argc, char *argv[])
    blaise_tokenizer tokenizer;
    std::vector<sanelli::token<gasp::blaise::blaise_token_type>> tokens;
 
+   set_input_format("blaise");
+   set_output_format("text");
    parse_command_line(argc, argv);
 
    if (is_help())
@@ -37,9 +39,15 @@ bool gasp_module_tokenize::run(int argc, char *argv[])
       return true;
    }
 
-   if (format() != "blaise")
+   if (input_format() != "blaise")
    {
-      std::cerr << "Format '" << format() << "' is not supported." << std::endl;
+      std::cerr << "Inut format '" << input_format() << "' is not supported." << std::endl;
+      return false;
+   }
+
+   if (output_format() != "text")
+   {
+      std::cerr << "Output format '" << output_format() << "' is not supported." << std::endl;
       return false;
    }
 
