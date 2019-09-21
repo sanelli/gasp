@@ -11,18 +11,42 @@ using namespace gasp::module;
 
 std::map<std::string, std::string> _samples;
 
-auto sample_empty = R"__(program empty;
+auto sample_empty = R"__(program sample;
 begin
 end.)__";
 
-auto sample_empty_with_parameters = R"__(program empty_with_parameters(first: integer, second: boolean);
+auto sample_empty_with_parameters = R"__(program sample(first: integer, second: boolean);
 begin
+end.)__";
+
+auto sample_sum_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+begin
+   sample := first + second;
+end.)__";
+
+auto sample_subtract_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+begin
+   sample := first - second;
+end.)__";
+
+auto sample_multiply_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+begin
+   sample := first * second;
+end.)__";
+
+auto sample_divide_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+begin
+   sample := first / second;
 end.)__";
 
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = sample_empty;
    _samples["empty-with-parameters"] = sample_empty_with_parameters;
+   _samples["sum-two-integer-parameters"] = sample_sum_two_integer_parameters;
+   _samples["subtract-two-integer-parameters"] = sample_subtract_two_integer_parameters;
+   _samples["multiply-two-integer-parameters"] = sample_multiply_two_integer_parameters;
+   _samples["divide-two-integer-parameters"] = sample_divide_two_integer_parameters;
 }
 
 std::string gasp_module_blaise_sample::name() const
