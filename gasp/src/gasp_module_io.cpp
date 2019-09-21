@@ -1,20 +1,14 @@
 #include <string>
-#include <iostream>
 #include <fstream>
-#include <vector>
-#include <stdexcept>
 
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/common/gasp_error.hpp>
-#include <gasp/module/gasp_module.hpp>
-#include <gasp/module/gasp_module_tokenizer.hpp>
-#include <gasp/blaise/tokenizer/tokenizer.hpp>
+#include <gasp/module/gasp_module_io.hpp>
 
 using namespace gasp;
 using namespace gasp::common;
 using namespace gasp::module;
-using namespace gasp::blaise;
 
 const std::string p_help = "--help";
 const std::string p_help_short = "-h";
@@ -25,23 +19,42 @@ const std::string p_output_file_short = "-o";
 const std::string p_input_format = "--format";
 const std::string p_input_format_short = "-f";
 
-gasp_module_tokenizer::gasp_module_tokenizer()
-    : _has_help_flag(false), _input_from_file(false), _output_from_file(false)
-{
-}
+gasp_module_io::gasp_module_io()
+    : _has_help_flag(false), _input_from_file(false), _output_from_file(false), _format("blaise") {}
 
-gasp_module_tokenizer::~gasp_module_tokenizer()
+gasp_module_io::~gasp_module_io()
 {
-   if (_input_from_file)
+   if (input_from_file())
       _input.close();
-   if (_output_from_file)
+   if (output_from_file())
       _output.close();
 }
 
-std::string gasp_module_tokenizer::name() const { return "tokenizer"; }
-std::string gasp_module_tokenizer::description() const { return "Output the tokenized version of the input file."; }
+bool gasp_module_io::is_help() const { return _has_help_flag; }
+std::string gasp_module_io::help() const
+{
+   auto help_message = "   " + p_help + "/" + p_help_short + " : Display the help message.\n" +
+                       "   " + p_input_file + "/" + p_input_file_short + " : Input file (optiona; default: stdin).\n" +
+                       "   " + p_output_file + "/" + p_output_file_short + " : Output file (optional; default: stdout).\n" +
+                       "   " + p_input_format + "/" + p_input_format_short + " : Input file format (optional; default: blaise).";
+   auto extended_help_message = extended_help();
+   if (extended_help_message == "")
+      return help_message;
+   else
+      return help_message + "\n" + extended_help_message;
+}
 
-void gasp_module_tokenizer::parse_command_line(int argc, char *argv[])
+std::string gasp_module_io::extended_help() const { return ""; }
+
+bool gasp_module_io::input_from_file() const { return _input_from_file; }
+std::ifstream &gasp_module_io::input() { return _input; }
+bool gasp_module_io::output_from_file() const { return _output_from_file; }
+std::ofstream &gasp_module_io::output() { return _output; }
+std::string gasp_module_io::format() const { return _format; }
+
+bool gasp_module_io::parse_command_line_hook(int &arg_index, int argc, char *argv[]) { return false; }
+
+void gasp_module_io::parse_command_line(int argc, char *argv[])
 {
    bool infile_found = false;
    bool outfile_found = false;
@@ -95,7 +108,8 @@ void gasp_module_tokenizer::parse_command_line(int argc, char *argv[])
       }
       else
       {
-         throw gasp_error(sanelli::make_string("Unknown parameter '", arg, "'."));
+         if (!parse_command_line_hook(arg_index, argc, argv))
+            throw gasp_error(sanelli::make_string("Unknown parameter '", arg, "'."));
       }
    }
 
@@ -111,38 +125,5 @@ void gasp_module_tokenizer::parse_command_line(int argc, char *argv[])
       _output.copyfmt(std::cout);
       _output.clear(std::cout.rdstate());
       _output.basic_ios<char>::rdbuf(std::cout.rdbuf());
-   }
-}
-
-bool gasp_module_tokenizer::run(int argc, char *argv[])
-{
-   blaise_tokenizer tokenizer;
-   std::vector<sanelli::token<gasp::blaise::blaise_token_type>> tokens;
-
-   parse_command_line(argc, argv);
-
-   try
-   {
-      tokenizer.tokenize(_input, tokens);
-      for (const auto &token : tokens)
-      {
-         _output << token << std::endl;
-      }
-      return true;
-   }
-   catch (sanelli::tokenizer_error &error)
-   {
-      std::cerr << "TOKENIZER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
-      return false;
-   }
-   catch (std::exception &error)
-   {
-      std::cerr << "GENERIC_ERROR: " << error.what() << std::endl;
-      return false;
-   }
-   catch (...)
-   {
-      std::cerr << "UNKNOWN ERROR -- No further information available." << std::endl;
-      return false;
    }
 }

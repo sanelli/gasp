@@ -13,7 +13,8 @@
 #include <gasp/common/gasp_error.hpp>
 
 #include <gasp/module/gasp_module.hpp>
-#include <gasp/module/gasp_module_tokenizer.hpp>
+#include <gasp/module/gasp_module_tokenize.hpp>
+#include <gasp/module/gasp_module_compile.hpp>
 
 // #include <gasp/common/internal_error.hpp>
 // #include <gasp/blaise/tokenizer/tokenizer.hpp>
@@ -54,8 +55,10 @@ int main(int argc, char *argv[])
 
    std::map<std::string, std::unique_ptr<gasp::module::gasp_module>> modules;
 
-   auto tokenizer_module = std::make_unique<gasp::module::gasp_module_tokenizer>();
-   modules[tokenizer_module->name()] = std::move(tokenizer_module);
+   auto tokenize_module = std::make_unique<gasp::module::gasp_module_tokenize>();
+   auto compile_module = std::make_unique<gasp::module::gasp_module_compile>();
+   modules[tokenize_module->name()] = std::move(tokenize_module);
+   modules[compile_module->name()] = std::move(compile_module);
 
    if (argc < 2)
    {
