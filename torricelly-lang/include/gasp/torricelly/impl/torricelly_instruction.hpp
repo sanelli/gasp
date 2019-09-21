@@ -59,4 +59,7 @@ public:
 
 };
 
+std::string to_string(torricelly_inst_ref_type type);
+std::string to_string(torricelly_instruction instruction);
+
 }

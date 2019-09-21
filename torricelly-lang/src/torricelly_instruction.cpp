@@ -1,4 +1,5 @@
 #include <memory>
+#include <sstream>
 
 #include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/torricelly.hpp>
@@ -83,4 +84,24 @@ torricelly_instruction torricelly_instruction::make(const torricelly_inst_code c
 
 torricelly_instruction torricelly_instruction::make(const torricelly_inst_code code) { 
    return torricelly_instruction(code);
+}
+
+std::string gasp::torricelly::to_string(torricelly_inst_ref_type type) {
+   switch(type){
+      case torricelly_inst_ref_type::MODULE: return "$";
+      case torricelly_inst_ref_type::SUBROUTINE: return "#";
+      case torricelly_inst_ref_type::LABEL: return "@";
+      default:
+         throw torricelly_error("Unknown instruction parameter reference type.");
+   }
+}
+
+std::string gasp::torricelly::to_string(torricelly_instruction instruction) {
+   std::stringstream stream;
+   if(instruction.has_label())
+      stream << to_string(torricelly_inst_ref_type::LABEL) << instruction.label() << ": ";
+   stream << instruction.code();
+   if(instruction.has_parameter_reference())
+      stream <<  " " << to_string(instruction.ref_type()) << instruction.parameter_reference();
+   return stream.str();
 }
