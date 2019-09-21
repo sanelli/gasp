@@ -67,7 +67,7 @@ bool gasp_module_compile::run(int argc, char *argv[])
 
    if (is_help())
    {
-      std::cerr << "Command line: " << argv[0] << " " << name() << "[options]" << std::endl;
+      std::cerr << "Command line: " << argv[0] << " " << name() << " [options]" << std::endl;
       std::cerr << "Options:" << std::endl;
       std::cerr << help() << std::endl;
       return true;
@@ -75,7 +75,7 @@ bool gasp_module_compile::run(int argc, char *argv[])
 
    if (format() != "blaise")
    {
-      std::cerr << "Format '" << format() << "' is not supported." << std::endl;
+      std::cerr << "Input format '" << format() << "' is not supported." << std::endl;
       return false;
    }
 
