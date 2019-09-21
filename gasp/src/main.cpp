@@ -15,6 +15,7 @@
 #include <gasp/module/gasp_module.hpp>
 #include <gasp/module/gasp_module_tokenize.hpp>
 #include <gasp/module/gasp_module_compile.hpp>
+#include <gasp/module/gasp_module_execute.hpp>
 
 // #include <gasp/common/internal_error.hpp>
 // #include <gasp/blaise/tokenizer/tokenizer.hpp>
@@ -57,8 +58,10 @@ int main(int argc, char *argv[])
 
    auto tokenize_module = std::make_unique<gasp::module::gasp_module_tokenize>();
    auto compile_module = std::make_unique<gasp::module::gasp_module_compile>();
+   auto execute_module = std::make_unique<gasp::module::gasp_module_execute>();
    modules[tokenize_module->name()] = std::move(tokenize_module);
    modules[compile_module->name()] = std::move(compile_module);
+   modules[execute_module->name()] = std::move(execute_module);
 
    if (argc < 2)
    {
@@ -78,7 +81,7 @@ int main(int argc, char *argv[])
       }
    }
 
-   // Either I found the module or not I do nto need to waste
+   // Either I found the module or not I do not need to waste
    // memory with something I will never user.
    modules.clear();
 

@@ -6,4 +6,5 @@ target_sources(gasp
         gasp_module_io.cpp
         gasp_module_tokenize.cpp
         gasp_module_compile.cpp
+        gasp_module_execute.cpp
 )

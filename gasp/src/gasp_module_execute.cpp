@@ -1,5 +1,6 @@
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 #include <sanelli/sanelli.hpp>
 
@@ -10,9 +11,9 @@
 #include <gasp/blaise/ast.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
-#include <gasp/torricelly/torricelly_io.hpp>
+#include <gasp/torricelly/interpreter.hpp>
 
-#include <gasp/module/gasp_module_compile.hpp>
+#include <gasp/module/gasp_module_execute.hpp>
 
 using namespace gasp;
 using namespace gasp::module;
@@ -21,24 +22,29 @@ using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 using namespace gasp::torricelly;
 using namespace gasp::blaise_to_torricelly;
+using namespace gasp::torricelly::interpreter;
 
-gasp_module_compile::gasp_module_compile() {}
-gasp_module_compile::~gasp_module_compile() {}
+gasp_module_execute::gasp_module_execute() {}
+gasp_module_execute::~gasp_module_execute() {}
 
-std::string gasp_module_compile::name() const { return "compile"; }
-std::string gasp_module_compile::description() const { return "Compile the input source file into the desired format."; }
+std::string gasp_module_execute::name() const { return "execute"; }
+std::string gasp_module_execute::description() const { return "Execute the input source file using an interpreter."; }
 
-bool gasp_module_compile::run(int argc, char *argv[])
+bool gasp_module_execute::parse_command_line_hook(int &arg_index, int argc, char *argv[], std::map<std::string, bool> &flags)
+{
+   _parameters.push_back(argv[arg_index]);
+   return true;
+}
+
+bool gasp_module_execute::run(int argc, char *argv[])
 {
    set_input_format("blaise");
-   set_output_format("torricelly-text");
    parse_command_line(argc, argv);
 
    blaise_tokenizer tokenizer;
    blaise_parser parser;
    blaise_parser_context context;
    std::vector<std::shared_ptr<torricelly_module>> modules;
-   torricelly_text_output torricelly_output(output());
 
    if (is_help())
    {
@@ -54,21 +60,27 @@ bool gasp_module_compile::run(int argc, char *argv[])
       return false;
    }
 
-   if (output_format() != "torricelly-text")
-   {
-      std::cerr << "Output format '" << output_format() << "' is not supported." << std::endl;
-      return false;
-   }
-
    try
    {
       tokenizer.tokenize(input(), context);
       parser.parse(context);
       translator translator(context.module());
       translator.execute(modules);
-      for (auto module : modules)
-         torricelly_output << module;
-      return true;
+      auto interpreter = make_torricelly_interpreter(
+          modules.at(0),
+          [this](unsigned int index) { return index < _parameters.size() ? _parameters.at(index) : ""; });
+      interpreter->initialize();
+      interpreter->run();
+
+      if (interpreter->status() == torricelly_interpreter_status::FINISHED)
+      {
+         auto return_value = interpreter->return_value();
+         std::cout << return_value.get_integer() << std::endl;
+      } else {
+         std::cerr << "Execution failed." << std::endl;
+      }
+
+      return interpreter->status() == torricelly_interpreter_status::FINISHED;
    }
    catch (sanelli::tokenizer_error &error)
    {
@@ -98,6 +110,16 @@ bool gasp_module_compile::run(int argc, char *argv[])
    catch (gasp::blaise_to_torricelly::blaise_to_torricelly_error &error)
    {
       std::cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
+      return false;
+   }
+   catch (gasp::torricelly::interpreter::torricelly_interpreter_error &error)
+   {
+      std::cerr << "TORRICELLY_INTERPRETER_ERROR:" << error.what() << std::endl;
+      return false;
+   }
+   catch (gasp::torricelly::interpreter::torricelly_interpreter_execution_error &error)
+   {
+      std::cerr << "TORRICELLY_INTERPRETER_EXECUTION_ERROR(" << error.subroutine() << ":" << error.ip() << ")" << error.what() << std::endl;
       return false;
    }
    catch (const std::exception &error)
