@@ -49,9 +49,9 @@ unsigned int torricelly_activation_record::get_instruction_address(unsigned int 
 
 torricelly_activation_record_variable torricelly_activation_record::load(unsigned int index)
 {
-   auto it = _variables.find(index);
+   auto it = _variables.find(index - 1);
    if (it == _variables.end())
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get variable at ", index, "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get local at ", index, "."));
    return it->second;
 }
 void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_variable variable)
@@ -59,9 +59,9 @@ void torricelly_activation_record::store(unsigned int index, torricelly_activati
    _variables[index] = variable;
 }
 torricelly_activation_record_variable_type torricelly_activation_record::load_type(unsigned int index) { 
-      auto it = _variables.find(index);
+      auto it = _variables.find(index - 1);
    if (it == _variables.end())
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get variable at ", index, "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get type for local at ", index, "."));
    return it->second.type();
 }
 

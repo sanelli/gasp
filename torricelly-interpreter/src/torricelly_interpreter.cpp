@@ -5,6 +5,7 @@
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
+#include <gasp/torricelly/torricelly_io.hpp>
 #include <gasp/torricelly/interpreter.hpp>
 
 using namespace gasp;
@@ -61,7 +62,7 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-         for (auto param_count = 1U; param_count <= subroutine->count_parameters(); ++param_count)
+         for (signed int param_count = subroutine->count_parameters(); param_count > 0; --param_count)
          {
             auto variable_type = subroutine->get_local_type(param_count);
             auto input_string = _get_parameter(param_count);
@@ -128,6 +129,9 @@ void torricelly_interpreter::initialize()
 }
 void torricelly_interpreter::run()
 {
+   if (_status == torricelly_interpreter_status::INITIALIZED)
+      _status = torricelly_interpreter_status::RUNNING;
+
    SANELLI_DEBUG("torricelly-interpreter", "[ENTER] run" << std::endl);
    while (_status == torricelly_interpreter_status::RUNNING)
       step();
@@ -146,6 +150,9 @@ void torricelly_interpreter::step()
    if (current_activation_record->move_next())
    {
       auto instruction = current_activation_record->instruction();
+
+      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] Executing (ip = " << current_activation_record->ip() << "): "<< to_string(instruction) << std::endl);
+
       auto next_instruction = 0U;
       auto is_jump = false;
       bool continue_inside_subroutine = _instruction_interpreter->execute(instruction, next_instruction, is_jump);
