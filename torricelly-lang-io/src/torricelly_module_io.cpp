@@ -10,16 +10,18 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const
 
    os << ".module " << module->module_name() << std::endl;
    os << ".version " << os.version_major() << "." << os.version_minor() << "." << os.version_build() << std::endl;
-   os << ".variables " << module->count_locals() << std::endl;
+   os << ".locals " << module->count_locals() << std::endl;
    for(auto variable_index = 1u; variable_index <= module->count_locals(); ++variable_index) { 
-      os << "   .variable "
+      os << "   .local "
          << torricelly_inst_ref_type::MODULE << variable_index << " "
          << module->get_local_type(variable_index) << " "
          << module->get_local_initial_value(variable_index) 
          << std::endl
          ;
    }
+   os << std::endl;
    for(auto subroutine_index = 1u; subroutine_index <= module->get_number_of_subroutines(); ++subroutine_index)
       os << module->get_subroutine(subroutine_index) << std::endl;
+   os << ".end module" << std::endl;
    return os;
 }

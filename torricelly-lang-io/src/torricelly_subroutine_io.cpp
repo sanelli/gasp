@@ -17,7 +17,7 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const
    for (auto local_index = 1u; local_index <= subroutine->count_locals(); ++local_index)
    {
       os << "      .local "   
-         << (subroutine->is_parameter(local_index) ? " .parameter" : "")
+         << (subroutine->is_parameter(local_index) ? ".parameter " : "")
          << torricelly_inst_ref_type::SUBROUTINE << local_index << " "
          << subroutine->get_local_type(local_index) << " "
          << subroutine->get_local_initial_value(local_index)
