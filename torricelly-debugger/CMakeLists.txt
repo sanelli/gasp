@@ -1,0 +1,12 @@
+add_library(gasp-torricelly-debugger STATIC "")
+set_target_properties(gasp-torricelly-debugger PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(gasp-torricelly-debugger gasp-common)
+target_link_libraries(gasp-torricelly-debugger libsanelli)
+target_link_libraries(gasp-torricelly-debugger gasp-torricelly-lang)
+target_link_libraries(gasp-torricelly-debugger gasp-torricelly-lang-io)
+target_link_libraries(gasp-torricelly-debugger gasp-torricelly-interpreter)
+target_include_directories(gasp-torricelly-debugger PUBLIC include)
+
+add_subdirectory(include)
+add_subdirectory(src)
+# add_subdirectory(test)

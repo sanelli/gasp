@@ -11,6 +11,7 @@ target_link_libraries(gasp gasp-torricelly-lang)
 target_link_libraries(gasp gasp-torricelly-lang-io)
 target_link_libraries(gasp gasp-torricelly-interpreter)
 target_link_libraries(gasp gasp-blaise-to-torricelly)
+target_link_libraries(gasp gasp-torricelly-debugger)
 
 target_include_directories(gasp PUBLIC include)
 
