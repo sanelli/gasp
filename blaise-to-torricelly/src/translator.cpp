@@ -85,14 +85,13 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
 
    // Crate locals and add STORE from right to left
    if (subroutine->count_parameters() > 0)
-      for (auto index = subroutine->count_parameters() - 1; index >= 0; --index)
+      for (signed int index = subroutine->count_parameters() - 1; index >= 0; --index)
       {
          auto parameter = subroutine->get_parameter(index);
          auto torricelly_type = translate_type(parameter->type());
          auto initial_value = get_type_initial_value(parameter->type());
          auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, true);
          variables_mapping.insert(std::make_pair(parameter->name(), torricelly_index));
-
          auto store_instruction_code = compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
                                                                 torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
                                                                 torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
