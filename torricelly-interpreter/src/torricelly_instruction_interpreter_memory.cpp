@@ -9,7 +9,7 @@ using namespace gasp::torricelly::interpreter;
 
 void inline torricelly_instruction_interpreter::__execute_load(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
 {
-   auto activation_record = _interpreter->_activation_records.top();
+   auto activation_record = _interpreter.lock()->_activation_records.top();
    auto parameter = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::SUBROUTINE);
    auto value = activation_record->load(parameter);
   
@@ -25,7 +25,7 @@ void inline torricelly_instruction_interpreter::__execute_load(const torricelly:
 
 void inline torricelly_instruction_interpreter::__execute_store(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
 {
-   auto activation_record = _interpreter->_activation_records.top();
+   auto activation_record = _interpreter.lock()->_activation_records.top();
    auto parameter = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::SUBROUTINE);
    auto value = pop_and_validate(activation_record, extpected_type);
    activation_record->store(parameter, value);

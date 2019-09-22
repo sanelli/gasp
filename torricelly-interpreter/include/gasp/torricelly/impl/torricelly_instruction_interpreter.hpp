@@ -14,7 +14,7 @@ class torricelly_interpreter;
 
 class torricelly_instruction_interpreter {
 private:
-std::shared_ptr<torricelly_interpreter> _interpreter;
+std::weak_ptr<torricelly_interpreter> _interpreter;
 torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter);
 bool execute(const torricelly::torricelly_instruction& instruction, unsigned int &next_instruction, bool& is_jump);
 const bool _validate_during_executions = true;
