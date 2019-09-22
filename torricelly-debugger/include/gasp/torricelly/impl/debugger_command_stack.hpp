@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <ostream>
 
 #include <gasp/torricelly/impl/debugger.hpp>
 #include <gasp/torricelly/impl/debugger_command.hpp>
@@ -18,7 +19,7 @@ public:
    virtual ~torricelly_debugger_command_stack();
 
    std::string command() const override;
-   bool execute(const std::vector<std::string>& parameters) override;
+   bool execute(std::ostream& out, const std::vector<std::string>& parameters) override;
 };
 
 } // namespace gasp::torricelly::debugger

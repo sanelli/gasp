@@ -14,7 +14,7 @@ torricelly_debugger_command_stack::~torricelly_debugger_command_stack() {}
 
 std::string torricelly_debugger_command_stack::command() const { return "stack"; }
 
-bool torricelly_debugger_command_stack::execute(const std::vector<std::string> &parameters)
+bool torricelly_debugger_command_stack::execute(std::ostream& out, const std::vector<std::string>& parameters)
 {
    return true;
 }
