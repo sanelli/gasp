@@ -49,8 +49,7 @@ public:
    void run();
    void step();
    torricelly_activation_record_variable return_value() const;
-
-   torricelly_activation_record_variable peek_stack() const;
+   std::shared_ptr<torricelly_activation_record> activation_record() const;
 
    friend sanelli::memory;
    friend torricelly_instruction_interpreter;

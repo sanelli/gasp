@@ -83,4 +83,6 @@ public:
    friend sanelli::memory;
 };
 
+std::string to_string(const torricelly_activation_record_variable& value);
+
 } // namespace gasp::torricelly::interpreter

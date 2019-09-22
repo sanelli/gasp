@@ -151,7 +151,7 @@ void torricelly_interpreter::step()
    {
       auto instruction = current_activation_record->instruction();
 
-      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] Executing (ip = " << current_activation_record->ip() << "): "<< to_string(instruction) << std::endl);
+      SANELLI_DEBUG("torricelly-interpreter", "[INSIDE] Executing (ip = " << current_activation_record->ip() << "): " << to_string(instruction) << std::endl);
 
       auto next_instruction = 0U;
       auto is_jump = false;
@@ -182,12 +182,10 @@ void torricelly_interpreter::step()
    SANELLI_DEBUG("torricelly-interpreter", "[EXIT] step" << std::endl);
 }
 
-torricelly_activation_record_variable torricelly_interpreter::peek_stack() const
+std::shared_ptr<torricelly_activation_record> torricelly_interpreter::activation_record() const
 {
-   if (_status != torricelly_interpreter_status::FINISHED && _status != torricelly_interpreter_status::HALTED)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get top of the stack in status ", to_string(_status)));
-   return _activation_records.top()->peek();
-}
+   return _activation_records.top();
+};
 
 std::shared_ptr<torricelly_interpreter> gasp::torricelly::interpreter::make_torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
 {

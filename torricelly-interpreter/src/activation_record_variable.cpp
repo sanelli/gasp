@@ -1,5 +1,6 @@
 #include <memory>
 #include <string>
+#include <sstream>
 
 #include <sanelli/sanelli.hpp>
 
@@ -313,3 +314,32 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
 torricelly_activation_record_variable torricelly_activation_record_variable::make(float f) { return torricelly_activation_record_variable(f); }
 torricelly_activation_record_variable torricelly_activation_record_variable::make(double d) { return torricelly_activation_record_variable(d); }
 torricelly_activation_record_variable torricelly_activation_record_variable::make(char c) { return torricelly_activation_record_variable(c); }
+
+std::string gasp::torricelly::interpreter::to_string(const torricelly_activation_record_variable& value)
+{
+   switch (value.type())
+   {
+   case torricelly_activation_record_variable_type::UNDEFINED:
+      return "undefined";
+   case torricelly_activation_record_variable_type::VOID:
+      return "void";
+   case torricelly_activation_record_variable_type::INTEGER:
+      return std::to_string(value.get_integer());
+   case torricelly_activation_record_variable_type::CHAR:
+      return std::string(1, value.get_char());
+   case torricelly_activation_record_variable_type::BOOLEAN:
+      return value.get_boolean() ? "true" : "false";
+   case torricelly_activation_record_variable_type::FLOAT:
+      return std::to_string(value.get_float());
+   case torricelly_activation_record_variable_type::DOUBLE:
+      return std::to_string(value.get_double());
+   case torricelly_activation_record_variable_type::POINTER:
+   {
+      std::stringstream sstream;
+      sstream << value.get_pointer();
+      return sstream.str();
+   }
+   default:
+      throw torricelly_interpreter_error("Unexpected type for given value. It cannot be converted into string.");
+   }
+}

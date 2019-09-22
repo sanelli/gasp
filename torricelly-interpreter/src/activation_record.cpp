@@ -10,27 +10,38 @@ using namespace gasp;
 using namespace gasp::torricelly;
 using namespace gasp::torricelly::interpreter;
 
-torricelly_activation_record::torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine) 
-   : _ip(0), _subroutine(subroutine), _module(module) {}
+torricelly_activation_record::torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine)
+    : _ip(0), _subroutine(subroutine), _module(module) {}
 
 void torricelly_activation_record::push(const torricelly_activation_record_variable value)
 {
-   return _stack.push(value);
+   return _stack.push_back(value);
 }
 torricelly_activation_record_variable torricelly_activation_record::pop()
 {
-   auto value = _stack.top();
-   _stack.pop();
+   auto value = _stack.back();
+   _stack.pop_back();
    return value;
 }
 torricelly_activation_record_variable torricelly_activation_record::peek() const
 {
-   return _stack.top();
+   return _stack.back();
 }
+
+typename std::vector<torricelly_activation_record_variable>::const_reverse_iterator torricelly_activation_record::begin_stack() const
+{
+   return _stack.rbegin();
+}
+
+typename std::vector<torricelly_activation_record_variable>::const_reverse_iterator torricelly_activation_record::end_stack() const
+{
+   return _stack.rend();
+}
+
 std::shared_ptr<torricelly_module> torricelly_activation_record::module() const { return _module; }
 std::shared_ptr<torricelly_subroutine> torricelly_activation_record::subroutine() const { return _subroutine; }
 unsigned int torricelly_activation_record::ip() const { return _ip; }
-void torricelly_activation_record::jump(unsigned int ip){ _ip = ip; }
+void torricelly_activation_record::jump(unsigned int ip) { _ip = ip; }
 bool torricelly_activation_record::move_next()
 {
    _ip++;
@@ -58,8 +69,9 @@ void torricelly_activation_record::store(unsigned int index, torricelly_activati
 {
    _variables[index] = variable;
 }
-torricelly_activation_record_variable_type torricelly_activation_record::load_type(unsigned int index) { 
-      auto it = _variables.find(index - 1);
+torricelly_activation_record_variable_type torricelly_activation_record::load_type(unsigned int index)
+{
+   auto it = _variables.find(index - 1);
    if (it == _variables.end())
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get type for local at ", index, "."));
    return it->second.type();
