@@ -82,42 +82,42 @@ bool gasp_module_execute::run(int argc, char *argv[])
 
       return interpreter->status() == torricelly_interpreter_status::FINISHED;
    }
-   catch (sanelli::tokenizer_error &error)
+   catch (const sanelli::tokenizer_error &error)
    {
       std::cerr << "TOKENIZER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (sanelli::parser_error &error)
+   catch (const sanelli::parser_error &error)
    {
       std::cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::blaise::ast::blaise_ast_error &error)
+   catch (const gasp::blaise::ast::blaise_ast_error &error)
    {
       std::cerr << "BLAISE_AST_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::common::gasp_internal_error &error)
+   catch (const gasp::common::gasp_internal_error &error)
    {
       std::cerr << "INTERNAL_ERROR: " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
+   catch (const gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
    {
       std::cerr << "BLAISE_TO_TORRICELLI_INTERNAL_ERROR: " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_error &error)
+   catch (const gasp::blaise_to_torricelly::blaise_to_torricelly_error &error)
    {
       std::cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::torricelly::interpreter::torricelly_interpreter_error &error)
+   catch (const gasp::torricelly::interpreter::torricelly_interpreter_error &error)
    {
       std::cerr << "TORRICELLY_INTERPRETER_ERROR:" << error.what() << std::endl;
       return false;
    }
-   catch (gasp::torricelly::interpreter::torricelly_interpreter_execution_error &error)
+   catch (const gasp::torricelly::interpreter::torricelly_interpreter_execution_error &error)
    {
       std::cerr << "TORRICELLY_INTERPRETER_EXECUTION_ERROR(" << error.subroutine() << ":" << error.ip() << ")" << error.what() << std::endl;
       return false;

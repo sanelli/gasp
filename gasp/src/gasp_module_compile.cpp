@@ -70,27 +70,27 @@ bool gasp_module_compile::run(int argc, char *argv[])
          torricelly_output << module;
       return true;
    }
-   catch (sanelli::tokenizer_error &error)
+   catch (const sanelli::tokenizer_error &error)
    {
       std::cerr << "TOKENIZER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (sanelli::parser_error &error)
+   catch (const sanelli::parser_error &error)
    {
       std::cerr << "PARSER_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::blaise::ast::blaise_ast_error &error)
+   catch (const gasp::blaise::ast::blaise_ast_error &error)
    {
       std::cerr << "BLAISE_AST_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::common::gasp_internal_error &error)
+   catch (const gasp::common::gasp_internal_error &error)
    {
       std::cerr << "INTERNAL_ERROR: " << error.what() << std::endl;
       return false;
    }
-   catch (gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
+   catch (const gasp::blaise_to_torricelly::blaise_to_torricelly_internal_error &error)
    {
       std::cerr << "BLAISE_TO_TORRICELLI_INTERNAL_ERROR: " << error.what() << std::endl;
       return false;
@@ -100,7 +100,7 @@ bool gasp_module_compile::run(int argc, char *argv[])
       std::cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (const std::exception &error)
+   catch (const const std::exception &error)
    {
       std::cerr << "GENERIC_ERROR: " << error.what() << std::endl;
       return false;
