@@ -8,31 +8,38 @@
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/interpreter.hpp>
 
-namespace gasp::torricelly::debugger {
+#include <gasp/torricelly/impl/debugger_command.hpp>
 
-   enum class torricelly_debugger_status { 
-      UNLOADED,
-      LOADED
-   };
+namespace gasp::torricelly::debugger
+{
 
-   class torricelly_debugger {
+enum class torricelly_debugger_status
+{
+   UNLOADED,
+   LOADED
+};
 
-      std::shared_ptr<interpreter::torricelly_interpreter> _interpreter;
-      std::vector<std::shared_ptr<gasp::torricelly::torricelly_module>> _modules;
-      torricelly_debugger_status _status;
+class torricelly_debugger
+{
 
-      public:
-         torricelly_debugger();
-         ~torricelly_debugger();
+   std::shared_ptr<interpreter::torricelly_interpreter> _interpreter;
+   std::vector<std::shared_ptr<gasp::torricelly::torricelly_module>> _modules;
+   torricelly_debugger_status _status;
+   std::map<std::string, std::shared_ptr<torricelly_debugger_command>> _commands;
 
-         void run(std::istream& input, std::ostream& output);
-         void load(std::istream&, const std::vector<std::string>& parameters);
-         void unload();
+public:
+   torricelly_debugger();
+   ~torricelly_debugger();
 
-         torricelly_debugger_status status() const;
-         std::shared_ptr<interpreter::torricelly_interpreter> interpreter() const;
-         unsigned int count_modules() const;
-         std::shared_ptr<gasp::torricelly::torricelly_module> get_module(unsigned int index) const;
+   void run(std::istream &input, std::ostream &output);
+   void load(std::istream &, const std::vector<std::string> &parameters);
+   void unload();
 
-   };
-}
+   torricelly_debugger_status status() const;
+   std::shared_ptr<interpreter::torricelly_interpreter> interpreter() const;
+   unsigned int count_modules() const;
+   std::shared_ptr<gasp::torricelly::torricelly_module> get_module(unsigned int index) const;
+
+   void install_command(std::shared_ptr<torricelly_debugger_command> command);
+};
+} // namespace gasp::torricelly::debugger
