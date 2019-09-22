@@ -14,6 +14,8 @@ namespace gasp::torricelly::debugger
 class torricelly_debugger_command_stack : public torricelly_debugger_command
 {
 
+   void show(std::ostream& out);
+
 public:
    torricelly_debugger_command_stack(std::shared_ptr<torricelly_debugger> debugger);
    virtual ~torricelly_debugger_command_stack();
