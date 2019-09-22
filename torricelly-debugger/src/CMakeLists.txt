@@ -3,4 +3,5 @@ target_sources(gasp-torricelly-debugger
         debugger.cpp
         debugger_command.cpp
         debugger_command_stack.cpp
+        debugger_command_step.cpp
 )
