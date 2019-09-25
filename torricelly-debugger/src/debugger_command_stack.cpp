@@ -42,7 +42,7 @@ bool torricelly_debugger_command_stack::execute(std::ostream &out, const std::ve
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "Display the content od the stack of the current activation record." << std::endl;
+         out << "Display the content of the data stack for the activation record on top of the activation records stack." << std::endl;
          out << "Usage:" << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
