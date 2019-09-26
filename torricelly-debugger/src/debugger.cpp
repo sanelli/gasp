@@ -50,6 +50,7 @@ void torricelly_debugger::unload()
    _status = torricelly_debugger_status::UNLOADED;
    _interpreter = nullptr;
    _modules.clear();
+   _breakpoints.clear();
 }
 
 torricelly_debugger_status torricelly_debugger::status() const { return _status; }
@@ -60,6 +61,47 @@ std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_debugger::get_mo
 void torricelly_debugger::install_command(std::shared_ptr<torricelly_debugger_command> command)
 {
    _commands[command->command()] = command;
+}
+
+void torricelly_debugger::add_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip)
+{
+   auto name = subroutine->name();
+   if (!is_breakpoint(subroutine, ip))
+      _breakpoints.insert(std::make_pair(name, ip));
+}
+
+void torricelly_debugger::remove_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip)
+{
+   auto name = subroutine->name();
+   if (is_breakpoint(subroutine, ip))
+   {
+      auto range = _breakpoints.equal_range(name);
+      for (auto it = range.first; it != range.second; ++it)
+      {
+         if (ip == it->second)
+         {
+            _breakpoints.erase(it);
+            return;
+         }
+      }
+   }
+}
+
+bool torricelly_debugger::is_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip) const
+{
+   auto range = _breakpoints.equal_range(subroutine->name());
+   for (auto it = range.first; it != range.second; ++it)
+   {
+      if (ip == it->second)
+         return true;
+   }
+   return false;
+}
+
+std::pair<typename std::multimap<std::string, unsigned int>::const_iterator, typename std::multimap<std::string, unsigned int>::const_iterator> torricelly_debugger::breakpoints(std::shared_ptr<torricelly::torricelly_subroutine> subroutine) const
+{
+   auto name = subroutine->name();
+   return _breakpoints.equal_range(name);
 }
 
 void torricelly_debugger::run(std::istream &input, std::ostream &output)
