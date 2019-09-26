@@ -5,4 +5,5 @@ target_sources(gasp-torricelly-debugger
         debugger_command_stack.cpp
         debugger_command_step.cpp
         debugger_command_locals.cpp
+        debugger_command_ip.cpp
 )
