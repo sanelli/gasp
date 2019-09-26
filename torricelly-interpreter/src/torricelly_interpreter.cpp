@@ -81,7 +81,7 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
       else
       {
          for (auto param_count = subroutine->count_parameters(); param_count > 0; --param_count)
-            _parameters_passing.push(_activation_records.top()->pop());
+            _parameters_passing.push(this->activation_record()->pop());
          while (!_parameters_passing.empty())
          {
             activation_record->push(_parameters_passing.top());
@@ -90,14 +90,14 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
       }
    }
 
-   _activation_records.push(activation_record);
+   _activation_records.push_back(activation_record);
    SANELLI_DEBUG("torricelly-interpreter", "[EXIT] push_activation_record" << std::endl);
 }
 
 void torricelly_interpreter::pop_activation_record()
 {
    SANELLI_DEBUG("torricelly-interpreter", "[ENTER] pop_activation_record" << std::endl);
-   _activation_records.pop();
+   _activation_records.pop_back();
    SANELLI_DEBUG("torricelly-interpreter", "[EXIT] pop_activation_record" << std::endl);
 }
 
@@ -146,7 +146,7 @@ void torricelly_interpreter::step()
    if (_status != torricelly_interpreter_status::RUNNING)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot execute next instruction because status pf the interpreter is '", to_string(_status), "'."));
 
-   auto current_activation_record = _activation_records.top();
+   auto current_activation_record = activation_record();
    if (current_activation_record->move_next())
    {
       auto instruction = current_activation_record->instruction();
@@ -168,7 +168,7 @@ void torricelly_interpreter::step()
             else
                _return_value = torricelly_activation_record_variable::make(0);
          }
-         _activation_records.pop();
+         _activation_records.pop_back();
          _status = torricelly_interpreter_status::FINISHED;
       }
 
@@ -184,8 +184,17 @@ void torricelly_interpreter::step()
 
 std::shared_ptr<torricelly_activation_record> torricelly_interpreter::activation_record() const
 {
-   return _activation_records.top();
-};
+   return _activation_records.back();
+}
+
+typename std::vector<std::shared_ptr<torricelly_activation_record>>::const_reverse_iterator torricelly_interpreter::begin_stack_trace() const
+{
+   return this->_activation_records.rbegin();
+}
+typename std::vector<std::shared_ptr<torricelly_activation_record>>::const_reverse_iterator torricelly_interpreter::end_stack_trace() const
+{
+   return this->_activation_records.rend();
+}
 
 std::shared_ptr<torricelly_interpreter> gasp::torricelly::interpreter::make_torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
 {

@@ -9,14 +9,14 @@ using namespace gasp::torricelly::interpreter;
 
 void torricelly_instruction_interpreter::execute_dup(const torricelly::torricelly_instruction &instruction)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto value = activation_record->peek();
    activation_record->push(activation_record->peek());
 }
 
 void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    if (_validate_during_executions)
    {
       auto top_value = activation_record->peek();

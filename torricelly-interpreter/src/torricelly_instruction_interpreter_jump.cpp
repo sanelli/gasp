@@ -13,7 +13,7 @@ using namespace gasp::torricelly::interpreter;
 bool torricelly_instruction_interpreter::__execute_jump(const torricelly::torricelly_instruction &instruction, unsigned int &next_address, std::function<bool(int)> condition)
 {
    next_address = 0U;
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
    if (condition(value.get_integer()))
    {

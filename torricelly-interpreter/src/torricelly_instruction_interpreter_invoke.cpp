@@ -10,7 +10,7 @@ using namespace gasp::torricelly::interpreter;
 void torricelly_instruction_interpreter::execute_static_invoke(const torricelly::torricelly_instruction &instruction)
 {
    auto interpreter = _interpreter.lock();
-   auto activation_record = interpreter->_activation_records.top();
+   auto activation_record = interpreter->activation_record();
    auto parameter_index = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::MODULE);
 
    // TODO: Add support for multiple modules

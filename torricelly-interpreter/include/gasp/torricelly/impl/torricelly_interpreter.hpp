@@ -26,7 +26,7 @@ std::string to_string(const torricelly_interpreter_status status);
 class torricelly_interpreter : public std::enable_shared_from_this<torricelly_interpreter>
 {
    std::shared_ptr<gasp::torricelly::torricelly_module> _main_module;
-   std::stack<std::shared_ptr<torricelly_activation_record>> _activation_records;
+   std::vector<std::shared_ptr<torricelly_activation_record>> _activation_records;
    torricelly_interpreter_status _status;
    std::stack<torricelly_activation_record_variable> _parameters_passing;
    std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_variable>>> _module_variables_mapping;
@@ -50,6 +50,8 @@ public:
    void step();
    torricelly_activation_record_variable return_value() const;
    std::shared_ptr<torricelly_activation_record> activation_record() const;
+   typename std::vector<std::shared_ptr<torricelly_activation_record>>::const_reverse_iterator begin_stack_trace() const;
+   typename std::vector<std::shared_ptr<torricelly_activation_record>>::const_reverse_iterator end_stack_trace() const;
 
    friend sanelli::memory;
    friend torricelly_instruction_interpreter;

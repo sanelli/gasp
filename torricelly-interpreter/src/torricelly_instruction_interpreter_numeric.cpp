@@ -12,7 +12,7 @@ using namespace gasp::torricelly::interpreter;
 
 void inline torricelly_instruction_interpreter::__execute_binary_integer(const torricelly::torricelly_instruction &instruction, std::function<int(int, int)> op)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
    auto integer_result = op(left_param_value.get_integer(), left_param_value.get_integer());
@@ -22,7 +22,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_integer(const t
 
 void inline torricelly_instruction_interpreter::__execute_binary_float(const torricelly::torricelly_instruction &instruction, std::function<float(float, float)> op)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
    auto float_result = op(left_param_value.get_float(), left_param_value.get_float());
@@ -32,7 +32,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_float(const tor
 
 void inline torricelly_instruction_interpreter::__execute_binary_double(const torricelly::torricelly_instruction &instruction, std::function<double(double, double)> op)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
    auto double_result = op(left_param_value.get_double(), left_param_value.get_double());
@@ -67,7 +67,7 @@ void torricelly_instruction_interpreter::execute_rem_integer(const torricelly::t
 
 void torricelly_instruction_interpreter::execute_negate_integer(const torricelly::torricelly_instruction &instruction)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
    auto integer_result = -value.get_integer();
    auto result = torricelly_activation_record_variable::make(integer_result);
@@ -96,7 +96,7 @@ void torricelly_instruction_interpreter::execute_div_float(const torricelly::tor
 
 void torricelly_instruction_interpreter::execute_negate_float(const torricelly::torricelly_instruction &instruction)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
    auto float_result = -value.get_float();
    auto result = torricelly_activation_record_variable::make(float_result);
@@ -125,7 +125,7 @@ void torricelly_instruction_interpreter::execute_div_double(const torricelly::to
 
 void torricelly_instruction_interpreter::execute_negate_double(const torricelly::torricelly_instruction &instruction)
 {
-   auto activation_record = _interpreter.lock()->_activation_records.top();
+   auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
    auto double_result = -value.get_float();
    auto result = torricelly_activation_record_variable::make(double_result);
