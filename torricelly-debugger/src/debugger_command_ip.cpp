@@ -76,6 +76,7 @@ bool torricelly_debugger_command_ip::execute(std::ostream &out, const std::vecto
       else
       {
          out << "Unknwon option" << std::endl;
+         success = false;
       }
    }
    break;
