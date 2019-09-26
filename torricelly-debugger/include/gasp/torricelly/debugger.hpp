@@ -6,3 +6,4 @@
 #include <gasp/torricelly/impl/debugger_command_step.hpp>
 #include <gasp/torricelly/impl/debugger_command_locals.hpp>
 #include <gasp/torricelly/impl/debugger_command_ip.hpp>
+#include <gasp/torricelly/impl/debugger_command_bp.hpp>

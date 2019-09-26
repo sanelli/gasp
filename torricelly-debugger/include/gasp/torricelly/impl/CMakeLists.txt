@@ -6,4 +6,5 @@ target_sources(gasp-torricelly-debugger
         debugger_command_step.hpp
         debugger_command_locals.hpp
         debugger_command_ip.hpp
+        debugger_command_bp.hpp
 )

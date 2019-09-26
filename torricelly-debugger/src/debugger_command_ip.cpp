@@ -73,6 +73,10 @@ bool torricelly_debugger_command_ip::execute(std::ostream &out, const std::vecto
       {
          ip(out, true);
       }
+      else
+      {
+         out << "Unknwon option" << std::endl;
+      }
    }
    break;
    default:
