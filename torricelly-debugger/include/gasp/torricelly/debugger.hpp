@@ -8,3 +8,4 @@
 #include <gasp/torricelly/impl/debugger_command_ip.hpp>
 #include <gasp/torricelly/impl/debugger_command_bp.hpp>
 #include <gasp/torricelly/impl/debugger_command_inst.hpp>
+#include <gasp/torricelly/impl/debugger_command_help.hpp>

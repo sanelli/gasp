@@ -8,4 +8,5 @@ target_sources(gasp-torricelly-debugger
         debugger_command_ip.hpp
         debugger_command_bp.hpp
         debugger_command_inst.hpp
+        debugger_command_help.hpp
 )
