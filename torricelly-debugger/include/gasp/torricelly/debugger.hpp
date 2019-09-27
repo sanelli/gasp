@@ -9,3 +9,4 @@
 #include <gasp/torricelly/impl/debugger_command_bp.hpp>
 #include <gasp/torricelly/impl/debugger_command_inst.hpp>
 #include <gasp/torricelly/impl/debugger_command_help.hpp>
+#include <gasp/torricelly/impl/debugger_command_blaise-load.hpp>

@@ -9,4 +9,5 @@ target_sources(gasp-torricelly-debugger
         debugger_command_bp.hpp
         debugger_command_inst.hpp
         debugger_command_help.hpp
+        debugger_command_blaise-load.hpp
 )

@@ -29,6 +29,7 @@ class torricelly_debugger
    torricelly_debugger_status _status;
    std::map<std::string, std::shared_ptr<torricelly_debugger_command>> _commands;
    std::multimap<std::string, unsigned int> _breakpoints;
+   std::vector<std::string> _parameters;
 
    torricelly_debugger();
 
@@ -36,11 +37,12 @@ public:
    ~torricelly_debugger();
 
    void run(std::istream &input, std::ostream &output);
-   void load(std::istream &, const std::vector<std::string> &parameters);
+   void load(typename std::vector<std::string>::const_iterator &from, typename std::vector<std::string>::const_iterator &to);
    void unload();
 
    torricelly_debugger_status status() const;
    std::shared_ptr<interpreter::torricelly_interpreter> interpreter() const;
+   void add_module(std::shared_ptr<gasp::torricelly::torricelly_module> module);
    unsigned int count_modules() const;
    std::shared_ptr<gasp::torricelly::torricelly_module> get_module(unsigned int index) const;
 
