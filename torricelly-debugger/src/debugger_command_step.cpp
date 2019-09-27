@@ -22,7 +22,18 @@ void torricelly_debugger_command_step::step(std::ostream &out, unsigned int coun
 {
    auto interpreter = debugger()->interpreter();
    for (int st = 0; st < count; ++st)
+   {  
+      if(interpreter->status() != torricelly_interpreter_status::RUNNING)
+         break;
+
       interpreter->step();
+
+      auto activation_record = interpreter->activation_record();
+      auto subroutine = activation_record->subroutine();
+
+      if(debugger()->is_breakpoint(subroutine, activation_record->ip()))
+         break;
+   }
 }
 
 bool torricelly_debugger_command_step::execute(std::ostream &out, const std::vector<std::string> &parameters)
