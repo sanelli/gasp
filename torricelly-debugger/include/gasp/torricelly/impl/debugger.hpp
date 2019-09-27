@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include <sanelli/sanelli.hpp>
+
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/interpreter.hpp>
 
@@ -28,8 +30,9 @@ class torricelly_debugger
    std::map<std::string, std::shared_ptr<torricelly_debugger_command>> _commands;
    std::multimap<std::string, unsigned int> _breakpoints;
 
-public:
    torricelly_debugger();
+
+public:
    ~torricelly_debugger();
 
    void run(std::istream &input, std::ostream &output);
@@ -42,10 +45,19 @@ public:
    std::shared_ptr<gasp::torricelly::torricelly_module> get_module(unsigned int index) const;
 
    void install_command(std::shared_ptr<torricelly_debugger_command> command);
+   typename std::map<std::string, std::shared_ptr<torricelly_debugger_command>>::const_iterator begin_commands() const;
+   typename std::map<std::string, std::shared_ptr<torricelly_debugger_command>>::const_iterator end_commands() const;
 
    void add_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip);
    void remove_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip);
    bool is_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip) const;
    std::pair <typename std::multimap<std::string, unsigned int>::const_iterator, typename std::multimap<std::string, unsigned int>::const_iterator> breakpoints(std::shared_ptr<torricelly::torricelly_subroutine> subroutine) const;
+
+   friend sanelli::memory;
+
 };
+
+
+std::shared_ptr<torricelly_debugger> make_torricelly_debugger();
+
 } // namespace gasp::torricelly::debugger

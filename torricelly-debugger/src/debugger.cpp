@@ -2,6 +2,9 @@
 #include <istream>
 #include <vector>
 #include <string>
+#include <map>
+
+#include <sanelli/sanelli.hpp>
 
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -63,6 +66,15 @@ void torricelly_debugger::install_command(std::shared_ptr<torricelly_debugger_co
    _commands[command->command()] = command;
 }
 
+typename std::map<std::string, std::shared_ptr<torricelly_debugger_command>>::const_iterator torricelly_debugger::begin_commands() const {
+   return _commands.begin();
+}
+
+typename std::map<std::string, std::shared_ptr<torricelly_debugger_command>>::const_iterator torricelly_debugger::end_commands() const 
+{
+   return _commands.end();
+}
+
 void torricelly_debugger::add_breakpoint(std::shared_ptr<torricelly::torricelly_subroutine> subroutine, unsigned int ip)
 {
    auto name = subroutine->name();
@@ -102,6 +114,18 @@ std::pair<typename std::multimap<std::string, unsigned int>::const_iterator, typ
 {
    auto name = subroutine->name();
    return _breakpoints.equal_range(name);
+}
+
+std::shared_ptr<torricelly_debugger> gasp::torricelly::debugger::make_torricelly_debugger()
+{
+   auto debugger = sanelli::memory::make_shared<torricelly_debugger>();
+   debugger->install_command(std::make_shared<torricelly_debugger_command_bp>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_inst>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_ip>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_locals>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_stack>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_step>(debugger));
+   return debugger;
 }
 
 void torricelly_debugger::run(std::istream &input, std::ostream &output)
