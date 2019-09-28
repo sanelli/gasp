@@ -40,6 +40,11 @@ void torricelly_debugger_command_locals::show(std::ostream &out, std::shared_ptr
       show(out, activation_record, index);
 }
 
+std::string torricelly_debugger_command_locals::description() const
+{
+   return "Display the content of the locals for the activation record on top of the activation records stack";
+}
+
 bool torricelly_debugger_command_locals::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {
    auto success = true;
@@ -60,7 +65,7 @@ bool torricelly_debugger_command_locals::execute(std::ostream &out, const std::v
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "Display the content of the locals for the activation record on top of the activation records stacl." << std::endl;
+         out << description() << std::endl;
          out << "Usage:" << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;

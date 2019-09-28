@@ -36,6 +36,11 @@ void torricelly_debugger_command_step::step(std::ostream &out, unsigned int coun
    }
 }
 
+std::string torricelly_debugger_command_step::description() const
+{
+   return "Execute the next instruction(s)";
+}
+
 bool torricelly_debugger_command_step::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {
 
@@ -53,7 +58,7 @@ bool torricelly_debugger_command_step::execute(std::ostream &out, const std::vec
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "Step to the next instruction." << std::endl;
+         out << description() << std::endl;
          out << "Usage:" << command() << " [<number>]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;

@@ -19,6 +19,7 @@ public:
    torricelly_debugger_command_stack(std::shared_ptr<torricelly_debugger> debugger);
    virtual ~torricelly_debugger_command_stack();
    std::string command() const override;
+   std::string description() const override;
    bool execute(std::ostream& out, const std::vector<std::string>& parameters) override;
 };
 

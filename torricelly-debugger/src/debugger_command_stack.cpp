@@ -26,6 +26,11 @@ void torricelly_debugger_command_stack::show(std::ostream &out)
       out << (first ? "> " : "  ") << to_string(*it) << to_string(it->type()) << std::endl;
 }
 
+std::string torricelly_debugger_command_stack::description() const
+{
+   return "Display the content of the data stack for the activation record on top of the activation records stack";
+}
+
 bool torricelly_debugger_command_stack::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {
    auto success = true;
@@ -42,7 +47,7 @@ bool torricelly_debugger_command_stack::execute(std::ostream &out, const std::ve
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "Display the content of the data stack for the activation record on top of the activation records stack." << std::endl;
+         out << description() << std::endl;
          out << "Usage:" << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;

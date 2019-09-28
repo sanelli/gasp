@@ -18,7 +18,10 @@ torricelly_debugger_command_inst::torricelly_debugger_command_inst(std::shared_p
 torricelly_debugger_command_inst::~torricelly_debugger_command_inst() {}
 
 std::string torricelly_debugger_command_inst::command() const { return "inst"; };
-
+std::string torricelly_debugger_command_inst::description() const
+{
+   return "Display instruction pointed by the instruction pointer";
+}
 void torricelly_debugger_command_inst::print_instruction(std::ostream &out, std::shared_ptr<torricelly_subroutine> subroutine, unsigned int ip)
 {
    auto interpreter = debugger()->interpreter();
@@ -53,7 +56,7 @@ bool torricelly_debugger_command_inst::execute(std::ostream &out, const std::vec
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "Display instruction pointed by the instruction pointer." << std::endl;
+         out << description() << std::endl;
          out << "Usage:" << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;

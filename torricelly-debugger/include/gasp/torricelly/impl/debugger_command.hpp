@@ -21,6 +21,7 @@ public:
    virtual ~torricelly_debugger_command();
 
    virtual std::string command() const = 0;
+   virtual std::string description() const = 0;
    virtual bool execute(std::ostream& out, const std::vector<std::string>& parameters) = 0;
 };
 

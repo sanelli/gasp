@@ -47,6 +47,11 @@ void torricelly_debugger_command_bp::remove(std::ostream &out, std::shared_ptr<t
    debugger()->remove_breakpoint(subroutine, ip);
 }
 
+std::string torricelly_debugger_command_bp::description() const
+{
+   return "List, add and remove breakpoints";
+}
+
 bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {
    auto success = true;
@@ -67,7 +72,7 @@ bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vecto
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "List, add and remove breakpoints." << std::endl;
+         out << description() << std::endl;
          out << "Usage:" << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;

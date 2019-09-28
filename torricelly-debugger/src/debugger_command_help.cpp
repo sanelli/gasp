@@ -17,15 +17,21 @@ torricelly_debugger_command_help::torricelly_debugger_command_help(std::shared_p
 torricelly_debugger_command_help::~torricelly_debugger_command_help() { }
 
 std::string torricelly_debugger_command_help::command() const { return "help"; }
+
+std::string torricelly_debugger_command_blaise_load::description() const
+{
+   return "Display available commands.";
+}
+
 bool torricelly_debugger_command_help::execute(std::ostream &out, const std::vector<std::string> &parameters) { 
 
    switch(parameters.size()) { 
       case 0:
       {
-         out << "Available commands are:" << std::endl;
+         out << "Available commands:" << std::endl;
          for(auto it = debugger()->begin_commands(); it != debugger()->end_commands(); ++it)
-            out << it->first << std::endl;
-         out << "Type <command_name> help for more details about the command." << std::endl; 
+            out << "   " << it->second->command() << ": " << it->second->description() << "." << std::endl;
+         out << "Type \"<command_name> help\" for more details about the command." << std::endl; 
       }
       break;
       default:

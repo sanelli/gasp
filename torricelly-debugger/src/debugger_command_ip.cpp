@@ -42,6 +42,11 @@ void torricelly_debugger_command_ip::ip(std::ostream &out, bool print_instructio
    }
 }
 
+std::string torricelly_debugger_command_ip::description() const
+{
+   return "Display the instruction pointer value of the current activation record";
+}
+
 bool torricelly_debugger_command_ip::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {
    auto success = true;
@@ -58,7 +63,7 @@ bool torricelly_debugger_command_ip::execute(std::ostream &out, const std::vecto
       sanelli::ltrim(param);
       if (param == "help")
       {
-         out << "Display the instruction pointer value of the current activation record." << std::endl;
+         out << description() << std::endl;
          out << "Usage:" << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
