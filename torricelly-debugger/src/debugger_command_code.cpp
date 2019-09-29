@@ -30,13 +30,15 @@ void torricelly_debugger_command_code::print_instruction(std::ostream &out, std:
    auto current_subroutine = activation_record->subroutine();
    auto is_current_subrouttine = current_subroutine->name() == subroutine->name();
    bool is_breakpoint = debugger()->is_breakpoint(subroutine, ip);
-   bool is_current_instruction = is_current_subrouttine && activation_record->subroutine()->name() == subroutine->name() && activation_record->ip() == ip;
+   bool is_next_instruction = is_current_subrouttine 
+      && activation_record->subroutine()->name() == subroutine->name()
+      && (activation_record->ip()+1) == ip;
 
    out
        << prefix
        << "(" << ip << ") "
        << (is_breakpoint ? "*" : " ")
-       << (is_current_instruction ? ">" : " ")
+       << (is_next_instruction ? ">" : " ")
        << " "
        << to_string(subroutine->get_instruction(ip))
        << std::endl;
@@ -70,7 +72,7 @@ bool torricelly_debugger_command_code::execute(std::ostream &out, const std::vec
    switch (parameters.size())
    {
    case 0:
-      print_instruction(out, " ", activation_record->subroutine(), activation_record->ip());
+      print_instruction(out, " ", activation_record->subroutine(), activation_record->ip()+1);
       break;
    case 1:
    {
@@ -87,7 +89,7 @@ bool torricelly_debugger_command_code::execute(std::ostream &out, const std::vec
       }
       else if (param == "show")
       {
-         print_instruction(out, " ", activation_record->subroutine(), activation_record->ip());
+         print_instruction(out, " ", activation_record->subroutine(), activation_record->ip()+1);
       }
       else if (param == "sub")
       {

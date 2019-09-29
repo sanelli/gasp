@@ -23,7 +23,8 @@ void torricelly_debugger_command_step::step(std::ostream &out, unsigned int coun
    auto interpreter = debugger()->interpreter();
    for (int st = 0; st < count; ++st)
    {  
-      if(interpreter->status() != torricelly_interpreter_status::RUNNING)
+      if(interpreter->status() != torricelly_interpreter_status::RUNNING
+         && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
          break;
 
       interpreter->step();

@@ -24,15 +24,19 @@ void torricelly_debugger_command_ip::ip(std::ostream &out, bool print_instructio
    auto interpreter = debugger()->interpreter();
    auto activation_record = interpreter->activation_record();
 
-   auto ip = activation_record->ip();
+   auto ip = activation_record->ip() + 1;
    if (ip > 0)
    {
-      out << activation_record->ip();
+
       if (print_instruction)
       {
          auto subroutine = activation_record->subroutine();
          auto instruction = subroutine->get_instruction(ip);
-         out << to_string(instruction);
+         out << "(" << ip << ") " << to_string(instruction);
+      }
+      else
+      {
+         out << ip;
       }
       out << std::endl;
    }
