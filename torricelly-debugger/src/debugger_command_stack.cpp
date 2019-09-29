@@ -23,7 +23,7 @@ void torricelly_debugger_command_stack::show(std::ostream &out)
    auto activation_record = interpreter->activation_record();
    bool first = true;
    for (auto it = activation_record->begin_stack(); it != activation_record->end_stack(); ++it, first = false)
-      out << (first ? "> " : "  ") << to_string(*it) << to_string(it->type()) << std::endl;
+      out << (first ? " > " : "   ") << to_string(*it) << " [" << to_string(it->type()) << "]" << std::endl;
 }
 
 std::string torricelly_debugger_command_stack::description() const
