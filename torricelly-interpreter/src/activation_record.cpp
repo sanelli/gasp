@@ -1,6 +1,8 @@
 #include <memory>
 #include <string>
 
+#include <iostream>
+
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
@@ -44,7 +46,7 @@ unsigned int torricelly_activation_record::ip() const { return _ip; }
 void torricelly_activation_record::jump(unsigned int ip) { _ip = ip; }
 bool torricelly_activation_record::move_next()
 {
-   _ip++;
+   ++_ip;
    return _ip <= _subroutine->get_number_of_instructions();
 }
 torricelly_instruction torricelly_activation_record::instruction() const
@@ -67,7 +69,7 @@ torricelly_activation_record_variable torricelly_activation_record::load(unsigne
 }
 void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_variable variable)
 {
-   _variables[index] = variable;
+   _variables[index - 1] = variable;
 }
 torricelly_activation_record_variable_type torricelly_activation_record::load_type(unsigned int index)
 {
