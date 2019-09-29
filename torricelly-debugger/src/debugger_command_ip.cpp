@@ -62,7 +62,7 @@ bool torricelly_debugger_command_ip::execute(std::ostream &out, const std::vecto
       if (param == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [option]" << std::endl;
+         out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   show: display the instruction pointer (defult option)" << std::endl;

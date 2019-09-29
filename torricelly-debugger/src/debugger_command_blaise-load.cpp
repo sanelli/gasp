@@ -76,11 +76,10 @@ std::string torricelly_debugger_command_blaise_load::description() const
 bool torricelly_debugger_command_blaise_load::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {
    auto success = true;
-
    switch (parameters.size())
    {
    case 0:
-      out << "Not enough parameters." << std::endl;
+      out << "Not enough parameters" << std::endl;
       success = false;
       break;
    case 1:
@@ -90,7 +89,7 @@ bool torricelly_debugger_command_blaise_load::execute(std::ostream &out, const s
       if (p1 == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [option]" << std::endl;
+         out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   <filename> [parameters]: Load filename with the given parameters (defult option)" << std::endl;

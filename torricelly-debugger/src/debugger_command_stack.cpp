@@ -46,7 +46,7 @@ bool torricelly_debugger_command_stack::execute(std::ostream &out, const std::ve
       if (param == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [option]" << std::endl;
+         out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   show: display context of the stack (defult option)" << std::endl;

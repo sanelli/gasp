@@ -20,7 +20,7 @@ std::string torricelly_debugger_command_stop::command() const { return "stop"; }
 
 std::string torricelly_debugger_command_stop::description() const
 {
-   return "Stop the debugger and exit.";
+   return "Stop the debugger and exit";
 }
 
 bool torricelly_debugger_command_stop::execute(std::ostream &out, const std::vector<std::string> &parameters)

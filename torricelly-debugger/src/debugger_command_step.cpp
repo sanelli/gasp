@@ -57,7 +57,7 @@ bool torricelly_debugger_command_step::execute(std::ostream &out, const std::vec
       if (param == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [<number>]" << std::endl;
+         out << "Usage: " << command() << " [<number>]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   <number>: number of steps (defult 1)" << std::endl;

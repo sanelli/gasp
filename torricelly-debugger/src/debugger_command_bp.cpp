@@ -72,7 +72,7 @@ bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vecto
       if (param == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [option]" << std::endl;
+         out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   list: display the list of breakpoints for the currenct subroutine (defult option)" << std::endl;

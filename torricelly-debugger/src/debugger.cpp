@@ -136,7 +136,7 @@ bool torricelly_debugger::run(std::istream &in, std::ostream &out)
    {
       std::string string_command_line;
       out << "> ";
-      in >> string_command_line;
+      getline(in, string_command_line);
       sanelli::trim(string_command_line);
       if (string_command_line == "")
          string_command_line = last_string_command;

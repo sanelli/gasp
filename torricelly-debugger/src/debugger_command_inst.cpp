@@ -55,7 +55,7 @@ bool torricelly_debugger_command_inst::execute(std::ostream &out, const std::vec
       if (param == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [option]" << std::endl;
+         out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   show: display the instruction pointed by the instruction pointer (defult option)" << std::endl;

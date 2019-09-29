@@ -20,7 +20,7 @@ std::string torricelly_debugger_command_help::command() const { return "help"; }
 
 std::string torricelly_debugger_command_help::description() const
 {
-   return "Display available commands.";
+   return "Display available commands";
 }
 
 bool torricelly_debugger_command_help::execute(std::ostream &out, const std::vector<std::string> &parameters) { 

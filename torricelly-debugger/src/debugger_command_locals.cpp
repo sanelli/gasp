@@ -64,7 +64,7 @@ bool torricelly_debugger_command_locals::execute(std::ostream &out, const std::v
       if (param == "help")
       {
          out << description() << std::endl;
-         out << "Usage:" << command() << " [option]" << std::endl;
+         out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
          out << "   all: display all the locals (defult option)" << std::endl;
