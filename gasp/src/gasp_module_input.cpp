@@ -15,8 +15,6 @@ const std::string p_help = "--help";
 const std::string p_help_short = "-h";
 const std::string p_input_file = "--input";
 const std::string p_input_file_short = "-i";
-const std::string p_output_file = "--output";
-const std::string p_output_file_short = "-o";
 const std::string p_input_format = "--input-format";
 const std::string p_input_format_short = "-if";
 
