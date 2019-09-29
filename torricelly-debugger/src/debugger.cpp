@@ -116,7 +116,7 @@ std::shared_ptr<torricelly_debugger> gasp::torricelly::debugger::make_torricelly
 {
    auto debugger = sanelli::memory::make_shared<torricelly_debugger>();
    debugger->install_command(std::make_shared<torricelly_debugger_command_bp>(debugger));
-   debugger->install_command(std::make_shared<torricelly_debugger_command_inst>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_code>(debugger));
    debugger->install_command(std::make_shared<torricelly_debugger_command_ip>(debugger));
    debugger->install_command(std::make_shared<torricelly_debugger_command_locals>(debugger));
    debugger->install_command(std::make_shared<torricelly_debugger_command_stack>(debugger));
