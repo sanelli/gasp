@@ -100,7 +100,7 @@ bool gasp_module_compile::run(int argc, char *argv[])
       std::cerr << "BLAISE_TO_TORRICELLI_ERROR(" << error.line() << "," << error.column() << "): " << error.what() << std::endl;
       return false;
    }
-   catch (const const std::exception &error)
+   catch (const std::exception &error)
    {
       std::cerr << "GENERIC_ERROR: " << error.what() << std::endl;
       return false;
