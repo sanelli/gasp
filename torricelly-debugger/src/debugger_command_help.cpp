@@ -18,7 +18,7 @@ torricelly_debugger_command_help::~torricelly_debugger_command_help() { }
 
 std::string torricelly_debugger_command_help::command() const { return "help"; }
 
-std::string torricelly_debugger_command_blaise_load::description() const
+std::string torricelly_debugger_command_help::description() const
 {
    return "Display available commands.";
 }
