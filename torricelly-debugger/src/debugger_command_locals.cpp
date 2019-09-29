@@ -29,10 +29,11 @@ bool torricelly_debugger_command_locals::show(std::ostream &out, std::shared_ptr
    else
    {
       auto value = activation_record->load(index);
-      out << index << ")" << to_string(value) << "[" << to_string(value.type()) << "]" << std::endl;
+      out << "(" << index << ") " << to_string(value) << " [" << to_string(value.type()) << "]" << std::endl;
       return true;
    }
 }
+
 void torricelly_debugger_command_locals::show(std::ostream &out, std::shared_ptr<gasp::torricelly::interpreter::torricelly_activation_record> activation_record)
 {
    auto subroutine = activation_record->subroutine();
