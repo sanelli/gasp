@@ -38,6 +38,7 @@ public:
    ~torricelly_debugger();
 
    bool run(std::istream &in, std::ostream &out);
+   void stop();
    void load(typename std::vector<std::string>::const_iterator &from, typename std::vector<std::string>::const_iterator &to);
    void unload();
 

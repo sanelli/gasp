@@ -45,6 +45,8 @@ void torricelly_debugger::unload()
    _breakpoints.clear();
 }
 
+ void torricelly_debugger::stop() { _stop = true; }
+
 torricelly_debugger_status torricelly_debugger::status() const { return _status; }
 std::shared_ptr<interpreter::torricelly_interpreter> torricelly_debugger::interpreter() const { return _interpreter; }
 void torricelly_debugger::add_module(std::shared_ptr<gasp::torricelly::torricelly_module> module)
