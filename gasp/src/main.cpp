@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
    modules[compile_module->name()] = std::move(compile_module);
    modules[execute_module->name()] = std::move(execute_module);
    modules[debug_module->name()] = std::move(debug_module);
+   modules[blaise_sample_module->name()] = std::move(blaise_sample_module);
 
    if (argc < 2)
    {
