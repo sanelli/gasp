@@ -15,7 +15,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_integer(const t
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
-   auto integer_result = op(left_param_value.get_integer(), left_param_value.get_integer());
+   auto integer_result = op(left_param_value.get_integer(), right_param_value.get_integer());
    auto result = torricelly_activation_record_variable::make(integer_result);
    activation_record->push(result);
 }
@@ -25,7 +25,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_float(const tor
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
-   auto float_result = op(left_param_value.get_float(), left_param_value.get_float());
+   auto float_result = op(left_param_value.get_float(), right_param_value.get_float());
    auto result = torricelly_activation_record_variable::make(float_result);
    activation_record->push(result);
 }
@@ -35,7 +35,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_double(const to
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
-   auto double_result = op(left_param_value.get_double(), left_param_value.get_double());
+   auto double_result = op(left_param_value.get_double(), right_param_value.get_double());
    auto result = torricelly_activation_record_variable::make(double_result);
    activation_record->push(result);
 }
