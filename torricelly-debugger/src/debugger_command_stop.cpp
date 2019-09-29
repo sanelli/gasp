@@ -18,7 +18,7 @@ torricelly_debugger_command_stop::~torricelly_debugger_command_stop() {}
 
 std::string torricelly_debugger_command_stop::command() const { return "stop"; }
 
-std::string torricelly_debugger_command_blaise_load::description() const
+std::string torricelly_debugger_command_stop::description() const
 {
    return "Stop the debugger and exit.";
 }

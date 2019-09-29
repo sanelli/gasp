@@ -30,7 +30,7 @@ bool torricelly_debugger_command_help::execute(std::ostream &out, const std::vec
       {
          out << "Available commands:" << std::endl;
          for(auto it = debugger()->begin_commands(); it != debugger()->end_commands(); ++it)
-            out << "   " << it->second->command() << ": " << it->second->description() << "." << std::endl;
+            out << "   " << it->second->command() << ":\t\t" << it->second->description() << "." << std::endl;
          out << "Type \"<command_name> help\" for more details about the command." << std::endl; 
       }
       break;
