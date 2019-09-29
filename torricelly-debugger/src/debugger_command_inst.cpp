@@ -52,8 +52,6 @@ bool torricelly_debugger_command_inst::execute(std::ostream &out, const std::vec
    case 1:
    {
       auto param = parameters.at(0);
-      sanelli::rtrim(param);
-      sanelli::ltrim(param);
       if (param == "help")
       {
          out << description() << std::endl;

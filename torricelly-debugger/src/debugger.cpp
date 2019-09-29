@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include <iterator>
 
 #include <sanelli/sanelli.hpp>
 
@@ -15,7 +16,10 @@ using namespace gasp::torricelly;
 using namespace gasp::torricelly::interpreter;
 using namespace gasp::torricelly::debugger;
 
-torricelly_debugger::torricelly_debugger() : _interpreter(nullptr), _status(torricelly_debugger_status::UNLOADED) {}
+torricelly_debugger::torricelly_debugger()
+    : _interpreter(nullptr),
+      _status(torricelly_debugger_status::UNLOADED),
+      _stop(false) {}
 torricelly_debugger::~torricelly_debugger()
 {
    unload();
@@ -120,6 +124,52 @@ std::shared_ptr<torricelly_debugger> gasp::torricelly::debugger::make_torricelly
    return debugger;
 }
 
-void torricelly_debugger::run(std::istream &input, std::ostream &output)
+bool torricelly_debugger::run(std::istream &in, std::ostream &out)
 {
+   std::string last_string_command("");
+
+   out << "Torricelly debugger. Type 'help' for more commands." << std::endl;
+   while (!_stop)
+   {
+      std::string string_command_line;
+      out << "> ";
+      in >> string_command_line;
+      sanelli::trim(string_command_line);
+      if (string_command_line == "")
+         string_command_line = last_string_command;
+      if (string_command_line == "")
+         continue;
+      last_string_command = string_command_line;
+      std::vector<std::string> command_line;
+      sanelli::split(string_command_line, ' ', command_line);
+      std::transform(command_line.begin(), command_line.end(), command_line.begin(),
+                     [](std::string s) { sanelli::trim(s); return s; });
+      if (command_line.size() <= 0)
+         continue;
+      auto string_command = command_line.at(0);
+      std::vector<std::string> parameters;
+      parameters.resize(command_line.size() - 1);
+      auto command_line_it = command_line.begin();
+      std::advance(command_line_it, 1);
+      std::copy(command_line_it, command_line.end(), parameters.begin());
+      command_line.clear(); // No need to keep it
+
+      auto command_it = _commands.find(string_command);
+      if (command_it == _commands.end())
+      {
+         out << "Cannot execute command '" << string_command << "'" << std::endl;
+         continue;
+      }
+
+      try
+      {
+         command_it->second->execute(out, parameters);
+      }
+      catch (const std::exception &e)
+      {
+         out << "[!] Command '" << string_command << "' caused an error: " << e.what() << std::endl;
+      }
+   }
+
+   return true;
 }

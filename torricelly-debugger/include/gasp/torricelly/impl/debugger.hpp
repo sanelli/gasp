@@ -30,13 +30,14 @@ class torricelly_debugger
    std::map<std::string, std::shared_ptr<torricelly_debugger_command>> _commands;
    std::multimap<std::string, unsigned int> _breakpoints;
    std::vector<std::string> _parameters;
+   bool _stop;
 
    torricelly_debugger();
 
 public:
    ~torricelly_debugger();
 
-   void run(std::istream &input, std::ostream &output);
+   bool run(std::istream &in, std::ostream &out);
    void load(typename std::vector<std::string>::const_iterator &from, typename std::vector<std::string>::const_iterator &to);
    void unload();
 

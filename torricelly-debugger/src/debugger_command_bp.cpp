@@ -68,8 +68,7 @@ bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vecto
    case 1:
    {
       auto param = parameters.at(0);
-      sanelli::rtrim(param);
-      sanelli::ltrim(param);
+      sanelli::trim(param);
       if (param == "help")
       {
          out << description() << std::endl;
@@ -103,12 +102,7 @@ bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vecto
    case 2:
    {
       auto p1 = parameters.at(0);
-      sanelli::rtrim(p1);
-      sanelli::ltrim(p1);
       auto p2 = parameters.at(1);
-      sanelli::rtrim(p2);
-      sanelli::ltrim(p2);
-
       unsigned int ip = 0;
       try
       {
@@ -148,15 +142,8 @@ bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vecto
    case 3:
    {
       auto p1 = parameters.at(0);
-      sanelli::rtrim(p1);
-      sanelli::ltrim(p1);
       auto p2 = parameters.at(1);
-      sanelli::rtrim(p2);
-      sanelli::ltrim(p2);
       auto p3 = parameters.at(2);
-      sanelli::rtrim(p3);
-      sanelli::ltrim(p3);
-
       unsigned int ip = 0;
       try
       {

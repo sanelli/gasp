@@ -59,8 +59,6 @@ bool torricelly_debugger_command_ip::execute(std::ostream &out, const std::vecto
    case 1:
    {
       auto param = parameters.at(0);
-      sanelli::rtrim(param);
-      sanelli::ltrim(param);
       if (param == "help")
       {
          out << description() << std::endl;

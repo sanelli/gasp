@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <iterator>
 
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/blaise/parser/parser.hpp>
@@ -28,10 +29,8 @@ torricelly_debugger_command_blaise_load::~torricelly_debugger_command_blaise_loa
 
 bool torricelly_debugger_command_blaise_load::load(std::ostream &out, const std::vector<std::string> parameters)
 {
-
    try
    {
-
       blaise_tokenizer tokenizer;
       blaise_parser parser;
       blaise_parser_context context;
@@ -56,7 +55,7 @@ bool torricelly_debugger_command_blaise_load::load(std::ostream &out, const std:
          debugger()->add_module(module);
 
       auto it = parameters.begin();
-      ++it;
+      std::advance(it, 1);
       auto end = parameters.end();
       debugger()->load(it, end);
 
@@ -87,8 +86,7 @@ bool torricelly_debugger_command_blaise_load::execute(std::ostream &out, const s
    case 1:
    {
       auto p1 = parameters.at(0);
-      sanelli::ltrim(p1);
-      sanelli::rtrim(p1);
+      sanelli::trim(p1);
       if (p1 == "help")
       {
          out << description() << std::endl;
