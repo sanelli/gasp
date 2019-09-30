@@ -17,13 +17,21 @@ torricelly_debugger_command_stack::~torricelly_debugger_command_stack() {}
 
 std::string torricelly_debugger_command_stack::command() const { return "stack"; }
 
-void torricelly_debugger_command_stack::show(std::ostream &out)
+bool torricelly_debugger_command_stack::show(std::ostream &out)
 {
    auto interpreter = debugger()->interpreter();
+   if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+   {
+      out << "Cannot display the stack. Program is not running or not program loaded or reached the end of the program." << std::endl;
+      return false;
+   }
+
    auto activation_record = interpreter->activation_record();
    bool first = true;
    for (auto it = activation_record->begin_stack(); it != activation_record->end_stack(); ++it, first = false)
       out << (first ? " > " : "   ") << to_string(*it) << " [" << to_string(it->type()) << "]" << std::endl;
+
+   return true;
 }
 
 std::string torricelly_debugger_command_stack::description() const
@@ -38,7 +46,7 @@ bool torricelly_debugger_command_stack::execute(std::ostream &out, const std::ve
    switch (parameters.size())
    {
    case 0:
-      show(out);
+      return show(out);
       break;
    case 1:
    {
@@ -55,17 +63,27 @@ bool torricelly_debugger_command_stack::execute(std::ostream &out, const std::ve
       }
       else if (param == "show")
       {
-         show(out);
+         return show(out);
       }
       else if (param == "peek")
       {
          auto interpreter = debugger()->interpreter();
+         if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+         {
+            out << "Cannot display the stack. Program is not running or not program loaded or reached the end of the program." << std::endl;
+            return false;
+         }
          auto activation_record = interpreter->activation_record();
          out << to_string(activation_record->peek()) << std::endl;
       }
       else if (param == "peek-type")
       {
          auto interpreter = debugger()->interpreter();
+         if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+         {
+            out << "Cannot display the stack. Program is not running or not program loaded or reached the end of the program." << std::endl;
+            return false;
+         }
          auto activation_record = interpreter->activation_record();
          out << to_string(activation_record->peek().type()) << std::endl;
       }

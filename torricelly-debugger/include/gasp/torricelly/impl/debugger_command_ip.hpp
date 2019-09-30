@@ -13,7 +13,7 @@ namespace gasp::torricelly::debugger
 
 class torricelly_debugger_command_ip : public torricelly_debugger_command
 {
-   void ip(std::ostream &out, bool print_instruction);
+   bool ip(std::ostream &out, bool print_instruction);
 
 public:
    torricelly_debugger_command_ip(std::shared_ptr<torricelly_debugger> debugger);

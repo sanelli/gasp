@@ -19,9 +19,15 @@ torricelly_debugger_command_ip::~torricelly_debugger_command_ip() {}
 
 std::string torricelly_debugger_command_ip::command() const { return "ip"; }
 
-void torricelly_debugger_command_ip::ip(std::ostream &out, bool print_instruction)
+bool torricelly_debugger_command_ip::ip(std::ostream &out, bool print_instruction)
 {
    auto interpreter = debugger()->interpreter();
+   if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+   {
+      out << "Cannot display Instruction Pointer. Program is not running or not program loaded or reached the end of the program." << std::endl;
+      return false;
+   }
+
    auto activation_record = interpreter->activation_record();
 
    auto ip = activation_record->ip() + 1;
@@ -43,6 +49,7 @@ void torricelly_debugger_command_ip::ip(std::ostream &out, bool print_instructio
    else
    {
       out << "Instruction Pointer not set" << std::endl;
+      return false;
    }
 }
 

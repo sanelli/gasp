@@ -20,6 +20,14 @@ std::string torricelly_debugger_command_locals::command() const { return "locals
 
 bool torricelly_debugger_command_locals::show(std::ostream &out, std::shared_ptr<gasp::torricelly::interpreter::torricelly_activation_record> activation_record, unsigned int index)
 {
+
+   auto interpreter = debugger()->interpreter();
+   if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+   {
+      out << "Cannot display locals. Program is not running or not program loaded or reached the end of the program." << std::endl;
+      return false;
+   }
+
    auto subroutine = activation_record->subroutine();
    if (index < 1 || index > subroutine->count_locals())
    {
