@@ -164,17 +164,22 @@ void torricelly_interpreter::step()
          if (_activation_records.size() == 1)
          {
             if (!torricelly_type_utility::is_void(current_activation_record->subroutine()->return_type()))
-               // TODO: Check that the type matches with the expected return type
+            // TODO: Check that the type matches with the expected return type
+            {
                _return_value = current_activation_record->peek();
+            }
             else
                _return_value = torricelly_activation_record_variable::make(0);
+
+            _status = torricelly_interpreter_status::FINISHED;
          }
          _activation_records.pop_back();
-         _status = torricelly_interpreter_status::FINISHED;
       }
-
-      if (is_jump)
-         current_activation_record->jump(next_instruction - 1);
+      else
+      {
+         if (is_jump)
+            current_activation_record->jump(next_instruction - 1);
+      }
    }
    else
    {
