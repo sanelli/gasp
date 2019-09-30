@@ -51,6 +51,8 @@ bool torricelly_debugger_command_ip::ip(std::ostream &out, bool print_instructio
       out << "Instruction Pointer not set" << std::endl;
       return false;
    }
+
+   return true;
 }
 
 std::string torricelly_debugger_command_ip::description() const
