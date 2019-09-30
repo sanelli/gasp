@@ -65,7 +65,8 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
          for (signed int param_count = subroutine->count_parameters(); param_count > 0; --param_count)
          {
             auto variable_type = subroutine->get_local_type(param_count);
-            auto input_string = _get_parameter(param_count);
+            auto input_string = _get_parameter(param_count - 1);
+
             if (input_string.empty())
             {
                auto default_value = torricelly_value::get_default_value(variable_type);
