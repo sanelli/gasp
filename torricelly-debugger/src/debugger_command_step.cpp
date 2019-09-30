@@ -22,18 +22,21 @@ void torricelly_debugger_command_step::step(std::ostream &out, unsigned int coun
 {
    auto interpreter = debugger()->interpreter();
    for (int st = 0; st < count; ++st)
-   {  
-      if(interpreter->status() != torricelly_interpreter_status::RUNNING
-         && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+   {
+      if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
          break;
 
       interpreter->step();
 
-      auto activation_record = interpreter->activation_record();
-      auto subroutine = activation_record->subroutine();
+      // If not running something went wrong or reached the end program execution
+      if (interpreter->status() == torricelly_interpreter_status::RUNNING)
+      {
+         auto activation_record = interpreter->activation_record();
+         auto subroutine = activation_record->subroutine();
 
-      if(debugger()->is_breakpoint(subroutine, activation_record->ip()))
-         break;
+         if (debugger()->is_breakpoint(subroutine, activation_record->ip()))
+            break;
+      }
    }
 }
 
@@ -67,6 +70,13 @@ bool torricelly_debugger_command_step::execute(std::ostream &out, const std::vec
       {
          try
          {
+            auto interpreter = debugger()->interpreter();
+            if (interpreter->status() != torricelly_interpreter_status::RUNNING && interpreter->status() != torricelly_interpreter_status::INITIALIZED)
+            {
+               out << "Cannot step. Reached the end of the program." << std::endl;
+               return false;
+            }
+
             auto steps = std::stoi(parameters.at(0));
             step(out, steps);
          }
