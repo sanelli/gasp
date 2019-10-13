@@ -47,11 +47,11 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = sample_empty;
    _samples_parameters["empty"] = "";
-   _samples_return_value["empty"] = "";
+   _samples_return_value["empty"] = "0";
 
    _samples["empty-with-parameters"] = sample_empty_with_parameters;
-   _samples_parameters["empty-with-parameters"] = "7 5";
-   _samples_return_value["empty-with-parameters"] = "";
+   _samples_parameters["empty-with-parameters"] = "7 true";
+   _samples_return_value["empty-with-parameters"] = "0";
 
    _samples["sum-two-integer-parameters"] = sample_sum_two_integer_parameters;
    _samples_parameters["sum-two-integer-parameters"] = "3 4";
