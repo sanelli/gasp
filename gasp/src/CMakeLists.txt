@@ -9,4 +9,5 @@ target_sources(gasp
         gasp_module_execute.cpp
         gasp_module_blaise_sample.cpp
         gasp_module_debug.cpp
+        gasp_module_blaise_test.cpp
 )

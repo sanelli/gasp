@@ -11,11 +11,12 @@
 #include <gasp/module/gasp_module_compile.hpp>
 #include <gasp/module/gasp_module_execute.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
+#include <gasp/module/gasp_module_blaise_test.hpp>
 #include <gasp/module/gasp_module_debug.hpp>
 
 // TODO: Add error codes when I throw errors
 
-void print_available_modules(const std::map<std::string, std::unique_ptr<gasp::module::gasp_module>> &modules)
+void print_available_modules(const std::map<std::string, std::shared_ptr<gasp::module::gasp_module>> &modules)
 {
    for (auto it = modules.begin(); it != modules.end(); ++it)
    {
@@ -33,19 +34,21 @@ int main(int argc, char *argv[])
    SANELLI_INSTALL_DEBUGGER("blaise-to-torricelly");
    SANELLI_INSTALL_DEBUGGER("torricelly-interpreter");
 
-   std::map<std::string, std::unique_ptr<gasp::module::gasp_module>> modules;
+   std::map<std::string, std::shared_ptr<gasp::module::gasp_module>> modules;
 
-   auto tokenize_module = std::make_unique<gasp::module::gasp_module_tokenize>();
-   auto compile_module = std::make_unique<gasp::module::gasp_module_compile>();
-   auto execute_module = std::make_unique<gasp::module::gasp_module_execute>();
-   auto blaise_sample_module = std::make_unique<gasp::module::gasp_module_blaise_sample>();
-   auto debug_module = std::make_unique<gasp::module::gasp_module_debug>();
+   auto tokenize_module = std::make_shared<gasp::module::gasp_module_tokenize>();
+   auto compile_module = std::make_shared<gasp::module::gasp_module_compile>();
+   auto execute_module = std::make_shared<gasp::module::gasp_module_execute>();
+   auto blaise_sample_module = std::make_shared<gasp::module::gasp_module_blaise_sample>();
+   auto blaise_test_module = std::make_shared<gasp::module::gasp_module_blaise_test>(blaise_sample_module);
+   auto debug_module = std::make_shared<gasp::module::gasp_module_debug>();
 
-   modules[tokenize_module->name()] = std::move(tokenize_module);
-   modules[compile_module->name()] = std::move(compile_module);
-   modules[execute_module->name()] = std::move(execute_module);
-   modules[debug_module->name()] = std::move(debug_module);
-   modules[blaise_sample_module->name()] = std::move(blaise_sample_module);
+   modules[tokenize_module->name()] = tokenize_module;
+   modules[compile_module->name()] = compile_module;
+   modules[execute_module->name()] = execute_module;
+   modules[debug_module->name()] = debug_module;
+   modules[blaise_sample_module->name()] = blaise_sample_module;
+   modules[blaise_test_module->name()] = blaise_test_module;
 
    if (argc < 2)
    {
@@ -55,12 +58,12 @@ int main(int argc, char *argv[])
    }
 
    auto expected_module = std::string(argv[1]);
-   std::unique_ptr<gasp::module::gasp_module> module = nullptr;
+   std::shared_ptr<gasp::module::gasp_module> module = nullptr;
    for (auto it = modules.begin(); it != modules.end(); ++it)
    {
       if (it->first == expected_module)
       {
-         module = std::move(it->second);
+         module = it->second;
          break;
       }
    }
