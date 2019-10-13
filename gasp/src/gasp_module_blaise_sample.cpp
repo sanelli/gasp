@@ -5,6 +5,8 @@
 #include <gasp/common/gasp_error.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
 
+#include <sanelli/sanelli.hpp>
+
 using namespace gasp;
 using namespace gasp::common;
 using namespace gasp::module;
@@ -87,6 +89,35 @@ const std::string p_sample_parameter_short("-sp");
 const std::string p_sample_return("--sample-return");
 const std::string p_sample_return_short("-sr");
 
+void gasp_module_blaise_sample::get_sample_names(std::vector<std::string> &samples) const
+{
+   for (auto it = _samples.begin(); it != _samples.end(); ++it)
+      samples.push_back(it->first);
+}
+
+std::string gasp_module_blaise_sample::get_sample(std::string sample) const
+{
+   auto it = _samples.find(sample);
+   if (it != _samples.end())
+      return it->second;
+   throw std::runtime_error(sanelli::make_string("Cannot find sample ", sample, "."));
+}
+
+std::string gasp_module_blaise_sample::get_input(std::string sample) const
+{
+   auto it = _samples_parameters.find(sample);
+   if (it != _samples_parameters.end())
+      return it->second;
+   throw std::runtime_error(sanelli::make_string("Cannot find sample ", sample, "."));
+}
+std::string gasp_module_blaise_sample::get_output(std::string sample) const
+{
+   auto it = _samples_return_value.find(sample);
+   if (it != _samples_return_value.end())
+      return it->second;
+   throw std::runtime_error(sanelli::make_string("Cannot find sample ", sample, "."));
+}
+
 bool gasp_module_blaise_sample::run(int argc, char *argv[])
 {
    if (argc < 3)
@@ -113,7 +144,7 @@ bool gasp_module_blaise_sample::run(int argc, char *argv[])
       return true;
    }
 
-   if (arg == p_list|| arg == p_list_short)
+   if (arg == p_list || arg == p_list_short)
    {
       for (auto it = _samples.begin(); it != _samples.end(); ++it)
          std::cout << it->first << std::endl;
@@ -122,10 +153,11 @@ bool gasp_module_blaise_sample::run(int argc, char *argv[])
 
    if (arg == p_sample_parameter || arg == p_sample_parameter_short)
    {
-       if(argc < 4) { 
-          std::cout << "Missing sample format name" << std::endl;
-          return false;
-       }
+      if (argc < 4)
+      {
+         std::cout << "Missing sample format name" << std::endl;
+         return false;
+      }
       arg = argv[3];
       auto it = _samples_parameters.find(arg);
       if (it != _samples_parameters.end())
@@ -142,10 +174,11 @@ bool gasp_module_blaise_sample::run(int argc, char *argv[])
 
    if (arg == p_sample_return || arg == p_sample_return_short)
    {
-       if(argc < 4) { 
-          std::cout << "Missing sample format name" << std::endl;
-          return false;
-       }
+      if (argc < 4)
+      {
+         std::cout << "Missing sample format name" << std::endl;
+         return false;
+      }
       arg = argv[3];
       auto it = _samples_return_value.find(arg);
       if (it != _samples_return_value.end())
