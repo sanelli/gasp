@@ -103,7 +103,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
 
    _samples["compare-two-integer-parameters-neq-2"] = sample_neq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-neq-2"] = "5 5";
-   _samples_return_value["compare-two-integer-parameters-neq-2"] = "1";
+   _samples_return_value["compare-two-integer-parameters-neq-2"] = "0";
 
    _samples["compare-two-integer-parameters-gt-1"] = sample_gt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-gt-1"] = "6 5";
@@ -111,7 +111,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
 
    _samples["compare-two-integer-parameters-gt-2"] = sample_gt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-gt-2"] = "4 5";
-   _samples_return_value["compare-two-integer-parameters-gt-2"] = "1";
+   _samples_return_value["compare-two-integer-parameters-gt-2"] = "0";
 
    _samples["compare-two-integer-parameters-lt-1"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-1"] = "4 5";
@@ -119,7 +119,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
 
    _samples["compare-two-integer-parameters-lt-2"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-2"] = "6 5";
-   _samples_return_value["compare-two-integer-parameters-lt-2"] = "1";
+   _samples_return_value["compare-two-integer-parameters-lt-2"] = "0";
 }
 
 std::string gasp_module_blaise_sample::name() const
