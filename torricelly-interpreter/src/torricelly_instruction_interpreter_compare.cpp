@@ -14,7 +14,7 @@ void torricelly_instruction_interpreter::execute_cmp_integer(const torricelly::t
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
-   auto integer_result = sanelli::sign(left_param_value.get_integer() - left_param_value.get_integer());
+   auto integer_result = sanelli::sign(left_param_value.get_integer() - right_param_value.get_integer());
    auto result = torricelly_activation_record_variable::make(integer_result);
    activation_record->push(result);
 }
@@ -24,7 +24,7 @@ void torricelly_instruction_interpreter::execute_cmp_float(const torricelly::tor
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
-   auto integer_result = sanelli::sign(left_param_value.get_float() - left_param_value.get_float());
+   auto integer_result = sanelli::sign(left_param_value.get_float() - right_param_value.get_float());
    auto result = torricelly_activation_record_variable::make(integer_result);
    activation_record->push(result);
 }
@@ -34,7 +34,7 @@ void torricelly_instruction_interpreter::execute_cmp_double(const torricelly::to
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
-   auto integer_result = sanelli::sign(left_param_value.get_double() - left_param_value.get_double());
+   auto integer_result = sanelli::sign(left_param_value.get_double() - right_param_value.get_double());
    auto result = torricelly_activation_record_variable::make(integer_result);
    activation_record->push(result);
 }
@@ -44,7 +44,7 @@ void torricelly_instruction_interpreter::execute_cmp_boolean(const torricelly::t
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::BOOLEAN);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::BOOLEAN);
-   auto integer_result = sanelli::sign(left_param_value.get_boolean() - left_param_value.get_boolean());
+   auto integer_result = sanelli::sign(left_param_value.get_boolean() - right_param_value.get_boolean());
    auto result = torricelly_activation_record_variable::make(integer_result);
    activation_record->push(result);
 }
@@ -54,7 +54,7 @@ void torricelly_instruction_interpreter::execute_cmp_char(const torricelly::torr
    auto activation_record = _interpreter.lock()->activation_record();
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::CHAR);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::CHAR);
-   auto integer_result = sanelli::sign(left_param_value.get_char() - left_param_value.get_char());
+   auto integer_result = sanelli::sign(left_param_value.get_char() - right_param_value.get_char());
    auto result = torricelly_activation_record_variable::make(integer_result);
    activation_record->push(result);
 }

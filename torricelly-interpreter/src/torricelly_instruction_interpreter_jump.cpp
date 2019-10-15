@@ -25,7 +25,11 @@ bool torricelly_instruction_interpreter::__execute_jump(const torricelly::torric
 }
 bool torricelly_instruction_interpreter::execute_jump(const torricelly::torricelly_instruction &instruction, unsigned int &next_address)
 {
-   return __execute_jump(instruction, next_address, [](int value) { return true; });
+   next_address = 0U;
+   auto activation_record = _interpreter.lock()->activation_record();
+   auto label = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::LABEL);
+   next_address = activation_record->get_instruction_address(label);
+   return true;
 }
 bool torricelly_instruction_interpreter::execute_jump_lt(const torricelly::torricelly_instruction &instruction, unsigned int &next_address)
 {
