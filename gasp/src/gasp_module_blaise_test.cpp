@@ -47,7 +47,7 @@ bool gasp_module_blaise_test::run(int argc, char *argv[])
    switch (argc)
    {
    case 2:
-      run_tests();
+      success = run_tests();
       break;
    case 3:
    {
@@ -58,7 +58,7 @@ bool gasp_module_blaise_test::run(int argc, char *argv[])
       }
       else if (arg == p_execute || arg == p_execute_short)
       {
-         run_tests();
+         success = run_tests();
       }
       else
       {
@@ -89,7 +89,7 @@ void gasp_module_blaise_test::print_usage(char *argv[]) const
    std::cerr << "\t" << p_execute << "/" << p_execute_short << ": Run the test on all the samples (default)." << std::endl;
 }
 
-void gasp_module_blaise_test::run_tests() const
+bool gasp_module_blaise_test::run_tests() const
 {
    unsigned success = 0;
    unsigned failure = 0;
@@ -124,6 +124,8 @@ void gasp_module_blaise_test::run_tests() const
       std::cout << "Success: " << success << "/" << total << "(" << (success * 100.00f / total) << "%)" << std::endl;
       std::cout << "Failure: " << failure << "/" << total << "(" << (failure * 100.00f / total) << "%)" << std::endl;
    }
+
+   return failure == 0;
 }
 
 bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::milliseconds& elapsed_time) const
