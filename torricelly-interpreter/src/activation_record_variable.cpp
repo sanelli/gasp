@@ -226,7 +226,7 @@ double torricelly_activation_record_variable::get_double() const
 std::shared_ptr<void> torricelly_activation_record_variable::get_pointer() const
 {
    if (_type != torricelly_activation_record_variable_type::POINTER)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get integer type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get pointer type. variable is of type ", to_string(_type), "."));
    return _pointer;
 }
 
