@@ -6,6 +6,8 @@
 #include <sstream>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
+#include <iomanip>
 
 #include <gasp/module/gasp_module.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
@@ -28,6 +30,25 @@ using namespace gasp::blaise::ast;
 using namespace gasp::torricelly;
 using namespace gasp::blaise_to_torricelly;
 using namespace gasp::torricelly::interpreter;
+
+// https://stackoverflow.com/a/9158263/1468832
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
 const std::string p_help("--help");
 const std::string p_help_short("-h");
@@ -97,19 +118,27 @@ bool gasp_module_blaise_test::run_tests() const
    std::vector<std::string> samples;
    _module_samples->get_sample_names(samples);
 
+   auto wsize = samples.size() > 0 ? (unsigned int)std::ceil(std::log10(samples.size())) : 0;
+   size_t max_sample_name_size = 0;
+   for (const std::string &sample : samples) max_sample_name_size = std::max(max_sample_name_size, sample.size());
+
+   std::cout << std::setprecision(4);
+
+   auto index = 0;
    for (const std::string &sample : samples)
    {
-      std::cout << "Running '" << sample << "'... ";
+      std::cout << std::right << std::setw(wsize) << (++index) << std::setw(0) << std::left
+            << ") " << std::setw(max_sample_name_size) << sample << std::setw(0) << " ";
       std::chrono::milliseconds elapsed_time;
       auto result = run_test(sample, elapsed_time);
       if (result)
       {
-         std::cout << "OK [" << elapsed_time.count() << " ms]" << std::endl;
+         std::cout  << GREEN << "[OK] " << RESET << BLUE << "[" << elapsed_time.count() << " ms]" << RESET << std::endl;
          ++success;
       }
       else
       {
-         std::cout << "FAIL" << std::endl;
+         std::cout << RED << "[FAIL]" << RESET << std::endl;
          ++failure;
       }
    }
@@ -117,12 +146,13 @@ bool gasp_module_blaise_test::run_tests() const
    auto total = success + failure;
    if (total == 0)
    {
-      std::cout << "No test run" << std::endl;
+      std::cout << "No test run." << std::endl;
    }
    else
    {
-      std::cout << "Success: " << success << "/" << total << "(" << (success * 100.00f / total) << "%)" << std::endl;
-      std::cout << "Failure: " << failure << "/" << total << "(" << (failure * 100.00f / total) << "%)" << std::endl;
+      std::cout << std::endl << "Result:" << std::endl;
+      std::cout << GREEN << "   Success: " << success << "/" << total << " (" << (success * 100.00f / total) << "%)" << RESET << std::endl;
+      std::cout << RED << "   Failure: " << failure << "/" << total << " (" << (failure * 100.00f / total) << "%)" << RESET << std::endl;
    }
 
    return failure == 0;
