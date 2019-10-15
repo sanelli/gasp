@@ -63,6 +63,7 @@ bool torricelly_subroutine::is_parameter(unsigned int variable_index) const
 unsigned int torricelly_subroutine::append_instruction(torricelly::torricelly_instruction instruction)
 {
    _instructions.push_back(instruction);
+   make_labels_map();
    return _instructions.size();
 }
 void torricelly_subroutine::insert_instruction(unsigned int index, torricelly::torricelly_instruction instruction)
