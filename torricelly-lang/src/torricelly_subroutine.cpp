@@ -11,7 +11,8 @@ using namespace gasp::torricelly;
 
 torricelly_subroutine::torricelly_subroutine(const std::string &name,
                                              std::shared_ptr<torricelly::torricelly_type> return_type)
-    : _name(name), _return_type(return_type), _flags(torricelly_subroutine_flag::NOTHING) {}
+    : _name(name), _return_type(return_type), 
+      _flags(torricelly_subroutine_flag::NOTHING), _labels_counter(0) {}
 std::string torricelly_subroutine::name() const { return _name; };
 std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::return_type() const { return _return_type; }
 
