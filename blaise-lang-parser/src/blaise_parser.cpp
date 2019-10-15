@@ -35,8 +35,6 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    module->self(module);
    auto main_subroutine = module->add_subroutine(context.peek_token());
    main_subroutine->set(blaise::ast::blaise_ast_subroutine_flags::MAIN);
-   main_subroutine->return_type(ast::make_plain_type(ast::blaise_ast_system_type::INTEGER));
-   main_subroutine->add_variable(identifier, identifier.value(), ast::make_plain_type(ast::blaise_ast_system_type::INTEGER));
 
    context.module(module);
    context.main_subroutine(main_subroutine);
@@ -52,6 +50,15 @@ void blaise_parser::parse_program(blaise_parser_context &context)
       match_token(context, blaise_token_type::RIGHT_PARENTHESES);
       context.current_subroutine(nullptr);
    }
+
+   // Retrun value of the main program
+   auto return_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
+   if(is_token_and_match(context, blaise_token_type::COLON)) {
+      return_type = parse_variable_type(context, false);
+   }
+
+   main_subroutine->return_type(return_type);
+   main_subroutine->add_variable(identifier, identifier.value(), return_type);
 
    match_token(context, blaise_token_type::SEMICOLON);
 
