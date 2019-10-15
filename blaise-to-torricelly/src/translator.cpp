@@ -84,20 +84,33 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    std::map<std::string, unsigned int> variables_mapping;
 
    // Crate locals and add STORE from right to left
-   if (subroutine->count_parameters() > 0)
-      for (signed int index = subroutine->count_parameters() - 1; index >= 0; --index)
+   if (subroutine->count_parameters() > 0) {
+      // Fisrt create the locals in the correct order
+      for (signed int index = 0; index < subroutine->count_parameters(); ++index)
       {
          auto parameter = subroutine->get_parameter(index);
          auto torricelly_type = translate_type(parameter->type());
          auto initial_value = get_type_initial_value(parameter->type());
          auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, true);
          variables_mapping.insert(std::make_pair(parameter->name(), torricelly_index));
+      }
+
+      // Then create the STORES in the reverse order
+      for (signed int index = subroutine->count_parameters() - 1; index >= 0; --index)
+      {
+         auto parameter = subroutine->get_parameter(index);
+         auto variable_name = parameter->name();
+         auto variable_index_it = variables_mapping.find(variable_name);
+         if (variable_index_it == variables_mapping.end())
+            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(),"'."));
+ 
          auto store_instruction_code = compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
                                                                 torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
                                                                 torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
-         auto store_instruction = torricelly_instruction::make(store_instruction_code, torricelly_index, torricelly_inst_ref_type::SUBROUTINE);
+         auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index_it->second, torricelly_inst_ref_type::SUBROUTINE);
          torricelly_subroutine->append_instruction(store_instruction);
       }
+   }
 
    for (auto index = 0UL; index < subroutine->count_constants(); ++index)
    {
