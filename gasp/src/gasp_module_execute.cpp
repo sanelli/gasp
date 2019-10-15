@@ -75,7 +75,7 @@ bool gasp_module_execute::run(int argc, char *argv[])
       if (interpreter->status() == torricelly_interpreter_status::FINISHED)
       {
          auto return_value = interpreter->return_value();
-         std::cout << return_value.get_integer() << std::endl;
+         std::cout << gasp::torricelly::interpreter::to_string(return_value) << std::endl;
       } else {
          std::cerr << "Execution failed." << std::endl;
       }

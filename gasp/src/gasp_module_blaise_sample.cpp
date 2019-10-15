@@ -19,6 +19,18 @@ auto sample_empty = R"__(program sample;
 begin
 end.)__";
 
+auto sample_empty_returning_integer = R"__(program sample : integer;
+begin
+end.)__";
+
+auto sample_empty_returning_float = R"__(program sample : float;
+begin
+end.)__";
+
+auto sample_empty_returning_boolean = R"__(program sample : boolean;
+begin
+end.)__";
+
 auto sample_empty_with_parameters = R"__(program sample(first: integer, second: boolean);
 begin
 end.)__";
@@ -68,6 +80,18 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty"] = sample_empty;
    _samples_parameters["empty"] = "";
    _samples_return_value["empty"] = "0";
+
+   _samples["empty-returning-integer"] = sample_empty_returning_integer;
+   _samples_parameters["empty-returning-integer"] = "";
+   _samples_return_value["empty-returning-integer"] = "0";
+
+   _samples["empty-returning-float"] = sample_empty_returning_float;
+   _samples_parameters["empty-returning-float"] = "";
+   _samples_return_value["empty-returning-float"] = "0.000000";
+
+   _samples["empty-returning-boolean"] = sample_empty_returning_boolean;
+   _samples_parameters["empty-returning-boolean"] = "";
+   _samples_return_value["empty-returning-boolean"] = "false";
 
    _samples["empty-with-parameters"] = sample_empty_with_parameters;
    _samples_parameters["empty-with-parameters"] = "7 true";
