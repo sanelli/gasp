@@ -190,7 +190,6 @@ bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::millisec
       if (interpreter->status() == torricelly_interpreter_status::FINISHED)
       {
          auto return_value = interpreter->return_value();
-         // Assuming at present we are only getting back integer (will fixx this soon I hope)
          return gasp::torricelly::interpreter::to_string(return_value) == _module_samples->get_output(sample);
       }
       else
