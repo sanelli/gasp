@@ -115,6 +115,11 @@ begin
    sample := first / second;
 end.)__";
 
+auto sample_ternary_operator = R"__(program sample(first: boolean);
+begin
+   sample := if first then 1 else 2;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = sample_empty;
@@ -216,6 +221,14 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["divide-two-double-parameters"] = sample_divide_two_double_parameters;
    _samples_parameters["divide-two-double-parameters"] = "5.0 2.0";
    _samples_return_value["divide-two-double-parameters"] = "2.500000";
+
+   _samples["sample_ternary_operator-1"] = sample_ternary_operator;
+   _samples_parameters["sample_ternary_operator-1"] = "true";
+   _samples_return_value["sample_ternary_operator-1"] = "1";
+
+   _samples["sample_ternary_operator-2"] = sample_ternary_operator;
+   _samples_parameters["sample_ternary_operator-2"] = "false";
+   _samples_return_value["sample_ternary_operator-2"] = "2";
 
 }
 
