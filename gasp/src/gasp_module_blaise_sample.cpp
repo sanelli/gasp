@@ -150,6 +150,21 @@ begin
    sample := not first;
 end.)__";
 
+auto sample_binary_integer = R"__(program sample;
+begin
+   sample := 0b11;
+end.)__";
+
+auto sample_octal_integer = R"__(program sample;
+begin
+   sample := 0o77;
+end.)__";
+
+auto sample_hexadecimal_integer = R"__(program sample;
+begin
+   sample := 0xFF;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = sample_empty;
@@ -343,6 +358,18 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["boolean-not-2"] = sample_not_boolean_parameter;
    _samples_parameters["boolean-not-2"] = "true";
    _samples_return_value["boolean-not-2"] = "false";
+
+   _samples["integer-binary-literal"] = sample_binary_integer;
+   _samples_parameters["integer-binary-literal"] = "";
+   _samples_return_value["integer-binary-literal"] = "3";
+
+   _samples["integer-octal-literal"] = sample_octal_integer;
+   _samples_parameters["integer-octal-literal"] = "";
+   _samples_return_value["integer-octal-literal"] = "63";
+
+   _samples["integer-hex-literal"] = sample_hexadecimal_integer;
+   _samples_parameters["integer-hex-literal"] = "";
+   _samples_return_value["integer-hex-literal"] = "255";
 }
 
 std::string gasp_module_blaise_sample::name() const
