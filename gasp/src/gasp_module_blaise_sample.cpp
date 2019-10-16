@@ -75,6 +75,46 @@ begin
    sample := if (first < second) then 1 else 0;
 end.)__";
 
+auto sample_sum_two_float_parameters = R"__(program sample(first: float, second: float) : float;
+begin
+   sample := first + second;
+end.)__";
+
+auto sample_subtract_two_float_parameters = R"__(program sample(first: float, second: float) : float;
+begin
+   sample := first - second;
+end.)__";
+
+auto sample_multiply_two_float_parameters = R"__(program sample(first: float, second: float) : float;
+begin
+   sample := first * second;
+end.)__";
+
+auto sample_divide_two_float_parameters = R"__(program sample(first: float, second: float) : float;
+begin
+   sample := first / second;
+end.)__";
+
+auto sample_sum_two_double_parameters = R"__(program sample(first: double, second: double) : double;
+begin
+   sample := first + second;
+end.)__";
+
+auto sample_subtract_two_double_parameters = R"__(program sample(first: double, second: double) : double;
+begin
+   sample := first - second;
+end.)__";
+
+auto sample_multiply_two_double_parameters = R"__(program sample(first: double, second: double) : double;
+begin
+   sample := first * second;
+end.)__";
+
+auto sample_divide_two_double_parameters = R"__(program sample(first: double, second: double) : double;
+begin
+   sample := first / second;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = sample_empty;
@@ -144,6 +184,39 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["compare-two-integer-parameters-lt-2"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-2"] = "6 5";
    _samples_return_value["compare-two-integer-parameters-lt-2"] = "0";
+
+   _samples["sum-two-float-parameters"] = sample_sum_two_float_parameters;
+   _samples_parameters["sum-two-float-parameters"] = "3.5 4.5";
+   _samples_return_value["sum-two-float-parameters"] = "8.000000";
+
+   _samples["subtract-two-float-parameters"] = sample_subtract_two_float_parameters;
+   _samples_parameters["subtract-two-float-parameters"] = "3.5 4.5";
+   _samples_return_value["subtract-two-float-parameters"] = "-1.000000";
+
+   _samples["multiply-two-float-parameters"] = sample_multiply_two_float_parameters;
+   _samples_parameters["multiply-two-float-parameters"] = "3.5 4.5";
+   _samples_return_value["multiply-two-float-parameters"] = "15.750000";
+
+   _samples["divide-two-float-parameters"] = sample_divide_two_float_parameters;
+   _samples_parameters["divide-two-float-parameters"] = "5.0 2.0";
+   _samples_return_value["divide-two-float-parameters"] = "2.500000";
+
+   _samples["sum-two-double-parameters"] = sample_sum_two_double_parameters;
+   _samples_parameters["sum-two-double-parameters"] = "3.5 4.5";
+   _samples_return_value["sum-two-double-parameters"] = "8.000000";
+
+   _samples["subtract-two-double-parameters"] = sample_subtract_two_double_parameters;
+   _samples_parameters["subtract-two-double-parameters"] = "3.5 4.5";
+   _samples_return_value["subtract-two-double-parameters"] = "-1.000000";
+
+   _samples["multiply-two-double-parameters"] = sample_multiply_two_double_parameters;
+   _samples_parameters["multiply-two-double-parameters"] = "3.5 4.5";
+   _samples_return_value["multiply-two-double-parameters"] = "15.750000";
+
+   _samples["divide-two-double-parameters"] = sample_divide_two_double_parameters;
+   _samples_parameters["divide-two-double-parameters"] = "5.0 2.0";
+   _samples_return_value["divide-two-double-parameters"] = "2.500000";
+
 }
 
 std::string gasp_module_blaise_sample::name() const
