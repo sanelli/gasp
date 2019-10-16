@@ -55,6 +55,11 @@ begin
    sample := first / second;
 end.)__";
 
+auto sample_remainder_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+begin
+   sample := first % second;
+end.)__";
+
 auto sample_eq_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
 begin
    sample := first == second;
@@ -182,6 +187,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["divide-two-integer-parameters"] = sample_divide_two_integer_parameters;
    _samples_parameters["divide-two-integer-parameters"] = "15 5";
    _samples_return_value["divide-two-integer-parameters"] = "3";
+
+   _samples["remainder-two-integer-parameters"] = sample_remainder_two_integer_parameters;
+   _samples_parameters["remainder-two-integer-parameters"] = "6 4";
+   _samples_return_value["remainder-two-integer-parameters"] = "2";
 
    _samples["compare-two-integer-parameters-eq-1"] = sample_eq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-eq-1"] = "5 5";
