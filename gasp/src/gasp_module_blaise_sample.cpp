@@ -55,24 +55,24 @@ begin
    sample := first / second;
 end.)__";
 
-auto sample_eq_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+auto sample_eq_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
 begin
-   sample := if (first == second) then 1 else 0;
+   sample := first == second;
 end.)__";
 
-auto sample_neq_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+auto sample_neq_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
 begin
-   sample := if (first <> second) then 1 else 0;
+   sample := first <> second;
 end.)__";
 
-auto sample_gt_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+auto sample_gt_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
 begin
-   sample := if (first > second) then 1 else 0;
+   sample := first > second;
 end.)__";
 
-auto sample_lt_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+auto sample_lt_two_integer_parameters = R"__(program sample(first: integer, second: integer) : boolean;
 begin
-   sample := if (first < second) then 1 else 0;
+   sample := first < second;
 end.)__";
 
 auto sample_sum_two_float_parameters = R"__(program sample(first: float, second: float) : float;
@@ -155,35 +155,35 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
 
    _samples["compare-two-integer-parameters-eq-1"] = sample_eq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-eq-1"] = "5 5";
-   _samples_return_value["compare-two-integer-parameters-eq-1"] = "1";
+   _samples_return_value["compare-two-integer-parameters-eq-1"] = "true";
 
    _samples["compare-two-integer-parameters-eq-2"] = sample_eq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-eq-2"] = "4 5";
-   _samples_return_value["compare-two-integer-parameters-eq-2"] = "0";
+   _samples_return_value["compare-two-integer-parameters-eq-2"] = "false";
 
    _samples["compare-two-integer-parameters-neq-1"] = sample_neq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-neq-1"] = "4 5";
-   _samples_return_value["compare-two-integer-parameters-neq-1"] = "1";
+   _samples_return_value["compare-two-integer-parameters-neq-1"] = "true";
 
    _samples["compare-two-integer-parameters-neq-2"] = sample_neq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-neq-2"] = "5 5";
-   _samples_return_value["compare-two-integer-parameters-neq-2"] = "0";
+   _samples_return_value["compare-two-integer-parameters-neq-2"] = "false";
 
    _samples["compare-two-integer-parameters-gt-1"] = sample_gt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-gt-1"] = "6 5";
-   _samples_return_value["compare-two-integer-parameters-gt-1"] = "1";
+   _samples_return_value["compare-two-integer-parameters-gt-1"] = "true";
 
    _samples["compare-two-integer-parameters-gt-2"] = sample_gt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-gt-2"] = "4 5";
-   _samples_return_value["compare-two-integer-parameters-gt-2"] = "0";
+   _samples_return_value["compare-two-integer-parameters-gt-2"] = "false";
 
    _samples["compare-two-integer-parameters-lt-1"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-1"] = "4 5";
-   _samples_return_value["compare-two-integer-parameters-lt-1"] = "1";
+   _samples_return_value["compare-two-integer-parameters-lt-1"] = "true";
 
    _samples["compare-two-integer-parameters-lt-2"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-2"] = "6 5";
-   _samples_return_value["compare-two-integer-parameters-lt-2"] = "0";
+   _samples_return_value["compare-two-integer-parameters-lt-2"] = "false";
 
    _samples["sum-two-float-parameters"] = sample_sum_two_float_parameters;
    _samples_parameters["sum-two-float-parameters"] = "3.5 4.5";
