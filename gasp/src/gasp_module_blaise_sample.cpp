@@ -130,6 +130,21 @@ begin
    sample := if first then 1 else 2;
 end.)__";
 
+auto sample_and_two_boolean_parameters = R"__(program sample(first: boolean, second: boolean): boolean;
+begin
+   sample := first and second;
+end.)__";
+
+auto sample_or_two_boolean_parameters = R"__(program sample(first: boolean, second: boolean): boolean;
+begin
+   sample := first or second;
+end.)__";
+
+auto sample_not_boolean_parameter = R"__(program sample(first: boolean): boolean;
+begin
+   sample := not first;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = sample_empty;
@@ -280,6 +295,45 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples_parameters["ternary-expression-2"] = "false";
    _samples_return_value["ternary-expression-2"] = "2";
 
+   _samples["boolean-and-1"] = sample_and_two_boolean_parameters;
+   _samples_parameters["boolean-and-1"] = "true true";
+   _samples_return_value["boolean-and-1"] = "true";
+
+   _samples["boolean-and-2"] = sample_and_two_boolean_parameters;
+   _samples_parameters["boolean-and-2"] = "true false";
+   _samples_return_value["boolean-and-2"] = "false";
+
+   _samples["boolean-and-3"] = sample_and_two_boolean_parameters;
+   _samples_parameters["boolean-and-3"] = "false true";
+   _samples_return_value["boolean-and-3"] = "false";
+
+   _samples["boolean-and-4"] = sample_and_two_boolean_parameters;
+   _samples_parameters["boolean-and-4"] = "false false";
+   _samples_return_value["boolean-and-4"] = "false";
+
+   _samples["boolean-or-1"] = sample_or_two_boolean_parameters;
+   _samples_parameters["boolean-or-1"] = "true true";
+   _samples_return_value["boolean-or-1"] = "true";
+
+   _samples["boolean-or-2"] = sample_or_two_boolean_parameters;
+   _samples_parameters["boolean-or-2"] = "true false";
+   _samples_return_value["boolean-or-2"] = "true";
+
+   _samples["boolean-or-3"] = sample_or_two_boolean_parameters;
+   _samples_parameters["boolean-or-3"] = "false true";
+   _samples_return_value["boolean-or-3"] = "true";
+
+   _samples["boolean-or-4"] = sample_or_two_boolean_parameters;
+   _samples_parameters["boolean-or-4"] = "false false";
+   _samples_return_value["boolean-or-4"] = "false";
+
+   _samples["boolean-not-1"] = sample_not_boolean_parameter;
+   _samples_parameters["boolean-not-1"] = "false";
+   _samples_return_value["boolean-not-1"] = "true";
+
+   _samples["boolean-not-2"] = sample_not_boolean_parameter;
+   _samples_parameters["boolean-not-2"] = "true";
+   _samples_return_value["boolean-not-2"] = "false";
 }
 
 std::string gasp_module_blaise_sample::name() const
