@@ -75,6 +75,16 @@ begin
    sample := first < second;
 end.)__";
 
+auto sample_gte_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
+begin
+   sample := first >= second;
+end.)__";
+
+auto sample_lte_two_integer_parameters = R"__(program sample(first: integer, second: integer) : boolean;
+begin
+   sample := first <= second;
+end.)__";
+
 auto sample_sum_two_float_parameters = R"__(program sample(first: float, second: float) : float;
 begin
    sample := first + second;
@@ -115,7 +125,7 @@ begin
    sample := first / second;
 end.)__";
 
-auto sample_ternary_operator = R"__(program sample(first: boolean);
+auto sample_ternary_expression = R"__(program sample(first: boolean);
 begin
    sample := if first then 1 else 2;
 end.)__";
@@ -166,6 +176,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples_parameters["compare-two-integer-parameters-eq-2"] = "4 5";
    _samples_return_value["compare-two-integer-parameters-eq-2"] = "false";
 
+   _samples["compare-two-integer-parameters-eq-3"] = sample_eq_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-eq-3"] = "5 4";
+   _samples_return_value["compare-two-integer-parameters-eq-3"] = "false";
+
    _samples["compare-two-integer-parameters-neq-1"] = sample_neq_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-neq-1"] = "4 5";
    _samples_return_value["compare-two-integer-parameters-neq-1"] = "true";
@@ -174,6 +188,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples_parameters["compare-two-integer-parameters-neq-2"] = "5 5";
    _samples_return_value["compare-two-integer-parameters-neq-2"] = "false";
 
+   _samples["compare-two-integer-parameters-neq-3"] = sample_neq_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-neq-3"] = "5 4";
+   _samples_return_value["compare-two-integer-parameters-neq-3"] = "true";
+
    _samples["compare-two-integer-parameters-gt-1"] = sample_gt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-gt-1"] = "6 5";
    _samples_return_value["compare-two-integer-parameters-gt-1"] = "true";
@@ -181,6 +199,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["compare-two-integer-parameters-gt-2"] = sample_gt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-gt-2"] = "4 5";
    _samples_return_value["compare-two-integer-parameters-gt-2"] = "false";
+   
+   _samples["compare-two-integer-parameters-gt-3"] = sample_gt_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-gt-3"] = "4 4";
+   _samples_return_value["compare-two-integer-parameters-gt-3"] = "false";
 
    _samples["compare-two-integer-parameters-lt-1"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-1"] = "4 5";
@@ -189,6 +211,34 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["compare-two-integer-parameters-lt-2"] = sample_lt_two_integer_parameters;
    _samples_parameters["compare-two-integer-parameters-lt-2"] = "6 5";
    _samples_return_value["compare-two-integer-parameters-lt-2"] = "false";
+
+   _samples["compare-two-integer-parameters-lt-3"] = sample_lt_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-lt-3"] = "5 5";
+   _samples_return_value["compare-two-integer-parameters-lt-3"] = "false";
+
+   _samples["compare-two-integer-parameters-lte-1"] = sample_lte_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-lte-1"] = "4 5";
+   _samples_return_value["compare-two-integer-parameters-lte-1"] = "true";
+
+   _samples["compare-two-integer-parameters-lte-2"] = sample_lte_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-lte-2"] = "4 4";
+   _samples_return_value["compare-two-integer-parameters-lte-2"] = "true";
+
+   _samples["compare-two-integer-parameters-lte-3"] = sample_lte_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-lte-3"] = "5 4";
+   _samples_return_value["compare-two-integer-parameters-lte-3"] = "false";
+
+   _samples["compare-two-integer-parameters-gte-1"] = sample_gte_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-gte-1"] = "4 5";
+   _samples_return_value["compare-two-integer-parameters-gte-1"] = "false";
+
+   _samples["compare-two-integer-parameters-gte-2"] = sample_gte_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-gte-2"] = "4 4";
+   _samples_return_value["compare-two-integer-parameters-gte-2"] = "true";
+
+   _samples["compare-two-integer-parameters-gte-3"] = sample_gte_two_integer_parameters;
+   _samples_parameters["compare-two-integer-parameters-gte-3"] = "5 4";
+   _samples_return_value["compare-two-integer-parameters-gte-3"] = "true";
 
    _samples["sum-two-float-parameters"] = sample_sum_two_float_parameters;
    _samples_parameters["sum-two-float-parameters"] = "3.5 4.5";
@@ -222,13 +272,13 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples_parameters["divide-two-double-parameters"] = "5.0 2.0";
    _samples_return_value["divide-two-double-parameters"] = "2.500000";
 
-   _samples["sample_ternary_operator-1"] = sample_ternary_operator;
-   _samples_parameters["sample_ternary_operator-1"] = "true";
-   _samples_return_value["sample_ternary_operator-1"] = "1";
+   _samples["ternary-expression-1"] = sample_ternary_expression;
+   _samples_parameters["ternary-expression-1"] = "true";
+   _samples_return_value["ternary-expression-1"] = "1";
 
-   _samples["sample_ternary_operator-2"] = sample_ternary_operator;
-   _samples_parameters["sample_ternary_operator-2"] = "false";
-   _samples_return_value["sample_ternary_operator-2"] = "2";
+   _samples["ternary-expression-2"] = sample_ternary_expression;
+   _samples_parameters["ternary-expression-2"] = "false";
+   _samples_return_value["ternary-expression-2"] = "2";
 
 }
 
