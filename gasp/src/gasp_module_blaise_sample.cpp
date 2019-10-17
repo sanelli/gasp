@@ -1,6 +1,7 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <regex>
 
 #include <gasp/common/gasp_error.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
@@ -11,7 +12,8 @@ using namespace gasp;
 using namespace gasp::common;
 using namespace gasp::module;
 
-struct sample_type { 
+struct sample_type
+{
    std::string sample;
    std::string input;
    std::string output;
@@ -39,194 +41,132 @@ auto sample_empty_with_parameters = R"__(program sample(first: integer, second: 
 begin
 end.)__";
 
-auto sample_sum_two_integer_parameters = R"__(program sample(first: integer, second: integer);
-begin
-   sample := first + second;
-end.)__";
+std::string generate_binary_operator_sample(const char *operator_type, const char *return_type, const char *binary_operator)
+{
+   std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+   std::regex binary_operator_regexp("\\{OPERATOR\\}");
 
-auto sample_subtract_two_integer_parameters = R"__(program sample(first: integer, second: integer);
+   std::string sample(R"__(program sample(first: {OPERATOR_TYPE}, second: {OPERATOR_TYPE}): {RETURN_TYPE};
 begin
-   sample := first - second;
-end.)__";
+   sample := first {OPERATOR} second;
+end.)__");
 
-auto sample_multiply_two_integer_parameters = R"__(program sample(first: integer, second: integer);
-begin
-   sample := first * second;
-end.)__";
+   sample = std::regex_replace(sample, operator_type_regexp, operator_type);
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+   sample = std::regex_replace(sample, binary_operator_regexp, binary_operator);
 
-auto sample_divide_two_integer_parameters = R"__(program sample(first: integer, second: integer);
-begin
-   sample := first / second;
-end.)__";
+   return sample;
+}
 
-auto sample_remainder_two_integer_parameters = R"__(program sample(first: integer, second: integer);
-begin
-   sample := first % second;
-end.)__";
+std::string generate_unary_operator_sample(const char *operator_type, const char *return_type, const char *binary_operator)
+{
+   std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+   std::regex binary_operator_regexp("\\{OPERATOR\\}");
 
-auto sample_eq_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
+   std::string sample(R"__(program sample(first: {OPERATOR_TYPE}): {RETURN_TYPE};
 begin
-   sample := first == second;
-end.)__";
+   sample := {OPERATOR} first;
+end.)__");
 
-auto sample_neq_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
-begin
-   sample := first <> second;
-end.)__";
+   sample = std::regex_replace(sample, operator_type_regexp, operator_type);
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+   sample = std::regex_replace(sample, binary_operator_regexp, binary_operator);
 
-auto sample_gt_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
-begin
-   sample := first > second;
-end.)__";
+   return sample;
+}
 
-auto sample_lt_two_integer_parameters = R"__(program sample(first: integer, second: integer) : boolean;
-begin
-   sample := first < second;
-end.)__";
+std::string generate_assignment_operator_sample(const char *operator_type, const char *return_type, const char *literal)
+{
+   std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+   std::regex literal_regexp("\\{LITERAL\\}");
 
-auto sample_gte_two_integer_parameters = R"__(program sample(first: integer, second: integer): boolean;
+   std::string sample(R"__(program sample: {RETURN_TYPE};
 begin
-   sample := first >= second;
-end.)__";
+   sample := {LITERAL};
+end.)__");
 
-auto sample_lte_two_integer_parameters = R"__(program sample(first: integer, second: integer) : boolean;
-begin
-   sample := first <= second;
-end.)__";
+   sample = std::regex_replace(sample, operator_type_regexp, operator_type);
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+   sample = std::regex_replace(sample, literal_regexp, literal);
 
-auto sample_sum_two_float_parameters = R"__(program sample(first: float, second: float) : float;
-begin
-   sample := first + second;
-end.)__";
-
-auto sample_subtract_two_float_parameters = R"__(program sample(first: float, second: float) : float;
-begin
-   sample := first - second;
-end.)__";
-
-auto sample_multiply_two_float_parameters = R"__(program sample(first: float, second: float) : float;
-begin
-   sample := first * second;
-end.)__";
-
-auto sample_divide_two_float_parameters = R"__(program sample(first: float, second: float) : float;
-begin
-   sample := first / second;
-end.)__";
-
-auto sample_sum_two_double_parameters = R"__(program sample(first: double, second: double) : double;
-begin
-   sample := first + second;
-end.)__";
-
-auto sample_subtract_two_double_parameters = R"__(program sample(first: double, second: double) : double;
-begin
-   sample := first - second;
-end.)__";
-
-auto sample_multiply_two_double_parameters = R"__(program sample(first: double, second: double) : double;
-begin
-   sample := first * second;
-end.)__";
-
-auto sample_divide_two_double_parameters = R"__(program sample(first: double, second: double) : double;
-begin
-   sample := first / second;
-end.)__";
+   return sample;
+}
 
 auto sample_ternary_expression = R"__(program sample(first: boolean);
 begin
    sample := if first then 1 else 2;
 end.)__";
 
-auto sample_and_two_boolean_parameters = R"__(program sample(first: boolean, second: boolean): boolean;
-begin
-   sample := first and second;
-end.)__";
-
-auto sample_or_two_boolean_parameters = R"__(program sample(first: boolean, second: boolean): boolean;
-begin
-   sample := first or second;
-end.)__";
-
-auto sample_not_boolean_parameter = R"__(program sample(first: boolean): boolean;
-begin
-   sample := not first;
-end.)__";
-
-auto sample_binary_integer = R"__(program sample;
-begin
-   sample := 0b11;
-end.)__";
-
-auto sample_octal_integer = R"__(program sample;
-begin
-   sample := 0o77;
-end.)__";
-
-auto sample_hexadecimal_integer = R"__(program sample;
-begin
-   sample := 0xFF;
-end.)__";
-
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
-   _samples["empty"] = {sample_empty, "", "0"} ;
-   _samples["empty-return-integer"] = { sample_empty_returning_integer, "", "0" };
-   _samples["empty-return-float"] = { sample_empty_returning_float, "",  "0.000000" };
-   _samples["empty-return-boolean"] = { sample_empty_returning_boolean, "", "false" };
-   _samples["empty-parameters-1"] = { sample_empty_with_parameters, "7 true", "0" };
-   
-   _samples["expression-math-integer-sum"] = { sample_sum_two_integer_parameters, "3 4", "7"};
-   _samples["expression-math-integer-subtract"] = { sample_subtract_two_integer_parameters, "3 4", "-1" };
-   _samples["expression-math-integer-multiply"] = { sample_multiply_two_integer_parameters, "3 4", "12" };
-   _samples["expression-math-integer-divide"] = { sample_divide_two_integer_parameters, "15 5", "3" };
-   _samples["expression-math-integer-remainder"] = { sample_remainder_two_integer_parameters, "6 4", "2" };
-   _samples["expression-math-float-sum"] = { sample_sum_two_float_parameters, "3.5 4.5", "8.000000" };
-   _samples["expression-math-float-subtract"] = { sample_subtract_two_float_parameters, "3.5 4.5", "-1.000000" };
-   _samples["expression-math-float-multiply"] = { sample_multiply_two_float_parameters, "3.5 4.5", "15.750000" };
-   _samples["expression-math-float-divide"] = { sample_divide_two_float_parameters, "5.0 2.0", "2.500000" };
-   _samples["expression-math-double-sum"] = { sample_sum_two_double_parameters, "3.5 4.5", "8.000000" };
-   _samples["expression-math-double-subtract"] = { sample_subtract_two_double_parameters, "3.5 4.5", "-1.000000" };
-   _samples["expression-math-double-multiply"] = { sample_multiply_two_double_parameters, "3.5 4.5", "15.750000" };
-   _samples["expression-math-double-divide"] = { sample_divide_two_double_parameters, "5.0 2.0", "2.500000" };
+   _samples["empty"] = {sample_empty, "", "0"};
+   _samples["empty-return-integer"] = {sample_empty_returning_integer, "", "0"};
+   _samples["empty-return-float"] = {sample_empty_returning_float, "", "0.000000"};
+   _samples["empty-return-boolean"] = {sample_empty_returning_boolean, "", "false"};
+   _samples["empty-parameters-1"] = {sample_empty_with_parameters, "7 true", "0"};
 
-   _samples["expression-boolean-and-1"] = { sample_and_two_boolean_parameters, "true true", "true" };
-   _samples["expression-boolean-and-2"] = { sample_and_two_boolean_parameters, "true false", "false" };
-   _samples["expression-boolean-and-3"] = { sample_and_two_boolean_parameters, "false true", "false" };
-   _samples["expression-boolean-and-4"] = { sample_and_two_boolean_parameters, "false false", "false" };
-   _samples["expression-boolean-or-1"] = { sample_or_two_boolean_parameters, "true true", "true" };
-   _samples["expression-boolean-or-2"] = { sample_or_two_boolean_parameters, "true false", "true" };
-   _samples["expression-boolean-or-3"] = { sample_or_two_boolean_parameters, "false true", "true" };
-   _samples["expression-boolean-or-4"] = { sample_or_two_boolean_parameters, "false false", "false" };
-   _samples["expression-boolean-not-1"] = { sample_not_boolean_parameter, "false", "true" };
-   _samples["expression-boolean-not-2"] = { sample_not_boolean_parameter,  "true", "false" };
+   _samples["expression-math-integer-sum"] = {generate_binary_operator_sample("integer", "integer", "+"), "3 4", "7"};
+   _samples["expression-math-integer-subtract"] = {generate_binary_operator_sample("integer", "integer", "-"), "3 4", "-1"};
+   _samples["expression-math-integer-multiply"] = {generate_binary_operator_sample("integer", "integer", "*"), "3 4", "12"};
+   _samples["expression-math-integer-divide"] = {generate_binary_operator_sample("integer", "integer", "/"), "15 5", "3"};
+   _samples["expression-math-integer-remainder"] = {generate_binary_operator_sample("integer", "integer", "%"), "6 4", "2"};
+   _samples["expression-math-integer-negate-1"] = {generate_unary_operator_sample("integer", "integer", "-"), "4", "-4"};
+   _samples["expression-math-integer-negate-2"] = {generate_unary_operator_sample("integer", "integer", "-"), "-4", "4"};
+   _samples["expression-math-integer-negate-3"] = {generate_unary_operator_sample("integer", "integer", "-"), "0", "0"};
+   _samples["expression-math-float-sum"] = {generate_binary_operator_sample("float", "float", "+"), "3.5 4.5", "8.000000"};
+   _samples["expression-math-float-subtract"] = {generate_binary_operator_sample("float", "float", "-"), "3.5 4.5", "-1.000000"};
+   _samples["expression-math-float-multiply"] = {generate_binary_operator_sample("float", "float", "*"), "3.5 4.5", "15.750000"};
+   _samples["expression-math-float-divide"] = {generate_binary_operator_sample("float", "float", "/"), "5.0 2.0", "2.500000"};
+   _samples["expression-math-float-negate-1"] = {generate_unary_operator_sample("float", "float", "-"), "4.000000", "-4.000000"};
+   _samples["expression-math-float-negate-2"] = {generate_unary_operator_sample("float", "float", "-"), "-4.000000", "4.000000"};
+   _samples["expression-math-float-negate-3"] = {generate_unary_operator_sample("float", "float", "-"), "0.000000", "0.000000"};
+   _samples["expression-math-double-sum"] = {generate_binary_operator_sample("double", "double", "+"), "3.5 4.5", "8.000000"};
+   _samples["expression-math-double-subtract"] = {generate_binary_operator_sample("double", "double", "-"), "3.5 4.5", "-1.000000"};
+   _samples["expression-math-double-multiply"] = {generate_binary_operator_sample("double", "double", "*"), "3.5 4.5", "15.750000"};
+   _samples["expression-math-double-divide"] = {generate_binary_operator_sample("double", "double", "/"), "5.0 2.0", "2.500000"};
+   _samples["expression-math-double-negate-1"] = {generate_unary_operator_sample("double", "double", "-"), "4.000000", "-4.000000"};
+   _samples["expression-math-double-negate-2"] = {generate_unary_operator_sample("double", "double", "-"), "-4.000000", "4.000000"};
+   _samples["expression-math-double-negate-3"] = {generate_unary_operator_sample("double", "double", "-"), "0.000000", "0.000000"};
 
-   _samples["expression-compare-integer-eq-1"] = { sample_eq_two_integer_parameters, "5 5", "true" };
-   _samples["expression-compare-integer-eq-2"] = { sample_eq_two_integer_parameters, "4 5", "false" };
-   _samples["expression-compare-integer-eq-3"] = { sample_eq_two_integer_parameters, "5 4", "false" };
-   _samples["expression-compare-integer-neq-1"] = { sample_neq_two_integer_parameters, "4 5", "true" };
-   _samples["expression-compare-integer-neq-2"] = { sample_neq_two_integer_parameters, "5 5", "false" };
-   _samples["expression-compare-integer-neq-3"] = { sample_neq_two_integer_parameters, "5 4", "true" };
-   _samples["expression-compare-integer-gt-1"] = { sample_gt_two_integer_parameters, "6 5", "true" };
-   _samples["expression-compare-integer-gt-2"] = { sample_gt_two_integer_parameters, "4 5", "false" };
-   _samples["expression-compare-integer-gt-3"] = { sample_gt_two_integer_parameters, "4 4", "false" };
-   _samples["expression-compare-integer-lt-1"] = { sample_lt_two_integer_parameters, "4 5", "true" };
-   _samples["expression-compare-integer-lt-2"] = { sample_lt_two_integer_parameters, "6 5", "false" };
-   _samples["expression-compare-integer-lt-3"] = { sample_lt_two_integer_parameters, "5 5", "false" };
-   _samples["expression-compare-integer-lte-1"] = { sample_lte_two_integer_parameters, "4 5", "true" };
-   _samples["expression-compare-integer-lte-2"] = { sample_lte_two_integer_parameters, "4 4", "true" };
-   _samples["expression-compare-integer-lte-3"] =  {sample_lte_two_integer_parameters, "5 4", "false" };
-   _samples["expression-compare-integer-gte-1"] = { sample_gte_two_integer_parameters, "4 5", "false" };
-   _samples["expression-compare-integer-gte-2"] = { sample_gte_two_integer_parameters, "4 4", "true" };
-   _samples["expression-compare-integer-gte-3"] = { sample_gte_two_integer_parameters, "5 4", "true" };
- 
-   _samples["expression-ternary-1"] = { sample_ternary_expression, "true", "1" };
-   _samples["expression-ternary-2"] = { sample_ternary_expression, "false", "2" };
+   _samples["expression-boolean-and-1"] = {generate_binary_operator_sample("boolean", "boolean", "and"), "true true", "true"};
+   _samples["expression-boolean-and-2"] = {generate_binary_operator_sample("boolean", "boolean", "and"), "true false", "false"};
+   _samples["expression-boolean-and-3"] = {generate_binary_operator_sample("boolean", "boolean", "and"), "false true", "false"};
+   _samples["expression-boolean-and-4"] = {generate_binary_operator_sample("boolean", "boolean", "and"), "false false", "false"};
+   _samples["expression-boolean-or-1"] = {generate_binary_operator_sample("boolean", "boolean", "or"), "true true", "true"};
+   _samples["expression-boolean-or-2"] = {generate_binary_operator_sample("boolean", "boolean", "or"), "true false", "true"};
+   _samples["expression-boolean-or-3"] = {generate_binary_operator_sample("boolean", "boolean", "or"), "false true", "true"};
+   _samples["expression-boolean-or-4"] = {generate_binary_operator_sample("boolean", "boolean", "or"), "false false", "false"};
+   _samples["expression-boolean-not-1"] = {generate_unary_operator_sample("boolean", "boolean", "not"), "false", "true"};
+   _samples["expression-boolean-not-2"] = {generate_unary_operator_sample("boolean", "boolean", "not"), "true", "false"};
 
-   _samples["literal-integer-binary"] = { sample_binary_integer, "", "3" };
-   _samples["literal-integer-octal"] = { sample_octal_integer, "", "63" };
-   _samples["literal-integer-hexadecimal"] = { sample_hexadecimal_integer, "", "255" };
+   _samples["expression-compare-integer-eq-1"] = {generate_binary_operator_sample("integer", "boolean", "=="), "5 5", "true"};
+   _samples["expression-compare-integer-eq-2"] = {generate_binary_operator_sample("integer", "boolean", "=="), "4 5", "false"};
+   _samples["expression-compare-integer-eq-3"] = {generate_binary_operator_sample("integer", "boolean", "=="), "5 4", "false"};
+   _samples["expression-compare-integer-neq-1"] = {generate_binary_operator_sample("integer", "boolean", "<>"), "4 5", "true"};
+   _samples["expression-compare-integer-neq-2"] = {generate_binary_operator_sample("integer", "boolean", "<>"), "5 5", "false"};
+   _samples["expression-compare-integer-neq-3"] = {generate_binary_operator_sample("integer", "boolean", "<>"), "5 4", "true"};
+   _samples["expression-compare-integer-gt-1"] = {generate_binary_operator_sample("integer", "boolean", ">"), "6 5", "true"};
+   _samples["expression-compare-integer-gt-2"] = {generate_binary_operator_sample("integer", "boolean", ">"), "4 5", "false"};
+   _samples["expression-compare-integer-gt-3"] = {generate_binary_operator_sample("integer", "boolean", ">"), "4 4", "false"};
+   _samples["expression-compare-integer-lt-1"] = {generate_binary_operator_sample("integer", "boolean", "<"), "4 5", "true"};
+   _samples["expression-compare-integer-lt-2"] = {generate_binary_operator_sample("integer", "boolean", "<"), "6 5", "false"};
+   _samples["expression-compare-integer-lt-3"] = {generate_binary_operator_sample("integer", "boolean", "<"), "5 5", "false"};
+   _samples["expression-compare-integer-lte-1"] = {generate_binary_operator_sample("integer", "boolean", "<="), "4 5", "true"};
+   _samples["expression-compare-integer-lte-2"] = {generate_binary_operator_sample("integer", "boolean", "<="), "4 4", "true"};
+   _samples["expression-compare-integer-lte-3"] = {generate_binary_operator_sample("integer", "boolean", "<="), "5 4", "false"};
+   _samples["expression-compare-integer-gte-1"] = {generate_binary_operator_sample("integer", "boolean", ">="), "4 5", "false"};
+   _samples["expression-compare-integer-gte-2"] = {generate_binary_operator_sample("integer", "boolean", ">="), "4 4", "true"};
+   _samples["expression-compare-integer-gte-3"] = {generate_binary_operator_sample("integer", "boolean", ">="), "5 4", "true"};
+
+   _samples["expression-ternary-1"] = {sample_ternary_expression, "true", "1"};
+   _samples["expression-ternary-2"] = {sample_ternary_expression, "false", "2"};
+
+   _samples["literal-integer-binary"] = {generate_assignment_operator_sample("integer", "integer", "0b11"), "", "3"};
+   _samples["literal-integer-octal"] = {generate_assignment_operator_sample("integer", "integer", "0o77"), "", "63"};
+   _samples["literal-integer-hexadecimal"] = {generate_assignment_operator_sample("integer", "integer", "0xFF"), "", "255"};
 }
 
 std::string gasp_module_blaise_sample::name() const
