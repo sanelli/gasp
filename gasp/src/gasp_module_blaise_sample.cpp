@@ -112,7 +112,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-math-float-divide"] = {generate_binary_operator_sample("float", "float", "/"), "5.0 2.0", "2.500000"};
    _samples["expression-math-float-negate-1"] = {generate_unary_operator_sample("float", "float", "-"), "4.000000", "-4.000000"};
    _samples["expression-math-float-negate-2"] = {generate_unary_operator_sample("float", "float", "-"), "-4.000000", "4.000000"};
-   _samples["expression-math-float-negate-3"] = {generate_unary_operator_sample("float", "float", "-"), "0.000000", "0.000000"};
+   _samples["expression-math-float-negate-3"] = {generate_unary_operator_sample("float", "float", "-"), "0.000000", "-0.000000"};
    _samples["expression-math-double-sum"] = {generate_binary_operator_sample("double", "double", "+"), "3.5 4.5", "8.000000"};
    _samples["expression-math-double-subtract"] = {generate_binary_operator_sample("double", "double", "-"), "3.5 4.5", "-1.000000"};
    _samples["expression-math-double-multiply"] = {generate_binary_operator_sample("double", "double", "*"), "3.5 4.5", "15.750000"};
