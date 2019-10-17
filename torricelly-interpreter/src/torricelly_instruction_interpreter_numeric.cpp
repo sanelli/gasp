@@ -127,7 +127,7 @@ void torricelly_instruction_interpreter::execute_negate_double(const torricelly:
 {
    auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
-   auto double_result = -value.get_float();
+   auto double_result = -value.get_double();
    auto result = torricelly_activation_record_variable::make(double_result);
    activation_record->push(result);
 }
