@@ -173,10 +173,10 @@ const std::string p_help("--help");
 const std::string p_help_short("-h");
 const std::string p_list("--list");
 const std::string p_list_short("-l");
-const std::string p_sample_parameter("--sample-parameter");
-const std::string p_sample_parameter_short("-sp");
-const std::string p_sample_return("--sample-return");
-const std::string p_sample_return_short("-sr");
+const std::string p_sample_input("--sample-input");
+const std::string p_sample_input_short("-si");
+const std::string p_sample_output("--sample-output");
+const std::string p_sample_output_short("-so");
 
 void gasp_module_blaise_sample::get_sample_names(std::vector<std::string> &samples) const
 {
@@ -240,7 +240,7 @@ bool gasp_module_blaise_sample::run(int argc, char *argv[])
       return true;
    }
 
-   if (arg == p_sample_parameter || arg == p_sample_parameter_short)
+   if (arg == p_sample_input || arg == p_sample_input_short)
    {
       if (argc < 4)
       {
@@ -261,7 +261,7 @@ bool gasp_module_blaise_sample::run(int argc, char *argv[])
       }
    }
 
-   if (arg == p_sample_return || arg == p_sample_return_short)
+   if (arg == p_sample_output || arg == p_sample_output_short)
    {
       if (argc < 4)
       {
