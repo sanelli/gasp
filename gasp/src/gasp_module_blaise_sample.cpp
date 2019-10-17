@@ -1,5 +1,4 @@
 #include <string>
-#include <map>
 #include <iostream>
 #include <regex>
 
@@ -11,15 +10,6 @@
 using namespace gasp;
 using namespace gasp::common;
 using namespace gasp::module;
-
-struct sample_type
-{
-   std::string sample;
-   std::string input;
-   std::string output;
-};
-
-std::map<std::string, sample_type> _samples;
 
 auto sample_empty = R"__(program sample;
 begin
