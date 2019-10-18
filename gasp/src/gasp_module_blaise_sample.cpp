@@ -15,21 +15,21 @@ auto sample_empty = R"__(program sample;
 begin
 end.)__";
 
-auto sample_empty_returning_integer = R"__(program sample : integer;
-begin
-end.)__";
-
-auto sample_empty_returning_float = R"__(program sample : float;
-begin
-end.)__";
-
-auto sample_empty_returning_boolean = R"__(program sample : boolean;
-begin
-end.)__";
-
 auto sample_empty_with_parameters = R"__(program sample(first: integer, second: boolean);
 begin
 end.)__";
+
+std::string generate_empty_with_return_type_sample(const char *return_type) { 
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+
+   std::string sample(R"__(program sample: {RETURN_TYPE};
+begin
+end.)__");
+
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+
+   return sample;
+}
 
 std::string generate_binary_operator_sample(const char *operator_type, const char *return_type, const char *binary_operator)
 {
@@ -93,9 +93,11 @@ end.)__";
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
-   _samples["empty-return-integer"] = {sample_empty_returning_integer, "", "0"};
-   _samples["empty-return-float"] = {sample_empty_returning_float, "", "0.000000"};
-   _samples["empty-return-boolean"] = {sample_empty_returning_boolean, "", "false"};
+   _samples["empty-return-integer"] = {generate_empty_with_return_type_sample("integer"), "", "0"};
+   _samples["empty-return-float"] = {generate_empty_with_return_type_sample("float"), "", "0.000000"};
+   _samples["empty-return-boolean"] = {generate_empty_with_return_type_sample("boolean"), "", "false"};
+   _samples["empty-return-double"] = {generate_empty_with_return_type_sample("double"), "", "0.000000"};
+   _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\0"};
    _samples["empty-parameters-1"] = {sample_empty_with_parameters, "7 true", "0"};
 
    _samples["expression-math-integer-sum"] = {generate_binary_operator_sample("integer", "integer", "+"), "3 4", "7"};
