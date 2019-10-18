@@ -67,7 +67,7 @@ end.)__");
    return sample;
 }
 
-std::string generate_assignment_operator_sample(const char *operator_type, const char *return_type, const char *literal)
+std::string generate_literal_assignment_sample(const char *operator_type, const char *return_type, const char *literal)
 {
    std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
    std::regex return_type_regexp("\\{RETURN_TYPE\\}");
@@ -194,9 +194,14 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-ternary-1"] = {sample_ternary_expression, "true", "1"};
    _samples["expression-ternary-2"] = {sample_ternary_expression, "false", "2"};
 
-   _samples["literal-integer-binary"] = {generate_assignment_operator_sample("integer", "integer", "0b11"), "", "3"};
-   _samples["literal-integer-octal"] = {generate_assignment_operator_sample("integer", "integer", "0o77"), "", "63"};
-   _samples["literal-integer-hexadecimal"] = {generate_assignment_operator_sample("integer", "integer", "0xFF"), "", "255"};
+   _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
+   _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
+   _samples["literal-integer-hexadecimal"] = {generate_literal_assignment_sample("integer", "integer", "0xFF"), "", "255"};
+   _samples["literal-integer-decimal"] = {generate_literal_assignment_sample("integer", "integer", "10"), "", "10"};
+   _samples["literal-char"] = {generate_literal_assignment_sample("char", "char", "'A'"), "", "A"};
+   _samples["literal-boolean-true"] = {generate_literal_assignment_sample("boolean", "boolean", "true"), "", "true"};
+   _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
+   _samples["literal-double"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
 }
 
 std::string gasp_module_blaise_sample::name() const
