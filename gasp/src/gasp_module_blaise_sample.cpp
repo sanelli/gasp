@@ -151,6 +151,44 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-compare-integer-gte-2"] = {generate_binary_operator_sample("integer", "boolean", ">="), "4 4", "true"};
    _samples["expression-compare-integer-gte-3"] = {generate_binary_operator_sample("integer", "boolean", ">="), "5 4", "true"};
 
+   _samples["expression-compare-float-eq-1"] = {generate_binary_operator_sample("float", "boolean", "=="), "5 5", "true"};
+   _samples["expression-compare-float-eq-2"] = {generate_binary_operator_sample("float", "boolean", "=="), "4 5", "false"};
+   _samples["expression-compare-float-eq-3"] = {generate_binary_operator_sample("float", "boolean", "=="), "5 4", "false"};
+   _samples["expression-compare-float-neq-1"] = {generate_binary_operator_sample("float", "boolean", "<>"), "4 5", "true"};
+   _samples["expression-compare-float-neq-2"] = {generate_binary_operator_sample("float", "boolean", "<>"), "5 5", "false"};
+   _samples["expression-compare-float-neq-3"] = {generate_binary_operator_sample("float", "boolean", "<>"), "5 4", "true"};
+   _samples["expression-compare-float-gt-1"] = {generate_binary_operator_sample("float", "boolean", ">"), "6 5", "true"};
+   _samples["expression-compare-float-gt-2"] = {generate_binary_operator_sample("float", "boolean", ">"), "4 5", "false"};
+   _samples["expression-compare-float-gt-3"] = {generate_binary_operator_sample("float", "boolean", ">"), "4 4", "false"};
+   _samples["expression-compare-float-lt-1"] = {generate_binary_operator_sample("float", "boolean", "<"), "4 5", "true"};
+   _samples["expression-compare-float-lt-2"] = {generate_binary_operator_sample("float", "boolean", "<"), "6 5", "false"};
+   _samples["expression-compare-float-lt-3"] = {generate_binary_operator_sample("float", "boolean", "<"), "5 5", "false"};
+   _samples["expression-compare-float-lte-1"] = {generate_binary_operator_sample("float", "boolean", "<="), "4 5", "true"};
+   _samples["expression-compare-float-lte-2"] = {generate_binary_operator_sample("float", "boolean", "<="), "4 4", "true"};
+   _samples["expression-compare-float-lte-3"] = {generate_binary_operator_sample("float", "boolean", "<="), "5 4", "false"};
+   _samples["expression-compare-float-gte-1"] = {generate_binary_operator_sample("float", "boolean", ">="), "4 5", "false"};
+   _samples["expression-compare-float-gte-2"] = {generate_binary_operator_sample("float", "boolean", ">="), "4 4", "true"};
+   _samples["expression-compare-float-gte-3"] = {generate_binary_operator_sample("float", "boolean", ">="), "5 4", "true"};
+
+   _samples["expression-compare-double-eq-1"] = {generate_binary_operator_sample("double", "boolean", "=="), "5 5", "true"};
+   _samples["expression-compare-double-eq-2"] = {generate_binary_operator_sample("double", "boolean", "=="), "4 5", "false"};
+   _samples["expression-compare-double-eq-3"] = {generate_binary_operator_sample("double", "boolean", "=="), "5 4", "false"};
+   _samples["expression-compare-double-neq-1"] = {generate_binary_operator_sample("double", "boolean", "<>"), "4 5", "true"};
+   _samples["expression-compare-double-neq-2"] = {generate_binary_operator_sample("double", "boolean", "<>"), "5 5", "false"};
+   _samples["expression-compare-double-neq-3"] = {generate_binary_operator_sample("double", "boolean", "<>"), "5 4", "true"};
+   _samples["expression-compare-double-gt-1"] = {generate_binary_operator_sample("double", "boolean", ">"), "6 5", "true"};
+   _samples["expression-compare-double-gt-2"] = {generate_binary_operator_sample("double", "boolean", ">"), "4 5", "false"};
+   _samples["expression-compare-double-gt-3"] = {generate_binary_operator_sample("double", "boolean", ">"), "4 4", "false"};
+   _samples["expression-compare-double-lt-1"] = {generate_binary_operator_sample("double", "boolean", "<"), "4 5", "true"};
+   _samples["expression-compare-double-lt-2"] = {generate_binary_operator_sample("double", "boolean", "<"), "6 5", "false"};
+   _samples["expression-compare-double-lt-3"] = {generate_binary_operator_sample("double", "boolean", "<"), "5 5", "false"};
+   _samples["expression-compare-double-lte-1"] = {generate_binary_operator_sample("double", "boolean", "<="), "4 5", "true"};
+   _samples["expression-compare-double-lte-2"] = {generate_binary_operator_sample("double", "boolean", "<="), "4 4", "true"};
+   _samples["expression-compare-double-lte-3"] = {generate_binary_operator_sample("double", "boolean", "<="), "5 4", "false"};
+   _samples["expression-compare-double-gte-1"] = {generate_binary_operator_sample("double", "boolean", ">="), "4 5", "false"};
+   _samples["expression-compare-double-gte-2"] = {generate_binary_operator_sample("double", "boolean", ">="), "4 4", "true"};
+   _samples["expression-compare-double-gte-3"] = {generate_binary_operator_sample("double", "boolean", ">="), "5 4", "true"};
+
    _samples["expression-ternary-1"] = {sample_ternary_expression, "true", "1"};
    _samples["expression-ternary-2"] = {sample_ternary_expression, "false", "2"};
 
