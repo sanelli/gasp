@@ -97,7 +97,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-return-float"] = {generate_empty_with_return_type_sample("float"), "", "0.000000"};
    _samples["empty-return-boolean"] = {generate_empty_with_return_type_sample("boolean"), "", "false"};
    _samples["empty-return-double"] = {generate_empty_with_return_type_sample("double"), "", "0.000000"};
-   _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\0"};
+   _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\\0"};
    _samples["empty-parameters-1"] = {sample_empty_with_parameters, "7 true", "0"};
 
    _samples["expression-math-integer-sum"] = {generate_binary_operator_sample("integer", "integer", "+"), "3 4", "7"};
