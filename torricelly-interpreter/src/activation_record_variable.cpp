@@ -1,6 +1,7 @@
 #include <memory>
 #include <string>
 #include <sstream>
+#include <cctype>
 
 #include <sanelli/sanelli.hpp>
 
@@ -315,7 +316,7 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
 torricelly_activation_record_variable torricelly_activation_record_variable::make(double d) { return torricelly_activation_record_variable(d); }
 torricelly_activation_record_variable torricelly_activation_record_variable::make(char c) { return torricelly_activation_record_variable(c); }
 
-std::string gasp::torricelly::interpreter::to_string(const torricelly_activation_record_variable& value)
+std::string gasp::torricelly::interpreter::to_string(const torricelly_activation_record_variable &value)
 {
    switch (value.type())
    {
@@ -326,7 +327,12 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
    case torricelly_activation_record_variable_type::INTEGER:
       return std::to_string(value.get_integer());
    case torricelly_activation_record_variable_type::CHAR:
-      return std::string(1, value.get_char());
+   {
+      auto cvalue = value.get_char();
+      if (std::isprint(cvalue))
+         return std::string(1, cvalue);
+      return std::string("\\") + std::to_string((int)cvalue);
+   }
    case torricelly_activation_record_variable_type::BOOLEAN:
       return value.get_boolean() ? "true" : "false";
    case torricelly_activation_record_variable_type::FLOAT:
