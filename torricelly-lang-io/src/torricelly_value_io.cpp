@@ -1,36 +1,59 @@
 #include <ostream>
-
+#include <cctype>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/torricelly_io.hpp>
 
 using namespace gasp;
 using namespace gasp::torricelly;
 
-torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, torricelly_value value) { 
+torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, torricelly_value value)
+{
 
-   switch(value.type()){
-      case torricelly_type_type::UNDEFINED:
+   switch (value.type())
+   {
+   case torricelly_type_type::UNDEFINED:
       break;
-      case torricelly_type_type::SYSTEM:
+   case torricelly_type_type::SYSTEM:
+   {
+      switch (value.system_type())
       {
-         switch(value.system_type()) { 
-            case torricelly_system_type_type::UNDEFINED: break;
-            case torricelly_system_type_type::VOID: break;
-            case torricelly_system_type_type::INTEGER: os << value.get_integer(); break;
-            case torricelly_system_type_type::FLOAT: os << value.get_float();  break;
-            case torricelly_system_type_type::DOUBLE: os << value.get_double();  break;
-            case torricelly_system_type_type::CHAR: os << value.get_char();  break;
-            case torricelly_system_type_type::BOOLEAN: os << (value.get_boolean() ? "true" : "false");  break;
-            case torricelly_system_type_type::STRING_LITERAL: os << "[" << value.get_string_literal().length() << "]" << value.get_string_literal();  break;
-            default:
-               throw torricelly_error("Unknown torricelly system type");
-         }
+      case torricelly_system_type_type::UNDEFINED:
+         break;
+      case torricelly_system_type_type::VOID:
+         break;
+      case torricelly_system_type_type::INTEGER:
+         os << value.get_integer();
+         break;
+      case torricelly_system_type_type::FLOAT:
+         os << value.get_float();
+         break;
+      case torricelly_system_type_type::DOUBLE:
+         os << value.get_double();
+         break;
+      case torricelly_system_type_type::CHAR:
+      {
+         auto cvalue = value.get_char();
+         if (std::isprint(cvalue))
+            os << cvalue;
+         else
+            os << '\\' << (int)cvalue;
       }
       break;
-      case torricelly_type_type::STRUCTURED:
-      break;
+      case torricelly_system_type_type::BOOLEAN:
+         os << (value.get_boolean() ? "true" : "false");
+         break;
+      case torricelly_system_type_type::STRING_LITERAL:
+         os << "[" << value.get_string_literal().length() << "]" << value.get_string_literal();
+         break;
       default:
-         throw torricelly_error("Unknown torricelly type");
+         throw torricelly_error("Unknown torricelly system type");
+      }
+   }
+   break;
+   case torricelly_type_type::STRUCTURED:
+      break;
+   default:
+      throw torricelly_error("Unknown torricelly type");
    }
 
    return os;
