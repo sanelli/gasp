@@ -122,6 +122,26 @@ begin
       sample := 3;
 end.)__";
 
+auto sample_statment_for = R"__(program sample(first: integer): integer;
+var
+   index: integer;
+begin
+   sample := 0;
+   for index from 1 to first begin
+      sample := sample + index;
+   end
+end.)__";
+
+auto sample_statment_for_step = R"__(program sample(first: integer, second: integer): integer;
+var
+   index: integer;
+begin
+   sample := 0;
+   for index from 1 to first step second begin
+      sample := sample + index;
+   end
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -250,6 +270,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["statement-if-then-false"] = {sample_statment_if_then, "false", "1"};
    _samples["statement-if-then-else-true"] = {sample_statment_if_then_else, "true", "2"};
    _samples["statement-if-then-else-false"] = {sample_statment_if_then_else, "false", "3"};
+   _samples["statement-for-1"] = {sample_statment_for, "3", "6"};
+   _samples["statement-for-2"] = {sample_statment_for, "100", "5050"};
+   _samples["statement-for-step-1"] = {sample_statment_for_step, "3 1", "6"};
+   _samples["statement-for-step-2"] = {sample_statment_for_step, "3 2", "4"};
 }
 
 std::string gasp_module_blaise_sample::name() const
