@@ -75,7 +75,7 @@ void torricelly_instruction_interpreter::execute_cast_f2i(const torricelly::torr
 void torricelly_instruction_interpreter::execute_cast_f2d(const torricelly::torricelly_instruction &instruction)
 {
    auto activation_record = _interpreter.lock()->activation_record();
-   auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::DOUBLE);
+   auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::FLOAT);
    auto converted_result = (double)value.get_float();
    auto result = torricelly_activation_record_variable::make(converted_result);
    activation_record->push(result);
