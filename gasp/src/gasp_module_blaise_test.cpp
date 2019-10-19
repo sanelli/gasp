@@ -10,6 +10,8 @@
 #include <iomanip>
 #include <regex>
 
+#include <sanelli/sanelli.hpp>
+
 #include <gasp/module/gasp_module.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
 #include <gasp/module/gasp_module_blaise_test.hpp>
@@ -31,25 +33,7 @@ using namespace gasp::blaise::ast;
 using namespace gasp::torricelly;
 using namespace gasp::blaise_to_torricelly;
 using namespace gasp::torricelly::interpreter;
-
-// https://stackoverflow.com/a/9158263/1468832
-#define RESET "\033[0m"
-#define BLACK "\033[30m"              /* Black */
-#define RED "\033[31m"                /* Red */
-#define GREEN "\033[32m"              /* Green */
-#define YELLOW "\033[33m"             /* Yellow */
-#define BLUE "\033[34m"               /* Blue */
-#define MAGENTA "\033[35m"            /* Magenta */
-#define CYAN "\033[36m"               /* Cyan */
-#define WHITE "\033[37m"              /* White */
-#define BOLDBLACK "\033[1m\033[30m"   /* Bold Black */
-#define BOLDRED "\033[1m\033[31m"     /* Bold Red */
-#define BOLDGREEN "\033[1m\033[32m"   /* Bold Green */
-#define BOLDYELLOW "\033[1m\033[33m"  /* Bold Yellow */
-#define BOLDBLUE "\033[1m\033[34m"    /* Bold Blue */
-#define BOLDMAGENTA "\033[1m\033[35m" /* Bold Magenta */
-#define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
-#define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
+using namespace sanelli;
 
 const std::string p_help("--help");
 const std::string p_help_short("-h");
@@ -161,12 +145,14 @@ bool gasp_module_blaise_test::run_tests(std::string regular_expression) const
       auto result = run_test(sample, elapsed_time);
       if (result)
       {
-         std::cout << GREEN << "[OK] " << RESET << BLUE << "[" << elapsed_time.count() << " ms]" << RESET << std::endl;
+         std::cout << console_colour::green() << "[OK] " << console_colour::reset() 
+                   << console_colour::blue() << "[" << elapsed_time.count() << " ms]" << console_colour::reset() 
+                   << std::endl;
          ++success;
       }
       else
       {
-         std::cout << RED << "[FAIL]" << RESET << std::endl;
+         std::cout << console_colour::red() << "[FAIL]" << console_colour::reset() << std::endl;
          ++failure;
       }
    }
@@ -180,8 +166,8 @@ bool gasp_module_blaise_test::run_tests(std::string regular_expression) const
    {
       std::cout << std::endl
                 << "Result:" << std::endl;
-      std::cout << GREEN << "   Success: " << success << "/" << total << " (" << (success * 100.00f / total) << "%)" << RESET << std::endl;
-      std::cout << RED << "   Failure: " << failure << "/" << total << " (" << (failure * 100.00f / total) << "%)" << RESET << std::endl;
+      std::cout << (failure == 0 ? console_colour::bold_green() : console_colour::green()) << "   Success " << console_colour::reset() << console_colour::green() << ": "<< success << "/" << total << " (" << (success * 100.00f / total) << "%)" << console_colour::reset() << std::endl;
+      std::cout << (failure != 0 ? console_colour::bold_red() : console_colour::red()) << "   Failure " << console_colour::reset() <<  console_colour::red() << ": " << failure << "/" << total << " (" << (failure * 100.00f / total) << "%)" << console_colour::reset() << std::endl;
    }
 
    return failure == 0;
