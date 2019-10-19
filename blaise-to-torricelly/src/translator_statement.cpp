@@ -170,7 +170,8 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
 
    auto else_max_stack_size = 0U;
-   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->else_statement(), else_max_stack_size);
+   if(statement->else_statement() != nullptr)
+      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->else_statement(), else_max_stack_size);
 
    auto jump_to_done = torricelly_instruction::make(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_to_done);
