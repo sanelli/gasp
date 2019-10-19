@@ -16,6 +16,7 @@ class blaise_ast_subroutine;
 
 enum class blaise_ast_statement_type : unsigned char
 {
+   EMPTY,
    COMPOUND,
    ASSIGNEMENT,
    SUBROUTINE_CALL,
@@ -36,6 +37,17 @@ protected:
 public:
    blaise_ast_statement_type type();
 };
+
+class blaise_ast_statement_empty : public blaise_ast_statement
+{
+   blaise_ast_statement_type _type;
+
+protected:
+   blaise_ast_statement_empty(const sanelli::token<gasp::blaise::blaise_token_type> &reference);
+
+   friend class sanelli::memory;
+};
+std::shared_ptr<ast::blaise_ast_statement_empty> make_empty_statement(const sanelli::token<gasp::blaise::blaise_token_type> &reference);
 
 class blaise_ast_statement_compund : public blaise_ast_statement
 {

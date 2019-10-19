@@ -17,6 +17,17 @@ using namespace gasp::blaise::ast;
 blaise_ast_statement::blaise_ast_statement(const sanelli::token<gasp::blaise::blaise_token_type> &reference, blaise_ast_statement_type type)
     : blaise_ast(reference), _type(type) {}
 blaise_ast_statement_type blaise_ast_statement::type() { return _type; }
+
+//
+// EMPTY STATEMENT
+//
+blaise_ast_statement_empty::blaise_ast_statement_empty(const sanelli::token<gasp::blaise::blaise_token_type> &reference)
+    : blaise_ast_statement(reference, blaise_ast_statement_type::EMPTY) {}
+shared_ptr<ast::blaise_ast_statement_empty> gasp::blaise::ast::make_empty_statement(const sanelli::token<gasp::blaise::blaise_token_type> &reference)
+{
+   return memory::make_shared<blaise_ast_statement_empty>(reference);
+}
+
 //
 // COMPOUND STATEMENT
 //

@@ -11,6 +11,14 @@ using namespace std;
 using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 
+std::shared_ptr<blaise_ast_statement_empty> blaise_ast_statement_utility::as_empty(std::shared_ptr<blaise_ast_statement> statement)
+{
+   if (statement->type() != blaise_ast_statement_type::EMPTY)
+      throw blaise_ast_error(statement->line(), statement->column(), "Cannot convert statetemt into empty statement");
+
+   return std::static_pointer_cast<blaise_ast_statement_empty>(statement);
+}
+
 std::shared_ptr<blaise_ast_statement_compund> blaise_ast_statement_utility::as_compound(std::shared_ptr<blaise_ast_statement> statement)
 {
    if (statement->type() != blaise_ast_statement_type::COMPOUND)
