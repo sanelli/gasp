@@ -66,6 +66,10 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
    case blaise_token_type::REPEAT:
       statement = parse_repeat_until_loop_statement(context);
       break;
+   case blaise_token_type::SEMICOLON:
+      statement = parse_empty_statement(context);
+      match_ending_semicolon = false;
+      break;
       // TODO: Add support for other kind of statement
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("Unexpected token '", token_type, "' found."));
@@ -294,4 +298,10 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_repeat_until_loo
                   sanelli::make_string("Condition must be a bollean expression."));
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    return ast::make_blaise_ast_statement_while_loop(loop_token, condition, body);
+}
+
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_empty_statement(blaise_parser_context &context) { 
+   auto token = context.peek_token();
+   match_token(context, blaise_token_type::SEMICOLON);
+   return ast::make_empty_statement(token);
 }
