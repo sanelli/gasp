@@ -30,6 +30,12 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    max_stack_size = 0U;
    switch (statement->type())
    {
+   case ast::blaise_ast_statement_type::EMPTY:
+   {
+      auto empty_statement = ast::blaise_ast_statement_utility::as_empty(statement);
+      translate_empty_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, empty_statement, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_statement_type::COMPOUND:
    {
       auto compound_statement = ast::blaise_ast_statement_utility::as_compound(statement);
@@ -82,6 +88,16 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
       throw blaise_to_torricelly_internal_error("Unknown statement type");
    }
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_statement" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                                    const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                                    std::map<std::string, unsigned int> &variables_mapping,
+                                                                    std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_empty> statement,
+                                                                    unsigned int &max_stack_size) const {
+   max_stack_size = 0U;
+   auto noop = torricelly_instruction::make(torricelly_inst_code::NOOP);
+   torricelly_subroutine->append_instruction(noop);
 }
 
 void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
