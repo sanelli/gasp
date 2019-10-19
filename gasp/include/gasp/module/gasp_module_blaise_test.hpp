@@ -15,7 +15,7 @@ class gasp_module_blaise_test : public gasp_module
 {
    std::shared_ptr<gasp_module_blaise_sample> _module_samples;
 
-   bool run_tests() const;
+   bool run_tests(std::string regular_expression) const;
    bool run_test(std::string sample, std::chrono::milliseconds& elapsed_time) const;
 
    void print_usage(char* argv[]) const;

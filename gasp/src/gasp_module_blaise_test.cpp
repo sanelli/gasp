@@ -8,6 +8,7 @@
 #include <chrono>
 #include <cmath>
 #include <iomanip>
+#include <regex>
 
 #include <gasp/module/gasp_module.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
@@ -32,28 +33,30 @@ using namespace gasp::blaise_to_torricelly;
 using namespace gasp::torricelly::interpreter;
 
 // https://stackoverflow.com/a/9158263/1468832
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"      /* Black */
-#define RED     "\033[31m"      /* Red */
-#define GREEN   "\033[32m"      /* Green */
-#define YELLOW  "\033[33m"      /* Yellow */
-#define BLUE    "\033[34m"      /* Blue */
-#define MAGENTA "\033[35m"      /* Magenta */
-#define CYAN    "\033[36m"      /* Cyan */
-#define WHITE   "\033[37m"      /* White */
-#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+#define RESET "\033[0m"
+#define BLACK "\033[30m"              /* Black */
+#define RED "\033[31m"                /* Red */
+#define GREEN "\033[32m"              /* Green */
+#define YELLOW "\033[33m"             /* Yellow */
+#define BLUE "\033[34m"               /* Blue */
+#define MAGENTA "\033[35m"            /* Magenta */
+#define CYAN "\033[36m"               /* Cyan */
+#define WHITE "\033[37m"              /* White */
+#define BOLDBLACK "\033[1m\033[30m"   /* Bold Black */
+#define BOLDRED "\033[1m\033[31m"     /* Bold Red */
+#define BOLDGREEN "\033[1m\033[32m"   /* Bold Green */
+#define BOLDYELLOW "\033[1m\033[33m"  /* Bold Yellow */
+#define BOLDBLUE "\033[1m\033[34m"    /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m" /* Bold Magenta */
+#define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
+#define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
 
 const std::string p_help("--help");
 const std::string p_help_short("-h");
 const std::string p_execute("--execute");
 const std::string p_execute_short("-x");
+const std::string p_filter("--filter");
+const std::string p_filter_short("-f");
 
 gasp_module_blaise_test::gasp_module_blaise_test(std::shared_ptr<gasp_module_blaise_sample> module_samples)
     : _module_samples(module_samples) {}
@@ -68,7 +71,7 @@ bool gasp_module_blaise_test::run(int argc, char *argv[])
    switch (argc)
    {
    case 2:
-      success = run_tests();
+      success = run_tests("");
       break;
    case 3:
    {
@@ -79,7 +82,22 @@ bool gasp_module_blaise_test::run(int argc, char *argv[])
       }
       else if (arg == p_execute || arg == p_execute_short)
       {
-         success = run_tests();
+         success = run_tests("");
+      }
+      else
+      {
+         std::cerr << "Ivalid parameters." << std::endl;
+         print_usage(argv);
+      }
+   }
+   break;
+   case 4:
+   {
+      std::string arg(argv[2]);
+      if (arg == p_filter || arg == p_filter_short)
+      {
+         std::string regular_expression(argv[3]);
+         success = run_tests(regular_expression);
       }
       else
       {
@@ -108,9 +126,10 @@ void gasp_module_blaise_test::print_usage(char *argv[]) const
    std::cerr << "Options:" << std::endl;
    std::cerr << "\t" << p_help << "/" << p_help_short << ": Display help and usage." << std::endl;
    std::cerr << "\t" << p_execute << "/" << p_execute_short << ": Run the test on all the samples (default)." << std::endl;
+   std::cerr << "\t" << p_filter << "/" << p_filter_short << " <REGEX>: Run the test on all the samples mathing the given regex." << std::endl;
 }
 
-bool gasp_module_blaise_test::run_tests() const
+bool gasp_module_blaise_test::run_tests(std::string regular_expression) const
 {
    unsigned success = 0;
    unsigned failure = 0;
@@ -120,20 +139,29 @@ bool gasp_module_blaise_test::run_tests() const
 
    auto wsize = samples.size() > 0 ? (unsigned int)std::ceil(std::log10(samples.size())) : 0;
    size_t max_sample_name_size = 0;
-   for (const std::string &sample : samples) max_sample_name_size = std::max(max_sample_name_size, sample.size());
+   for (const std::string &sample : samples)
+      max_sample_name_size = std::max(max_sample_name_size, sample.size());
 
    std::cout << std::setprecision(4);
 
+   if (regular_expression == "")
+      regular_expression = ".*";
+   regular_expression = "^" + regular_expression + "$";
+
    auto index = 0;
+   std::regex matcher(regular_expression);
    for (const std::string &sample : samples)
    {
+      if(!std::regex_match(sample, matcher))
+         continue;
+
       std::cout << std::right << std::setw(wsize) << (++index) << std::setw(0) << std::left
-            << ") " << std::setw(max_sample_name_size) << sample << std::setw(0) << " ";
+                << ") " << std::setw(max_sample_name_size) << sample << std::setw(0) << " ";
       std::chrono::milliseconds elapsed_time;
       auto result = run_test(sample, elapsed_time);
       if (result)
       {
-         std::cout  << GREEN << "[OK] " << RESET << BLUE << "[" << elapsed_time.count() << " ms]" << RESET << std::endl;
+         std::cout << GREEN << "[OK] " << RESET << BLUE << "[" << elapsed_time.count() << " ms]" << RESET << std::endl;
          ++success;
       }
       else
@@ -150,7 +178,8 @@ bool gasp_module_blaise_test::run_tests() const
    }
    else
    {
-      std::cout << std::endl << "Result:" << std::endl;
+      std::cout << std::endl
+                << "Result:" << std::endl;
       std::cout << GREEN << "   Success: " << success << "/" << total << " (" << (success * 100.00f / total) << "%)" << RESET << std::endl;
       std::cout << RED << "   Failure: " << failure << "/" << total << " (" << (failure * 100.00f / total) << "%)" << RESET << std::endl;
    }
@@ -158,7 +187,7 @@ bool gasp_module_blaise_test::run_tests() const
    return failure == 0;
 }
 
-bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::milliseconds& elapsed_time) const
+bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::milliseconds &elapsed_time) const
 {
    blaise_tokenizer tokenizer;
    blaise_parser parser;
@@ -185,7 +214,7 @@ bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::millisec
       interpreter->run();
       auto end = std::chrono::high_resolution_clock::now();
 
-      elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end-begin);
+      elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
 
       if (interpreter->status() == torricelly_interpreter_status::FINISHED)
       {
