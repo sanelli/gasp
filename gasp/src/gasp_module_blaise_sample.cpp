@@ -142,6 +142,12 @@ begin
    end
 end.)__";
 
+auto sample_statment_empty = R"__(program sample;
+var
+begin
+ ; ; ; ; ;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -266,6 +272,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
    _samples["literal-double"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
 
+   _samples["statement-empty"] = {sample_statment_empty, "", "0"};
    _samples["statement-if-then-true"] = {sample_statment_if_then, "true", "2"};
    _samples["statement-if-then-false"] = {sample_statment_if_then, "false", "1"};
    _samples["statement-if-then-else-true"] = {sample_statment_if_then_else, "true", "2"};
