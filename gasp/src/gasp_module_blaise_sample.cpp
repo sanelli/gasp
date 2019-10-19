@@ -106,6 +106,22 @@ begin
    sample := if first then 1 else 2;
 end.)__";
 
+auto sample_statment_if_then = R"__(program sample(first: boolean): integer;
+begin
+   sample := 1;
+   if (first) then 
+      sample := 2;
+end.)__";
+
+auto sample_statment_if_then_else = R"__(program sample(first: boolean): integer;
+begin
+   sample := 1;
+   if first then 
+      sample := 2;
+   else 
+      sample := 3;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -229,6 +245,11 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["literal-boolean-true"] = {generate_literal_assignment_sample("boolean", "boolean", "true"), "", "true"};
    _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
    _samples["literal-double"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
+
+   _samples["statement-if-then-true"] = {sample_statment_if_then, "true", "2"};
+   _samples["statement-if-then-false"] = {sample_statment_if_then, "false", "1"};
+   _samples["statement-if-then-else-true"] = {sample_statment_if_then_else, "true", "2"};
+   _samples["statement-if-then-else-false"] = {sample_statment_if_then_else, "false", "3"};
 }
 
 std::string gasp_module_blaise_sample::name() const
