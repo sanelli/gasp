@@ -85,6 +85,22 @@ end.)__");
    return sample;
 }
 
+std::string generate_cast_sample(const char *from_type, const char *target_type)
+{
+   std::regex from_type_regexp("\\{FROM_TYPE\\}");
+   std::regex target_type_regexp("\\{TARGET_TYPE\\}");
+
+   std::string sample(R"__(program sample(first: {FROM_TYPE}): {TARGET_TYPE};
+begin
+   sample := cast<{TARGET_TYPE}>(first);
+end.)__");
+
+   sample = std::regex_replace(sample, from_type_regexp, from_type);
+   sample = std::regex_replace(sample, target_type_regexp, target_type);
+
+   return sample;
+}
+
 auto sample_ternary_expression = R"__(program sample(first: boolean);
 begin
    sample := if first then 1 else 2;
@@ -152,7 +168,6 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-compare-integer-gte-1"] = {generate_binary_operator_sample("integer", "boolean", ">="), "4 5", "false"};
    _samples["expression-compare-integer-gte-2"] = {generate_binary_operator_sample("integer", "boolean", ">="), "4 4", "true"};
    _samples["expression-compare-integer-gte-3"] = {generate_binary_operator_sample("integer", "boolean", ">="), "5 4", "true"};
-
    _samples["expression-compare-float-eq-1"] = {generate_binary_operator_sample("float", "boolean", "=="), "5 5", "true"};
    _samples["expression-compare-float-eq-2"] = {generate_binary_operator_sample("float", "boolean", "=="), "4 5", "false"};
    _samples["expression-compare-float-eq-3"] = {generate_binary_operator_sample("float", "boolean", "=="), "5 4", "false"};
@@ -171,7 +186,6 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-compare-float-gte-1"] = {generate_binary_operator_sample("float", "boolean", ">="), "4 5", "false"};
    _samples["expression-compare-float-gte-2"] = {generate_binary_operator_sample("float", "boolean", ">="), "4 4", "true"};
    _samples["expression-compare-float-gte-3"] = {generate_binary_operator_sample("float", "boolean", ">="), "5 4", "true"};
-
    _samples["expression-compare-double-eq-1"] = {generate_binary_operator_sample("double", "boolean", "=="), "5 5", "true"};
    _samples["expression-compare-double-eq-2"] = {generate_binary_operator_sample("double", "boolean", "=="), "4 5", "false"};
    _samples["expression-compare-double-eq-3"] = {generate_binary_operator_sample("double", "boolean", "=="), "5 4", "false"};
@@ -193,6 +207,19 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
 
    _samples["expression-ternary-1"] = {sample_ternary_expression, "true", "1"};
    _samples["expression-ternary-2"] = {sample_ternary_expression, "false", "2"};
+
+   _samples["expression-cast-integer-to-float"] = {generate_cast_sample("integer", "float"), "1", "1.000000"};
+   _samples["expression-cast-integer-to-double"] = {generate_cast_sample("integer", "double"), "1", "1.000000"};
+   _samples["expression-cast-integer-to-boolean-1"] = {generate_cast_sample("integer", "boolean"), "1", "true"};
+   _samples["expression-cast-integer-to-boolean-2"] = {generate_cast_sample("integer", "boolean"), "0", "false"};
+   _samples["expression-cast-integer-to-char"] = {generate_cast_sample("integer", "char"), "65", "A"};
+   _samples["expression-cast-char-to-integer"] = {generate_cast_sample("char", "integer"), "A", "65"};
+   _samples["expression-cast-float-to-integer"] = {generate_cast_sample("float", "integer"), "1.00", "1"};
+   _samples["expression-cast-float-to-double"] = {generate_cast_sample("float", "double"), "1.00", "1.000000"};
+   _samples["expression-cast-double-to-integer"] = {generate_cast_sample("double", "integer"), "1.00", "1"};
+   _samples["expression-cast-double-to-float"] = {generate_cast_sample("double", "float"), "1.00", "1.000000"};
+   _samples["expression-cast-boolean-to-integer-1"] = {generate_cast_sample("boolean", "integer"), "true", "1"};
+   _samples["expression-cast-boolean-to-integer-2"] = {generate_cast_sample("boolean", "integer"), "false", "0"};
 
    _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
