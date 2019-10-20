@@ -335,8 +335,8 @@ void blaise_to_torricelly::translator::translate_repeat_until_statement(std::sha
    auto condition_max_stack_size = 0U;
    translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
 
-   auto jump_eq_zero_instrution = torricelly_instruction::make(torricelly_inst_code::JUMP_NOT_ZERO, on_start_label, torricelly_inst_ref_type::LABEL);
-   torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
+   auto jump_neq_zero_instrution = torricelly_instruction::make(torricelly_inst_code::JUMP_NOT_ZERO, on_start_label, torricelly_inst_ref_type::LABEL);
+   torricelly_subroutine->append_instruction(jump_neq_zero_instrution);
 
    max_stack_size = std::max({1U, condition_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
 
