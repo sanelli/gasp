@@ -1,6 +1,8 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 
 #include <sanelli/sanelli.hpp>
 
@@ -18,10 +20,20 @@
 
 void print_available_modules(const std::map<std::string, std::shared_ptr<gasp::module::gasp_module>> &modules)
 {
+   size_t module_name_size = 0;
+   const std::string head("  ");
+   const std::string tail("       ");
+
+   for (auto it = modules.begin(); it != modules.end(); ++it) {
+      module_name_size = std::max(module_name_size, it->first.size() + head.size() + tail.size());
+   }
+    std::ios_base::fmtflags original_flags(std::cerr.flags());
    for (auto it = modules.begin(); it != modules.end(); ++it)
    {
-      std::cerr << "   * " << it->first << " : " << it->second->description() << std::endl;
+      std::cerr << std::left << std::setw(module_name_size) << head + it->first + tail 
+          << std::setw(0) << it->second->description() << std::endl;
    }
+   std::cerr.flags(original_flags);
 }
 
 int main(int argc, char *argv[])
@@ -68,16 +80,16 @@ int main(int argc, char *argv[])
       }
    }
 
-   // Either I found the module or not I do not need to waste
-   // memory with something I will never user.
-   modules.clear();
-
    if (module == nullptr)
    {
       std::cerr << "Cannot find module '" << expected_module << "'. Available modules are:" << std::endl;
       print_available_modules(modules);
       return EXIT_FAILURE;
    }
+
+   // Either I found the module or not I do not need to waste
+   // memory with something I will never user.
+   modules.clear();
 
    try
    {
