@@ -184,6 +184,27 @@ begin
    end until index > first;
 end.)__";
 
+
+std::string generate_function_expression_sample(const char *type)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+
+   std::string sample(R"__(program sample(first: {TYPE}): {TYPE};
+
+function duplicate(p: {TYPE}) : {TYPE}
+begin
+   duplicate := 2 * p;
+end;
+
+begin
+   sample := duplicate(first);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+
+   return sample;
+}
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -298,6 +319,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-cast-double-to-float"] = {generate_cast_sample("double", "float"), "1.00", "1.000000"};
    _samples["expression-cast-boolean-to-integer-1"] = {generate_cast_sample("boolean", "integer"), "true", "1"};
    _samples["expression-cast-boolean-to-integer-2"] = {generate_cast_sample("boolean", "integer"), "false", "0"};
+
+   _samples["expression-function-call-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
+   _samples["expression-function-call-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
+   _samples["expression-function-call-float"] = {generate_function_expression_sample("float"), "1", "2.000000"};
 
    _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
