@@ -79,16 +79,20 @@ torricelly_activation_record_variable_type torricelly_activation_record::load_ty
    return it->second.type();
 }
 
-void torricelly_activation_record::register_module_variable(unsigned int index, torricelly_activation_record_variable *variable)
+void torricelly_activation_record::reference_module_local(unsigned int index, torricelly_activation_record_variable *variable)
 {
    _module_variables[index] = variable;
 }
-torricelly_activation_record_variable *torricelly_activation_record::load_module_variable(unsigned int index)
+torricelly_activation_record_variable *torricelly_activation_record::get_module_local(unsigned int index)
 {
    auto it = _module_variables.find(index);
    if (it == _module_variables.end())
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get module variable at ", index, "."));
    return it->second;
+}
+
+unsigned int torricelly_activation_record::count_module_locals() const { 
+   return _module_variables.size();
 }
 
 std::shared_ptr<torricelly_activation_record> gasp::torricelly::interpreter::make_torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine)

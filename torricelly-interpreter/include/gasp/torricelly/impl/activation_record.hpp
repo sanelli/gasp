@@ -47,8 +47,9 @@ public:
    torricelly_activation_record_variable_type load_type(unsigned int index);
 
    // Module variables management
-   void register_module_variable(unsigned int index, torricelly_activation_record_variable *variable);
-   torricelly_activation_record_variable *load_module_variable(unsigned int index);
+   void reference_module_local(unsigned int index, torricelly_activation_record_variable *variable);
+   torricelly_activation_record_variable *get_module_local(unsigned int index);
+   unsigned int count_module_locals() const;
 
    friend sanelli::memory;
 };

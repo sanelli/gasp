@@ -15,7 +15,7 @@ void torricelly_instruction_interpreter::execute_static_invoke(const torricelly:
 
    // TODO: Add support for multiple modules
    auto module = activation_record->module();
-   auto subroutine_name_local = activation_record->load_module_variable(parameter_index);
+   auto subroutine_name_local = activation_record->get_module_local(parameter_index);
    auto subroutine_name_ptr = std::static_pointer_cast<std::string>(subroutine_name_local->get_pointer());
    auto subroutine_to_call = module->get_subroutine(*subroutine_name_ptr);
 

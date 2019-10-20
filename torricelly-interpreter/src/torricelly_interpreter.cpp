@@ -55,7 +55,7 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    // Add module variables
    auto mapping = _module_variables_mapping[module->module_name()];
    for (auto index = 1U; index <= module->count_locals(); ++index)
-      activation_record->register_module_variable(index, &(mapping->operator[](index)));
+      activation_record->reference_module_local(index, &(mapping->operator[](index)));
 
    // Push parameters on the stack from left to right
    if (subroutine->count_parameters() > 0)
