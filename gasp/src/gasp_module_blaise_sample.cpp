@@ -205,6 +205,28 @@ end.)__");
    return sample;
 }
 
+std::string generate_function_expression_2_sample(const char *type, const char* op)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex op_regexp("\\{OP\\}");
+
+   std::string sample(R"__(program sample(first: {TYPE}, second: {TYPE}): {TYPE};
+
+function execute(p1: {TYPE}, p2: {TYPE}) : {TYPE}
+begin
+   execute := p1 {OP} p2;
+end;
+
+begin
+   sample := execute(first, second);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, op_regexp, op);
+
+   return sample;
+}
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -320,9 +342,14 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-cast-boolean-to-integer-1"] = {generate_cast_sample("boolean", "integer"), "true", "1"};
    _samples["expression-cast-boolean-to-integer-2"] = {generate_cast_sample("boolean", "integer"), "false", "0"};
 
-   _samples["expression-function-call-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
-   _samples["expression-function-call-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
-   _samples["expression-function-call-float"] = {generate_function_expression_sample("float"), "1", "2.000000"};
+   _samples["expression-function-call-duplicate-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
+   _samples["expression-function-call-duplicate-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
+   _samples["expression-function-call-duplicate-float"] = {generate_function_expression_sample("float"), "1", "2.000000"};
+   _samples["expression-function-call-sum-integer"] = {generate_function_expression_2_sample("integer", "+"), "1 2", "3"};
+   _samples["expression-function-call-subtract-integer"] = {generate_function_expression_2_sample("integer", "-"), "1 2", "-1"};
+   _samples["expression-function-call-multuply-integer"] = {generate_function_expression_2_sample("integer", "*"), "1 2", "2"};
+   _samples["expression-function-call-divide-integer"] = {generate_function_expression_2_sample("integer", "/"), "1 2", "0"};
+   _samples["expression-function-call-remainder-integer"] = {generate_function_expression_2_sample("integer", "%"), "1 2", "1"};
 
    _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
