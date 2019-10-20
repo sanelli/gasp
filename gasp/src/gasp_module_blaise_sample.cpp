@@ -19,7 +19,8 @@ auto sample_empty_with_parameters = R"__(program sample(first: integer, second: 
 begin
 end.)__";
 
-std::string generate_empty_with_return_type_sample(const char *return_type) { 
+std::string generate_empty_with_return_type_sample(const char *return_type)
+{
    std::regex return_type_regexp("\\{RETURN_TYPE\\}");
 
    std::string sample(R"__(program sample: {RETURN_TYPE};
@@ -184,7 +185,6 @@ begin
    end until index > first;
 end.)__";
 
-
 std::string generate_function_expression_sample(const char *type)
 {
    std::regex type_regexp("\\{TYPE\\}");
@@ -205,7 +205,7 @@ end.)__");
    return sample;
 }
 
-std::string generate_function_expression_2_sample(const char *type, const char* op)
+std::string generate_function_expression_2_sample(const char *type, const char *op)
 {
    std::regex type_regexp("\\{TYPE\\}");
    std::regex op_regexp("\\{OP\\}");
@@ -226,6 +226,17 @@ end.)__");
 
    return sample;
 }
+
+auto sample_statement_function = R"__(program sample(first: integer): integer;
+
+function execute(p1: integer) : integer
+begin
+   execute := p1 + p1 + p1;
+end;
+
+begin
+   execute(first);
+end.)__";
 
 auto sample_algorithm_fibonacci = R"__(program fibonacci(input: integer) : integer;
 
@@ -405,10 +416,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["statement-repeat-until-1"] = {sample_statement_repeat_until, "3", "6"};
    _samples["statement-repeat-until-2"] = {sample_statement_repeat_until, "100", "5050"};
    _samples["statement-repeat-until-3"] = {sample_statement_repeat_until, "0", "1"};
+   _samples["statement-function"] = {sample_statement_function, "10", "0"};
 
    _samples["algo-fibonacci-1"] = {sample_algorithm_fibonacci, "0", "1"};
    _samples["algo-fibonacci-2"] = {sample_algorithm_fibonacci, "15", "987"};
-   _samples["algo-fibonacci-3"] = {sample_algorithm_fibonacci, "23", "46368"};
    _samples["algo-isprime-1"] = {sample_algorithm_isprime, "15", "false"};
    _samples["algo-isprime-2"] = {sample_algorithm_isprime, "13", "true"};
    _samples["algo-isprime-3"] = {sample_algorithm_isprime, "99", "false"};
