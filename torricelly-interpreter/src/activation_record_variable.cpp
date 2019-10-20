@@ -150,7 +150,7 @@ void torricelly_activation_record_variable::copy_value_from(const torricelly_act
       _pointer = other._pointer;
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected type. It cannot be copied.");
+      throw torricelly_interpreter_error(sanelli::make_string("Unexpected type. It cannot be copied ( id=" , (int)_type,") ."));
    }
 }
 
