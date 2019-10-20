@@ -48,7 +48,8 @@ torricelly_activation_record_variable::torricelly_activation_record_variable(flo
 torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE) { _value._double = d; }
 torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p) : _type(torricelly_activation_record_variable_type::POINTER) { _pointer = p; }
 
-torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other) : _type(other._type)
+torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other) 
+   : _type(other._type)
 {
    copy_value_from(other);
 }

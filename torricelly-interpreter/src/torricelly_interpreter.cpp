@@ -48,11 +48,11 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
 
    auto activation_record = make_torricelly_activation_record(module, subroutine);
 
-   // Add module variables
+   // Add subroutine variables
    for (auto index = 1U; index <= subroutine->count_locals(); ++index)
       activation_record->store(index, torricelly_activation_record_variable::make(subroutine->get_local_initial_value(index)));
 
-   // Add subroutine variables
+   // Add module variables
    auto mapping = _module_variables_mapping[module->module_name()];
    for (auto index = 1U; index <= module->count_locals(); ++index)
       activation_record->register_module_variable(index, &(mapping->operator[](index)));
@@ -158,6 +158,9 @@ void torricelly_interpreter::step()
       auto is_jump = false;
       bool continue_inside_subroutine = _instruction_interpreter->execute(instruction, next_instruction, is_jump);
 
+      auto push_return_value = false;
+      gasp::torricelly::interpreter::torricelly_activation_record_variable returned_value;
+
       if (!continue_inside_subroutine)
       {
          // If getting back to entry point return whatever on the stack
@@ -170,8 +173,18 @@ void torricelly_interpreter::step()
                throw torricelly_interpreter_error(sanelli::make_string("Stack does not contain function return value for main function."));
 
             _status = torricelly_interpreter_status::FINISHED;
+         } else {
+            // Need to push the return value on the caller
+            if (!torricelly_type_utility::is_void(current_activation_record->subroutine()->return_type())) { 
+               push_return_value = true;
+               returned_value = current_activation_record->peek();
+            }
          }
+
          _activation_records.pop_back();
+         if(push_return_value && _activation_records.size() >= 1){
+            activation_record()->push(returned_value);
+         }
       }
       else
       {
