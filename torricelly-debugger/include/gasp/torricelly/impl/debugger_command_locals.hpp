@@ -16,6 +16,7 @@ class torricelly_debugger_command_locals : public torricelly_debugger_command
 {
    bool show(std::ostream& out, std::shared_ptr<gasp::torricelly::interpreter::torricelly_activation_record> activation_record, unsigned int index);
    void show(std::ostream& out, std::shared_ptr<gasp::torricelly::interpreter::torricelly_activation_record> activation_record);
+   void show_module(std::ostream& out, std::shared_ptr<gasp::torricelly::interpreter::torricelly_activation_record> activation_record);
 
 public:
    torricelly_debugger_command_locals(std::shared_ptr<torricelly_debugger> debugger);
