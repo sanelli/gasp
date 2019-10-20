@@ -106,14 +106,14 @@ begin
    sample := if first then 1 else 2;
 end.)__";
 
-auto sample_statment_if_then = R"__(program sample(first: boolean): integer;
+auto sample_statement_if_then = R"__(program sample(first: boolean): integer;
 begin
    sample := 1;
    if (first) then 
       sample := 2;
 end.)__";
 
-auto sample_statment_if_then_else = R"__(program sample(first: boolean): integer;
+auto sample_statement_if_then_else = R"__(program sample(first: boolean): integer;
 begin
    sample := 1;
    if first then 
@@ -122,7 +122,7 @@ begin
       sample := 3;
 end.)__";
 
-auto sample_statment_for = R"__(program sample(first: integer): integer;
+auto sample_statement_for = R"__(program sample(first: integer): integer;
 var
    index: integer;
 begin
@@ -132,7 +132,7 @@ begin
    end
 end.)__";
 
-auto sample_statment_for_step = R"__(program sample(first: integer, second: integer): integer;
+auto sample_statement_for_step = R"__(program sample(first: integer, second: integer): integer;
 var
    index: integer;
 begin
@@ -142,10 +142,22 @@ begin
    end
 end.)__";
 
-auto sample_statment_empty = R"__(program sample;
+auto sample_statement_empty = R"__(program sample;
 var
 begin
  ; ; ; ; ;
+end.)__";
+
+auto sample_statement_while = R"__(program sample(first: integer): integer;
+var
+   index: integer;
+begin
+   sample := 0;
+   index := 1;
+   while index <= first begin
+      sample := sample + index;
+      index := index + 1;
+   end;
 end.)__";
 
 gasp_module_blaise_sample::gasp_module_blaise_sample()
@@ -272,15 +284,19 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
    _samples["literal-double"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
 
-   _samples["statement-empty"] = {sample_statment_empty, "", "0"};
-   _samples["statement-if-then-true"] = {sample_statment_if_then, "true", "2"};
-   _samples["statement-if-then-false"] = {sample_statment_if_then, "false", "1"};
-   _samples["statement-if-then-else-true"] = {sample_statment_if_then_else, "true", "2"};
-   _samples["statement-if-then-else-false"] = {sample_statment_if_then_else, "false", "3"};
-   _samples["statement-for-1"] = {sample_statment_for, "3", "6"};
-   _samples["statement-for-2"] = {sample_statment_for, "100", "5050"};
-   _samples["statement-for-step-1"] = {sample_statment_for_step, "3 1", "6"};
-   _samples["statement-for-step-2"] = {sample_statment_for_step, "3 2", "4"};
+   _samples["statement-empty"] = {sample_statement_empty, "", "0"};
+   _samples["statement-if-then-true"] = {sample_statement_if_then, "true", "2"};
+   _samples["statement-if-then-false"] = {sample_statement_if_then, "false", "1"};
+   _samples["statement-if-then-else-true"] = {sample_statement_if_then_else, "true", "2"};
+   _samples["statement-if-then-else-false"] = {sample_statement_if_then_else, "false", "3"};
+   _samples["statement-for-1"] = {sample_statement_for, "3", "6"};
+   _samples["statement-for-2"] = {sample_statement_for, "100", "5050"};
+   _samples["statement-for-step-1"] = {sample_statement_for_step, "3 1", "6"};
+   _samples["statement-for-step-2"] = {sample_statement_for_step, "3 2", "4"};
+   _samples["statement-while-1"] = {sample_statement_while, "3", "6"};
+   _samples["statement-while-2"] = {sample_statement_while, "100", "5050"};
+   _samples["statement-while-3"] = {sample_statement_while, "0", "0"};
+
 }
 
 std::string gasp_module_blaise_sample::name() const
