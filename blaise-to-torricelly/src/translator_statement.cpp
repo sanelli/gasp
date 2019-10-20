@@ -270,10 +270,10 @@ void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr
    translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
 
    auto jump_to_start_instruction = torricelly_instruction::make(torricelly_inst_code::JUMP, on_start_label, torricelly_inst_ref_type::LABEL);
-   torricelly_subroutine->append_instruction(jump_neq_zero_instrution);
+   torricelly_subroutine->append_instruction(jump_to_start_instruction);
 
    auto done_noop_instruction = torricelly_instruction::make(torricelly_inst_code::NOOP);
-   start_noop_instruction.set_label(on_done_label);
+   done_noop_instruction.set_label(on_done_label);
    torricelly_subroutine->append_instruction(done_noop_instruction);
 
    max_stack_size = std::max({1U, condition_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
