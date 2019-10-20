@@ -40,21 +40,45 @@ std::string gasp::torricelly::interpreter::to_string(torricelly_activation_recor
    }
 }
 
-torricelly_activation_record_variable::torricelly_activation_record_variable() : _type(torricelly_activation_record_variable_type::UNDEFINED) {}
-torricelly_activation_record_variable::torricelly_activation_record_variable(int i) : _type(torricelly_activation_record_variable_type::INTEGER) { _value._integer = i; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(char c) : _type(torricelly_activation_record_variable_type::CHAR) { _value._char = c; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(bool b) : _type(torricelly_activation_record_variable_type::BOOLEAN) { _value._boolean = b; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(float f) : _type(torricelly_activation_record_variable_type::FLOAT) { _value._float = f; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE) { _value._double = d; }
-torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p) : _type(torricelly_activation_record_variable_type::POINTER) { _pointer = p; }
+torricelly_activation_record_variable::torricelly_activation_record_variable()
+    : _type(torricelly_activation_record_variable_type::UNDEFINED), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+{
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(int i)
+    : _type(torricelly_activation_record_variable_type::INTEGER), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+{
+   _value._integer = i;
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(char c)
+    : _type(torricelly_activation_record_variable_type::CHAR), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+{
+   _value._char = c;
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(bool b) : _type(torricelly_activation_record_variable_type::BOOLEAN), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+{
+   _value._boolean = b;
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(float f) : _type(torricelly_activation_record_variable_type::FLOAT), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+{
+   _value._float = f;
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+{
+   _value._double = d;
+}
+torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p, torricelly_system_type_type underlying_type)
+    : _type(torricelly_activation_record_variable_type::POINTER), _pointer_system_type(underlying_type)
+{
+   _pointer = p;
+}
 
-torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other) 
-   : _type(other._type)
+torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other)
+    : _type(other._type), _pointer_system_type(other._pointer_system_type)
 {
    copy_value_from(other);
 }
 torricelly_activation_record_variable::torricelly_activation_record_variable(torricelly_activation_record_variable &&other)
-    : _type(std::move(other._type))
+    : _type(std::move(other._type)), _pointer_system_type(std::move(other._pointer_system_type))
 {
    switch (_type)
    {
@@ -88,12 +112,14 @@ torricelly_activation_record_variable &torricelly_activation_record_variable::op
    if (this == &other)
       return *this;
    _type = other._type;
+   _pointer_system_type = other._pointer_system_type;
    copy_value_from(other);
    return *this;
 }
 torricelly_activation_record_variable &torricelly_activation_record_variable::operator=(torricelly_activation_record_variable &&other)
 {
    _type = std::move(other._type);
+   _pointer_system_type = std::move(other._pointer_system_type);
    switch (_type)
    {
    case torricelly_activation_record_variable_type::UNDEFINED:
@@ -151,7 +177,7 @@ void torricelly_activation_record_variable::copy_value_from(const torricelly_act
       _pointer = other._pointer;
       break;
    default:
-      throw torricelly_interpreter_error(sanelli::make_string("Unexpected type. It cannot be copied ( id=" , (int)_type,") ."));
+      throw torricelly_interpreter_error(sanelli::make_string("Unexpected type. It cannot be copied ( id=", (int)_type, ") ."));
    }
 }
 
@@ -232,6 +258,15 @@ std::shared_ptr<void> torricelly_activation_record_variable::get_pointer() const
    return _pointer;
 }
 
+std::shared_ptr<std::string> torricelly_activation_record_variable::get_string_pointer() const { 
+   return std::static_pointer_cast<std::string>(get_pointer());
+}
+
+torricelly_system_type_type torricelly_activation_record_variable::get_pointer_underlying_type() const
+{
+   return _pointer_system_type;
+}
+
 void torricelly_activation_record_variable::set_integer(int i)
 {
    if (_type != torricelly_activation_record_variable_type::INTEGER)
@@ -296,7 +331,7 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
       {
          auto string_literal = value.get_string_literal();
          auto pointer = std::shared_ptr<std::string>(new std::string(string_literal));
-         return torricelly_activation_record_variable(pointer);
+         return torricelly_activation_record_variable(pointer, torricelly_system_type_type::STRING_LITERAL);
       }
       default:
          throw torricelly_interpreter_error("Unknown or unsupported torricelly system type when creating a new activation record type.");
@@ -343,7 +378,21 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
    case torricelly_activation_record_variable_type::POINTER:
    {
       std::stringstream sstream;
-      sstream << value.get_pointer();
+      switch (value.get_pointer_underlying_type())
+      {
+      case torricelly_system_type_type::STRING_LITERAL:
+      {
+         auto string_pointer = value.get_string_pointer();
+         sstream << "'" << *string_pointer << "'" 
+                 << " (" << value.get_pointer() << ")"
+                 << " ["  <<  to_string(torricelly_system_type_type::STRING_LITERAL) << "]"
+                 ;
+      }
+      break;
+      default:
+         sstream << value.get_pointer();
+         break;
+      }
       return sstream.str();
    }
    default:

@@ -38,13 +38,14 @@ class torricelly_activation_record_variable
    torricelly_activation_record_variable_type _type;
    torricelly_activation_record_variable_union _value;
    std::shared_ptr<void> _pointer;
+   gasp::torricelly::torricelly_system_type_type _pointer_system_type;
 
    torricelly_activation_record_variable(int i);
    torricelly_activation_record_variable(char c);
    torricelly_activation_record_variable(bool b);
    torricelly_activation_record_variable(float f);
    torricelly_activation_record_variable(double d);
-   torricelly_activation_record_variable(std::shared_ptr<void> p);
+   torricelly_activation_record_variable(std::shared_ptr<void> p, torricelly_system_type_type underlying_type);
 
    void copy_value_from(const torricelly_activation_record_variable &other);
 
@@ -65,6 +66,8 @@ public:
    float get_float() const;
    double get_double() const;
    std::shared_ptr<void> get_pointer() const;
+   std::shared_ptr<std::string> get_string_pointer() const;
+   torricelly_system_type_type get_pointer_underlying_type() const;
 
    void set_integer(int i);
    void set_char(char c);
