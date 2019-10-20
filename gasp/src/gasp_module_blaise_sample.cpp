@@ -227,6 +227,33 @@ end.)__");
    return sample;
 }
 
+auto sample_algorithm_fibonacci = R"__(program fibonacci(input: integer) : integer;
+
+function fibo(i : integer): integer
+begin
+   fibo := 1;
+   if i > 1 then
+      fibo := fibo(i-2) + fibo(i-1);
+end;
+
+begin
+   fibonacci := fibo(input);
+end.)__";
+
+auto sample_algorithm_isprime = R"__(program isprime(input: integer) : boolean;
+var 
+   limit : integer;
+   index : integer;
+begin
+   limit := input / 2;
+   index := 2;
+   isprime := true;
+   while isprime and (index <= limit) begin
+      isprime := (input % index) <> 0;
+      index := index + 1;
+   end;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -379,6 +406,13 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["statement-repeat-until-2"] = {sample_statement_repeat_until, "100", "5050"};
    _samples["statement-repeat-until-3"] = {sample_statement_repeat_until, "0", "1"};
 
+   _samples["algo-fibonacci-1"] = {sample_algorithm_fibonacci, "0", "1"};
+   _samples["algo-fibonacci-2"] = {sample_algorithm_fibonacci, "15", "987"};
+   _samples["algo-fibonacci-3"] = {sample_algorithm_fibonacci, "23", "46368"};
+   _samples["algo-isprime-1"] = {sample_algorithm_isprime, "15", "false"};
+   _samples["algo-isprime-2"] = {sample_algorithm_isprime, "13", "true"};
+   _samples["algo-isprime-3"] = {sample_algorithm_isprime, "99", "false"};
+   _samples["algo-isprime-4"] = {sample_algorithm_isprime, "101", "true"};
 }
 
 std::string gasp_module_blaise_sample::name() const
