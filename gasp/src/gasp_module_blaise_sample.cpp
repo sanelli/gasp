@@ -172,6 +172,18 @@ begin
    end while index <= first;
 end.)__";
 
+auto sample_statement_repeat_until = R"__(program sample(first: integer): integer;
+var
+   index: integer;
+begin
+   sample := 0;
+   index := 1;
+   repeat begin
+      sample := sample + index;
+      index := index + 1;
+   end until index > first;
+end.)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -311,6 +323,9 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["statement-do-while-1"] = {sample_statement_do_while, "3", "6"};
    _samples["statement-do-while-2"] = {sample_statement_do_while, "100", "5050"};
    _samples["statement-do-while-3"] = {sample_statement_do_while, "0", "1"};
+   _samples["statement-repeat-until-1"] = {sample_statement_repeat_until, "3", "6"};
+   _samples["statement-repeat-until-2"] = {sample_statement_repeat_until, "100", "5050"};
+   _samples["statement-repeat-until-3"] = {sample_statement_repeat_until, "0", "1"};
 
 }
 
