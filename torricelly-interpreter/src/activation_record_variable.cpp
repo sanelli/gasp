@@ -79,7 +79,7 @@ torricelly_activation_record_variable::torricelly_activation_record_variable(tor
       _pointer = std::move(other._pointer);
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+      throw torricelly_interpreter_error("Unexpected type. It cannot be moved inside constructor.");
    }
 }
 torricelly_activation_record_variable &torricelly_activation_record_variable::operator=(const torricelly_activation_record_variable &other)
@@ -117,7 +117,7 @@ torricelly_activation_record_variable &torricelly_activation_record_variable::op
       _pointer = std::move(other._pointer);
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+      throw torricelly_interpreter_error("Unexpected type. It cannot be assigned.");
    }
    return *this;
 }
@@ -150,7 +150,7 @@ void torricelly_activation_record_variable::copy_value_from(const torricelly_act
       _pointer = other._pointer;
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+      throw torricelly_interpreter_error("Unexpected type. It cannot be copied.");
    }
 }
 
