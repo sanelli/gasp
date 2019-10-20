@@ -297,7 +297,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_repeat_until_loo
       throw_parse_error_with_details(context, condition->line(), condition->column(),
                   sanelli::make_string("Condition must be a boolean expression."));
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
-   return ast::make_blaise_ast_statement_while_loop(loop_token, condition, body);
+   return ast::make_blaise_ast_statement_repeatuntil_loop(loop_token, condition, body);
 }
 
 std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_empty_statement(blaise_parser_context &context) { 
