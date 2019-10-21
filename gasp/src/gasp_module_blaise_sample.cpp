@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <regex>
+#include <iomanip>
 
 #include <gasp/common/gasp_error.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
@@ -491,12 +492,16 @@ bool gasp_module_blaise_sample::run(int argc, char *argv[])
    std::string arg(argv[2]);
    if (arg == p_help || arg == p_help_short)
    {
+      const int WIDTH = 25;
+      std::ios_base::fmtflags original_flags(std::cout.flags());
       std::cout << "Command line: " << argv[0] << " " << name() << " [options]|<sample_name>" << std::endl;
       std::cout << "Options:" << std::endl;
-      std::cout << "   " << p_help << "/" << p_help_short << ": display this help." << std::endl;
-      std::cout << "   " << p_list << "/" << p_list_short << ": list all the available samples." << std::endl;
-      std::cout << "   --sample-parameters/-sp <sample_name>: print out sample parameters." << std::endl;
-      std::cout << "   --sample-result/-sr <sample_name>: print out sample result given the simple parameters form -sp." << std::endl;
+      std::cout << std::left;
+      std::cout << std::setw(WIDTH) << " " + p_help + "/" + p_help_short << std::setw(0) << "Display this help." << std::endl;
+      std::cout << std::setw(WIDTH) << " " + p_list + "/" + p_list_short << std::setw(0) << "List all the available samples." << std::endl;
+      std::cout << std::setw(WIDTH) << " " + p_sample_input + "/" + p_sample_input_short << std::setw(0) << "Print out sample parameters." << std::endl;
+      std::cout << std::setw(WIDTH) << " " + p_sample_output + "/" + p_sample_output_short << std::setw(0) << "Print out sample result given the simple parameters." << std::endl;
+      std::cout.flags(original_flags);
       return true;
    }
 
