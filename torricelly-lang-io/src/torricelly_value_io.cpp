@@ -8,14 +8,14 @@ using namespace gasp::torricelly;
 
 torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, torricelly_value value)
 {
-
-   switch (value.type())
+   switch (value.type()->type_type())
    {
    case torricelly_type_type::UNDEFINED:
       break;
    case torricelly_type_type::SYSTEM:
    {
-      switch (value.system_type())
+      auto system_type = torricelly_type_utility::as_system_type(value.type());
+      switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
          break;
