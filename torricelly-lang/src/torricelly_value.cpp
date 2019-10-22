@@ -1,5 +1,6 @@
 #include <utility>
 #include <memory>
+#include <vector>
 
 #include <gasp/torricelly/torricelly.hpp>
 
@@ -10,15 +11,52 @@ torricelly_value_union::torricelly_value_union() : _integer(0) {}
 torricelly_value_union::~torricelly_value_union() {}
 
 torricelly_value::torricelly_value(torricelly_system_type_type system_type, const torricelly_value_union &value)
-    : _type(make_torricelly_system_type(system_type))
+    : _type(make_torricelly_system_type(system_type)), _array(nullptr)
 {
    copy_value(value);
+}
+
+torricelly_value::torricelly_value(std::shared_ptr<torricelly_array_type> type, torricelly_value initial_value)
+    : _type(type)
+{
+   memset(&_value, 0, sizeof(_value));
+   _array = std::make_shared<std::vector<torricelly_value>>();
+   auto array_len = 1;
+   bool is_fully_defined = true;
+   for (auto dim = 0; dim < type->dimensions(); ++dim)
+   {
+      auto dimension = type->dimension(dim);
+      if (dimension == torricelly_array_type::undefined_dimension())
+      {
+         is_fully_defined = false;
+         array_len = 1;
+         break;
+      }
+      else
+      {
+         array_len *= dimension;
+      }
+   }
+   if (is_fully_defined)
+   {
+      for (auto index = 0; index < array_len; ++index)
+         _array->push_back(initial_value);
+   }
 }
 
 torricelly_value::torricelly_value(const torricelly_value &other)
     : _type(other._type)
 {
    copy_value(other._value);
+   copy_array(other._array);
+}
+
+torricelly_value &torricelly_value::operator=(const torricelly_value &other)
+{
+   _type = other._type;
+   copy_value(other._value);
+   copy_array(other._array);
+   return *this;
 }
 
 void torricelly_value::copy_value(const torricelly_value_union &value)
@@ -57,19 +95,33 @@ void torricelly_value::copy_value(const torricelly_value_union &value)
       }
    }
    break;
+   case torricelly_type_type::ARRAY:
+      memset(&_value, 0, sizeof(_value));
+      break;
    default:
       throw torricelly_error(sanelli::make_string("Unsupported torricelly type"));
    }
 }
 
-torricelly_value &torricelly_value::operator=(const torricelly_value &other)
+void torricelly_value::copy_array(std::shared_ptr<std::vector<torricelly_value>> array)
 {
-   _type = other._type;
-   copy_value(other._value);
-   return *this;
+   switch (type()->type_type())
+   {
+   case torricelly_type_type::SYSTEM:
+      _array = nullptr;
+      break;
+   case torricelly_type_type::ARRAY:
+      std::copy(array->begin(), array->end(), _array->begin());
+      break;
+   default:
+      throw torricelly_error(sanelli::make_string("Unsupported torricelly type"));
+   }
 }
 
-std::shared_ptr<torricelly_type> torricelly_value::type() const { return _type; }
+std::shared_ptr<torricelly_type> torricelly_value::type() const
+{
+   return _type;
+}
 
 void torricelly_value::throw_if_is_not(std::shared_ptr<torricelly_type> check_type) const
 {
@@ -106,6 +158,12 @@ std::string torricelly_value::get_string_literal() const
 {
    throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL));
    return _value._string_literal;
+}
+std::shared_ptr<std::vector<torricelly_value>> torricelly_value::get_array() const
+{
+   if (type()->type_type() != torricelly_type_type::ARRAY)
+      throw torricelly_error(sanelli::make_string("Expected type '", to_string(torricelly_type_type::ARRAY), "' but found '", to_string(type()), "'."));
+   return _array;
 }
 
 torricelly_value torricelly_value::make(int value)
@@ -144,6 +202,10 @@ torricelly_value torricelly_value::make(std::string value)
    value_union._string_literal = value;
    return torricelly_value(torricelly_system_type_type::STRING_LITERAL, value_union);
 }
+torricelly_value torricelly_value::make(std::shared_ptr<torricelly_array_type> type, torricelly_value initial_value)
+{
+   return torricelly_value(type, initial_value);
+}
 
 torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_type> type)
 {
@@ -153,7 +215,7 @@ torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_
       throw torricelly_error("Cannot get default value for undefined type.");
    case torricelly_type_type::SYSTEM:
    {
-      auto system_type = std::dynamic_pointer_cast<const torricelly_system_type>(type);
+      auto system_type = torricelly_type_utility::as_system_type(type);
       switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
@@ -176,6 +238,14 @@ torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_
          throw torricelly_error("Cannot get default value for unknwon system type.");
       }
    }
+   case torricelly_type_type::ARRAY:
+   {
+      auto array_type = torricelly_type_utility::as_array_type(type);
+      auto underlying_type = array_type->underlying_type();
+      auto default_value = torricelly_value::get_default_value(underlying_type);
+      return torricelly_value::make(array_type, default_value);
+   }
+   break;
    case torricelly_type_type::STRUCTURED:
       throw torricelly_error("Cannot get default value for structured type.");
    default:
@@ -191,7 +261,7 @@ torricelly_value torricelly_value::get_value_from_string(const std::string &valu
       throw torricelly_error("Cannot get default value for undefined type.");
    case torricelly_type_type::SYSTEM:
    {
-      auto system_type = std::dynamic_pointer_cast<const torricelly_system_type>(type);
+      auto system_type = torricelly_type_utility::as_system_type(type);
       switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
@@ -214,6 +284,22 @@ torricelly_value torricelly_value::get_value_from_string(const std::string &valu
          throw torricelly_error("Cannot get default value for unknwon system type.");
       }
    }
+   case torricelly_type_type::ARRAY:
+   {
+      auto array_type = torricelly_type_utility::as_array_type(type);
+      if (array_type->dimensions() != 1)
+         throw torricelly_error("Multi dimensional array cannot be converted from a string.");
+      if (array_type->dimension(0) == torricelly_array_type::undefined_dimension())
+         throw torricelly_error("Cannot convert array with undefined dimensions.");
+      auto return_value = torricelly_value::make(array_type, get_default_value(array_type->underlying_type()));
+      auto array = return_value.get_array();
+      std::vector<std::string> items;
+      sanelli::split(value, ',', items);
+      if (items.size() != array_type->dimensions())
+         throw torricelly_error(sanelli::make_string("Input array has size ", items.size(), " but expected ", array_type->dimension(0)));
+      return return_value;
+   }
+   break;
    case torricelly_type_type::STRUCTURED:
       throw torricelly_error("Cannot get default value for structured type.");
    default:

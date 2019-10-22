@@ -83,7 +83,7 @@ std::shared_ptr<torricelly_system_type> torricelly::make_torricelly_system_type(
    return memory::make_shared<torricelly_system_type>(system_type);
 }
 
-std::shared_ptr<torricelly_array_type> make_torricelly_array_type(std::shared_ptr<torricelly_type> underlying_type, const std::vector<unsigned int>& dimensions)
+std::shared_ptr<torricelly_array_type> torricelly::make_torricelly_array_type(std::shared_ptr<torricelly_type> underlying_type, const std::vector<unsigned int>& dimensions)
 {
    return memory::make_shared<torricelly_array_type>(underlying_type, dimensions);
 }
