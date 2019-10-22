@@ -87,7 +87,7 @@ std::string torricelly::to_string(torricelly_system_type_type type)
    case torricelly_system_type_type::BOOLEAN:
       return "boolean";
    case torricelly_system_type_type::STRING_LITERAL:
-      return "string";
+      return "string_literal";
    default:
       throw torricelly_error("Unknown torricelly system type");
    }
