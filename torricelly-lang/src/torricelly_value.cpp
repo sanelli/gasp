@@ -56,6 +56,7 @@ void torricelly_value::copy_value(const torricelly_value_union &value)
          throw torricelly_error("Cannot create a value out of unknown system type");
       }
    }
+   break;
    default:
       throw torricelly_error(sanelli::make_string("Unsupported torricelly type"));
    }

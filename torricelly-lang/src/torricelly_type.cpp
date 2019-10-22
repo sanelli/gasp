@@ -63,7 +63,7 @@ std::shared_ptr<torricelly_array_type> torricelly_type_utility::as_array_type(st
 }
 
 bool torricelly_type_utility::is_system_type(std::shared_ptr<torricelly_type> type) {
-   return type->type_type() != torricelly_type_type::SYSTEM;
+   return type->type_type() == torricelly_type_type::SYSTEM;
 }
 
 bool torricelly_type_utility::is_void(std::shared_ptr<torricelly_type> type) { 
