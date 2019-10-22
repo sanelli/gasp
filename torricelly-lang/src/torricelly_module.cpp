@@ -83,7 +83,7 @@ unsigned int torricelly_module::count_locals() const
 unsigned int torricelly_module::get_variable_with_string_literal(const std::string &string_literal) const
 {
    return static_cast<unsigned int>(sanelli::indexof_if(_local_initial_values.begin(), _local_initial_values.end(),
-                                                        [string_literal](const torricelly_value &value) { return value.is(torricelly_system_type_type::STRING_LITERAL) &&
+                                                        [string_literal](const torricelly_value &value) { return torricelly_type_utility::is_string_literal(value.type()) &&
                                                                                                                  (string_literal == value.get_string_literal()); }));
 }
 
@@ -99,8 +99,8 @@ void torricelly_module::validate() const
    {
       auto initial_value = get_local_initial_value(variable_index);
       auto variable_type = get_local_type(variable_index);
-      if (!initial_value.match(variable_type))
-         throw torricelly_error(sanelli::make_string("Variable at index ", variable_index + 1, " has type ", variable_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", initial_value.system_type(), "> in module '", module_name(), "'."));
+      if (!initial_value.type()->equals(variable_type))
+         throw torricelly_error(sanelli::make_string("Variable at index ", variable_index + 1, " has type ", variable_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", to_string(initial_value.type()), "> in module '", module_name(), "'."));
    }
 
    // Check subroutines

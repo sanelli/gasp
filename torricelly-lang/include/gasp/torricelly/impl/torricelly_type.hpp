@@ -78,7 +78,9 @@ class torricelly_type_utility
 public:
    static std::shared_ptr<torricelly_system_type> as_system_type(std::shared_ptr<torricelly_type> type);
    static std::shared_ptr<torricelly_array_type> as_array_type(std::shared_ptr<torricelly_type> type);
+   static bool is_system_type(std::shared_ptr<torricelly_type> type);
    static bool is_void(std::shared_ptr<torricelly_type> type);
+   static bool is_string_literal(std::shared_ptr<torricelly_type> type);
 };
 
 std::shared_ptr<torricelly_system_type> make_torricelly_system_type(torricelly_system_type_type system_type);

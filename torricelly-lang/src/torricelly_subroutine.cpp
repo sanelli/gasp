@@ -151,8 +151,8 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
    {
       auto initial_value = get_local_initial_value(local_index);
       auto local_type = get_local_type(local_index);
-      if (!initial_value.match(local_type))
-         throw torricelly_error(sanelli::make_string("Local at index ", local_index, " has type ", local_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", initial_value.system_type(), "> in  subroutine '", name(), "'"));
+      if (!initial_value.type()->equals(local_type))
+         throw torricelly_error(sanelli::make_string("Local at index ", local_index, " has type ", local_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", to_string(initial_value.type()), "> in  subroutine '", name(), "'"));
    }
 
    // Check instructions

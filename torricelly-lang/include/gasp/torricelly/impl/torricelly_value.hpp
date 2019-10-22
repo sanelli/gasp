@@ -20,19 +20,15 @@ union torricelly_value_union {
 
 class torricelly_value {
    torricelly_value_union _value;
-   torricelly_type_type _type;
-   torricelly_system_type_type _system_type;
+   std::shared_ptr<torricelly_type> _type;
    torricelly_value(torricelly_system_type_type system_type, const torricelly_value_union& value);
-   void throw_if_is_not(torricelly_system_type_type system_type) const;
+   void throw_if_is_not(std::shared_ptr<torricelly_type> check_type) const;
    void copy_value(const torricelly_value_union& value);
 public:
    torricelly_value(const torricelly_value& other);
    torricelly_value& operator=(const torricelly_value& other);
 
-   torricelly_type_type type() const;
-   torricelly_system_type_type system_type() const;
-
-   bool is(torricelly_system_type_type system_type) const;
+   std::shared_ptr<torricelly_type> type() const;
 
    int get_integer() const;
    char get_char() const;
