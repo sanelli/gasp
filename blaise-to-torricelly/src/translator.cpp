@@ -297,9 +297,10 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
 
 unsigned int blaise_to_torricelly::translator::add_temporary(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const
 {
-   if (initial_value.type() != gasp::torricelly::torricelly_type_type::SYSTEM)
-      throw blaise_to_torricelly_internal_error("Unsupported type. Cannot create a new variable of the required type. Only system types are supported.");
-   auto variable_index = torricelly_subroutine->add_local(make_torricelly_system_type(initial_value.system_type()), initial_value);
+   if (!torricelly_type_utility::is_system_type(initial_value.type()))
+      throw blaise_to_torricelly_internal_error("Unsupported type. Cannot create a new temporary variable of the required type. Only system types are supported.");
+   auto system_type = torricelly_type_utility::as_system_type(initial_value.type());
+   auto variable_index = torricelly_subroutine->add_local(make_torricelly_system_type(system_type->system_type()), initial_value);
    variables_mapping[sanelli::make_string("^temp", variable_index)] = variable_index;
    return variable_index;
 }
