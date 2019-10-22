@@ -307,11 +307,12 @@ void torricelly_activation_record_variable::set_pointer(std::shared_ptr<void> p)
 
 torricelly_activation_record_variable torricelly_activation_record_variable::make(const torricelly_value &value)
 {
-   switch (value.type())
+   switch (value.type()->type_type())
    {
    case torricelly_type_type::SYSTEM:
    {
-      switch (value.system_type())
+      auto system_type = torricelly_type_utility::as_system_type(value.type());
+      switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
          throw torricelly_interpreter_error("Cannot create activation record variable from UNDEFINED torricelly type");
