@@ -1,3 +1,5 @@
+#include <ostream>
+#include <string>
 #include <gasp/torricelly/torricelly.hpp>
 
 using namespace gasp;
@@ -31,6 +33,16 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "fload";
    case torricelly_inst_code::LOAD_DOUBLE:
       return "dload";
+   case torricelly_inst_code::LOAD_ARRAY_INTEGER:
+      return "aiload";
+   case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
+      return "abload";
+   case torricelly_inst_code::LOAD_ARRAY_CHAR:
+      return "acload";
+   case torricelly_inst_code::LOAD_ARRAY_FLOAT:
+      return "afload";
+   case torricelly_inst_code::LOAD_ARRAY_DOUBLE:
+      return "adload";
    case torricelly_inst_code::STORE_INTEGER:
       return "istore";
    case torricelly_inst_code::STORE_BOOLEAN:
@@ -41,6 +53,16 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "fstore";
    case torricelly_inst_code::STORE_DOUBLE:
       return "dstore";
+   case torricelly_inst_code::STORE_ARRAY_INTEGER:
+      return "aistore";
+   case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
+      return "abstore";
+   case torricelly_inst_code::STORE_ARRAY_CHAR:
+      return "acstore";
+   case torricelly_inst_code::STORE_ARRAY_FLOAT:
+      return "afstore";
+   case torricelly_inst_code::STORE_ARRAY_DOUBLE:
+      return "adstore";
    case torricelly_inst_code::ADD_INTEGER:
       return "iadd";
    case torricelly_inst_code::ADD_FLOAT:
@@ -135,7 +157,18 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "ret";
    case torricelly_inst_code::HALT:
       return "ret";
-
+   case torricelly_inst_code::ALLOCATE_INT_ARRAY:
+      return "ainew";
+   case torricelly_inst_code::ALLOCATE_CHAR_ARRAY:
+      return "acnew";
+   case torricelly_inst_code::ALLOCATE_FLOAT_ARRAY:
+      return "afnew";
+   case torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY:
+      return "adnew";
+   case torricelly_inst_code::ALLOCATE_BOOLEAN_ARRAY:
+      return "abnew";
+   case torricelly_inst_code::FREE_ARRAY:
+      return "afree";
    default:
       throw torricelly_error("Cannot get instruction code string representation: unknown instruction code");
    }
@@ -155,15 +188,31 @@ bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
    case torricelly_inst_code::LOAD_CHAR:
    case torricelly_inst_code::LOAD_FLOAT:
    case torricelly_inst_code::LOAD_DOUBLE:
+   case torricelly_inst_code::LOAD_ARRAY_INTEGER:
+   case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
+   case torricelly_inst_code::LOAD_ARRAY_CHAR:
+   case torricelly_inst_code::LOAD_ARRAY_FLOAT:
+   case torricelly_inst_code::LOAD_ARRAY_DOUBLE:
    case torricelly_inst_code::STORE_INTEGER:
    case torricelly_inst_code::STORE_BOOLEAN:
    case torricelly_inst_code::STORE_CHAR:
    case torricelly_inst_code::STORE_FLOAT:
    case torricelly_inst_code::STORE_DOUBLE:
+   case torricelly_inst_code::STORE_ARRAY_INTEGER:
+   case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
+   case torricelly_inst_code::STORE_ARRAY_CHAR:
+   case torricelly_inst_code::STORE_ARRAY_FLOAT:
+   case torricelly_inst_code::STORE_ARRAY_DOUBLE:
    case torricelly_inst_code::STATIC_INVOKE:
    case torricelly_inst_code::VIRTUAL_INVOKE:
    case torricelly_inst_code::DYNAMIC_INVOKE:
    case torricelly_inst_code::NATIVE_INVOKE:
+   case torricelly_inst_code::ALLOCATE_INT_ARRAY:
+   case torricelly_inst_code::ALLOCATE_CHAR_ARRAY:
+   case torricelly_inst_code::ALLOCATE_FLOAT_ARRAY:
+   case torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY:
+   case torricelly_inst_code::ALLOCATE_BOOLEAN_ARRAY:
+   case torricelly_inst_code::FREE_ARRAY:
       return true;
    default:
       return false;

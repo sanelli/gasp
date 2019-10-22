@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 namespace gasp::torricelly
 {
 
@@ -19,12 +21,22 @@ enum class torricelly_inst_code : unsigned short
    LOAD_CHAR,
    LOAD_FLOAT,
    LOAD_DOUBLE,
+   LOAD_ARRAY_INTEGER,
+   LOAD_ARRAY_BOOLEAN,
+   LOAD_ARRAY_CHAR,
+   LOAD_ARRAY_FLOAT,
+   LOAD_ARRAY_DOUBLE,
 
    STORE_INTEGER,
    STORE_BOOLEAN,
    STORE_CHAR,
    STORE_FLOAT,
    STORE_DOUBLE,
+   STORE_ARRAY_INTEGER,
+   STORE_ARRAY_BOOLEAN,
+   STORE_ARRAY_CHAR,
+   STORE_ARRAY_FLOAT,
+   STORE_ARRAY_DOUBLE,
 
    ADD_INTEGER,
    ADD_FLOAT,
@@ -83,7 +95,14 @@ enum class torricelly_inst_code : unsigned short
    DYNAMIC_INVOKE,
    RET,
 
-   HALT
+   HALT,
+
+   ALLOCATE_INT_ARRAY,
+   ALLOCATE_CHAR_ARRAY,
+   ALLOCATE_FLOAT_ARRAY,
+   ALLOCATE_DOUBLE_ARRAY,
+   ALLOCATE_BOOLEAN_ARRAY,
+   FREE_ARRAY
 
 };
 
