@@ -84,7 +84,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
    std::map<std::string, unsigned int> variables_mapping;
 
    // Crate locals and add STORE from right to left
-   if (subroutine->count_parameters() > 0) {
+   if (subroutine->count_parameters() > 0)
+   {
       // Fisrt create the locals in the correct order
       for (signed int index = 0; index < subroutine->count_parameters(); ++index)
       {
@@ -102,8 +103,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
          auto variable_name = parameter->name();
          auto variable_index_it = variables_mapping.find(variable_name);
          if (variable_index_it == variables_mapping.end())
-            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(),"'."));
- 
+            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(), "'."));
+
          auto store_instruction_code = compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
                                                                 torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
                                                                 torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
@@ -298,7 +299,10 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
 unsigned int blaise_to_torricelly::translator::add_temporary(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const
 {
    if (!torricelly_type_utility::is_system_type(initial_value.type()))
-      throw blaise_to_torricelly_internal_error("Unsupported type. Cannot create a new temporary variable of the required type. Only system types are supported.");
+   {
+      auto message = sanelli::make_string("Unsupported type. Cannot create a new temporary of type ", to_string(initial_value.type()), ". Only system types are supported.");
+      throw blaise_to_torricelly_internal_error(message);
+   }
    auto system_type = torricelly_type_utility::as_system_type(initial_value.type());
    auto variable_index = torricelly_subroutine->add_local(make_torricelly_system_type(system_type->system_type()), initial_value);
    variables_mapping[sanelli::make_string("^temp", variable_index)] = variable_index;
