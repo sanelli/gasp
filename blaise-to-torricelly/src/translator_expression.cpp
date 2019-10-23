@@ -268,7 +268,7 @@ torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(
       throw blaise_to_torricelly_internal_error("Unsupported structured type.");
       break;
    default:
-      throw blaise_to_torricelly_internal_error("Unexpected or unknown type.");
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown type when computing instruction code.");
    }
 }
 
@@ -307,7 +307,7 @@ torricelly::torricelly_inst_code blaise_to_torricelly::translator::compute_instr
       throw blaise_to_torricelly_internal_error("Unsupported structured type.");
       break;
    default:
-      throw blaise_to_torricelly_internal_error("Unexpected or unknown type.");
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown type when computing instruction code.");
    }
 }
 

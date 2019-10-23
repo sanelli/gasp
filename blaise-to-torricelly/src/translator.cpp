@@ -131,6 +131,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       variables_mapping.insert(std::make_pair(variable->name(), torricelly_index));
    }
 
+   SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] end transalting variables for '" << subroutine->name() << "'." << std::endl);
+
    if (!is_native)
    {
       auto statements_count = subroutine->get_statements_count();
@@ -177,10 +179,12 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
 
 std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::translator::translate_type(std::shared_ptr<blaise::ast::blaise_ast_type> type) const
 {
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_type" << std::endl);
    switch (type->type_type())
    {
    case blaise::ast::blaise_ast_type_type::PLAIN:
    {
+      SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_type for PLAIN " << std::endl);
       auto plain_type = blaise::ast::blaise_ast_utility::as_plain_type(type);
       switch (plain_type->system_type())
       {
@@ -201,6 +205,23 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
       }
    }
    break;
+   case blaise::ast::blaise_ast_type_type::ARRAY:
+   {
+      SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_type for ARRAY " << std::endl);
+      auto array_type = blaise::ast::blaise_ast_utility::as_array_type(type);
+      auto underlying_type = translate_type(array_type->inner_type());
+      SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Got underlying type " << std::endl);
+      std::vector<unsigned int> dimensions;
+      if(!array_type->is_unbounded())
+         dimensions.push_back(array_type->size());
+      else 
+         dimensions.push_back(torricelly_array_type::undefined_dimension());
+      SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Created dimensions " << std::endl);
+      auto torricelly_type = make_torricelly_array_type(underlying_type, dimensions);
+      SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_type for ARRAY " << std::endl);
+      return torricelly_type;
+   }
+   break;
    default:
       throw blaise_to_torricelly_internal_error("Type conversion not implemented for blaise type");
    }
@@ -208,33 +229,11 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
 
 gasp::torricelly::torricelly_value blaise_to_torricelly::translator::get_type_initial_value(std::shared_ptr<blaise::ast::blaise_ast_type> type) const
 {
-   switch (type->type_type())
-   {
-   case blaise::ast::blaise_ast_type_type::PLAIN:
-   {
-      auto plain_type = blaise::ast::blaise_ast_utility::as_plain_type(type);
-      switch (plain_type->system_type())
-      {
-      case blaise::ast::blaise_ast_system_type::BOOLEAN:
-         return torricelly_value::make(false);
-      case blaise::ast::blaise_ast_system_type::CHAR:
-         return torricelly_value::make((char)0);
-      case blaise::ast::blaise_ast_system_type::DOUBLE:
-         return torricelly_value::make(0.00);
-      case blaise::ast::blaise_ast_system_type::FLOAT:
-         return torricelly_value::make(0.00f);
-      case blaise::ast::blaise_ast_system_type::INTEGER:
-         return torricelly_value::make(0);
-      case blaise::ast::blaise_ast_system_type::VOID:
-         throw blaise_to_torricelly_internal_error("VOID type does not have an initial value");
-      default:
-         throw blaise_to_torricelly_internal_error("Type conversion not implemented for blaise system type");
-      }
-   }
-   break;
-   default:
-      throw blaise_to_torricelly_internal_error("Type conversion not implemented for blaise type");
-   }
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] get_type_initial_value" << std::endl);
+   auto torricelly_type = translate_type(type);
+   auto default_value = torricelly_value::get_default_value(torricelly_type);
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] get_type_initial_value" << std::endl);
+   return default_value;
 }
 
 bool blaise_to_torricelly::translator::has_translated(const std::vector<std::shared_ptr<gasp::torricelly::torricelly_module>> &torricelly_modules,

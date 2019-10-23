@@ -91,10 +91,11 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
 }
 
 void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
-                                                                    const std::map<std::string, unsigned int> &module_variables_mapping,
-                                                                    std::map<std::string, unsigned int> &variables_mapping,
-                                                                    std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_empty> statement,
-                                                                    unsigned int &max_stack_size) const {
+                                                                 const std::map<std::string, unsigned int> &module_variables_mapping,
+                                                                 std::map<std::string, unsigned int> &variables_mapping,
+                                                                 std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_empty> statement,
+                                                                 unsigned int &max_stack_size) const
+{
    max_stack_size = 0U;
    auto noop = torricelly_instruction::make(torricelly_inst_code::NOOP);
    torricelly_subroutine->append_instruction(noop);
@@ -138,26 +139,57 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
    {
       auto variable_identifier = blaise::ast::blaise_ast_identifier_utility::as_variable_identifier(identifier);
       variable_name = variable_identifier->variable()->name();
+
+      auto variable_index_it = variables_mapping.find(variable_name);
+      if (variable_index_it == variables_mapping.end())
+         throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
+      auto variable_index = variable_index_it->second;
+
+      auto store_instruction_code = compute_instruction_code(statement->expression()->result_type(),
+                                                             torricelly_inst_code::STORE_INTEGER,
+                                                             torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
+                                                             torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
+      auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(store_instruction);
    }
    break;
    case blaise::ast::blaise_ast_identifier_type::ARRAY:
-      throw blaise_to_torricelly_internal_error("ARRAY identifier type unsupported when translating assignemt statement.");
-      break;
+   {
+      auto array_identifier = blaise::ast::blaise_ast_identifier_utility::as_array_identifier(identifier);
+      variable_name = array_identifier->variable()->name();
+
+       auto variable_index_it = variables_mapping.find(variable_name);
+      if (variable_index_it == variables_mapping.end())
+         throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt for array. Cannot find varibale '", variable_name, "'."));
+      auto variable_index = variable_index_it->second;
+
+      // Translate expression of the 
+      auto indexing_expression_max_stack_size = 0U;
+      translate_expression(torricelly_subroutine,
+            module_variables_mapping, variables_mapping,
+            array_identifier->indexing_expression(),
+            indexing_expression_max_stack_size);
+      max_stack_size = std::max(max_stack_size, indexing_expression_max_stack_size);
+
+      // Push the size of the dimensions on the stack
+      auto dimensions = 1;
+      auto size_value_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(1));
+      auto load_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, size_value_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(load_size_instruction);
+
+      max_stack_size = std::max(max_stack_size, 2U);
+      auto array_type = gasp::blaise::ast::blaise_ast_utility::as_array_type(array_identifier->variable()->type());
+      auto store_instruction_code = compute_instruction_code(array_type->inner_type(),
+                                                             torricelly_inst_code::STORE_ARRAY_INTEGER,
+                                                             torricelly_inst_code::STORE_ARRAY_FLOAT, torricelly_inst_code::STORE_ARRAY_DOUBLE,
+                                                             torricelly_inst_code::STORE_ARRAY_CHAR, torricelly_inst_code::STORE_ARRAY_BOOLEAN);
+      auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+      torricelly_subroutine->append_instruction(store_instruction);
+   }
+   break;
    default:
       throw blaise_to_torricelly_internal_error("Unexpected identifier type when translating assignemt statement.");
    }
-
-   auto variable_index_it = variables_mapping.find(variable_name);
-   if (variable_index_it == variables_mapping.end())
-      throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
-   auto variable_index = variable_index_it->second;
-
-   auto store_instruction_code = compute_instruction_code(statement->expression()->result_type(),
-                                                          torricelly_inst_code::STORE_INTEGER,
-                                                          torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
-                                                          torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
-   auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
-   torricelly_subroutine->append_instruction(store_instruction);
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_assignment_statement" << std::endl);
 }
@@ -186,7 +218,7 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
 
    auto else_max_stack_size = 0U;
-   if(statement->else_statement() != nullptr)
+   if (statement->else_statement() != nullptr)
       translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->else_statement(), else_max_stack_size);
 
    auto jump_to_done = torricelly_instruction::make(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
@@ -428,12 +460,12 @@ void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<g
    torricelly_subroutine->append_instruction(add_inst);
    auto store_indexer_inst = torricelly_instruction::make(torricelly_inst_code::STORE_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(store_indexer_inst);
-   
+
    // Jump to header
    auto jump_to_header_inst = torricelly_instruction::make(torricelly_inst_code::JUMP, start_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_to_header_inst);
 
-   // done 
+   // done
    auto done_inst = torricelly_instruction::make(torricelly_inst_code::NOOP);
    done_inst.set_label(done_label);
    torricelly_subroutine->append_instruction(done_inst);
