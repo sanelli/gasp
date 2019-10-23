@@ -167,7 +167,7 @@ std::shared_ptr<blaise_ast_expression_memory_access> gasp::blaise::ast::make_bla
 blaise_ast_expression_array_access::blaise_ast_expression_array_access(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                      std::shared_ptr<blaise_ast_generic_memory_location> array,
                      std::shared_ptr<blaise_ast_expression> indexing)
-   : blaise_ast_expression_generic_memory_access(reference, blaise_ast_expression_memory_access_type::MEMORY_LOCATION, ast::blaise_ast_utility::as_array_type(array->type())->inner_type()), 
+   : blaise_ast_expression_generic_memory_access(reference, blaise_ast_expression_memory_access_type::ARRAY, ast::blaise_ast_utility::as_array_type(array->type())->inner_type()), 
       _array(array), _indexing(indexing) { 
       }
 std::shared_ptr<blaise_ast_generic_memory_location> blaise_ast_expression_array_access::array() const { return _array;}
