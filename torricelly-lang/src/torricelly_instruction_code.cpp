@@ -33,6 +33,8 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "fload";
    case torricelly_inst_code::LOAD_DOUBLE:
       return "dload";
+   case torricelly_inst_code::LOAD_ARRAY:
+      return "aload";
    case torricelly_inst_code::LOAD_ARRAY_INTEGER:
       return "aiload";
    case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
@@ -53,6 +55,8 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "fstore";
    case torricelly_inst_code::STORE_DOUBLE:
       return "dstore";
+   case torricelly_inst_code::STORE_ARRAY:
+      return "astore";
    case torricelly_inst_code::STORE_ARRAY_INTEGER:
       return "aistore";
    case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
@@ -188,6 +192,7 @@ bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
    case torricelly_inst_code::LOAD_CHAR:
    case torricelly_inst_code::LOAD_FLOAT:
    case torricelly_inst_code::LOAD_DOUBLE:
+   case torricelly_inst_code::LOAD_ARRAY:
    case torricelly_inst_code::LOAD_ARRAY_INTEGER:
    case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
    case torricelly_inst_code::LOAD_ARRAY_CHAR:
@@ -198,6 +203,7 @@ bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
    case torricelly_inst_code::STORE_CHAR:
    case torricelly_inst_code::STORE_FLOAT:
    case torricelly_inst_code::STORE_DOUBLE:
+   case torricelly_inst_code::STORE_ARRAY:
    case torricelly_inst_code::STORE_ARRAY_INTEGER:
    case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
    case torricelly_inst_code::STORE_ARRAY_CHAR:
