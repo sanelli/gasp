@@ -605,18 +605,24 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
                {
                case torricelly_activation_record_variable_array_underlying_type::UNDEFINED:
                   sstream << "undefined";
+                  break;
                case torricelly_activation_record_variable_array_underlying_type::INTEGER:
                   sstream << array_pointer->get(index)._integer;
+                  break;
                case torricelly_activation_record_variable_array_underlying_type::CHAR:
                   sstream << array_pointer->get(index)._char;
+                  break;
                case torricelly_activation_record_variable_array_underlying_type::BOOLEAN:
                   sstream << array_pointer->get(index)._boolean;
+                  break;
                case torricelly_activation_record_variable_array_underlying_type::FLOAT:
                   sstream << array_pointer->get(index)._float;
+                  break;
                case torricelly_activation_record_variable_array_underlying_type::DOUBLE:
                   sstream << array_pointer->get(index)._double;
+                  break;
                default:
-                  throw torricelly_interpreter_error("Unexpected type. Cannot convert value into string.");
+                  throw torricelly_interpreter_error(sanelli::make_string("Unexpected type. Cannot convert value into string (type id is ", (int)array_pointer->underlying_type(), ")."));
                }
             }
             sstream << "} (" << value.get_pointer() << ")"
