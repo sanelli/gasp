@@ -1,13 +1,17 @@
 #include <ostream>
 #include <cctype>
+#include <sstream>
+#include <memory>
+
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/torricelly_io.hpp>
 
 using namespace gasp;
 using namespace gasp::torricelly;
 
-torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, torricelly_value value)
+std::string gasp::torricelly::to_string(torricelly_value value)
 {
+   std::stringstream os;
    switch (value.type()->type_type())
    {
    case torricelly_type_type::UNDEFINED:
@@ -50,11 +54,45 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, torri
       }
    }
    break;
+   case torricelly_type_type::ARRAY:
+   {
+      auto array_type = torricelly_type_utility::as_array_type(value.type());
+      os << "[" << array_type->dimensions() << "] ";
+      os << "(";
+      bool has_defined_dimensions = true;
+      for (auto dimension = 0; dimension < array_type->dimensions(); ++dimension)
+      {
+         if (dimension > 0)
+            os << ",";
+         auto dim = array_type->dimension(dimension);
+         auto is_dimension_defined = dim != torricelly_array_type::undefined_dimension();
+         has_defined_dimensions = has_defined_dimensions && is_dimension_defined;
+         os << (is_dimension_defined ? std::to_string(dim) : "U");
+      }
+      os << ") {";
+      if (has_defined_dimensions)
+      {
+         auto array = value.get_array();
+         bool first = true;
+         for (auto it = array->begin(); it != array->end(); ++it, first = false)
+         {
+            if (!first)
+               os << ",";
+            os << to_string(*it);
+         }
+      }
+      os << "}";
+   }
+   break;
    case torricelly_type_type::STRUCTURED:
       break;
    default:
       throw torricelly_error("Unknown torricelly type");
    }
+   return os.str();
+}
 
-   return os;
+torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, torricelly_value value)
+{
+   return os << to_string(value);
 }
