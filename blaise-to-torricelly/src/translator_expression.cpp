@@ -179,8 +179,11 @@ void blaise_to_torricelly::translator::translate_memory_access_expression(std::s
    switch (expression->memory_access_type())
    {
    case ast::blaise_ast_expression_memory_access_type::ARRAY:
-      throw blaise_to_torricelly_internal_error("ARRAY memory access type not supported.");
-      break;
+   {
+      auto array_access_expression = ast::blaise_ast_expression_utility::as_array_memory_access(expression);
+      translate_array_access_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, array_access_expression, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_expression_memory_access_type::MEMORY_LOCATION:
    {
       auto variable_access_expression = ast::blaise_ast_expression_utility::as_variable_memory_access(expression);
@@ -210,6 +213,42 @@ void blaise_to_torricelly::translator::translate_variable_access_expression(std:
    torricelly_subroutine->append_instruction(instruction);
    max_stack_size = 1;
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_variable_access_expression" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_array_access_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_array_access> expression, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_array_access_expression" << std::endl);
+
+   auto array_variable = expression->array();
+
+   // Get the index of the array
+   auto array_variable_index_it = variables_mapping.find(array_variable->name());
+   if (array_variable_index_it == variables_mapping.end())
+      throw blaise_to_torricelly_error(expression->line(), expression->column(), sanelli::make_string("Cannot find variable '", array_variable->name(), "'."));
+   auto variable_index = array_variable_index_it->second;
+
+   // Traslate indexing expression
+   auto expression_max_stack_size = 0U;
+   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, expression->indexing(), expression_max_stack_size);
+
+   // Add the number of dimnsions
+   // At present only one because blaise do not support multiple arrays
+   auto dimensions = 1;
+   auto size_value_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(1));
+   auto load_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, size_value_variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_size_instruction);
+
+   // Generate the load array instruction
+   max_stack_size = std::max(max_stack_size, 2U);
+   auto array_type = gasp::blaise::ast::blaise_ast_utility::as_array_type(array_variable->type());
+   auto load_instruction_code = compute_instruction_code(expression->result_type(),
+                                                             torricelly_inst_code::LOAD_ARRAY_INTEGER,
+                                                             torricelly_inst_code::LOAD_ARRAY_FLOAT, torricelly_inst_code::LOAD_ARRAY_DOUBLE,
+                                                             torricelly_inst_code::LOAD_ARRAY_CHAR, torricelly_inst_code::LOAD_ARRAY_BOOLEAN);
+      
+   auto load_instruction = torricelly_instruction::make(load_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_instruction);
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_array_access_expression" << std::endl);
 }
 
 void blaise_to_torricelly::translator::translate_unary_expression(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_unary> expression, unsigned int &max_stack_size) const
@@ -268,7 +307,7 @@ torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(
       throw blaise_to_torricelly_internal_error("Unsupported structured type.");
       break;
    default:
-      throw blaise_to_torricelly_internal_error("Unexpected or unknown type when computing instruction code.");
+      throw blaise_to_torricelly_internal_error("Unexpected or unknown type when computing instruction code for numeric.");
    }
 }
 
@@ -495,12 +534,12 @@ void blaise_to_torricelly::translator::translate_subroutine_call_expression(std:
                                                                             std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_subroutine_call> expression,
                                                                             unsigned int &max_stack_size) const
 {
-  SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine_call_expression" << std::endl);
-  auto subroutine = expression->subroutine();
-  translate_subroutine_call(torricelly_subroutine, module_variables_mapping, variables_mapping,
-      subroutine,
-      [expression](unsigned int index) { return expression->get_parameter(index); },
-      max_stack_size);
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine_call_expression" << std::endl);
+   auto subroutine = expression->subroutine();
+   translate_subroutine_call(torricelly_subroutine, module_variables_mapping, variables_mapping,
+                             subroutine,
+                             [expression](unsigned int index) { return expression->get_parameter(index); },
+                             max_stack_size);
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call_expression" << std::endl);
 }

@@ -158,17 +158,17 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       auto array_identifier = blaise::ast::blaise_ast_identifier_utility::as_array_identifier(identifier);
       variable_name = array_identifier->variable()->name();
 
-       auto variable_index_it = variables_mapping.find(variable_name);
+      auto variable_index_it = variables_mapping.find(variable_name);
       if (variable_index_it == variables_mapping.end())
          throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt for array. Cannot find varibale '", variable_name, "'."));
       auto variable_index = variable_index_it->second;
 
-      // Translate expression of the 
+      // Translate expression of the
       auto indexing_expression_max_stack_size = 0U;
       translate_expression(torricelly_subroutine,
-            module_variables_mapping, variables_mapping,
-            array_identifier->indexing_expression(),
-            indexing_expression_max_stack_size);
+                           module_variables_mapping, variables_mapping,
+                           array_identifier->indexing_expression(),
+                           indexing_expression_max_stack_size);
       max_stack_size = std::max(max_stack_size, indexing_expression_max_stack_size);
 
       // Push the size of the dimensions on the stack
