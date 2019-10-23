@@ -42,6 +42,15 @@ void execute_load_float(const torricelly::torricelly_instruction& instruction);
 void execute_load_double(const torricelly::torricelly_instruction& instruction);
 void execute_load_char(const torricelly::torricelly_instruction& instruction);
 
+void inline __execute_load_array(const torricelly::torricelly_instruction& instruction, 
+                                 torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type extpected_type,
+                                 std::function<torricelly_activation_record_variable(torricelly::interpreter::torricelly_activation_record_variable_union)> get_value);
+void execute_load_array_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_integer(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_float(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_double(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_char(const torricelly::torricelly_instruction& instruction);
+
 void inline __execute_store(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_variable_type extpected_type);
 void execute_store_boolean(const torricelly::torricelly_instruction& instruction);
 void execute_store_integer(const torricelly::torricelly_instruction& instruction);

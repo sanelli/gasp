@@ -84,6 +84,21 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::LOAD_DOUBLE:
       execute_load_double(instruction);
       break;
+   case torricelly_inst_code::LOAD_ARRAY_INTEGER:
+      execute_load_array_integer(instruction);
+      break;
+   case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
+      execute_load_array_boolean(instruction);
+      break;
+   case torricelly_inst_code::LOAD_ARRAY_CHAR:
+      execute_load_array_char(instruction);
+      break;
+   case torricelly_inst_code::LOAD_ARRAY_FLOAT:
+      execute_load_array_float(instruction);
+      break;
+   case torricelly_inst_code::LOAD_ARRAY_DOUBLE:
+      execute_load_array_double(instruction);
+      break;
    case torricelly_inst_code::STORE_INTEGER:
       execute_store_integer(instruction);
       break;
