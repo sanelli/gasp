@@ -29,7 +29,7 @@ inline bool torricelly_system_type::equals(std::shared_ptr<torricelly_type> othe
 
 torricelly_array_type::torricelly_array_type(std::shared_ptr<torricelly_type> underlying_type, const std::vector<unsigned int>& dimensions)
 : torricelly_type(torricelly_type_type::ARRAY), _underlying_type(underlying_type) {
-   std::copy(dimensions.begin(), dimensions.end(), _dimensions.begin());
+   std::copy(dimensions.begin(), dimensions.end(), std::back_inserter(_dimensions));
 }
 
 torricelly_array_type::~torricelly_array_type() { }

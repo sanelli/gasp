@@ -111,7 +111,9 @@ void torricelly_value::copy_array(std::shared_ptr<std::vector<torricelly_value>>
       _array = nullptr;
       break;
    case torricelly_type_type::ARRAY:
-      std::copy(array->begin(), array->end(), _array->begin());
+      _array = std::make_shared<std::vector<torricelly_value>>();
+      for(auto index = 0; index < array->size(); ++index)
+          _array->push_back(array->at(index));
       break;
    default:
       throw torricelly_error(sanelli::make_string("Unsupported torricelly type"));
