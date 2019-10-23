@@ -2,6 +2,9 @@
 
 #include <string>
 #include <memory>
+#include <vector>
+
+#include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
 
@@ -31,21 +34,68 @@ enum class torricelly_activation_record_variable_type
    POINTER
 };
 
+enum class torricelly_activation_record_variable_underlying_type
+{
+   UNDEFINED,
+   STRING_LITERAL,
+   ARRAY
+};
+
+enum class torricelly_activation_record_variable_array_underlying_type
+{
+   UNDEFINED,
+   INTEGER,
+   CHAR,
+   BOOLEAN,
+   FLOAT,
+   DOUBLE,
+};
+
 std::string to_string(torricelly_activation_record_variable_type type);
+std::string to_string(torricelly_activation_record_variable_underlying_type type);
+std::string to_string(torricelly_activation_record_variable_array_underlying_type type);
+
+torricelly_activation_record_variable_array_underlying_type to_underlying_type(std::shared_ptr<torricelly_type> type);
+
+class torricelly_activation_record_variable_multidimensional_array
+{
+   std::vector<unsigned int> _dimensions;
+   std::vector<torricelly_activation_record_variable_union> _values;
+   torricelly_activation_record_variable_array_underlying_type _underlying_type;
+
+   void copy_from(const torricelly_activation_record_variable_multidimensional_array &other);
+
+public:
+   torricelly_activation_record_variable_multidimensional_array(const std::vector<unsigned int>& dimensions, torricelly_activation_record_variable_array_underlying_type underlying_type);
+   torricelly_activation_record_variable_multidimensional_array(const torricelly_activation_record_variable_multidimensional_array &other);
+   torricelly_activation_record_variable_multidimensional_array &operator=(const torricelly_activation_record_variable_multidimensional_array &other);
+   ~torricelly_activation_record_variable_multidimensional_array();
+
+   torricelly_activation_record_variable_array_underlying_type underlying_type() const;
+
+   unsigned int dimensions() const;
+   unsigned int dimension(unsigned int dim) const;
+
+   unsigned int index(const std::vector<unsigned int> &indexes) const;
+
+   unsigned int size() const;
+   void set(unsigned int index, torricelly_activation_record_variable_union value);
+   torricelly_activation_record_variable_union get(unsigned int index) const;
+};
 
 class torricelly_activation_record_variable
 {
    torricelly_activation_record_variable_type _type;
    torricelly_activation_record_variable_union _value;
    std::shared_ptr<void> _pointer;
-   gasp::torricelly::torricelly_system_type_type _pointer_system_type;
+   torricelly_activation_record_variable_underlying_type _pointer_unerlying_type;
 
    torricelly_activation_record_variable(int i);
    torricelly_activation_record_variable(char c);
    torricelly_activation_record_variable(bool b);
    torricelly_activation_record_variable(float f);
    torricelly_activation_record_variable(double d);
-   torricelly_activation_record_variable(std::shared_ptr<void> p, torricelly_system_type_type underlying_type);
+   torricelly_activation_record_variable(std::shared_ptr<void> p, torricelly_activation_record_variable_underlying_type underlying_type);
 
    void copy_value_from(const torricelly_activation_record_variable &other);
 
@@ -67,7 +117,8 @@ public:
    double get_double() const;
    std::shared_ptr<void> get_pointer() const;
    std::shared_ptr<std::string> get_string_pointer() const;
-   torricelly_system_type_type get_pointer_underlying_type() const;
+   std::shared_ptr<torricelly_activation_record_variable_multidimensional_array> get_array_pointer() const;
+   torricelly_activation_record_variable_underlying_type get_pointer_underlying_type() const;
 
    void set_integer(int i);
    void set_char(char c);
@@ -86,6 +137,6 @@ public:
    friend sanelli::memory;
 };
 
-std::string to_string(const torricelly_activation_record_variable& value);
+std::string to_string(const torricelly_activation_record_variable &value);
 
 } // namespace gasp::torricelly::interpreter

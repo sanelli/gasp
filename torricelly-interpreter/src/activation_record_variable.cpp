@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 #include <cctype>
+#include <algorithm>
+#include <functional>
 
 #include <sanelli/sanelli.hpp>
 
@@ -40,45 +42,186 @@ std::string gasp::torricelly::interpreter::to_string(torricelly_activation_recor
    }
 }
 
+std::string gasp::torricelly::interpreter::to_string(torricelly_activation_record_variable_underlying_type type)
+{
+   switch (type)
+   {
+   case torricelly_activation_record_variable_underlying_type::UNDEFINED:
+      return "undefined";
+   case torricelly_activation_record_variable_underlying_type::STRING_LITERAL:
+      return "string_literal";
+   case torricelly_activation_record_variable_underlying_type::ARRAY:
+      return "array";
+   default:
+      throw torricelly_interpreter_error("Unexpected underlying type. It cannot be converted into string.");
+   }
+}
+
+std::string gasp::torricelly::interpreter::to_string(torricelly_activation_record_variable_array_underlying_type type)
+{
+   switch (type)
+   {
+   case torricelly_activation_record_variable_array_underlying_type::UNDEFINED:
+      return "undefined";
+   case torricelly_activation_record_variable_array_underlying_type::INTEGER:
+      return "integer";
+   case torricelly_activation_record_variable_array_underlying_type::CHAR:
+      return "char";
+   case torricelly_activation_record_variable_array_underlying_type::BOOLEAN:
+      return "boolean";
+   case torricelly_activation_record_variable_array_underlying_type::FLOAT:
+      return "float";
+   case torricelly_activation_record_variable_array_underlying_type::DOUBLE:
+      return "double";
+   default:
+      throw torricelly_interpreter_error("Unexpected type. It cannot be converted into string.");
+   }
+}
+
+torricelly_activation_record_variable_array_underlying_type gasp::torricelly::interpreter::to_underlying_type(std::shared_ptr<torricelly_type> type)
+{
+   switch (type->type_type())
+   {
+   case torricelly_type_type::UNDEFINED:
+      throw torricelly_interpreter_error("Cannot generate an undefined type for underlying type.");
+      break;
+   case torricelly_type_type::SYSTEM:
+   {
+      auto system_type = torricelly_type_utility::as_system_type(type);
+      switch (system_type->system_type())
+      {
+      case torricelly::torricelly_system_type_type::DOUBLE:
+         return torricelly_activation_record_variable_array_underlying_type::DOUBLE;
+      case torricelly::torricelly_system_type_type::FLOAT:
+         return torricelly_activation_record_variable_array_underlying_type::FLOAT;
+      case torricelly::torricelly_system_type_type::INTEGER:
+         return torricelly_activation_record_variable_array_underlying_type::INTEGER;
+      case torricelly::torricelly_system_type_type::BOOLEAN:
+         return torricelly_activation_record_variable_array_underlying_type::BOOLEAN;
+      case torricelly::torricelly_system_type_type::CHAR:
+         return torricelly_activation_record_variable_array_underlying_type::CHAR;
+      case torricelly::torricelly_system_type_type::STRING_LITERAL:
+         throw torricelly_interpreter_error("STRING_LITERAL torricelly type unsupported for underlying type.");
+      case torricelly::torricelly_system_type_type::VOID:
+         throw torricelly_interpreter_error("VOID torricelly type unsupported for underlying type.");
+      case torricelly::torricelly_system_type_type::UNDEFINED:
+         throw torricelly_interpreter_error("UNDEFINED torricelly type unsupported for underlying type.");
+      default:
+         throw torricelly_interpreter_error("Unexpected or unknown torricelly for underlying type.");
+      }
+   }
+   break;
+   case torricelly_type_type::ARRAY:
+      throw torricelly_interpreter_error("Cannot generate an array type for underlying type.");
+      break;
+   case torricelly_type_type::STRUCTURED:
+      throw torricelly_interpreter_error("Cannot generate a structured type for underlying type.");
+      break;
+   }
+}
+
+torricelly_activation_record_variable_multidimensional_array::torricelly_activation_record_variable_multidimensional_array(
+    const std::vector<unsigned int> &dimensions, torricelly_activation_record_variable_array_underlying_type underlying_type)
+    : _underlying_type(underlying_type)
+{
+   std::copy(dimensions.begin(), dimensions.end(), std::back_inserter(_dimensions));
+   auto size = std::accumulate(dimensions.begin(), dimensions.end(), 1, std::multiplies<unsigned int>());
+   _values.resize(size);
+   for (auto index = 0; index < size; ++index)
+      memset(&_values[index], 0, sizeof(torricelly_activation_record_variable_union));
+}
+
+torricelly_activation_record_variable_multidimensional_array::torricelly_activation_record_variable_multidimensional_array(const torricelly_activation_record_variable_multidimensional_array &other)
+    : _underlying_type(other._underlying_type)
+{
+   copy_from(other);
+}
+torricelly_activation_record_variable_multidimensional_array &torricelly_activation_record_variable_multidimensional_array::operator=(const torricelly_activation_record_variable_multidimensional_array &other)
+{
+   if (this == &other)
+      return *this;
+   copy_from(other);
+   return *this;
+}
+
+torricelly_activation_record_variable_multidimensional_array::~torricelly_activation_record_variable_multidimensional_array() {}
+
+void torricelly_activation_record_variable_multidimensional_array::copy_from(const torricelly_activation_record_variable_multidimensional_array &other)
+{
+   std::copy(other._dimensions.begin(), other._dimensions.end(), std::back_inserter(_dimensions));
+   std::copy(other._values.begin(), other._values.end(), std::back_inserter(_values));
+}
+
+torricelly_activation_record_variable_array_underlying_type torricelly_activation_record_variable_multidimensional_array::underlying_type() const
+{
+   return _underlying_type;
+}
+
+unsigned int torricelly_activation_record_variable_multidimensional_array::dimensions() const { return _dimensions.size(); }
+unsigned int torricelly_activation_record_variable_multidimensional_array::dimension(unsigned int dim) const { return _dimensions.at(dim); }
+
+unsigned int torricelly_activation_record_variable_multidimensional_array::index(const std::vector<unsigned int> &indexes) const
+{
+   auto idx = indexes.at(0);
+   for (auto i = 1; i < indexes.size(); ++idx)
+      idx += _dimensions.at(i - 1) * indexes.at(i);
+   return idx;
+}
+
+unsigned int torricelly_activation_record_variable_multidimensional_array::size() const
+{
+   return _values.size();
+}
+
+void torricelly_activation_record_variable_multidimensional_array::set(unsigned int index, torricelly_activation_record_variable_union value)
+{
+   _values.at(index) = value;
+}
+
+torricelly_activation_record_variable_union torricelly_activation_record_variable_multidimensional_array::get(unsigned int index) const
+{
+   return _values.at(index);
+}
+
 torricelly_activation_record_variable::torricelly_activation_record_variable()
-    : _type(torricelly_activation_record_variable_type::UNDEFINED), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+    : _type(torricelly_activation_record_variable_type::UNDEFINED), _pointer_unerlying_type(torricelly_activation_record_variable_underlying_type::UNDEFINED)
 {
 }
 torricelly_activation_record_variable::torricelly_activation_record_variable(int i)
-    : _type(torricelly_activation_record_variable_type::INTEGER), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+    : _type(torricelly_activation_record_variable_type::INTEGER), _pointer_unerlying_type(torricelly_activation_record_variable_underlying_type::UNDEFINED)
 {
    _value._integer = i;
 }
 torricelly_activation_record_variable::torricelly_activation_record_variable(char c)
-    : _type(torricelly_activation_record_variable_type::CHAR), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+    : _type(torricelly_activation_record_variable_type::CHAR), _pointer_unerlying_type(torricelly_activation_record_variable_underlying_type::UNDEFINED)
 {
    _value._char = c;
 }
-torricelly_activation_record_variable::torricelly_activation_record_variable(bool b) : _type(torricelly_activation_record_variable_type::BOOLEAN), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+torricelly_activation_record_variable::torricelly_activation_record_variable(bool b) : _type(torricelly_activation_record_variable_type::BOOLEAN), _pointer_unerlying_type(torricelly_activation_record_variable_underlying_type::UNDEFINED)
 {
    _value._boolean = b;
 }
-torricelly_activation_record_variable::torricelly_activation_record_variable(float f) : _type(torricelly_activation_record_variable_type::FLOAT), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+torricelly_activation_record_variable::torricelly_activation_record_variable(float f) : _type(torricelly_activation_record_variable_type::FLOAT), _pointer_unerlying_type(torricelly_activation_record_variable_underlying_type::UNDEFINED)
 {
    _value._float = f;
 }
-torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE), _pointer_system_type(torricelly_system_type_type::UNDEFINED)
+torricelly_activation_record_variable::torricelly_activation_record_variable(double d) : _type(torricelly_activation_record_variable_type::DOUBLE), _pointer_unerlying_type(torricelly_activation_record_variable_underlying_type::UNDEFINED)
 {
    _value._double = d;
 }
-torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p, torricelly_system_type_type underlying_type)
-    : _type(torricelly_activation_record_variable_type::POINTER), _pointer_system_type(underlying_type)
+torricelly_activation_record_variable::torricelly_activation_record_variable(std::shared_ptr<void> p, torricelly_activation_record_variable_underlying_type underlying_type)
+    : _type(torricelly_activation_record_variable_type::POINTER), _pointer_unerlying_type(underlying_type)
 {
    _pointer = p;
 }
 
 torricelly_activation_record_variable::torricelly_activation_record_variable(const torricelly_activation_record_variable &other)
-    : _type(other._type), _pointer_system_type(other._pointer_system_type)
+    : _type(other._type), _pointer_unerlying_type(other._pointer_unerlying_type)
 {
    copy_value_from(other);
 }
 torricelly_activation_record_variable::torricelly_activation_record_variable(torricelly_activation_record_variable &&other)
-    : _type(std::move(other._type)), _pointer_system_type(std::move(other._pointer_system_type))
+    : _type(std::move(other._type)), _pointer_unerlying_type(std::move(other._pointer_unerlying_type))
 {
    switch (_type)
    {
@@ -112,14 +255,14 @@ torricelly_activation_record_variable &torricelly_activation_record_variable::op
    if (this == &other)
       return *this;
    _type = other._type;
-   _pointer_system_type = other._pointer_system_type;
+   _pointer_unerlying_type = other._pointer_unerlying_type;
    copy_value_from(other);
    return *this;
 }
 torricelly_activation_record_variable &torricelly_activation_record_variable::operator=(torricelly_activation_record_variable &&other)
 {
    _type = std::move(other._type);
-   _pointer_system_type = std::move(other._pointer_system_type);
+   _pointer_unerlying_type = std::move(other._pointer_unerlying_type);
    switch (_type)
    {
    case torricelly_activation_record_variable_type::UNDEFINED:
@@ -258,13 +401,19 @@ std::shared_ptr<void> torricelly_activation_record_variable::get_pointer() const
    return _pointer;
 }
 
-std::shared_ptr<std::string> torricelly_activation_record_variable::get_string_pointer() const { 
+std::shared_ptr<std::string> torricelly_activation_record_variable::get_string_pointer() const
+{
    return std::static_pointer_cast<std::string>(get_pointer());
 }
 
-torricelly_system_type_type torricelly_activation_record_variable::get_pointer_underlying_type() const
+std::shared_ptr<torricelly_activation_record_variable_multidimensional_array> torricelly_activation_record_variable::get_array_pointer() const
 {
-   return _pointer_system_type;
+   return std::static_pointer_cast<torricelly_activation_record_variable_multidimensional_array>(get_pointer());
+}
+
+torricelly_activation_record_variable_underlying_type torricelly_activation_record_variable::get_pointer_underlying_type() const
+{
+   return _pointer_unerlying_type;
 }
 
 void torricelly_activation_record_variable::set_integer(int i)
@@ -332,11 +481,61 @@ torricelly_activation_record_variable torricelly_activation_record_variable::mak
       {
          auto string_literal = value.get_string_literal();
          auto pointer = std::shared_ptr<std::string>(new std::string(string_literal));
-         return torricelly_activation_record_variable(pointer, torricelly_system_type_type::STRING_LITERAL);
+         return torricelly_activation_record_variable(pointer, torricelly_activation_record_variable_underlying_type::STRING_LITERAL);
       }
       default:
          throw torricelly_interpreter_error("Unknown or unsupported torricelly system type when creating a new activation record type.");
       }
+   }
+   break;
+   case torricelly_type_type::ARRAY:
+   {
+      auto array_type = torricelly_type_utility::as_array_type(value.type());
+      auto torricelly_underlying_type = array_type->underlying_type();
+      auto underlying_type = to_underlying_type(torricelly_underlying_type);
+      std::vector<unsigned int> dimensions;
+      auto size = 1;
+      bool isundefined = false;
+      for (auto dimension = 0; dimension < array_type->dimensions(); ++dimension)
+      {
+         dimensions.push_back(array_type->dimension(dimension));
+         size *= array_type->dimension(dimension);
+         isundefined = isundefined || (array_type->dimension(dimension) == torricelly_array_type::undefined_dimension());
+      }
+      if (isundefined)
+         return torricelly_activation_record_variable(nullptr, torricelly_activation_record_variable_underlying_type::ARRAY);
+      auto pointer = std::shared_ptr<torricelly_activation_record_variable_multidimensional_array>(
+          new torricelly_activation_record_variable_multidimensional_array(dimensions, underlying_type));
+      for (auto index = 0; index < size; ++index)
+      {
+         auto array_value = value.get_array();
+         auto array_item = array_value->at(index);
+         torricelly_activation_record_variable_union u;
+         switch (underlying_type)
+         {
+         case torricelly_activation_record_variable_array_underlying_type::UNDEFINED:
+            throw torricelly_interpreter_error("Cannot copy undefined underlying type");
+         case torricelly_activation_record_variable_array_underlying_type::INTEGER:
+            u._integer = array_value->at(index).get_integer();
+            break;
+         case torricelly_activation_record_variable_array_underlying_type::CHAR:
+            u._char = array_value->at(index).get_char();
+            break;
+         case torricelly_activation_record_variable_array_underlying_type::BOOLEAN:
+            u._boolean = array_value->at(index).get_boolean();
+            break;
+         case torricelly_activation_record_variable_array_underlying_type::FLOAT:
+            u._float = array_value->at(index).get_float();
+            break;
+         case torricelly_activation_record_variable_array_underlying_type::DOUBLE:
+            u._double = array_value->at(index).get_double();
+            break;
+         default:
+            throw torricelly_interpreter_error("Unexpected type. Cannot convert value into string.");
+         }
+         pointer->set(index, u);
+      }
+      return torricelly_activation_record_variable(pointer, torricelly_activation_record_variable_underlying_type::ARRAY);
    }
    break;
    case torricelly_type_type::STRUCTURED:
@@ -381,13 +580,56 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
       std::stringstream sstream;
       switch (value.get_pointer_underlying_type())
       {
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_activation_record_variable_underlying_type::STRING_LITERAL:
       {
          auto string_pointer = value.get_string_pointer();
-         sstream << "'" << *string_pointer << "'" 
+         sstream << "'" << *string_pointer << "'"
                  << " (" << value.get_pointer() << ")"
-                 << " ["  <<  to_string(torricelly_system_type_type::STRING_LITERAL) << "]"
-                 ;
+                 << " [" << to_string(torricelly_activation_record_variable_underlying_type::STRING_LITERAL) << "]";
+      }
+      case torricelly_activation_record_variable_underlying_type::ARRAY:
+      {
+         auto array_pointer = value.get_array_pointer();
+         if (array_pointer == nullptr)
+         {
+            sstream << "{} (" << value.get_pointer() << ") [" << to_string(torricelly_activation_record_variable_underlying_type::ARRAY) << "<>[]";
+         }
+         else
+         {
+            sstream << "{";
+            for (auto index = 0; index < array_pointer->size(); ++index)
+            {
+               if (index > 0)
+                  sstream << ",";
+               switch (array_pointer->underlying_type())
+               {
+               case torricelly_activation_record_variable_array_underlying_type::UNDEFINED:
+                  sstream << "undefined";
+               case torricelly_activation_record_variable_array_underlying_type::INTEGER:
+                  sstream << array_pointer->get(index)._integer;
+               case torricelly_activation_record_variable_array_underlying_type::CHAR:
+                  sstream << array_pointer->get(index)._char;
+               case torricelly_activation_record_variable_array_underlying_type::BOOLEAN:
+                  sstream << array_pointer->get(index)._boolean;
+               case torricelly_activation_record_variable_array_underlying_type::FLOAT:
+                  sstream << array_pointer->get(index)._float;
+               case torricelly_activation_record_variable_array_underlying_type::DOUBLE:
+                  sstream << array_pointer->get(index)._double;
+               default:
+                  throw torricelly_interpreter_error("Unexpected type. Cannot convert value into string.");
+               }
+            }
+            sstream << "} (" << value.get_pointer() << ")"
+                    << " [" << to_string(torricelly_activation_record_variable_underlying_type::ARRAY) << "<"
+                    << to_string(array_pointer->underlying_type()) << ">[";
+            for (auto dimension = 0; dimension < array_pointer->dimensions(); ++dimension)
+            {
+               if (dimension > 0)
+                  sstream << ",";
+               sstream << array_pointer->dimension(dimension);
+            }
+            sstream << "]]";
+         }
       }
       break;
       default:
