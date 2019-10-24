@@ -56,24 +56,24 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sa
 }
 
 // ARRAY
-blaise_ast_array_type::blaise_ast_array_type(std::shared_ptr<blaise_ast_type> inner_type, unsigned int size)
-    : blaise_ast_type(blaise_ast_type_type::ARRAY), _inner_type(inner_type), _size(size) { }
+blaise_ast_array_type::blaise_ast_array_type(std::shared_ptr<blaise_ast_type> underlying_type, unsigned int size)
+    : blaise_ast_type(blaise_ast_type_type::ARRAY), _underlying_type(underlying_type), _size(size) { }
 blaise_ast_array_type::~blaise_ast_array_type(){}
-std::shared_ptr<blaise_ast_type> blaise_ast_array_type::inner_type() const { return _inner_type; }
+std::shared_ptr<blaise_ast_type> blaise_ast_array_type::underlying_type() const { return _underlying_type; }
 unsigned int blaise_ast_array_type::size() const { return _size; }
 bool blaise_ast_array_type::is_unbounded() const { return _size == 0; }
 
 inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other) const {
    if(type_type() != other->type_type()) return false;
    auto array_other = ast::blaise_ast_utility::as_array_type(other);
-   return inner_type() == array_other->inner_type() && size() == array_other->size();
+   return underlying_type() == array_other->underlying_type() && size() == array_other->size();
 };
 
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_array_type_from_token(
    const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
-   std::shared_ptr<blaise_ast_type> inner_type,
+   std::shared_ptr<blaise_ast_type> underlying_type,
    const int array_size, const bool accept_unbounded_array) { 
       if(array_size < 0 || (!accept_unbounded_array && array_size == 0))
          throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Array must have a size greater than 0."));
-   return memory::make_shared<blaise_ast_array_type>(inner_type, static_cast<unsigned int>(array_size));
+   return memory::make_shared<blaise_ast_array_type>(underlying_type, static_cast<unsigned int>(array_size));
    }

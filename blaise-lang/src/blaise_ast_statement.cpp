@@ -76,7 +76,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
    {
       auto array_identifier = std::static_pointer_cast<blaise_ast_array_identifier>(identifier);
       variable = array_identifier->variable();
-      variable_real_type = ast::blaise_ast_utility::as_array_type(variable->type())->inner_type();
+      variable_real_type = ast::blaise_ast_utility::as_array_type(variable->type())->underlying_type();
       if (variable->type()->type_type() != ast::blaise_ast_type_type::ARRAY)
          throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "'. An array was expected here."));
    }

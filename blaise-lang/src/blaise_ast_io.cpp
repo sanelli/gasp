@@ -31,7 +31,7 @@ std::ostream &gasp::blaise::ast::operator<<(std::ostream &os, const std::shared_
          return os << gasp::blaise::ast::blaise_ast_utility::as_plain_type(type)->system_type();
       case gasp::blaise::ast::blaise_ast_type_type::ARRAY:
         { auto array_type = gasp::blaise::ast::blaise_ast_utility::as_array_type(type);
-           return os << "array<" << array_type->inner_type() <<  ">(" << array_type->size() << ")";
+           return os << "array<" << array_type->underlying_type() <<  ">(" << array_type->size() << ")";
          }
       default:
          throw std::runtime_error("Unexpected type's type.");
