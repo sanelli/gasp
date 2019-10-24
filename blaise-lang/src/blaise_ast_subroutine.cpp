@@ -44,8 +44,25 @@ bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const s
    if (_parameters.size() != param_types.size())
       return false;
    for (int index = 0; index < _parameters.size(); ++index)
-      if (!ast::blaise_ast_utility::can_auto_cast(param_types.at(index), _parameters.at(index)->type()))
+   {
+      auto param = param_types.at(index);
+      auto _param = _parameters.at(index)->type();
+      if (param->type_type() != _param->type_type())
          return false;
+      if (param->type_type() == blaise_ast_type_type::ARRAY)
+      {
+         auto param_array = blaise_ast_utility::as_array_type(param);
+         auto _param_array = blaise_ast_utility::as_array_type(_param);
+         if (!param_array->underlying_type()->equals(_param_array->underlying_type()))
+            return false;
+         if (param_array->size() != param_array->size()
+              && !param_array->is_unbounded() 
+              && !_param_array->is_unbounded())
+            return false;
+      }
+      else if (!ast::blaise_ast_utility::can_auto_cast(param, _parameters.at(index)->type()))
+         return false;
+   }
    return true;
 }
 
