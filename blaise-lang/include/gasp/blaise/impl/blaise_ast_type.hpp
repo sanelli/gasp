@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
-#include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <sanelli/sanelli.hpp>
+#include <gasp/blaise/tokenizer/tokenizer.hpp>
 
 namespace gasp::blaise::ast {
 
@@ -67,5 +68,7 @@ std::shared_ptr<blaise_ast_type> get_array_type_from_token(
    const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
    std::shared_ptr<blaise_ast_type> underlying_type,
    const int array_size, const bool accept_unbounded_array);
+
+std::string to_string(std::shared_ptr<blaise_ast_type> type);
 
 }
