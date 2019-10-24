@@ -67,11 +67,11 @@ void torricelly_instruction::validate() const
       break;
    case torricelly_inst_ref_type::MODULE:
       if (!torricelly_inst_code_helper::accept_reference(cd))
-         throw torricelly_error(sanelli::make_string("Instruction code '", cd, "' does not accept a module variable reference"));
+         throw torricelly_error(sanelli::make_string("Instruction code '", cd, "' does not accept a module local reference"));
       break;
    case torricelly_inst_ref_type::SUBROUTINE:
       if (!torricelly_inst_code_helper::accept_reference(cd))
-         throw torricelly_error(sanelli::make_string("Instruction code '", cd, "' does not accept a subroutine variable reference"));
+         throw torricelly_error(sanelli::make_string("Instruction code '", cd, "' does not accept a subroutine local reference"));
       break;
    default:
       throw torricelly_error("Unknwon instruction reference type detected during validation");

@@ -33,7 +33,7 @@ public:
    std::shared_ptr<torricelly::torricelly_type> get_local_type(unsigned int index) const;
    torricelly_value get_local_initial_value(unsigned int index) const;
    unsigned int count_locals() const;
-   unsigned int get_variable_with_string_literal(const std::string& string_literal) const;
+   unsigned int get_local_with_string_literal(const std::string& string_literal) const;
 
    void validate() const;
 

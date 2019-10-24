@@ -80,7 +80,7 @@ unsigned int torricelly_module::count_locals() const
 {
    return _local_types.size();
 }
-unsigned int torricelly_module::get_variable_with_string_literal(const std::string &string_literal) const
+unsigned int torricelly_module::get_local_with_string_literal(const std::string &string_literal) const
 {
    return static_cast<unsigned int>(sanelli::indexof_if(_local_initial_values.begin(), _local_initial_values.end(),
                                                         [string_literal](const torricelly_value &value) { return torricelly_type_utility::is_string_literal(value.type()) &&
@@ -93,14 +93,14 @@ void torricelly_module::validate() const
    if (module_name().length() <= 0)
       throw torricelly_error("Invalid module name");
 
-   // Match variable with types
+   // Match local with types
    auto num_of_vars = count_locals();
-   for (auto variable_index = 1; variable_index < num_of_vars; ++variable_index)
+   for (auto local_index = 1; local_index < num_of_vars; ++local_index)
    {
-      auto initial_value = get_local_initial_value(variable_index);
-      auto variable_type = get_local_type(variable_index);
-      if (!initial_value.type()->equals(variable_type))
-         throw torricelly_error(sanelli::make_string("Variable at index ", variable_index + 1, " has type ", variable_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", to_string(initial_value.type()), "> in module '", module_name(), "'."));
+      auto initial_value = get_local_initial_value(local_index);
+      auto local_type = get_local_type(local_index);
+      if (!initial_value.type()->equals(local_type))
+         throw torricelly_error(sanelli::make_string("Local at index ", local_index + 1, " has type ", local_type, " but initial value has type <type = ", initial_value.type(), ", system_type = ", to_string(initial_value.type()), "> in module '", module_name(), "'."));
    }
 
    // Check subroutines
@@ -109,8 +109,8 @@ void torricelly_module::validate() const
    {
       auto subroutine = get_subroutine(subroutine_index);
       auto subroutine_name = subroutine->name();
-      if (!get_variable_with_string_literal(subroutine_name))
-         throw torricelly_error(sanelli::make_string("Cannot find a variable of type '", torricelly_system_type_type::STRING_LITERAL, "' and value '", subroutine_name, "' in module '", module_name(), "'."));
+      if (!get_local_with_string_literal(subroutine_name))
+         throw torricelly_error(sanelli::make_string("Cannot find a local of type '", torricelly_system_type_type::STRING_LITERAL, "' and value '", subroutine_name, "' in module '", module_name(), "'."));
       subroutine->validate(num_of_vars);
    }
 }

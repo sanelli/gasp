@@ -39,13 +39,13 @@ unsigned int torricelly_subroutine::add_local(std::shared_ptr<torricelly::torric
 std::shared_ptr<torricelly::torricelly_type> torricelly_subroutine::get_local_type(unsigned int index) const
 {
    if (index > _local_types.size())
-      throw torricelly_error(sanelli::make_string("Cannot access variable type at index ", index, "."));
+      throw torricelly_error(sanelli::make_string("Cannot access local type at index ", index, "."));
    return _local_types.at(index - 1);
 }
 torricelly_value torricelly_subroutine::get_local_initial_value(unsigned int index) const
 {
    if (index > _local_initial_values.size())
-      throw torricelly_error(sanelli::make_string("Cannot access variable initial value at index ", index, "."));
+      throw torricelly_error(sanelli::make_string("Cannot access local initial value at index ", index, "."));
    return _local_initial_values.at(index - 1);
 }
 unsigned int torricelly_subroutine::count_locals() const
@@ -56,9 +56,9 @@ unsigned int torricelly_subroutine::count_parameters() const
 {
    return _parameters.size();
 }
-bool torricelly_subroutine::is_parameter(unsigned int variable_index) const
+bool torricelly_subroutine::is_parameter(unsigned int local_index) const
 {
-   return _parameters.count(variable_index) > 0;
+   return _parameters.count(local_index) > 0;
 }
 unsigned int torricelly_subroutine::append_instruction(torricelly::torricelly_instruction instruction)
 {
@@ -139,14 +139,14 @@ void torricelly_subroutine::validate(unsigned int number_of_module_fields) const
    if (is(torricelly_subroutine_flag::PRIVATE) && is(torricelly_subroutine_flag::PROTECTED))
       throw torricelly_error(sanelli::make_string("Subroutine cannot be marked as both '", torricelly_subroutine_flag::PRIVATE, "' and '", torricelly_subroutine_flag::PROTECTED, "'"));
 
-   // Check variables count
+   // Check locals count
    const unsigned int num_of_par = count_parameters();
    const unsigned int num_of_locals = count_locals();
    const unsigned int num_of_labels = get_number_of_labels();
    if (num_of_par > num_of_locals)
-      throw torricelly_error(sanelli::make_string("The number of parameters (", num_of_par, ") is greater than the number of variables (", num_of_locals, ")"));
+      throw torricelly_error(sanelli::make_string("The number of parameters (", num_of_par, ") is greater than the number of locals (", num_of_locals, ")"));
 
-   // Check all variables matches their initial values
+   // Check all locals matches their initial values
    for (auto local_index = 1; local_index <= num_of_locals; ++local_index)
    {
       auto initial_value = get_local_initial_value(local_index);
