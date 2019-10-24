@@ -212,9 +212,9 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
       auto underlying_type = translate_type(array_type->underlying_type());
       SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Got underlying type " << std::endl);
       std::vector<unsigned int> dimensions;
-      if(!array_type->is_unbounded())
+      if (!array_type->is_unbounded())
          dimensions.push_back(array_type->size());
-      else 
+      else
          dimensions.push_back(torricelly_array_type::undefined_dimension());
       SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Created dimensions " << std::endl);
       auto torricelly_type = make_torricelly_array_type(underlying_type, dimensions);
@@ -288,6 +288,18 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
       default:
          throw blaise_to_torricelly_internal_error("Mangling not implemeneted for system type");
       }
+   }
+   break;
+   case blaise::ast::blaise_ast_type_type::ARRAY:
+   {
+      auto array_type = blaise::ast::blaise_ast_utility::as_array_type(type);
+      std::stringstream result;
+      result << "a" << get_mangled_type_name(array_type->underlying_type());
+      if(array_type->is_unbounded())
+         result << "u";
+      else
+         result << array_type->size();
+      return result.str();
    }
    break;
    default:
