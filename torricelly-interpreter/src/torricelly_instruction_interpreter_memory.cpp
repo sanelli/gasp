@@ -102,6 +102,44 @@ void inline torricelly_instruction_interpreter::__execute_store_array(const torr
    // Set the value converti it into a proper union value
    array_pointer->set(computed_index, get_value(value));
 }
+void torricelly_instruction_interpreter::execute_load_array(const torricelly::torricelly_instruction &instruction)
+{
+   auto activation_record = _interpreter.lock()->activation_record();
+   auto parameter = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::SUBROUTINE);
+   auto value = activation_record->load(parameter);
+
+   if (_validate_during_executions)
+   {
+      if (value.type() != gasp::torricelly::interpreter::torricelly_activation_record_local_type::POINTER)
+         throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
+                                                      sanelli::make_string("Cannot load a '", to_string(gasp::torricelly::interpreter::torricelly_activation_record_local_type::POINTER), "'. Local is '", to_string(value.type()), "'."));
+      if (value.get_pointer_underlying_type() != gasp::torricelly::interpreter::torricelly_activation_record_local_underlying_type::ARRAY)
+         throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
+                                                      sanelli::make_string("Cannot load a '", to_string(gasp::torricelly::interpreter::torricelly_activation_record_local_type::POINTER), "<",
+                                                                           to_string(gasp::torricelly::interpreter::torricelly_activation_record_local_underlying_type::ARRAY), ">'. ",
+                                                                           "Local is '", to_string(value.type()), "<", to_string(value.get_pointer_underlying_type()), ">'."));
+   }
+
+   activation_record->push(value);
+}
+
+void torricelly_instruction_interpreter::execute_store_array(const torricelly::torricelly_instruction &instruction)
+{
+   auto activation_record = _interpreter.lock()->activation_record();
+   auto parameter = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::SUBROUTINE);
+   auto value = pop_and_validate(activation_record, gasp::torricelly::interpreter::torricelly_activation_record_local_type::POINTER);
+   
+    if (_validate_during_executions)
+   {
+      if (value.get_pointer_underlying_type() != gasp::torricelly::interpreter::torricelly_activation_record_local_underlying_type::ARRAY)
+         throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
+                                                      sanelli::make_string("Cannot store a '", to_string(gasp::torricelly::interpreter::torricelly_activation_record_local_type::POINTER), "<",
+                                                                           to_string(gasp::torricelly::interpreter::torricelly_activation_record_local_underlying_type::ARRAY), ">'. ",
+                                                                           "Local is '", to_string(value.type()), "<", to_string(value.get_pointer_underlying_type()), ">'."));
+   }
+   
+   activation_record->store(parameter, value);
+}
 
 void torricelly_instruction_interpreter::execute_load_boolean(const torricelly::torricelly_instruction &instruction)
 {

@@ -84,6 +84,9 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::LOAD_DOUBLE:
       execute_load_double(instruction);
       break;
+   case torricelly_inst_code::LOAD_ARRAY:
+      execute_load_array(instruction);
+      break;
    case torricelly_inst_code::LOAD_ARRAY_INTEGER:
       execute_load_array_integer(instruction);
       break;
@@ -113,6 +116,9 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
       break;
    case torricelly_inst_code::STORE_DOUBLE:
       execute_store_double(instruction);
+      break;
+   case torricelly_inst_code::STORE_ARRAY:
+      execute_store_array(instruction);
       break;
    case torricelly_inst_code::STORE_ARRAY_INTEGER:
       execute_store_array_integer(instruction);

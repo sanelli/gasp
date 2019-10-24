@@ -42,6 +42,7 @@ void execute_load_float(const torricelly::torricelly_instruction& instruction);
 void execute_load_double(const torricelly::torricelly_instruction& instruction);
 void execute_load_char(const torricelly::torricelly_instruction& instruction);
 
+void execute_load_array(const torricelly::torricelly_instruction& instruction);
 void inline __execute_load_array(const torricelly::torricelly_instruction& instruction, 
                                  torricelly::interpreter::torricelly_activation_record_local_array_underlying_type extpected_type,
                                  std::function<torricelly_activation_record_local(torricelly::interpreter::torricelly_activation_record_local_union)> get_value);
@@ -51,6 +52,7 @@ void execute_load_array_float(const torricelly::torricelly_instruction& instruct
 void execute_load_array_double(const torricelly::torricelly_instruction& instruction);
 void execute_load_array_char(const torricelly::torricelly_instruction& instruction);
 
+void execute_store_array(const torricelly::torricelly_instruction& instruction);
 void inline __execute_store_array(const torricelly::torricelly_instruction& instruction, 
                                  torricelly_activation_record_local_type expected_stack_type,
                                  torricelly::interpreter::torricelly_activation_record_local_array_underlying_type extpected_type,
