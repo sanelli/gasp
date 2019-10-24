@@ -207,10 +207,10 @@ void blaise_to_torricelly::translator::translate_variable_access_expression(std:
 
    auto memory_location_index = memory_location_index_it->second;
    auto instruction_code = (memory_location->type()->type_type() == blaise::ast::blaise_ast_type_type::ARRAY)
-         ? torricelly_inst_code::LOAD_ARRAY // When passing an array I have a memory access for a type ARRAY
-         : compute_instruction_code(memory_location->type(), torricelly_inst_code::LOAD_INTEGER,
-                                                    torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
-                                                    torricelly_inst_code::LOAD_BOOLEAN);
+                               ? torricelly_inst_code::LOAD_ARRAY // When passing an array I have a memory access for a type ARRAY
+                               : compute_instruction_code(memory_location->type(), torricelly_inst_code::LOAD_INTEGER,
+                                                          torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
+                                                          torricelly_inst_code::LOAD_BOOLEAN);
    auto instruction = torricelly_instruction::make(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
    max_stack_size = 1;
@@ -244,10 +244,10 @@ void blaise_to_torricelly::translator::translate_array_access_expression(std::sh
    max_stack_size = std::max(max_stack_size, 2U);
    auto array_type = gasp::blaise::ast::blaise_ast_utility::as_array_type(array_variable->type());
    auto load_instruction_code = compute_instruction_code(expression->result_type(),
-                                                             torricelly_inst_code::LOAD_ARRAY_INTEGER,
-                                                             torricelly_inst_code::LOAD_ARRAY_FLOAT, torricelly_inst_code::LOAD_ARRAY_DOUBLE,
-                                                             torricelly_inst_code::LOAD_ARRAY_CHAR, torricelly_inst_code::LOAD_ARRAY_BOOLEAN);
-      
+                                                         torricelly_inst_code::LOAD_ARRAY_INTEGER,
+                                                         torricelly_inst_code::LOAD_ARRAY_FLOAT, torricelly_inst_code::LOAD_ARRAY_DOUBLE,
+                                                         torricelly_inst_code::LOAD_ARRAY_CHAR, torricelly_inst_code::LOAD_ARRAY_BOOLEAN);
+
    auto load_instruction = torricelly_instruction::make(load_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(load_instruction);
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_array_access_expression" << std::endl);
@@ -580,14 +580,18 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
          instruction_code = torricelly_inst_code::CAST_INT_FLOAT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
          instruction_code = torricelly_inst_code::CAST_INT_DOUBLE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::NOOP;
       else
-         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from FLOAT type.");
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from INTEGER type.");
    }
    break;
    case torricelly::torricelly_system_type_type::BOOLEAN:
    {
       if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::CAST_BOOLEAN_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
+         instruction_code = torricelly_inst_code::NOOP;
       else
          throw blaise_to_torricelly_internal_error("Target system type cannot be casted from BOOLEAN type.");
    }
@@ -596,6 +600,8 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
    {
       if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::CAST_CHAR_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::CHAR)
+         instruction_code = torricelly_inst_code::NOOP;
       else
          throw blaise_to_torricelly_internal_error("Target system type cannot be casted from CHAR type.");
    }
@@ -606,6 +612,8 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
          instruction_code = torricelly_inst_code::CAST_FLOAT_INT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
          instruction_code = torricelly_inst_code::CAST_FLOAT_DOUBLE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
+         instruction_code = torricelly_inst_code::NOOP;
       else
          throw blaise_to_torricelly_internal_error("Target system type cannot be casted from FLOAT type.");
    }
@@ -616,8 +624,10 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
          instruction_code = torricelly_inst_code::CAST_DOUBLE_INT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
          instruction_code = torricelly_inst_code::CAST_DOUBLE_FLOAT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
+         instruction_code = torricelly_inst_code::NOOP;
       else
-         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from FLOAT type.");
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from DOUBLE type.");
    }
    break;
    default:
