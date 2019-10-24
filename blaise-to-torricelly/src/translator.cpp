@@ -209,7 +209,7 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
    {
       SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_type for ARRAY " << std::endl);
       auto array_type = blaise::ast::blaise_ast_utility::as_array_type(type);
-      auto underlying_type = translate_type(array_type->inner_type());
+      auto underlying_type = translate_type(array_type->underlying_type());
       SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Got underlying type " << std::endl);
       std::vector<unsigned int> dimensions;
       if(!array_type->is_unbounded())

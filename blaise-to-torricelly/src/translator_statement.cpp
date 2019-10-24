@@ -179,7 +179,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
 
       max_stack_size = std::max(max_stack_size, 2U);
       auto array_type = gasp::blaise::ast::blaise_ast_utility::as_array_type(array_identifier->variable()->type());
-      auto store_instruction_code = compute_instruction_code(array_type->inner_type(),
+      auto store_instruction_code = compute_instruction_code(array_type->underlying_type(),
                                                              torricelly_inst_code::STORE_ARRAY_INTEGER,
                                                              torricelly_inst_code::STORE_ARRAY_FLOAT, torricelly_inst_code::STORE_ARRAY_DOUBLE,
                                                              torricelly_inst_code::STORE_ARRAY_CHAR, torricelly_inst_code::STORE_ARRAY_BOOLEAN);
