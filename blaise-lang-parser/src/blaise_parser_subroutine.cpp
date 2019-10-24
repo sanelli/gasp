@@ -65,6 +65,9 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
       // of the function and its return type
       context.current_subroutine()->add_variable(subroutine_token_identifier, subroutine_token_identifier.value(), return_type);
    }
+
+   match_token(context, blaise_token_type::SEMICOLON);
+
    parse_variables_declaration(context);
 
    if (!is_native)
