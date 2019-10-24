@@ -151,7 +151,7 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
    if (type_token.type() == blaise_token_type::TYPE_ARRAY)
    {
       match_token(context, blaise_token_type::LESS_THAN);
-      auto inner_type = parse_variable_type(context, true);
+      auto underlying_type = parse_variable_type(context, true);
       match_token(context, blaise_token_type::GREAT_THAN);
       auto array_size_length = 0;
       if (is_token_and_match(context, blaise_token_type::LEFT_BRACKET))
@@ -170,7 +170,7 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
             throw_parse_error_with_details(context, "Array size required");
       }
 
-      variable_type = ast::get_array_type_from_token(type_token, inner_type, array_size_length, accept_unbounded_array);
+      variable_type = ast::get_array_type_from_token(type_token, underlying_type, array_size_length, accept_unbounded_array);
    }
    else
    {
