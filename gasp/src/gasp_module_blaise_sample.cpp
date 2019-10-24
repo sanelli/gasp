@@ -336,7 +336,7 @@ begin
    for index from 0 to ({SIZE}-1) begin
       numbers[index] := index;
    end
-   sample := sum(10, numbers);
+   sample := sum({SIZE}, numbers);
 end.)__");
 
    sample = std::regex_replace(sample, type_regexp, type);
@@ -368,7 +368,7 @@ begin
    for index from 0 to ({SIZE}-1) begin
       numbers[index] := index;
    end
-   sample := sum(10, numbers);
+   sample := sum({SIZE}, numbers);
 end.)__");
 
    sample = std::regex_replace(sample, type_regexp, type);
@@ -534,7 +534,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-array-double"] = {generate_array_load_and_store("double", 10), "", "45.000000"};
    _samples["expression-array-char"] = {generate_array_load_and_store_non_numeric("char", 66), "", "A"};
    _samples["expression-array-boolean"] = {generate_array_load_and_store_non_numeric("boolean", 10), "", "true"};
-   _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 10), "", "45"};
+   _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 101), "", "5050"};
    _samples["expression-function-call-array-float-unbound"] = {generate_array_passing_unbound("float", 10), "", "45.000000"};
    _samples["expression-function-call-array-double-unbound"] = {generate_array_passing_unbound("double", 10), "", "45.000000"};
    _samples["expression-function-call-array-integer-bound"] = {generate_array_passing_bound("integer", 10), "", "45"};
