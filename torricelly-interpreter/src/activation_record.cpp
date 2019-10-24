@@ -15,27 +15,27 @@ using namespace gasp::torricelly::interpreter;
 torricelly_activation_record::torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine)
     : _ip(0), _subroutine(subroutine), _module(module) {}
 
-void torricelly_activation_record::push(const torricelly_activation_record_variable value)
+void torricelly_activation_record::push(const torricelly_activation_record_local value)
 {
    return _stack.push_back(value);
 }
-torricelly_activation_record_variable torricelly_activation_record::pop()
+torricelly_activation_record_local torricelly_activation_record::pop()
 {
    auto value = _stack.back();
    _stack.pop_back();
    return value;
 }
-torricelly_activation_record_variable torricelly_activation_record::peek() const
+torricelly_activation_record_local torricelly_activation_record::peek() const
 {
    return _stack.back();
 }
 
-typename std::vector<torricelly_activation_record_variable>::const_reverse_iterator torricelly_activation_record::begin_stack() const
+typename std::vector<torricelly_activation_record_local>::const_reverse_iterator torricelly_activation_record::begin_stack() const
 {
    return _stack.rbegin();
 }
 
-typename std::vector<torricelly_activation_record_variable>::const_reverse_iterator torricelly_activation_record::end_stack() const
+typename std::vector<torricelly_activation_record_local>::const_reverse_iterator torricelly_activation_record::end_stack() const
 {
    return _stack.rend();
 }
@@ -60,14 +60,14 @@ unsigned int torricelly_activation_record::get_instruction_address(unsigned int 
    return _subroutine->get_instruction_address(label);
 }
 
-torricelly_activation_record_variable torricelly_activation_record::load(unsigned int index)
+torricelly_activation_record_local torricelly_activation_record::load(unsigned int index)
 {
    auto it = _variables.find(index);
    if (it == _variables.end())
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get local at ", index, "."));
    return it->second;
 }
-void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_variable variable)
+void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_local variable)
 {
    _variables[index] = variable;
 }
@@ -79,11 +79,11 @@ torricelly_activation_record_local_type torricelly_activation_record::load_type(
    return it->second.type();
 }
 
-void torricelly_activation_record::reference_module_local(unsigned int index, torricelly_activation_record_variable *variable)
+void torricelly_activation_record::reference_module_local(unsigned int index, torricelly_activation_record_local *variable)
 {
    _module_variables[index] = variable;
 }
-torricelly_activation_record_variable *torricelly_activation_record::get_module_local(unsigned int index)
+torricelly_activation_record_local *torricelly_activation_record::get_module_local(unsigned int index)
 {
    auto it = _module_variables.find(index);
    if (it == _module_variables.end())

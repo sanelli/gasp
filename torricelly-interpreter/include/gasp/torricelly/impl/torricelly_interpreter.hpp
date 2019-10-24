@@ -6,7 +6,7 @@
 
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/impl/activation_record.hpp>
-#include <gasp/torricelly/impl/activation_record_variable.hpp>
+#include <gasp/torricelly/impl/activation_record_local.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction_interpreter.hpp>
 
 namespace gasp::torricelly::interpreter
@@ -28,11 +28,11 @@ class torricelly_interpreter : public std::enable_shared_from_this<torricelly_in
    std::shared_ptr<gasp::torricelly::torricelly_module> _main_module;
    std::vector<std::shared_ptr<torricelly_activation_record>> _activation_records;
    torricelly_interpreter_status _status;
-   std::stack<torricelly_activation_record_variable> _parameters_passing;
-   std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_variable>>> _module_variables_mapping;
+   std::stack<torricelly_activation_record_local> _parameters_passing;
+   std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_local>>> _module_variables_mapping;
    std::function<std::string(unsigned int)> _get_parameter;
    std::shared_ptr<torricelly_instruction_interpreter> _instruction_interpreter;
-   torricelly_activation_record_variable _return_value;
+   torricelly_activation_record_local _return_value;
 
    // Need to force the creation of shared pointer in order to be able to use share_from_this feature
    torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter);
@@ -48,7 +48,7 @@ public:
    void initialize();
    void run();
    void step();
-   torricelly_activation_record_variable return_value() const;
+   torricelly_activation_record_local return_value() const;
    std::shared_ptr<torricelly_activation_record> activation_record() const;
    typename std::vector<std::shared_ptr<torricelly_activation_record>>::const_reverse_iterator begin_stack_trace() const;
    typename std::vector<std::shared_ptr<torricelly_activation_record>>::const_reverse_iterator end_stack_trace() const;

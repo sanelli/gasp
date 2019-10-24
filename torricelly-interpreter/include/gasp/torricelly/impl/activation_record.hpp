@@ -7,7 +7,7 @@
 #include <sanelli/sanelli.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 
-#include <gasp/torricelly/impl/activation_record_variable.hpp>
+#include <gasp/torricelly/impl/activation_record_local.hpp>
 
 namespace gasp::torricelly::interpreter
 {
@@ -16,9 +16,9 @@ class torricelly_activation_record
 {
    std::shared_ptr<torricelly_module> _module;
    std::shared_ptr<torricelly_subroutine> _subroutine;
-   std::vector<torricelly_activation_record_variable> _stack;
-   std::map<unsigned int, torricelly_activation_record_variable> _variables;
-   std::map<unsigned int, torricelly_activation_record_variable *> _module_variables;
+   std::vector<torricelly_activation_record_local> _stack;
+   std::map<unsigned int, torricelly_activation_record_local> _variables;
+   std::map<unsigned int, torricelly_activation_record_local *> _module_variables;
 
    unsigned int _ip; // instruction pointer
    torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine);
@@ -28,11 +28,11 @@ public:
    std::shared_ptr<torricelly_subroutine> subroutine() const;
 
    // Stack management
-   void push(const torricelly_activation_record_variable value);
-   torricelly_activation_record_variable pop();
-   torricelly_activation_record_variable peek() const;
-   typename std::vector<torricelly_activation_record_variable>::const_reverse_iterator begin_stack() const;
-   typename std::vector<torricelly_activation_record_variable>::const_reverse_iterator end_stack() const;
+   void push(const torricelly_activation_record_local value);
+   torricelly_activation_record_local pop();
+   torricelly_activation_record_local peek() const;
+   typename std::vector<torricelly_activation_record_local>::const_reverse_iterator begin_stack() const;
+   typename std::vector<torricelly_activation_record_local>::const_reverse_iterator end_stack() const;
 
    // Instructions management
    unsigned int ip() const;
@@ -42,13 +42,13 @@ public:
    unsigned int get_instruction_address(unsigned int label);
 
    // Variables management
-   torricelly_activation_record_variable load(unsigned int index);
-   void store(unsigned int index, torricelly_activation_record_variable variable);
+   torricelly_activation_record_local load(unsigned int index);
+   void store(unsigned int index, torricelly_activation_record_local variable);
    torricelly_activation_record_local_type load_type(unsigned int index);
 
    // Module variables management
-   void reference_module_local(unsigned int index, torricelly_activation_record_variable *variable);
-   torricelly_activation_record_variable *get_module_local(unsigned int index);
+   void reference_module_local(unsigned int index, torricelly_activation_record_local *variable);
+   torricelly_activation_record_local *get_module_local(unsigned int index);
    unsigned int count_module_locals() const;
 
    friend sanelli::memory;

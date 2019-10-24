@@ -35,8 +35,8 @@ void inline torricelly_instruction_interpreter::__execute_store(const torricelly
 }
 
 void inline torricelly_instruction_interpreter::__execute_load_array(const torricelly::torricelly_instruction &instruction,
-                                                                     torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type extpected_type,
-                                                                     std::function<torricelly_activation_record_variable(torricelly::interpreter::torricelly_activation_record_variable_union)> get_value)
+                                                                     torricelly::interpreter::torricelly_activation_record_local_array_underlying_type extpected_type,
+                                                                     std::function<torricelly_activation_record_local(torricelly::interpreter::torricelly_activation_record_local_union)> get_value)
 {
    // Get the idex of the array local
    auto activation_record = _interpreter.lock()->activation_record();
@@ -69,8 +69,8 @@ void inline torricelly_instruction_interpreter::__execute_load_array(const torri
 
 void inline torricelly_instruction_interpreter::__execute_store_array(const torricelly::torricelly_instruction &instruction,
                                                                       torricelly_activation_record_local_type expected_stack_type,
-                                                                      torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type extpected_type,
-                                                                      std::function<torricelly::interpreter::torricelly_activation_record_variable_union(torricelly_activation_record_variable)> get_value)
+                                                                      torricelly::interpreter::torricelly_activation_record_local_array_underlying_type extpected_type,
+                                                                      std::function<torricelly::interpreter::torricelly_activation_record_local_union(torricelly_activation_record_local)> get_value)
 {
    // Get the idex of the array local
    auto activation_record = _interpreter.lock()->activation_record();
@@ -156,41 +156,41 @@ void torricelly_instruction_interpreter::execute_store_char(const torricelly::to
 void torricelly_instruction_interpreter::execute_load_array_boolean(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load_array(instruction,
-                        torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::BOOLEAN,
-                        [](auto u) { return torricelly_activation_record_variable::make(u._boolean); });
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::BOOLEAN,
+                        [](auto u) { return torricelly_activation_record_local::make(u._boolean); });
 }
 void torricelly_instruction_interpreter::execute_load_array_integer(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load_array(instruction,
-                        torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::INTEGER,
-                        [](auto u) { return torricelly_activation_record_variable::make(u._integer); });
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::INTEGER,
+                        [](auto u) { return torricelly_activation_record_local::make(u._integer); });
 }
 void torricelly_instruction_interpreter::execute_load_array_float(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load_array(instruction,
-                        torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::FLOAT,
-                        [](auto u) { return torricelly_activation_record_variable::make(u._float); });
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::FLOAT,
+                        [](auto u) { return torricelly_activation_record_local::make(u._float); });
 }
 void torricelly_instruction_interpreter::execute_load_array_double(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load_array(instruction,
-                        torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::DOUBLE,
-                        [](auto u) { return torricelly_activation_record_variable::make(u._double); });
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::DOUBLE,
+                        [](auto u) { return torricelly_activation_record_local::make(u._double); });
 }
 void torricelly_instruction_interpreter::execute_load_array_char(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load_array(instruction,
-                        torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::CHAR,
-                        [](auto u) { return torricelly_activation_record_variable::make(u._char); });
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::CHAR,
+                        [](auto u) { return torricelly_activation_record_local::make(u._char); });
 }
 
 void torricelly_instruction_interpreter::execute_store_array_boolean(const torricelly::torricelly_instruction &instruction)
 {
    __execute_store_array(instruction,
                          torricelly_activation_record_local_type::BOOLEAN,
-                         torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::BOOLEAN,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::BOOLEAN,
                          [](auto value) {
-                            torricelly::interpreter::torricelly_activation_record_variable_union u;
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
                             u._boolean = value.get_boolean();
                             return u;
                          });
@@ -199,9 +199,9 @@ void torricelly_instruction_interpreter::execute_store_array_integer(const torri
 {
    __execute_store_array(instruction,
                          torricelly_activation_record_local_type::INTEGER,
-                         torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::INTEGER,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::INTEGER,
                          [](auto value) {
-                            torricelly::interpreter::torricelly_activation_record_variable_union u;
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
                             u._integer = value.get_integer();
                             return u;
                          });
@@ -210,9 +210,9 @@ void torricelly_instruction_interpreter::execute_store_array_float(const torrice
 {
    __execute_store_array(instruction,
                          torricelly_activation_record_local_type::FLOAT,
-                         torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::FLOAT,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::FLOAT,
                          [](auto value) {
-                            torricelly::interpreter::torricelly_activation_record_variable_union u;
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
                             u._float = value.get_float();
                             return u;
                          });
@@ -221,9 +221,9 @@ void torricelly_instruction_interpreter::execute_store_array_double(const torric
 {
    __execute_store_array(instruction,
                          torricelly_activation_record_local_type::DOUBLE,
-                         torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::DOUBLE,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::DOUBLE,
                          [](auto value) {
-                            torricelly::interpreter::torricelly_activation_record_variable_union u;
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
                             u._double = value.get_double();
                             return u;
                          });
@@ -232,9 +232,9 @@ void torricelly_instruction_interpreter::execute_store_array_char(const torricel
 {
    __execute_store_array(instruction,
                          torricelly_activation_record_local_type::CHAR,
-                         torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type::CHAR,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::CHAR,
                          [](auto value) {
-                            torricelly::interpreter::torricelly_activation_record_variable_union u;
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
                             u._char = value.get_char();
                             return u;
                          });

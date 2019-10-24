@@ -16,7 +16,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_integer(const t
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER);
    auto integer_result = op(left_param_value.get_integer(), right_param_value.get_integer());
-   auto result = torricelly_activation_record_variable::make(integer_result);
+   auto result = torricelly_activation_record_local::make(integer_result);
    activation_record->push(result);
 }
 
@@ -26,7 +26,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_float(const tor
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_local_type::FLOAT);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_local_type::FLOAT);
    auto float_result = op(left_param_value.get_float(), right_param_value.get_float());
-   auto result = torricelly_activation_record_variable::make(float_result);
+   auto result = torricelly_activation_record_local::make(float_result);
    activation_record->push(result);
 }
 
@@ -36,7 +36,7 @@ void inline torricelly_instruction_interpreter::__execute_binary_double(const to
    auto right_param_value = pop_and_validate(activation_record, torricelly_activation_record_local_type::DOUBLE);
    auto left_param_value = pop_and_validate(activation_record, torricelly_activation_record_local_type::DOUBLE);
    auto double_result = op(left_param_value.get_double(), right_param_value.get_double());
-   auto result = torricelly_activation_record_variable::make(double_result);
+   auto result = torricelly_activation_record_local::make(double_result);
    activation_record->push(result);
 }
 
@@ -70,7 +70,7 @@ void torricelly_instruction_interpreter::execute_negate_integer(const torricelly
    auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER);
    auto integer_result = -value.get_integer();
-   auto result = torricelly_activation_record_variable::make(integer_result);
+   auto result = torricelly_activation_record_local::make(integer_result);
    activation_record->push(result);
 }
 
@@ -99,7 +99,7 @@ void torricelly_instruction_interpreter::execute_negate_float(const torricelly::
    auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_local_type::FLOAT);
    auto float_result = -value.get_float();
-   auto result = torricelly_activation_record_variable::make(float_result);
+   auto result = torricelly_activation_record_local::make(float_result);
    activation_record->push(result);
 }
 
@@ -128,6 +128,6 @@ void torricelly_instruction_interpreter::execute_negate_double(const torricelly:
    auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_local_type::DOUBLE);
    auto double_result = -value.get_double();
-   auto result = torricelly_activation_record_variable::make(double_result);
+   auto result = torricelly_activation_record_local::make(double_result);
    activation_record->push(result);
 }

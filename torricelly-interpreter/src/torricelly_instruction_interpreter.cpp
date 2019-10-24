@@ -12,7 +12,7 @@ using namespace gasp::torricelly::interpreter;
 torricelly_instruction_interpreter::torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> interpreter)
     : _interpreter(interpreter) {}
 
-torricelly_activation_record_variable torricelly_instruction_interpreter::pop_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, torricelly_activation_record_local_type expected_type)
+torricelly_activation_record_local torricelly_instruction_interpreter::pop_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, torricelly_activation_record_local_type expected_type)
 {
    auto value = activation_record->pop();
    if (value.type() != expected_type)
