@@ -206,7 +206,9 @@ void blaise_to_torricelly::translator::translate_variable_access_expression(std:
       throw blaise_to_torricelly_error(expression->line(), expression->column(), sanelli::make_string("Cannot find variable '", memory_location->name(), "'."));
 
    auto memory_location_index = memory_location_index_it->second;
-   auto instruction_code = compute_instruction_code(memory_location->type(), torricelly_inst_code::LOAD_INTEGER,
+   auto instruction_code = (memory_location->type()->type_type() == blaise::ast::blaise_ast_type_type::ARRAY)
+         ? torricelly_inst_code::LOAD_ARRAY // When passing an array I have a memory access for a type ARRAY
+         : compute_instruction_code(memory_location->type(), torricelly_inst_code::LOAD_INTEGER,
                                                     torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
                                                     torricelly_inst_code::LOAD_BOOLEAN);
    auto instruction = torricelly_instruction::make(instruction_code, memory_location_index, torricelly_inst_ref_type::SUBROUTINE);
