@@ -62,37 +62,37 @@ unsigned int torricelly_activation_record::get_instruction_address(unsigned int 
 
 torricelly_activation_record_local torricelly_activation_record::load(unsigned int index)
 {
-   auto it = _variables.find(index);
-   if (it == _variables.end())
+   auto it = _locals.find(index);
+   if (it == _locals.end())
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get local at ", index, "."));
    return it->second;
 }
-void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_local variable)
+void torricelly_activation_record::store(unsigned int index, torricelly_activation_record_local local)
 {
-   _variables[index] = variable;
+   _locals[index] = local;
 }
 torricelly_activation_record_local_type torricelly_activation_record::load_type(unsigned int index)
 {
-   auto it = _variables.find(index);
-   if (it == _variables.end())
+   auto it = _locals.find(index);
+   if (it == _locals.end())
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get type for local at ", index, "."));
    return it->second.type();
 }
 
-void torricelly_activation_record::reference_module_local(unsigned int index, torricelly_activation_record_local *variable)
+void torricelly_activation_record::reference_module_local(unsigned int index, torricelly_activation_record_local *local)
 {
-   _module_variables[index] = variable;
+   _module_locals[index] = local;
 }
 torricelly_activation_record_local *torricelly_activation_record::get_module_local(unsigned int index)
 {
-   auto it = _module_variables.find(index);
-   if (it == _module_variables.end())
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get module variable at ", index, "."));
+   auto it = _module_locals.find(index);
+   if (it == _module_locals.end())
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get module local at ", index, "."));
    return it->second;
 }
 
 unsigned int torricelly_activation_record::count_module_locals() const { 
-   return _module_variables.size();
+   return _module_locals.size();
 }
 
 std::shared_ptr<torricelly_activation_record> gasp::torricelly::interpreter::make_torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine)

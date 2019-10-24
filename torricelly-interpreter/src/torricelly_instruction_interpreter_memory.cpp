@@ -20,7 +20,7 @@ void inline torricelly_instruction_interpreter::__execute_load(const torricelly:
    {
       if (value.type() != extpected_type)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
-                                                      sanelli::make_string("Cannot load a '", to_string(extpected_type), "'. Variable is '", to_string(value.type()), "'."));
+                                                      sanelli::make_string("Cannot load a '", to_string(extpected_type), "'. local is '", to_string(value.type()), "'."));
    }
 
    activation_record->push(value);

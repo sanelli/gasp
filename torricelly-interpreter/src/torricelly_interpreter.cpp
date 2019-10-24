@@ -48,12 +48,12 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
 
    auto activation_record = make_torricelly_activation_record(module, subroutine);
 
-   // Add subroutine variables
+   // Add subroutine locals
    for (auto index = 1U; index <= subroutine->count_locals(); ++index)
       activation_record->store(index, torricelly_activation_record_local::make(subroutine->get_local_initial_value(index)));
 
-   // Add module variables
-   auto mapping = _module_variables_mapping[module->module_name()];
+   // Add module locals
+   auto mapping = _module_locals_mapping[module->module_name()];
    for (auto index = 1U; index <= module->count_locals(); ++index)
       activation_record->reference_module_local(index, &(mapping->operator[](index)));
 
@@ -64,17 +64,17 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
       {
          for (signed int param_count = 1; param_count <= subroutine->count_parameters() ; ++param_count)
          {
-            auto variable_type = subroutine->get_local_type(param_count);
+            auto local_type = subroutine->get_local_type(param_count);
             auto input_string = _get_parameter(param_count - 1);
 
             if (input_string.empty())
             {
-               auto default_value = torricelly_value::get_default_value(variable_type);
+               auto default_value = torricelly_value::get_default_value(local_type);
                activation_record->push(torricelly_activation_record_local::make(default_value));
             }
             else
             {
-               auto value = torricelly_value::get_value_from_string(input_string, variable_type);
+               auto value = torricelly_value::get_value_from_string(input_string, local_type);
                activation_record->push(torricelly_activation_record_local::make(value));
             }
          }
@@ -111,7 +111,7 @@ void torricelly_interpreter::initialize()
    if (_status != torricelly_interpreter_status::ZERO)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot execute initialize when status is '", to_string(_status), "'."));
 
-   _module_variables_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_local>>();
+   _module_locals_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_local>>();
    auto main_subroutine = _main_module->get_main();
    if (main_subroutine == nullptr)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get main subroutine from module '", _main_module->module_name(), "'."));
@@ -119,8 +119,8 @@ void torricelly_interpreter::initialize()
    for (auto index = 1U; index <= _main_module->count_locals(); ++index)
    {
       auto initial_value = _main_module->get_local_initial_value(index);
-      auto variable = torricelly_activation_record_local::make(initial_value);
-      _module_variables_mapping[_main_module->module_name()]->operator[](index) = variable;
+      auto local = torricelly_activation_record_local::make(initial_value);
+      _module_locals_mapping[_main_module->module_name()]->operator[](index) = local;
    }
    push_activation_record(_main_module, main_subroutine);
 

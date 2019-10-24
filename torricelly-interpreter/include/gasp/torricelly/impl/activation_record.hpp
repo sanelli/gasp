@@ -17,8 +17,8 @@ class torricelly_activation_record
    std::shared_ptr<torricelly_module> _module;
    std::shared_ptr<torricelly_subroutine> _subroutine;
    std::vector<torricelly_activation_record_local> _stack;
-   std::map<unsigned int, torricelly_activation_record_local> _variables;
-   std::map<unsigned int, torricelly_activation_record_local *> _module_variables;
+   std::map<unsigned int, torricelly_activation_record_local> _locals;
+   std::map<unsigned int, torricelly_activation_record_local *> _module_locals;
 
    unsigned int _ip; // instruction pointer
    torricelly_activation_record(std::shared_ptr<torricelly_module> module, std::shared_ptr<torricelly_subroutine> subroutine);
@@ -41,13 +41,13 @@ public:
    torricelly_instruction instruction() const;
    unsigned int get_instruction_address(unsigned int label);
 
-   // Variables management
+   // locals management
    torricelly_activation_record_local load(unsigned int index);
-   void store(unsigned int index, torricelly_activation_record_local variable);
+   void store(unsigned int index, torricelly_activation_record_local local);
    torricelly_activation_record_local_type load_type(unsigned int index);
 
-   // Module variables management
-   void reference_module_local(unsigned int index, torricelly_activation_record_local *variable);
+   // Module locals management
+   void reference_module_local(unsigned int index, torricelly_activation_record_local *local);
    torricelly_activation_record_local *get_module_local(unsigned int index);
    unsigned int count_module_locals() const;
 

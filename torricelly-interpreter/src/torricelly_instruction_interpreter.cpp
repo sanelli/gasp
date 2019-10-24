@@ -30,7 +30,7 @@ unsigned int torricelly_instruction_interpreter::get_paramter_and_validate(std::
    {
       if (value <= 0U)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
-                                                      sanelli::make_string("Instruction does not contain a valid variable reference."));
+                                                      sanelli::make_string("Instruction does not contain a valid local reference."));
       if (instruction.ref_type() != ref_type)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
                                                       sanelli::make_string("Instruction does not refernce the correct parameter."));

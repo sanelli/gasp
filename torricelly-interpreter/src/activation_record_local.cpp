@@ -359,45 +359,45 @@ bool torricelly_activation_record_local::match(std::shared_ptr<torricelly::torri
       throw torricelly_interpreter_error("Torricelly structured type not supported yet");
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected or unknown torricelly type when matching it with activation record variable.");
+      throw torricelly_interpreter_error("Unexpected or unknown torricelly type when matching it with activation record local.");
    }
 }
 
 int torricelly_activation_record_local::get_integer() const
 {
    if (_type != torricelly_activation_record_local_type::INTEGER)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get integer type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get integer type. local is of type ", to_string(_type), "."));
    return _value._integer;
 }
 char torricelly_activation_record_local::get_char() const
 {
    if (_type != torricelly_activation_record_local_type::CHAR)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get char type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get char type. local is of type ", to_string(_type), "."));
    return _value._char;
 }
 bool torricelly_activation_record_local::get_boolean() const
 {
    if (_type != torricelly_activation_record_local_type::BOOLEAN)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get boolean type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get boolean type. local is of type ", to_string(_type), "."));
    return _value._boolean;
 }
 float torricelly_activation_record_local::get_float() const
 {
    if (_type != torricelly_activation_record_local_type::FLOAT)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get float type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get float type. local is of type ", to_string(_type), "."));
    return _value._float;
 }
 double torricelly_activation_record_local::get_double() const
 {
    if (_type != torricelly_activation_record_local_type::DOUBLE)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get double type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get double type. local is of type ", to_string(_type), "."));
    return _value._double;
 }
 
 std::shared_ptr<void> torricelly_activation_record_local::get_pointer() const
 {
    if (_type != torricelly_activation_record_local_type::POINTER)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot get pointer type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get pointer type. local is of type ", to_string(_type), "."));
    return _pointer;
 }
 
@@ -419,38 +419,38 @@ torricelly_activation_record_local_underlying_type torricelly_activation_record_
 void torricelly_activation_record_local::set_integer(int i)
 {
    if (_type != torricelly_activation_record_local_type::INTEGER)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot set integer type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set integer type. local is of type ", to_string(_type), "."));
    _value._integer = i;
 }
 
 void torricelly_activation_record_local::set_char(char c)
 {
    if (_type != torricelly_activation_record_local_type::INTEGER)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot set char type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set char type. local is of type ", to_string(_type), "."));
    _value._char = c;
 }
 void torricelly_activation_record_local::set_boolean(bool b)
 {
    if (_type != torricelly_activation_record_local_type::BOOLEAN)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot set boolean type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set boolean type. local is of type ", to_string(_type), "."));
    _value._boolean = b;
 }
 void torricelly_activation_record_local::set_float(float f)
 {
    if (_type != torricelly_activation_record_local_type::FLOAT)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot set float type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set float type. local is of type ", to_string(_type), "."));
    _value._float = f;
 }
 void torricelly_activation_record_local::set_double(double d)
 {
    if (_type != torricelly_activation_record_local_type::DOUBLE)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot set double type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set double type. local is of type ", to_string(_type), "."));
    _value._double = d;
 }
 void torricelly_activation_record_local::set_pointer(std::shared_ptr<void> p)
 {
    if (_type != torricelly_activation_record_local_type::POINTER)
-      throw torricelly_interpreter_error(sanelli::make_string("Cannot set pointer type. variable is of type ", to_string(_type), "."));
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set pointer type. local is of type ", to_string(_type), "."));
    _pointer = p;
 }
 
@@ -464,9 +464,9 @@ torricelly_activation_record_local torricelly_activation_record_local::make(cons
       switch (system_type->system_type())
       {
       case torricelly_system_type_type::UNDEFINED:
-         throw torricelly_interpreter_error("Cannot create activation record variable from UNDEFINED torricelly type");
+         throw torricelly_interpreter_error("Cannot create activation record local from UNDEFINED torricelly type");
       case torricelly_system_type_type::VOID:
-         throw torricelly_interpreter_error("Cannot create activation record variable from VOID torricelly type");
+         throw torricelly_interpreter_error("Cannot create activation record local from VOID torricelly type");
       case torricelly_system_type_type::INTEGER:
          return torricelly_activation_record_local(value.get_integer());
       case torricelly_system_type_type::FLOAT:
@@ -542,7 +542,7 @@ torricelly_activation_record_local torricelly_activation_record_local::make(cons
       throw torricelly_interpreter_error("Torricelly structured type not supported yet. Cannot create a new activation record.");
       break;
    default:
-      throw torricelly_interpreter_error("Unexpected or unknown torricelly type when creating a new activation record variable.");
+      throw torricelly_interpreter_error("Unexpected or unknown torricelly type when creating a new activation record local.");
    }
 }
 

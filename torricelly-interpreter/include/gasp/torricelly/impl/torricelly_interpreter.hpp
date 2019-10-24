@@ -29,7 +29,7 @@ class torricelly_interpreter : public std::enable_shared_from_this<torricelly_in
    std::vector<std::shared_ptr<torricelly_activation_record>> _activation_records;
    torricelly_interpreter_status _status;
    std::stack<torricelly_activation_record_local> _parameters_passing;
-   std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_local>>> _module_variables_mapping;
+   std::map<std::string, std::shared_ptr<std::map<unsigned int, torricelly_activation_record_local>>> _module_locals_mapping;
    std::function<std::string(unsigned int)> _get_parameter;
    std::shared_ptr<torricelly_instruction_interpreter> _instruction_interpreter;
    torricelly_activation_record_local _return_value;
