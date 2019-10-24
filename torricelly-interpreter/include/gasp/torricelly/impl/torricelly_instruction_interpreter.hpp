@@ -19,7 +19,7 @@ torricelly_instruction_interpreter(std::shared_ptr<torricelly_interpreter> inter
 bool execute(const torricelly::torricelly_instruction& instruction, unsigned int &next_instruction, bool& is_jump);
 const bool _validate_during_executions = true;
 
-torricelly_activation_record_variable pop_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, torricelly_activation_record_variable_type expected_type);
+torricelly_activation_record_variable pop_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, torricelly_activation_record_local_type expected_type);
 unsigned int get_paramter_and_validate(std::shared_ptr<torricelly_activation_record> activation_record, const torricelly::torricelly_instruction& instruction, const torricelly_inst_ref_type ref_type);
 
 // General purpose
@@ -27,7 +27,7 @@ void execute_noop(const torricelly::torricelly_instruction& instruction);
 
 // Stack management
 void execute_dup(const torricelly::torricelly_instruction& instruction);
-void inline __execute_pop(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_variable_type extpected_type);
+void inline __execute_pop(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
 void execute_pop_boolean(const torricelly::torricelly_instruction& instruction);
 void execute_pop_integer(const torricelly::torricelly_instruction& instruction);
 void execute_pop_float(const torricelly::torricelly_instruction& instruction);
@@ -35,7 +35,7 @@ void execute_pop_double(const torricelly::torricelly_instruction& instruction);
 void execute_pop_char(const torricelly::torricelly_instruction& instruction);
 
 // Memory management
-void inline __execute_load(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_variable_type extpected_type);
+void inline __execute_load(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
 void execute_load_boolean(const torricelly::torricelly_instruction& instruction);
 void execute_load_integer(const torricelly::torricelly_instruction& instruction);
 void execute_load_float(const torricelly::torricelly_instruction& instruction);
@@ -52,7 +52,7 @@ void execute_load_array_double(const torricelly::torricelly_instruction& instruc
 void execute_load_array_char(const torricelly::torricelly_instruction& instruction);
 
 void inline __execute_store_array(const torricelly::torricelly_instruction& instruction, 
-                                 torricelly_activation_record_variable_type expected_stack_type,
+                                 torricelly_activation_record_local_type expected_stack_type,
                                  torricelly::interpreter::torricelly_activation_record_variable_array_underlying_type extpected_type,
                                  std::function<torricelly::interpreter::torricelly_activation_record_variable_union(torricelly_activation_record_variable)> get_value);
 void execute_store_array_boolean(const torricelly::torricelly_instruction& instruction);
@@ -61,7 +61,7 @@ void execute_store_array_float(const torricelly::torricelly_instruction& instruc
 void execute_store_array_double(const torricelly::torricelly_instruction& instruction);
 void execute_store_array_char(const torricelly::torricelly_instruction& instruction);
 
-void inline __execute_store(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_variable_type extpected_type);
+void inline __execute_store(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
 void execute_store_boolean(const torricelly::torricelly_instruction& instruction);
 void execute_store_integer(const torricelly::torricelly_instruction& instruction);
 void execute_store_float(const torricelly::torricelly_instruction& instruction);

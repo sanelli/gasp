@@ -71,7 +71,7 @@ void torricelly_activation_record::store(unsigned int index, torricelly_activati
 {
    _variables[index] = variable;
 }
-torricelly_activation_record_variable_type torricelly_activation_record::load_type(unsigned int index)
+torricelly_activation_record_local_type torricelly_activation_record::load_type(unsigned int index)
 {
    auto it = _variables.find(index);
    if (it == _variables.end())

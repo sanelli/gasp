@@ -14,7 +14,7 @@ bool torricelly_instruction_interpreter::__execute_jump(const torricelly::torric
 {
    next_address = 0U;
    auto activation_record = _interpreter.lock()->activation_record();
-   auto value = pop_and_validate(activation_record, torricelly_activation_record_variable_type::INTEGER);
+   auto value = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER);
    if (condition(value.get_integer()))
    {
       auto label = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::LABEL);

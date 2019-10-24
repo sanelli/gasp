@@ -22,7 +22,7 @@ union torricelly_activation_record_variable_union {
    ~torricelly_activation_record_variable_union();
 };
 
-enum class torricelly_activation_record_variable_type
+enum class torricelly_activation_record_local_type
 {
    UNDEFINED,
    VOID,
@@ -51,7 +51,7 @@ enum class torricelly_activation_record_variable_array_underlying_type
    DOUBLE,
 };
 
-std::string to_string(torricelly_activation_record_variable_type type);
+std::string to_string(torricelly_activation_record_local_type type);
 std::string to_string(torricelly_activation_record_variable_underlying_type type);
 std::string to_string(torricelly_activation_record_variable_array_underlying_type type);
 
@@ -85,7 +85,7 @@ public:
 
 class torricelly_activation_record_variable
 {
-   torricelly_activation_record_variable_type _type;
+   torricelly_activation_record_local_type _type;
    torricelly_activation_record_variable_union _value;
    std::shared_ptr<void> _pointer;
    torricelly_activation_record_variable_underlying_type _pointer_unerlying_type;
@@ -107,7 +107,7 @@ public:
    torricelly_activation_record_variable &operator=(const torricelly_activation_record_variable &other);
    torricelly_activation_record_variable &operator=(torricelly_activation_record_variable &&other);
 
-   torricelly_activation_record_variable_type type() const;
+   torricelly_activation_record_local_type type() const;
    bool match(std::shared_ptr<torricelly::torricelly_type> torricelly_type) const;
 
    int get_integer() const;

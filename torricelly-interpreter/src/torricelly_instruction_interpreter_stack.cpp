@@ -14,7 +14,7 @@ void torricelly_instruction_interpreter::execute_dup(const torricelly::torricell
    activation_record->push(activation_record->peek());
 }
 
-void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_variable_type extpected_type)
+void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_local_type extpected_type)
 {
    auto activation_record = _interpreter.lock()->activation_record();
    if (_validate_during_executions)
@@ -29,25 +29,25 @@ void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::
 
 void torricelly_instruction_interpreter::execute_pop_boolean(const torricelly::torricelly_instruction &instruction)
 {
-   __execute_pop(instruction, torricelly_activation_record_variable_type::BOOLEAN);
+   __execute_pop(instruction, torricelly_activation_record_local_type::BOOLEAN);
 }
 
 void torricelly_instruction_interpreter::execute_pop_integer(const torricelly::torricelly_instruction &instruction)
 {
-   __execute_pop(instruction, torricelly_activation_record_variable_type::INTEGER);
+   __execute_pop(instruction, torricelly_activation_record_local_type::INTEGER);
 }
 
 void torricelly_instruction_interpreter::execute_pop_float(const torricelly::torricelly_instruction &instruction)
 {
-   __execute_pop(instruction, torricelly_activation_record_variable_type::FLOAT);
+   __execute_pop(instruction, torricelly_activation_record_local_type::FLOAT);
 }
 
 void torricelly_instruction_interpreter::execute_pop_double(const torricelly::torricelly_instruction &instruction)
 {
-   __execute_pop(instruction, torricelly_activation_record_variable_type::DOUBLE);
+   __execute_pop(instruction, torricelly_activation_record_local_type::DOUBLE);
 }
 
 void torricelly_instruction_interpreter::execute_pop_char(const torricelly::torricelly_instruction &instruction)
 {
-   __execute_pop(instruction, torricelly_activation_record_variable_type::CHAR);
+   __execute_pop(instruction, torricelly_activation_record_local_type::CHAR);
 }
