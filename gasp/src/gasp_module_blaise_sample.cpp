@@ -192,7 +192,7 @@ std::string generate_function_expression_sample(const char *type)
 
    std::string sample(R"__(program sample(first: {TYPE}): {TYPE};
 
-function duplicate(p: {TYPE}) : {TYPE}
+function duplicate(p: {TYPE}) : {TYPE};
 begin
    duplicate := 2 * p;
 end;
@@ -213,7 +213,7 @@ std::string generate_function_expression_2_sample(const char *type, const char *
 
    std::string sample(R"__(program sample(first: {TYPE}, second: {TYPE}): {TYPE};
 
-function execute(p1: {TYPE}, p2: {TYPE}) : {TYPE}
+function execute(p1: {TYPE}, p2: {TYPE}) : {TYPE};
 begin
    execute := p1 {OP} p2;
 end;
@@ -230,7 +230,7 @@ end.)__");
 
 auto sample_statement_function = R"__(program sample(first: integer): integer;
 
-function execute(p1: integer) : integer
+function execute(p1: integer) : integer;
 begin
    execute := p1 + p1 + p1;
 end;
@@ -241,7 +241,7 @@ end.)__";
 
 auto sample_algorithm_fibonacci = R"__(program fibonacci(input: integer) : integer;
 
-function fibo(i : integer): integer
+function fibo(i : integer): integer;
 begin
    fibo := 1;
    if i > 1 then
