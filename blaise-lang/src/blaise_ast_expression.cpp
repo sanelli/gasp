@@ -43,7 +43,8 @@ std::shared_ptr<blaise_ast_expression_cast> gasp::blaise::ast::make_blaise_ast_e
 shared_ptr<blaise_ast_expression> gasp::blaise::ast::introduce_cast_if_required(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
       std::shared_ptr<blaise_ast_type> target_type,
       shared_ptr<blaise_ast_expression> expression){
-   if(!expression->result_type()->equals(target_type)) {
+   if(expression->result_type()->type_type() != blaise_ast_type_type::ARRAY
+      && !expression->result_type()->equals(target_type)) {
          expression = ast::make_blaise_ast_expression_cast(reference, target_type, expression);
    }
    return expression;
