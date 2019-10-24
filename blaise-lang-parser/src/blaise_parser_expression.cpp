@@ -1,6 +1,6 @@
 #include <memory>
 #include <string>
-
+#include <sstream>
 
 #include <sanelli/sanelli.hpp>
 
@@ -10,7 +10,6 @@
 using namespace sanelli;
 using namespace std;
 using namespace gasp::blaise;
-
 
 // Algorihtm for expression management is taked from
 // https://en.wikipedia.org/wiki/Operator-precedence_parser
@@ -42,15 +41,16 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_helper(bl
          rhs = parse_expression_helper(context, rhs, blaise_token_type_utility::get_operator_precedence(lookahead_token.type()));
          lookahead_token = std::move(context.peek_token());
       }
-      if(lhs->result_type() != rhs->result_type()) {
-         if(ast::blaise_ast_utility::can_auto_cast(lhs->result_type(), rhs->result_type()))
+      if (lhs->result_type() != rhs->result_type())
+      {
+         if (ast::blaise_ast_utility::can_auto_cast(lhs->result_type(), rhs->result_type()))
             lhs = ast::introduce_cast_if_required(operator_token, rhs->result_type(), lhs);
-         else if(ast::blaise_ast_utility::can_auto_cast(rhs->result_type(), lhs->result_type()))
+         else if (ast::blaise_ast_utility::can_auto_cast(rhs->result_type(), lhs->result_type()))
             rhs = ast::introduce_cast_if_required(operator_token, lhs->result_type(), rhs);
          else
             throw_parse_error_with_details(context, lhs->line(), lhs->column(),
-                      sanelli::make_string("Operator ", operator_token, " between expressions of type ",lhs->result_type(), 
-                      " and ", rhs->result_type(), " is not supported."));
+                                           sanelli::make_string("Operator ", operator_token, " between expressions of type ", lhs->result_type(),
+                                                                " and ", rhs->result_type(), " is not supported."));
       }
 
       lhs = ast::make_blaise_ast_expression_binary(lhs, operator_token, rhs);
@@ -86,46 +86,59 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          // TODO: Add ability to look into referenced modules when the name contains a dot
          auto subroutine = context.module()->get_subroutine(identifier_token, types);
          if (subroutine == nullptr)
+         {
+            std::stringstream types_rep;
+            for (auto index = 0; index < types.size(); ++index)
+            {
+               auto type = types.at(index);
+               if (index > 0)
+                  types_rep << ", ";
+               types_rep << to_string(type);
+            }
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                                           sanelli::make_string("Cannot find a function matching: '", identifier_token.value(), "(", types, ")'"));
-         
+                                           sanelli::make_string("Cannot find a function matching call for '", identifier_token.value(), "(", types_rep.str(), ")'"));
+         }
+
          ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
-         
+
          term_expression = ast::make_blaise_ast_expression_subroutine_call(identifier_token, subroutine, expressions);
-      } else if(is_token_and_match(context, blaise_token_type::LEFT_BRACKET)){ // Array access
+      }
+      else if (is_token_and_match(context, blaise_token_type::LEFT_BRACKET))
+      { // Array access
          auto indexing_expression = parse_expression(context);
          match_token(context, blaise_token_type::RIGHT_BRACKET);
 
-        auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
-        if(memory_location == nullptr)
+         auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
+         if (memory_location == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     sanelli::make_string("Cannot find array with name '", identifier_token.value(),"'"));
-         switch(memory_location->type()->type_type()){
-            case ast::blaise_ast_type_type::ARRAY: // All good
+                                           sanelli::make_string("Cannot find array with name '", identifier_token.value(), "'"));
+         switch (memory_location->type()->type_type())
+         {
+         case ast::blaise_ast_type_type::ARRAY: // All good
             break;
-            case ast::blaise_ast_type_type::PLAIN:
-            case ast::blaise_ast_type_type::POINTER:
-            case ast::blaise_ast_type_type::USER_DEFINED:
-                throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     sanelli::make_string("Variable '", identifier_token.value(),"' must be of type array"));
-            default:
-               throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     sanelli::make_string("Unexpected variable type '", memory_location->type(),"'."));
+         case ast::blaise_ast_type_type::PLAIN:
+         case ast::blaise_ast_type_type::POINTER:
+         case ast::blaise_ast_type_type::USER_DEFINED:
+            throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                                           sanelli::make_string("Variable '", identifier_token.value(), "' must be of type array"));
+         default:
+            throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                                           sanelli::make_string("Unexpected variable type '", memory_location->type(), "'."));
          }
          auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
-         if(indexing_expression->result_type() != integer_type && !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type)){
-             throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
-                     sanelli::make_string("indexing expression must be an integer or a type that can be casted to an integer."));
+         if (indexing_expression->result_type() != integer_type && !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type))
+         {
+            throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
+                                           sanelli::make_string("indexing expression must be an integer or a type that can be casted to an integer."));
          }
          term_expression = ast::make_blaise_ast_expression_array_access(identifier_token, memory_location, indexing_expression);
-
       }
       else // Variable access
       {
-        auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
-        if(memory_location == nullptr)
+         auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
+         if (memory_location == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                     sanelli::make_string("Cannot find variable with name '", identifier_token.value(),"'"));
+                                           sanelli::make_string("Cannot find variable with name '", identifier_token.value(), "'"));
 
          term_expression = ast::make_blaise_ast_expression_memory_access(identifier_token, memory_location);
       }
@@ -272,7 +285,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_cast_expression(blai
    if (!ast::blaise_ast_utility::can_force_cast(expression->result_type(), return_type))
       throw_parse_error_with_details(context, reference.line(), reference.column(), sanelli::make_string("It is not possible force a cast from '", expression->result_type(), "' to '", return_type, "'."));
    auto cast_expression = ast::make_blaise_ast_expression_cast(reference, return_type, expression);
-   
+
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_cast_expression" << std::endl);
    return cast_expression;
 }
