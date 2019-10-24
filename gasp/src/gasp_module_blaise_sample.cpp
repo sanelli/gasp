@@ -266,6 +266,145 @@ begin
    end;
 end.)__";
 
+std::string generate_array_load_and_store(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+var
+   numbers: array<{TYPE}>[{SIZE}];
+   index: integer;
+begin
+   for index from 0 to ({SIZE}-1) begin
+      numbers[index] := index;
+   end
+   sample := 0;
+   for index from 0 to ({SIZE}-1) begin
+      sample := sample + numbers[index];
+   end;
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
+std::string generate_array_load_and_store_non_numeric(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+var
+   numbers: array<{TYPE}>[{SIZE}];
+   index: integer;
+begin
+   for index from 0 to ({SIZE}-1) begin
+      numbers[index] := cast<{TYPE}>(index);
+   end
+   sample := numbers[{SIZE}-1];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
+std::string generate_array_passing_unbound(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+
+function sum(size: integer, numbers: array<{TYPE}>) : {TYPE};
+var index: integer;
+begin
+   sum := 0;
+   for index from 0 to (size-1) begin
+      sum := sum + numbers[index];
+   end;
+end;
+
+var
+   numbers: array<{TYPE}>[{SIZE}];
+   index: integer;
+begin
+   for index from 0 to ({SIZE}-1) begin
+      numbers[index] := index;
+   end
+   sample := sum(10, numbers);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
+std::string generate_array_passing_bound(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+
+function sum(size: integer, numbers: array<{TYPE}>[{SIZE}]) : {TYPE};
+var index: integer;
+begin
+   sum := 0;
+   for index from 0 to (size-1) begin
+      sum := sum + numbers[index];
+   end;
+end;
+
+var
+   numbers: array<{TYPE}>[{SIZE}];
+   index: integer;
+begin
+   for index from 0 to ({SIZE}-1) begin
+      numbers[index] := index;
+   end
+   sample := sum(10, numbers);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
+std::string generate_array_passed_by_reference(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+
+procedure fill(size: integer, numbers: array<{TYPE}>);
+var index: integer;
+begin
+   for index from 0 to (size-1) begin
+      numbers[index] := cast<{TYPE}>(index);
+   end;
+end;
+
+var
+   numbers: array<{TYPE}>[{SIZE}];
+begin
+   fill({SIZE}, numbers);
+   sample := numbers[{SIZE}-1];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -389,6 +528,23 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-multuply-integer"] = {generate_function_expression_2_sample("integer", "*"), "1 2", "2"};
    _samples["expression-function-call-divide-integer"] = {generate_function_expression_2_sample("integer", "/"), "1 2", "0"};
    _samples["expression-function-call-remainder-integer"] = {generate_function_expression_2_sample("integer", "%"), "1 2", "1"};
+
+   _samples["expression-array-integer"] = {generate_array_load_and_store("integer", 10), "", "45"};
+   _samples["expression-array-float"] = {generate_array_load_and_store("float", 10), "", "45.000000"};
+   _samples["expression-array-double"] = {generate_array_load_and_store("double", 10), "", "45.000000"};
+   _samples["expression-array-char"] = {generate_array_load_and_store_non_numeric("char", 66), "", "A"};
+   _samples["expression-array-boolean"] = {generate_array_load_and_store_non_numeric("boolean", 10), "", "true"};
+   _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 10), "", "45"};
+   _samples["expression-function-call-array-float-unbound"] = {generate_array_passing_unbound("float", 10), "", "45.000000"};
+   _samples["expression-function-call-array-double-unbound"] = {generate_array_passing_unbound("double", 10), "", "45.000000"};
+   _samples["expression-function-call-array-integer-bound"] = {generate_array_passing_bound("integer", 10), "", "45"};
+   _samples["expression-function-call-array-float-bound"] = {generate_array_passing_bound("float", 10), "", "45.000000"};
+   _samples["expression-function-call-array-double-bound"] = {generate_array_passing_bound("double", 10), "", "45.000000"};
+   _samples["expression-function-call-array-integer-byref"] = {generate_array_passed_by_reference("integer", 10), "", "9"};
+   _samples["expression-function-call-array-float-byref"] = {generate_array_passed_by_reference("float", 10), "", "9.000000"};
+   _samples["expression-function-call-array-double-byref"] = {generate_array_passed_by_reference("double", 10), "", "9.000000"};
+   _samples["expression-function-call-array-char-byref"] = {generate_array_passed_by_reference("char", 66), "", "A"};
+   _samples["expression-function-call-array-boolean-byref"] = {generate_array_passed_by_reference("boolean", 10), "", "true"};
 
    _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
