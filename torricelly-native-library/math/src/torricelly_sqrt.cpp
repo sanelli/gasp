@@ -37,16 +37,4 @@ extern "C" void sqrt_f(std::vector<interpreter::torricelly_activation_record_loc
    stack.push_back(result);
 }
 
-extern "C" void random_integer(std::vector<interpreter::torricelly_activation_record_local> &stack)
-{
-}
-
-extern "C" void random_float(std::vector<interpreter::torricelly_activation_record_local> &stack)
-{
-}
-
-extern "C" void random_double(std::vector<interpreter::torricelly_activation_record_local> &stack)
-{
-}
-
 } // namespace gasp::torricelly::native::math
