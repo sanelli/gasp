@@ -13,4 +13,5 @@ target_sources(gasp-torricelly-interpreter
         torricelly_instruction_interpreter_cast.cpp
         torricelly_instruction_interpreter_jump.cpp
         torricelly_instruction_interpreter_invoke.cpp
+        torricelly_native_library_loader.cpp
 )

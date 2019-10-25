@@ -111,6 +111,11 @@ void torricelly_interpreter::initialize()
    if (_status != torricelly_interpreter_status::ZERO)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot execute initialize when status is '", to_string(_status), "'."));
 
+   // Load default native libraries
+   _native_module_loader.get_library("io");
+   _native_module_loader.get_library("math");
+
+   // Load main module
    _module_locals_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_local>>();
    auto main_subroutine = _main_module->get_main();
    if (main_subroutine == nullptr)
