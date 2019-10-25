@@ -7,7 +7,7 @@ using namespace std;
 using namespace gasp;
 using namespace gasp::torricelly;
 
-namespace gasp::torricelly::native::system
+namespace gasp::torricelly::native::io
 {
 
 extern "C" void print_i(std::vector<interpreter::torricelly_activation_record_local> &stack)
