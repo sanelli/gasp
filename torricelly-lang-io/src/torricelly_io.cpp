@@ -78,7 +78,7 @@ int32_t torricelly_binary_output::version_build() const { return BUILD_VERSION; 
 
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, const char *text)
 {
-   auto len = (int32_t) strlen(text);
+   auto len = (int32_t)strlen(text);
    char byte_len[sizeof(int32_t)];
    sanelli::binary_converter::to_binary(len, byte_len);
    os._os.write(byte_len, sizeof(int32_t));
@@ -87,7 +87,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
 }
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, const std::string &text)
 {
-   auto len = (int32_t) text.size();
+   auto len = (int32_t)text.size();
    char byte_len[sizeof(int32_t)];
    sanelli::binary_converter::to_binary(len, byte_len);
    os._os.write(byte_len, sizeof(int32_t));
@@ -95,8 +95,9 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
    return os;
 }
 
-template<typename TStream, typename TType>
-inline void __write_binary(TStream& stream, TType value) {
+template <typename TStream, typename TType>
+inline void __write_binary(TStream &stream, TType value)
+{
    char bytes[sizeof(TType)];
    sanelli::binary_converter::to_binary(value, bytes);
    stream.write(bytes, sizeof(TType));
@@ -108,9 +109,15 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, i
    return os;
 }
 
+torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, int16_t number)
+{
+   __write_binary(os._os, number);
+   return os;
+}
+
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, bool boolean)
 {
-  __write_binary(os._os, boolean);
+   __write_binary(os._os, boolean);
    return os;
 }
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, char character)

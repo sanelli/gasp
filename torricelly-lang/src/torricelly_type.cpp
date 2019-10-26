@@ -168,6 +168,7 @@ std::string torricelly::to_string(const std::shared_ptr<torricelly_type> type)
             : "...";
       }
       representation += "]";
+      return representation;
    }
    case torricelly_type_type::STRUCTURED:
       return to_string(torricelly_type_type::STRUCTURED);
