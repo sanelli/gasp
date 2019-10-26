@@ -25,3 +25,12 @@ torricelly_text_output& torricelly::operator<<(torricelly_text_output& os, const
    os << ".end module" << std::endl;
    return os;
 }
+
+torricelly_binary_output& torricelly::operator<<(torricelly_binary_output& os, const std::shared_ptr<const torricelly_module> module){
+
+   os << "TORRICELLY";
+   os << os.version_major() << os.version_minor()  << os.version_build();
+   os << module->module_name();
+
+   return os;
+}

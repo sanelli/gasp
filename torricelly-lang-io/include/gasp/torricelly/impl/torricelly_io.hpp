@@ -36,4 +36,33 @@ torricelly_text_output& operator<<(torricelly_text_output& os, char character);
 torricelly_text_output& operator<<(torricelly_text_output& os, float number);
 torricelly_text_output& operator<<(torricelly_text_output& os, double number);
 torricelly_text_output& operator<<(torricelly_text_output& os, std::ostream&(*manipualtor)(std::ostream&));
+
+class torricelly_binary_output {
+   std::ostream& _os;
+public:
+   torricelly_binary_output(std::ostream& os);
+
+   int32_t version_major() const;
+   int32_t version_minor() const;
+   int32_t version_build() const;
+
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, const char* text);
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, const std::string& text);
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, int32_t number);
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, bool boolean);
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, char character);
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, float number);
+   friend torricelly_binary_output& operator<<(torricelly_binary_output& os, double number);
+};
+
+torricelly_binary_output& operator<<(torricelly_binary_output& os, const char* text);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, const std::string& text);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, int32_t number);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, bool boolean);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, char character);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, float number);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, double number);
+
+
+
 }

@@ -8,5 +8,6 @@
 namespace gasp::torricelly {
 
 torricelly_text_output& operator<<(torricelly_text_output& os, const std::shared_ptr<const torricelly_module> module);
+torricelly_binary_output& operator<<(torricelly_binary_output& os, const std::shared_ptr<const torricelly_module> module);
 
 }
