@@ -31,14 +31,13 @@ std::string gasp_module_compile::description() const { return "Compile the input
 bool gasp_module_compile::run(int argc, char *argv[])
 {
    set_input_format("blaise");
-   set_output_format("torricelly-text");
+   set_output_format("torricelly-binary");
    parse_command_line(argc, argv);
 
    blaise_tokenizer tokenizer;
    blaise_parser parser;
    blaise_parser_context context;
    std::vector<std::shared_ptr<torricelly_module>> modules;
-   torricelly_text_output torricelly_output(output());
 
    if (is_help())
    {
@@ -54,9 +53,9 @@ bool gasp_module_compile::run(int argc, char *argv[])
       return false;
    }
 
-   if (output_format() != "torricelly-text")
+   if (output_format() != "torricelly-text" && output_format() != "torricelly-binary")
    {
-      std::cerr << "Output format '" << output_format() << "' is not supported." << std::endl;
+      std::cerr << "Output format '" << output_format() << "' is not supported (Valid values are 'torricelly-text' and 'torricelly-binary')." << std::endl;
       return false;
    }
 
@@ -66,8 +65,16 @@ bool gasp_module_compile::run(int argc, char *argv[])
       parser.parse(context);
       translator translator(context.module());
       translator.execute(modules);
-      for (auto module : modules)
-         torricelly_output << module;
+      if (output_format() == "torricelly-text")
+      {
+         torricelly_text_output torricelly_output(output());
+         torricelly_output << modules.at(0);
+      }
+      else if (output_format() == "torricelly-binary")
+      {
+         torricelly_binary_output torricelly_output(output());
+         torricelly_output << modules.at(0);
+      }
       return true;
    }
    catch (const sanelli::tokenizer_error &error)
