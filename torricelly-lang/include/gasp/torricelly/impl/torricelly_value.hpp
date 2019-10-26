@@ -5,6 +5,7 @@
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#include <cstdint>
 
 #include <gasp/torricelly/impl/torricelly_type.hpp>
 
@@ -12,7 +13,14 @@ namespace gasp::torricelly
 {
 
 union torricelly_value_union {
-   int _integer;
+
+   static_assert(sizeof(int32_t) == 4);
+   static_assert(sizeof(char) == 1);
+   static_assert(sizeof(bool) == 1);
+   static_assert(sizeof(float) == 4);
+   static_assert(sizeof(double) == 8);
+
+   int32_t _integer;
    char _char;
    bool _boolean;
    float _float;
@@ -40,7 +48,7 @@ public:
 
    std::shared_ptr<torricelly_type> type() const;
 
-   int get_integer() const;
+   int32_t get_integer() const;
    char get_char() const;
    bool get_boolean() const;
    float get_float() const;
@@ -50,7 +58,7 @@ public:
 
    bool match(std::shared_ptr<torricelly_type> type) const;
 
-   static torricelly_value make(int value);
+   static torricelly_value make(int32_t value);
    static torricelly_value make(bool value);
    static torricelly_value make(char value);
    static torricelly_value make(float value);

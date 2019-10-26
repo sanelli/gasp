@@ -131,7 +131,7 @@ void torricelly_value::throw_if_is_not(std::shared_ptr<torricelly_type> check_ty
       throw torricelly_error(sanelli::make_string("Expected type '", to_string(check_type), "' but found '", to_string(type()), "'."));
 }
 
-int torricelly_value::get_integer() const
+int32_t torricelly_value::get_integer() const
 {
    throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::INTEGER));
    return _value._integer;
@@ -168,7 +168,7 @@ std::shared_ptr<std::vector<torricelly_value>> torricelly_value::get_array() con
    return _array;
 }
 
-torricelly_value torricelly_value::make(int value)
+torricelly_value torricelly_value::make(int32_t value)
 {
    torricelly_value_union value_union;
    value_union._integer = value;
