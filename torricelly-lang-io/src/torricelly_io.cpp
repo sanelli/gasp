@@ -91,7 +91,8 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
    char byte_len[sizeof(int32_t)];
    sanelli::binary_converter::to_binary(len, byte_len);
    os._os.write(byte_len, sizeof(int32_t));
-   os._os.write(text.c_str(), len);
+   auto bytes = text.c_str();
+   os._os.write(bytes, len);
    return os;
 }
 

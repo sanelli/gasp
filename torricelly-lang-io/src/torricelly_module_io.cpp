@@ -29,7 +29,7 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const
 
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, const std::shared_ptr<const torricelly_module> module)
 {
-   os << "TORRICELLY";
+   os << 'T' <<'O'<<'R'<<'R'<<'I'<<'C'<<'E'<<'L'<<'L'<<'Y';
    os << os.version_major() << os.version_minor() << os.version_build();
    os << module->module_name();
    os << (int32_t)module->count_locals();

@@ -158,4 +158,5 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
    default:
       throw torricelly_error("Unknown torricelly type when converting value to binary format");
    }
+   return os;
 }
