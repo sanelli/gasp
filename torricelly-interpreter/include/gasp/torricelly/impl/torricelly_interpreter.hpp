@@ -4,6 +4,8 @@
 #include <stack>
 #include <string>
 
+#include <sanelli/sanelli.hpp>
+
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/torricelly/impl/activation_record.hpp>
 #include <gasp/torricelly/impl/activation_record_local.hpp>
@@ -34,7 +36,7 @@ class torricelly_interpreter : public std::enable_shared_from_this<torricelly_in
    std::function<std::string(unsigned int)> _get_parameter;
    std::shared_ptr<torricelly_instruction_interpreter> _instruction_interpreter;
    torricelly_activation_record_local _return_value;
-   torricelly_native_library_loader _native_module_loader;
+   std::shared_ptr<sanelli::shared_library_loader<torricelly_native_library>> _native_module_loader;
 
    // Need to force the creation of shared pointer in order to be able to use share_from_this feature
    torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter);

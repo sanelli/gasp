@@ -34,7 +34,10 @@ std::string interpreter::to_string(const torricelly_interpreter_status status)
 torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter)
     : _status(torricelly_interpreter_status::ZERO),
       _main_module(main_module),
-      _get_parameter(get_parameter) {}
+      _get_parameter(get_parameter)
+{
+   _native_module_loader = sanelli::memory::make_shared<sanelli::shared_library_loader<torricelly_native_library>>(torricelly_native_library::get_library_path);
+}
 std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_interpreter::main_module() const { return _main_module; }
 
 torricelly_interpreter_status torricelly_interpreter::status() const { return _status; }
@@ -62,7 +65,7 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    {
       if (subroutine->is(torricelly_subroutine_flag::MAIN))
       {
-         for (signed int param_count = 1; param_count <= subroutine->count_parameters() ; ++param_count)
+         for (signed int param_count = 1; param_count <= subroutine->count_parameters(); ++param_count)
          {
             auto local_type = subroutine->get_local_type(param_count);
             auto input_string = _get_parameter(param_count - 1);
@@ -112,8 +115,8 @@ void torricelly_interpreter::initialize()
       throw torricelly_interpreter_error(sanelli::make_string("Cannot execute initialize when status is '", to_string(_status), "'."));
 
    // Load default native libraries
-   _native_module_loader.get_library("io");
-   _native_module_loader.get_library("math");
+   _native_module_loader->get_library("io");
+   _native_module_loader->get_library("math");
 
    // Load main module
    _module_locals_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_local>>();
@@ -172,22 +175,26 @@ void torricelly_interpreter::step()
          if (_activation_records.size() == 1)
          {
             if (!torricelly_type_utility::is_void(current_activation_record->subroutine()->return_type()))
-            // TODO: Check that the type matches with the expected return type
+               // TODO: Check that the type matches with the expected return type
                _return_value = current_activation_record->peek();
             else
                throw torricelly_interpreter_error(sanelli::make_string("Stack does not contain function return value for main function."));
 
             _status = torricelly_interpreter_status::FINISHED;
-         } else {
+         }
+         else
+         {
             // Need to push the return value on the caller
-            if (!torricelly_type_utility::is_void(current_activation_record->subroutine()->return_type())) { 
+            if (!torricelly_type_utility::is_void(current_activation_record->subroutine()->return_type()))
+            {
                push_return_value = true;
                returned_value = current_activation_record->peek();
             }
          }
 
          _activation_records.pop_back();
-         if(push_return_value && _activation_records.size() >= 1){
+         if (push_return_value && _activation_records.size() >= 1)
+         {
             activation_record()->push(returned_value);
          }
       }
