@@ -1,0 +1,17 @@
+module io;
+
+function native pow(base: integer, exponent: integer) : integer;
+function native pow(base: float, exponent: float) : float;
+function native pow(base: double, exponent: doble) : double;
+
+function native sqrt(value: integer) : integer;
+function native sqrt(value: float) : float;
+function native sqrt(value: double) : double;
+
+function native random_boolean() : integer;
+function native random_char() : integer;
+function native random_integer() : integer;
+function native random_float() : integer;
+function native random_double() : integer;
+
+end.

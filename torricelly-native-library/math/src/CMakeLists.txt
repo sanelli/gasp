@@ -1,4 +1,4 @@
-target_sources(torricelly-native-math
+target_sources(gasp-torricelly-native-math
     PRIVATE
     torricelly_sqrt.cpp
     torricelly_random.cpp
