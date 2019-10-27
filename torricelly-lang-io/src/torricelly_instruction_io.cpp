@@ -42,3 +42,47 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
       os << (char)0 << (int32_t)0;
    return os;
 }
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_inst_ref_type &inst_ref_type)
+{
+   char code;
+   is >> code;
+   switch (code)
+   {
+   case '\0':
+      inst_ref_type = torricelly_inst_ref_type::UNDEFINED;
+      break;
+   case 'm':
+      inst_ref_type = torricelly_inst_ref_type::UNDEFINED;
+      break;
+   case 's':
+      inst_ref_type = torricelly_inst_ref_type::SUBROUTINE;
+      break;
+   case 'l':
+      inst_ref_type = torricelly_inst_ref_type::MODULE;
+      break;
+   default:
+      throw torricelly_error(
+          sanelli::make_string("Error while parsing file. Cannot parse instruction reference type. Unknown value (",
+                               (int)code, ")"));
+   }
+   return is;
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_instruction &instruction)
+{
+   int32_t label;
+   torricelly_inst_code instruction_code;
+   torricelly_inst_ref_type ref_type;
+   int32_t reference;
+   is >> label;
+   is >> instruction_code;
+   is >> ref_type;
+   is >> reference;
+   instruction = torricelly_instruction::make(instruction_code);
+   if (label > 0)
+      instruction.set_label(label);
+   if (ref_type != torricelly_inst_ref_type::UNDEFINED)
+      instruction.set_parameter_reference(reference, ref_type);
+   return is;
+}

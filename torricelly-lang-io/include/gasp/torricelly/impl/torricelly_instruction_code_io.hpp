@@ -9,5 +9,6 @@ namespace gasp::torricelly {
 
 torricelly_text_output& operator<<(torricelly_text_output& os, torricelly_inst_code code);
 torricelly_binary_output& operator<<(torricelly_binary_output& os, torricelly_inst_code code);
+torricelly_binary_input& operator>>(torricelly_binary_input& is, torricelly_inst_code& code);
 
 }
