@@ -1,5 +1,6 @@
 #include <string>
 #include <stdexcept>
+#include <filesystem>
 
 #include <sanelli/sanelli.hpp>
 
@@ -8,6 +9,7 @@
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/ast.hpp>
+#include <gasp/blaise/blaise_module_loader.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 #include <gasp/torricelly/torricelly_io.hpp>
@@ -36,7 +38,9 @@ bool gasp_module_compile::run(int argc, char *argv[])
 
    blaise_tokenizer tokenizer;
    blaise_parser parser;
-   blaise_parser_context context;
+   std::vector<std::string> module_loader_path{"library"};
+   auto loader = sanelli::memory::make_shared<blaise_module_loader>(std::filesystem::current_path().string(), module_loader_path);
+   blaise_parser_context context([loader](std::string dependency) { return loader->get_module(dependency); });
    std::vector<std::shared_ptr<torricelly_module>> modules;
 
    if (is_help())

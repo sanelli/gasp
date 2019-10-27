@@ -9,13 +9,14 @@
 #include <cmath>
 #include <iomanip>
 #include <regex>
+#include <filesystem>
 
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/module/gasp_module.hpp>
 #include <gasp/module/gasp_module_blaise_sample.hpp>
 #include <gasp/module/gasp_module_blaise_test.hpp>
-
+#include <gasp/blaise/blaise_module_loader.hpp>
 #include <gasp/common/gasp_error.hpp>
 #include <gasp/common/internal_error.hpp>
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
@@ -177,7 +178,9 @@ bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::millisec
 {
    blaise_tokenizer tokenizer;
    blaise_parser parser;
-   blaise_parser_context context;
+   std::vector<std::string> module_loader_path{"library"};
+   auto loader = sanelli::memory::make_shared<blaise_module_loader>(std::filesystem::current_path().string(), module_loader_path);
+   blaise_parser_context context([loader](std::string dependency) { return loader->get_module(dependency); });
    std::vector<std::shared_ptr<torricelly_module>> modules;
 
    try
