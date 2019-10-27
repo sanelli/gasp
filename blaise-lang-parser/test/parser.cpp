@@ -27,7 +27,7 @@ SCENARIO("Parse testing programs", "[blaise-lang][parser][base]")
 
    blaise_tokenizer tokenizer;
    blaise_parser parser;
-   blaise_parser_context context;
+   blaise_parser_context context([](std::string x) { return nullptr; });
 
    const char *filenames[] = {"0000_simple_empty_program",
                               "0001_variable_declaration",
@@ -35,8 +35,7 @@ SCENARIO("Parse testing programs", "[blaise-lang][parser][base]")
                               "0003_operations_on_booleans",
                               "0004_declarations_of_arrays",
                               "0005_operations_on_arrays",
-                              "0006_binary_operators_autocast"
-                              };
+                              "0006_binary_operators_autocast"};
    const std::string extension(".blaise");
 
    for (const auto filename : filenames)

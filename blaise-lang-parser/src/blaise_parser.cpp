@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <set>
 
 #include <sanelli/sanelli.hpp>
 
@@ -16,7 +17,7 @@ void blaise_parser::parse(blaise_parser_context &context) const
    unsigned int index = 0;
    if (is_token(context, blaise_token_type::PROGRAM))
       parse_program(context);
-   else if(is_token(context, blaise_token_type::MODULE))
+   else if (is_token(context, blaise_token_type::MODULE))
       parse_module(context);
 
    // If more tokens are available at this stage then the code is malformed
@@ -53,7 +54,8 @@ void blaise_parser::parse_program(blaise_parser_context &context)
 
    // Retrun value of the main program
    auto return_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
-   if(is_token_and_match(context, blaise_token_type::COLON)) {
+   if (is_token_and_match(context, blaise_token_type::COLON))
+   {
       return_type = parse_variable_type(context, false);
    }
 
@@ -62,7 +64,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
 
    match_token(context, blaise_token_type::SEMICOLON);
 
-   // TODO: match uses
+   parse_uses_declaration(context);
 
    parse_subroutines_declaration(context);
 
@@ -79,12 +81,12 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_program" << std::endl);
 }
 
-
-void blaise_parser::parse_module(blaise_parser_context &context){
+void blaise_parser::parse_module(blaise_parser_context &context)
+{
    SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_module" << std::endl);
 
    match_token(context, blaise_token_type::MODULE);
-   
+
    auto identifier = context.peek_token();
    auto module = ast::make_blaise_ast_module(identifier, identifier.value(), ast::blaise_ast_module_type::MODULE);
    module->self(module);
@@ -98,7 +100,7 @@ void blaise_parser::parse_module(blaise_parser_context &context){
 
    std::cout << context.peek_token() << std::endl;
 
-   // TODO: Parse uses
+   parse_uses_declaration(context);
 
    parse_subroutines_declaration(context);
 
@@ -106,6 +108,24 @@ void blaise_parser::parse_module(blaise_parser_context &context){
    match_token(context, blaise_token_type::PERIOD);
 
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_module" << std::endl);
+}
+
+void blaise_parser::parse_uses_declaration(blaise_parser_context &context)
+{
+   while (is_token(context, blaise_token_type::USE))
+   {
+      match_token(context, blaise_token_type::USE);
+      do
+      {
+         auto identifier = context.peek_token();
+         auto dependency = match_token_and_get_value(context, blaise_token_type::IDENTIFIER);
+         auto dependency_module = context.get_dependency(dependency);
+         if (dependency_module == nullptr)
+            throw_parse_error_with_details(context, sanelli::make_string("Cannot load blaise module '", dependency, "'."));
+         context.module()->add_dependency(dependency_module);
+      } while (is_token_and_match(context, blaise_token_type::COMMA));
+      match_token(context, blaise_token_type::SEMICOLON);
+   }
 }
 
 void blaise_parser::parse_variables_declaration(blaise_parser_context &context)
