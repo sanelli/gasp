@@ -39,7 +39,8 @@ unsigned int gasp::blaise::ast::blaise_ast_module::count_dependencies() const
 std::shared_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_module::get_dependency(std::string dependency) const
 {
    auto it = std::find_if(_dependencies.begin(), _dependencies.end(),
-                          [dependency](const std::shared_ptr<blaise_ast_module> m) { return m->name() == dependency; }) if (it == _dependencies.end()) return nullptr;
+                          [dependency](const std::shared_ptr<blaise_ast_module> m) { return m->name() == dependency; });
+   if (it == _dependencies.end()) return nullptr;
    return *it;
 }
 std::shared_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_module::get_dependency(unsigned int index) const
