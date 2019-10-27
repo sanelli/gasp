@@ -14,8 +14,6 @@
 #include <gasp/blaise/parser/parser.hpp>
 #include <gasp/blaise/blaise_module_loader.hpp>
 
-#include <iostream>
-
 using namespace gasp;
 using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
