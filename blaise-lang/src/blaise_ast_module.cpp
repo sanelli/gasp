@@ -74,7 +74,15 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get
    switch (matching_subs_with_cast.size())
    {
    case 0:
-      return nullptr;
+      {
+         // Look into dependencies
+         for(const auto dependency : _dependencies){
+            auto subroutine = dependency->get_subroutine(identifier, param_types);
+            if(subroutine != nullptr)
+               return subroutine;
+         }
+         return nullptr;
+      }
    case 1:
       return matching_subs_with_cast.at(0);
    default:
