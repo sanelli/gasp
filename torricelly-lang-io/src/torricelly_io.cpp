@@ -1,5 +1,7 @@
 #include <ostream>
 #include <string>
+#include <sstream>
+#include <istream>
 
 #include <sanelli/sanelli.hpp>
 
@@ -135,4 +137,72 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, d
 {
    __write_binary(os._os, number);
    return os;
+}
+
+torricelly_binary_input::torricelly_binary_input(std::istream &is)
+    : _buffer(nullptr), _index(0)
+{
+   is.seekg(0, is.end);
+   _buffer_size = is.tellg();
+   is.seekg(0, is.beg);
+
+   _buffer = new char[_buffer_size];
+   is.read(_buffer, _buffer_size);
+}
+
+torricelly_binary_input::~torricelly_binary_input()
+{
+   if (_buffer != nullptr)
+      delete[] _buffer;
+}
+
+int32_t torricelly_binary_input::version_major() const { return MAJOR_VERSION; }
+int32_t torricelly_binary_input::version_minor() const { return MINOR_VERSION; }
+int32_t torricelly_binary_input::version_build() const { return BUILD_VERSION; }
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::string &text)
+{
+   int32_t string_length;
+   is >> string_length;
+   std::stringstream stream;
+   for (auto i = 0U; i < string_length; ++i)
+   {
+      char c;
+      is >> c;
+      stream << c;
+   }
+   text = stream.str();
+   return is;
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int32_t &number)
+{
+   number = sanelli::binary_converter::from_binary<int32_t>(is._buffer, &is._index);
+   return is;
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int16_t &number)
+{
+   number = sanelli::binary_converter::from_binary<int16_t>(is._buffer, &is._index);
+   return is;
+}
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, bool &boolean)
+{
+   boolean = sanelli::binary_converter::from_binary<bool>(is._buffer, &is._index);
+   return is;
+}
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, char &character)
+{
+   character = sanelli::binary_converter::from_binary<char>(is._buffer, &is._index);
+   return is;
+}
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, float &number)
+{
+   number = sanelli::binary_converter::from_binary<float>(is._buffer, &is._index);
+   return is;
+}
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, double &number)
+{
+   number = sanelli::binary_converter::from_binary<double>(is._buffer, &is._index);
+   return is;
 }
