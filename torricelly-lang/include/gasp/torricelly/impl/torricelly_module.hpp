@@ -17,11 +17,18 @@ class torricelly_module
    std::vector<std::shared_ptr<torricelly_subroutine>> _subroutines;
    std::vector<std::shared_ptr<torricelly::torricelly_type>> _local_types;
    std::vector<torricelly_value> _local_initial_values;
+   std::vector<std::shared_ptr<torricelly_module>> _dependencies;
 
    torricelly_module(const std::string &module_name);
    
 public:
    std::string module_name() const;
+
+   void add_dependency(std::shared_ptr<torricelly_module> dependency);
+   unsigned int count_dependencies() const;
+   bool has_dependency(std::string dependency) const;
+   std::shared_ptr<torricelly_module> get_dependency(std::string dependency) const;
+   std::shared_ptr<torricelly_module> get_dependency(unsigned int index) const;
 
    unsigned int add_subroutine(std::shared_ptr<torricelly_subroutine> subroutine);
    unsigned int get_number_of_subroutines() const;
