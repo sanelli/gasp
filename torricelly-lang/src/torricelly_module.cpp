@@ -15,23 +15,29 @@ torricelly_module::torricelly_module(const std::string &module_name)
 
 std::string torricelly_module::module_name() const { return _module_name; }
 
-void torricelly_module::add_dependency(std::shared_ptr<torricelly_module> dependency) { 
-   _dependencies.push_back(dependency);
+void torricelly_module::add_dependency(std::shared_ptr<torricelly_module> dependency)
+{
+   if (!has_dependency(dependency->module_name()))
+      _dependencies.push_back(dependency);
 }
-unsigned int torricelly_module::count_dependencies() const { 
+unsigned int torricelly_module::count_dependencies() const
+{
    return _dependencies.size();
 }
-bool torricelly_module::has_dependency(std::string dependency) const { 
+bool torricelly_module::has_dependency(std::string dependency) const
+{
    return get_dependency(dependency) != nullptr;
 }
-std::shared_ptr<torricelly_module> torricelly_module::get_dependency(std::string dependency) const {
-   auto it = std::find_if(_dependencies.begin(), _dependencies.end(), 
-      [dependency](const std::shared_ptr<torricelly_module> module){ return module->module_name() == dependency; }
-      );
-   if(it == _dependencies.end()) return nullptr;
+std::shared_ptr<torricelly_module> torricelly_module::get_dependency(std::string dependency) const
+{
+   auto it = std::find_if(_dependencies.begin(), _dependencies.end(),
+                          [dependency](const std::shared_ptr<torricelly_module> module) { return module->module_name() == dependency; });
+   if (it == _dependencies.end())
+      return nullptr;
    return *it;
- }
-std::shared_ptr<torricelly_module> torricelly_module::get_dependency(unsigned int index) const { 
+}
+std::shared_ptr<torricelly_module> torricelly_module::get_dependency(unsigned int index) const
+{
    return _dependencies.at(index);
 }
 
