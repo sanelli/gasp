@@ -97,47 +97,48 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       }
 
       // Then create the STORES in the reverse order
-      for (signed int index = subroutine->count_parameters() - 1; index >= 0; --index)
-      {
-         auto parameter = subroutine->get_parameter(index);
-         auto variable_name = parameter->name();
-         auto variable_index_it = variables_mapping.find(variable_name);
-         if (variable_index_it == variables_mapping.end())
-            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(), "'."));
+      if (!is_native)
+         for (signed int index = subroutine->count_parameters() - 1; index >= 0; --index)
+         {
+            auto parameter = subroutine->get_parameter(index);
+            auto variable_name = parameter->name();
+            auto variable_index_it = variables_mapping.find(variable_name);
+            if (variable_index_it == variables_mapping.end())
+               throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(), "'."));
 
-         auto store_instruction_code = 
-            parameter->type()->type_type() == gasp::blaise::ast::blaise_ast_type_type::ARRAY
-            ? torricelly_inst_code::STORE_ARRAY
-            : compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
-                                                                torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
-                                                                torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
-         auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index_it->second, torricelly_inst_ref_type::SUBROUTINE);
-         torricelly_subroutine->append_instruction(store_instruction);
-      }
+            auto store_instruction_code =
+                parameter->type()->type_type() == gasp::blaise::ast::blaise_ast_type_type::ARRAY
+                    ? torricelly_inst_code::STORE_ARRAY
+                    : compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
+                                               torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
+                                               torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
+            auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index_it->second, torricelly_inst_ref_type::SUBROUTINE);
+            torricelly_subroutine->append_instruction(store_instruction);
+         }
    }
-
-   for (auto index = 0UL; index < subroutine->count_constants(); ++index)
-   {
-      auto constant = subroutine->get_constant(index);
-      auto torricelly_type = translate_type(constant->type());
-      auto initial_value = get_type_initial_value(constant->type());
-      auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, false);
-      variables_mapping.insert(std::make_pair(constant->name(), torricelly_index));
-   }
-
-   for (auto index = 0UL; index < subroutine->count_variables(); ++index)
-   {
-      auto variable = subroutine->get_variable(index);
-      auto torricelly_type = translate_type(variable->type());
-      auto initial_value = get_type_initial_value(variable->type());
-      auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, false);
-      variables_mapping.insert(std::make_pair(variable->name(), torricelly_index));
-   }
-
-   SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] end transalting variables for '" << subroutine->name() << "'." << std::endl);
 
    if (!is_native)
    {
+      for (auto index = 0UL; index < subroutine->count_constants(); ++index)
+      {
+         auto constant = subroutine->get_constant(index);
+         auto torricelly_type = translate_type(constant->type());
+         auto initial_value = get_type_initial_value(constant->type());
+         auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, false);
+         variables_mapping.insert(std::make_pair(constant->name(), torricelly_index));
+      }
+
+      for (auto index = 0UL; index < subroutine->count_variables(); ++index)
+      {
+         auto variable = subroutine->get_variable(index);
+         auto torricelly_type = translate_type(variable->type());
+         auto initial_value = get_type_initial_value(variable->type());
+         auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, false);
+         variables_mapping.insert(std::make_pair(variable->name(), torricelly_index));
+      }
+
+      SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] end transalting variables for '" << subroutine->name() << "'." << std::endl);
+
       auto statements_count = subroutine->get_statements_count();
       SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] translate_subroutine :: translating " << statements_count << " statements." << std::endl);
       unsigned int max_stack_size = subroutine->count_parameters();
@@ -298,7 +299,7 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
       auto array_type = blaise::ast::blaise_ast_utility::as_array_type(type);
       std::stringstream result;
       result << "a" << get_mangled_type_name(array_type->underlying_type());
-      if(array_type->is_unbounded())
+      if (array_type->is_unbounded())
          result << "u";
       else
          result << array_type->size();
