@@ -83,7 +83,6 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
          // Look up for the expression function
-         // TODO: Add ability to look into referenced modules when the name contains a dot
          auto subroutine = context.module()->get_subroutine(identifier_token, types);
          if (subroutine == nullptr)
          {
