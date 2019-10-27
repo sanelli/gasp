@@ -16,8 +16,8 @@ void blaise_parser::parse(blaise_parser_context &context) const
    unsigned int index = 0;
    if (is_token(context, blaise_token_type::PROGRAM))
       parse_program(context);
-   else
-      throw_parse_error_with_details(context, "only programs are supported.");
+   else if(is_token(context, blaise_token_type::MODULE))
+      parse_module(context);
 
    // If more tokens are available at this stage then the code is malformed
    if (context.has_more_tokens())
@@ -77,6 +77,35 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    match_token(context, blaise_token_type::PERIOD);
 
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_program" << std::endl);
+}
+
+
+void blaise_parser::parse_module(blaise_parser_context &context){
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_module" << std::endl);
+
+   match_token(context, blaise_token_type::MODULE);
+   
+   auto identifier = context.peek_token();
+   auto module = ast::make_blaise_ast_module(identifier, identifier.value(), ast::blaise_ast_module_type::MODULE);
+   module->self(module);
+   context.module(module);
+
+   match_token(context, blaise_token_type::IDENTIFIER);
+
+   std::cout << context.peek_token() << std::endl;
+
+   match_token(context, blaise_token_type::SEMICOLON);
+
+   std::cout << context.peek_token() << std::endl;
+
+   // TODO: Parse uses
+
+   parse_subroutines_declaration(context);
+
+   match_token(context, blaise_token_type::END);
+   match_token(context, blaise_token_type::PERIOD);
+
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_module" << std::endl);
 }
 
 void blaise_parser::parse_variables_declaration(blaise_parser_context &context)

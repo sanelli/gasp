@@ -2,11 +2,7 @@
 
 #include <memory>
 
-
-
-
 #include <gasp/blaise/ast.hpp>
-
 #include <gasp/blaise/parser/impl/blaise_parser_context.hpp>
 
 namespace gasp::blaise
@@ -14,10 +10,8 @@ namespace gasp::blaise
 
 class blaise_parser : public sanelli::parser<blaise_token_type>
 {
-   // TODO: Create a match identifier so that in the future I can 
-   //       handle identifiers followed by array definition
-
    static void parse_program(blaise_parser_context &context);
+   static void parse_module(blaise_parser_context &context);
    static void parse_subroutines_declaration(blaise_parser_context &context);
    static void parse_function_declaration(blaise_parser_context &context);
    static void parse_procedure_declaration(blaise_parser_context &context);
