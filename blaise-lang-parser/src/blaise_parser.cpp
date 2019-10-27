@@ -93,13 +93,7 @@ void blaise_parser::parse_module(blaise_parser_context &context)
    context.module(module);
 
    match_token(context, blaise_token_type::IDENTIFIER);
-
-   std::cout << context.peek_token() << std::endl;
-
    match_token(context, blaise_token_type::SEMICOLON);
-
-   std::cout << context.peek_token() << std::endl;
-
    parse_uses_declaration(context);
 
    parse_subroutines_declaration(context);

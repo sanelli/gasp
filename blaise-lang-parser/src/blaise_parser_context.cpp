@@ -7,7 +7,6 @@
 using namespace std;
 using namespace gasp::blaise;
 
-
 gasp::blaise::blaise_parser_context::blaise_parser_context(std::function<std::shared_ptr<ast::blaise_ast_module>(std::string)> get_dependency) 
    : sanelli::parser_context<blaise_token_type>(), 
    _main_subroutine(nullptr), _module(nullptr), _current_subroutine(nullptr),
