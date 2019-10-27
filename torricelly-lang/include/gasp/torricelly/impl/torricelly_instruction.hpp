@@ -11,6 +11,7 @@ namespace gasp::torricelly {
  * 
  */
 enum class torricelly_inst_ref_type {
+   UNDEFINED,
    /**
     * @brief Refers to a module field
     * 
