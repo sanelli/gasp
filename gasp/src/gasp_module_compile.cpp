@@ -30,6 +30,73 @@ gasp_module_compile::~gasp_module_compile() {}
 std::string gasp_module_compile::name() const { return "compile"; }
 std::string gasp_module_compile::description() const { return "Compile the input source file into the desired format."; }
 
+std::string __get_target_path(std::string original_path, std::string module_name, std::string format)
+{
+   if (original_path == "")
+      return "";
+   std::filesystem::path path{original_path};
+   auto target_path = path.parent_path() / (module_name +  (format == "torricelly-binary" ? ".tb" : ".t"));
+
+   if (!std::filesystem::exists(target_path))
+      return target_path;
+
+   auto original_last_modified = std::filesystem::last_write_time(original_path);
+   auto target_last_modified = std::filesystem::last_write_time(target_path);
+   
+   if(target_last_modified < original_last_modified)
+      return target_path;
+   
+   return "";
+}
+
+void __write_to_file(std::ostream &stream, std::string output_format, std::shared_ptr<torricelly_module> module)
+{
+   if (output_format == "torricelly-text")
+   {
+      torricelly_text_output torricelly_output(stream);
+      torricelly_output << module;
+   }
+   else if (output_format == "torricelly-binary")
+   {
+      torricelly_binary_output torricelly_output(stream);
+      torricelly_output << module;
+   }
+}
+
+void __translate_dependencies(std::ostream &original_output_stream,
+                              std::string output_format,
+                              std::shared_ptr<ast::blaise_ast_module> blaise_module,
+                              std::vector<std::shared_ptr<torricelly_module>> &torricelly_modules)
+{
+
+   auto initial_size = torricelly_modules.size();
+   translator translator(blaise_module);
+   translator.execute(torricelly_modules);
+   auto final_size = torricelly_modules.size();
+
+   if (initial_size != final_size)
+   {
+      std::ostream &output_stream = original_output_stream;
+
+      if (blaise_module->get_path() != "")
+      {
+         auto target_path = __get_target_path(blaise_module->get_path(), blaise_module->name(), output_format);
+         if (target_path != "")
+         {
+            std::ofstream file_output_stream;
+            file_output_stream.open(target_path);
+            __write_to_file(file_output_stream, output_format, torricelly_modules.back());
+            file_output_stream.close();
+         }
+      }
+      else
+         __write_to_file(original_output_stream, output_format, torricelly_modules.back());
+   }
+
+   for (auto dependecy_index = 0; dependecy_index < blaise_module->count_dependencies(); ++dependecy_index)
+      __translate_dependencies(original_output_stream, output_format, blaise_module->get_dependency(dependecy_index), torricelly_modules);
+}
+
 bool gasp_module_compile::run(int argc, char *argv[])
 {
    set_input_format("blaise");
@@ -67,8 +134,8 @@ bool gasp_module_compile::run(int argc, char *argv[])
    {
       tokenizer.tokenize(input(), context);
       parser.parse(context);
-      translator translator(context.module());
-      translator.execute(modules);
+      __translate_dependencies(output(), output_format(), context.module(), modules);
+     
       if (output_format() == "torricelly-text")
       {
          torricelly_text_output torricelly_output(output());
