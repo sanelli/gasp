@@ -37,6 +37,14 @@ std::shared_ptr<gasp::torricelly::torricelly_module> blaise_to_torricelly::trans
    auto torricelly_module = make_torricelly_module(mangled_module_name);
    std::map<std::string, unsigned int> module_variables_mapping;
 
+   // Add dependencies by creating some fake torricelly modules
+   for (auto dependency_index = 0; dependency_index < blaise_module->count_dependencies(); ++dependency_index)
+   {
+      torricelly_module->add_dependency(
+          make_torricelly_module(
+              get_mangled_module_name(blaise_module->get_dependency(dependency_index)->name())));
+   }
+
    // Add all subroutines to variables list
    for (auto subroutine_index = 0; subroutine_index < blaise_module->count_subroutines(); ++subroutine_index)
    {
@@ -311,7 +319,7 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
    }
 }
 
-unsigned int blaise_to_torricelly::translator::add_temporary(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const
+unsigned int blaise_to_torricelly::translator::add_temporary(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const
 {
    if (!torricelly_type_utility::is_system_type(initial_value.type()))
    {
@@ -335,7 +343,7 @@ unsigned int blaise_to_torricelly::translator::add_module_subroutine_reference_l
    return index;
 }
 
-void blaise_to_torricelly::translator::translate_condition(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping,
+void blaise_to_torricelly::translator::translate_condition(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping,
                                                            std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> expression, unsigned int &max_stack_size) const
 {
    auto condition_max_stack_size = 0U;
@@ -352,7 +360,7 @@ void blaise_to_torricelly::translator::translate_condition(std::shared_ptr<gasp:
    torricelly_subroutine->append_instruction(comparison_instruction);
 }
 
-void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
                                                                  std::map<std::string, unsigned int> &module_variables_mapping,
                                                                  std::map<std::string, unsigned int> &variables_mapping,
                                                                  std::shared_ptr<blaise::ast::blaise_ast_subroutine> subroutine,
@@ -391,8 +399,8 @@ void blaise_to_torricelly::translator::translate_subroutine_call(std::shared_ptr
 
    // INVOKE instruction
    auto invoke_instruction_code = !subroutine->is(blaise::ast::blaise_ast_subroutine_flags::NATIVE)
-      ? torricelly_inst_code::STATIC_INVOKE
-      : torricelly_inst_code::NATIVE_INVOKE;
+                                      ? torricelly_inst_code::STATIC_INVOKE
+                                      : torricelly_inst_code::NATIVE_INVOKE;
    auto invoke_instruction = torricelly_instruction::make(invoke_instruction_code, subroutine_name_index, torricelly_inst_ref_type::MODULE);
    torricelly_subroutine->append_instruction(invoke_instruction);
 
