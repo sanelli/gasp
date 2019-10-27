@@ -18,8 +18,8 @@ using namespace gasp;
 using namespace gasp::torricelly;
 using namespace gasp::blaise;
 
-void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
-                                                           const std::map<std::string, unsigned int> &module_variables_mapping,
+void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                           std::map<std::string, unsigned int> &module_variables_mapping,
                                                            std::map<std::string, unsigned int> &variables_mapping,
                                                            std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement,
                                                            unsigned int &max_stack_size) const
@@ -33,55 +33,55 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    case ast::blaise_ast_statement_type::EMPTY:
    {
       auto empty_statement = ast::blaise_ast_statement_utility::as_empty(statement);
-      translate_empty_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, empty_statement, max_stack_size);
+      translate_empty_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, empty_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::COMPOUND:
    {
       auto compound_statement = ast::blaise_ast_statement_utility::as_compound(statement);
-      translate_compound_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, compound_statement, max_stack_size);
+      translate_compound_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, compound_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::ASSIGNEMENT:
    {
       auto assignment_statement = ast::blaise_ast_statement_utility::as_assignment(statement);
-      translate_assignment_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, assignment_statement, max_stack_size);
+      translate_assignment_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, assignment_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::SUBROUTINE_CALL:
    {
       auto assignment_statement = ast::blaise_ast_statement_utility::as_subroutine_call(statement);
-      translate_subroutine_call_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, assignment_statement, max_stack_size);
+      translate_subroutine_call_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, assignment_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::IF:
    {
       auto if_statement = ast::blaise_ast_statement_utility::as_if(statement);
-      translate_if_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, if_statement, max_stack_size);
+      translate_if_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, if_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::FOR_LOOP:
    {
       auto for_statement = ast::blaise_ast_statement_utility::as_for_loop(statement);
-      translate_for_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, for_statement, max_stack_size);
+      translate_for_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, for_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::WHILE_LOOP:
    {
       auto whileloop_statement = ast::blaise_ast_statement_utility::as_while_loop(statement);
-      translate_while_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, whileloop_statement, max_stack_size);
+      translate_while_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, whileloop_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::DO_WHILE_LOOP:
    {
       auto dowhileloop_statement = ast::blaise_ast_statement_utility::as_do_while_loop(statement);
-      translate_do_while_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, dowhileloop_statement, max_stack_size);
+      translate_do_while_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, dowhileloop_statement, max_stack_size);
    }
    break;
    case ast::blaise_ast_statement_type::REPEAT_UNTIL_LOOP:
    {
       auto repeatuntil_statement = ast::blaise_ast_statement_utility::as_repeat_until_loop(statement);
-      translate_repeat_until_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, repeatuntil_statement, max_stack_size);
+      translate_repeat_until_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, repeatuntil_statement, max_stack_size);
    }
    break;
    default:
@@ -90,8 +90,8 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
-                                                                 const std::map<std::string, unsigned int> &module_variables_mapping,
+void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                                 std::map<std::string, unsigned int> &module_variables_mapping,
                                                                  std::map<std::string, unsigned int> &variables_mapping,
                                                                  std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_empty> statement,
                                                                  unsigned int &max_stack_size) const
@@ -101,8 +101,8 @@ void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr
    torricelly_subroutine->append_instruction(noop);
 }
 
-void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
-                                                                    const std::map<std::string, unsigned int> &module_variables_mapping,
+void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+                                                                    std::map<std::string, unsigned int> &module_variables_mapping,
                                                                     std::map<std::string, unsigned int> &variables_mapping,
                                                                     std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
                                                                     unsigned int &max_stack_size) const
@@ -115,19 +115,19 @@ void blaise_to_torricelly::translator::translate_compound_statement(std::shared_
    {
       auto inner_statement = statement->get_statement(index);
       auto statement_max_stack_size = 0U;
-      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, inner_statement, statement_max_stack_size);
+      translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, inner_statement, statement_max_stack_size);
       max_stack_size = std::max(max_stack_size, statement_max_stack_size);
    }
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_compound_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_assignment_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_assignment> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_assignment_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_assignment> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_assignment_statement" << std::endl);
 
    auto expression_max_stack_size = 0U;
-   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->expression(), expression_max_stack_size);
+   translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->expression(), expression_max_stack_size);
 
    max_stack_size = std::max(1U, expression_max_stack_size);
 
@@ -165,7 +165,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
 
       // Translate expression of the
       auto indexing_expression_max_stack_size = 0U;
-      translate_expression(torricelly_subroutine,
+      translate_expression(torricelly_module, torricelly_subroutine,
                            module_variables_mapping, variables_mapping,
                            array_identifier->indexing_expression(),
                            indexing_expression_max_stack_size);
@@ -173,7 +173,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
 
       // Push the size of the dimensions on the stack
       auto dimensions = 1;
-      auto size_value_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(1));
+      auto size_value_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(1));
       auto load_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, size_value_variable_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(load_size_instruction);
 
@@ -194,7 +194,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_assignment_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_if> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_if> statement, unsigned int &max_stack_size) const
 {
    // <condition>
    // LOAD_BOOLEAN [true]
@@ -209,7 +209,7 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_if_statement" << std::endl);
 
    auto condition_max_stack_size = 0U;
-   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+   translate_condition(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
 
    auto on_true_label = torricelly_subroutine->next_label();
    auto on_done_label = torricelly_subroutine->next_label();
@@ -219,7 +219,7 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
 
    auto else_max_stack_size = 0U;
    if (statement->else_statement() != nullptr)
-      translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->else_statement(), else_max_stack_size);
+      translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->else_statement(), else_max_stack_size);
 
    auto jump_to_done = torricelly_instruction::make(torricelly_inst_code::JUMP, on_done_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_to_done);
@@ -229,7 +229,7 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    torricelly_subroutine->append_instruction(on_true_noop);
 
    auto then_max_stack_size = 0U;
-   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->then_statement(), then_max_stack_size);
+   translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->then_statement(), then_max_stack_size);
 
    auto on_done_noop = torricelly_instruction::make(torricelly_inst_code::NOOP);
    on_done_noop.set_label(on_done_label);
@@ -240,13 +240,13 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_if_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_subroutine_call> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_subroutine_call> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine_call_statement" << std::endl);
 
    auto subroutine = statement->subroutine();
    auto subroutine_max_stack_size = 0U;
-   translate_subroutine_call(torricelly_subroutine, module_variables_mapping, variables_mapping,
+   translate_subroutine_call(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping,
                              subroutine,
                              [statement](unsigned int index) { return statement->actual_parameter(index); },
                              subroutine_max_stack_size);
@@ -271,7 +271,7 @@ void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_while_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_while_loop> statement, unsigned int &max_stack_size) const
 {
 
    // [start]: NOOP
@@ -293,13 +293,13 @@ void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr
    torricelly_subroutine->append_instruction(start_noop_instruction);
 
    auto condition_max_stack_size = 0U;
-   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+   translate_condition(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
 
    auto jump_neq_zero_instrution = torricelly_instruction::make(torricelly_inst_code::JUMP_NOT_ZERO, on_done_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_neq_zero_instrution);
 
    auto body_max_stack_size = 0U;
-   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
+   translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
 
    auto jump_to_start_instruction = torricelly_instruction::make(torricelly_inst_code::JUMP, on_start_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_to_start_instruction);
@@ -313,7 +313,7 @@ void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_while_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_dowhile_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_dowhile_loop> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_do_while_statement" << std::endl);
 
@@ -331,10 +331,10 @@ void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_
    torricelly_subroutine->append_instruction(start_noop_instruction);
 
    auto body_max_stack_size = 0U;
-   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
+   translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
 
    auto condition_max_stack_size = 0U;
-   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+   translate_condition(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
 
    auto jump_eq_zero_instrution = torricelly_instruction::make(torricelly_inst_code::JUMP_EQ_ZERO, on_start_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_eq_zero_instrution);
@@ -344,7 +344,7 @@ void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_do_while_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_repeat_until_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_repeatuntil_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_repeat_until_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_repeatuntil_loop> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_repeat_until_statement" << std::endl);
 
@@ -362,10 +362,10 @@ void blaise_to_torricelly::translator::translate_repeat_until_statement(std::sha
    torricelly_subroutine->append_instruction(start_noop_instruction);
 
    auto body_max_stack_size = 0U;
-   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
+   translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
 
    auto condition_max_stack_size = 0U;
-   translate_condition(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
+   translate_condition(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->condition(), condition_max_stack_size);
 
    auto jump_neq_zero_instrution = torricelly_instruction::make(torricelly_inst_code::JUMP_NOT_ZERO, on_start_label, torricelly_inst_ref_type::LABEL);
    torricelly_subroutine->append_instruction(jump_neq_zero_instrution);
@@ -375,7 +375,7 @@ void blaise_to_torricelly::translator::translate_repeat_until_statement(std::sha
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_repeat_until_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, const std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_for_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_for_loop> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_for_statement" << std::endl);
 
@@ -406,8 +406,8 @@ void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<g
    auto variable_indexer_index = variable_index_index_it->second;
 
    // create the required temporaries
-   auto upper_limit_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(0));
-   auto step_variable_index = add_temporary(torricelly_subroutine, variables_mapping, torricelly_value::make(1));
+   auto upper_limit_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(0));
+   auto step_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(1));
 
    // get all the required labels
    auto start_label = torricelly_subroutine->next_label();
@@ -415,19 +415,19 @@ void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<g
 
    // Initialize all variables involved
    auto from_expression_max_stack_size = 0U;
-   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->from_expression(), from_expression_max_stack_size);
+   translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->from_expression(), from_expression_max_stack_size);
    auto initialize_indexer_inst = torricelly_instruction::make(torricelly_inst_code::STORE_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(initialize_indexer_inst);
 
    auto upper_limit_max_stack_size = 0U;
-   translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->to_expression(), upper_limit_max_stack_size);
+   translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->to_expression(), upper_limit_max_stack_size);
    auto initialize_upper_limit_inst = torricelly_instruction::make(torricelly_inst_code::STORE_INTEGER, upper_limit_variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(initialize_upper_limit_inst);
 
    auto step_expression_max_stack_size = 0U;
    if (statement->step_expression() != nullptr)
    {
-      translate_expression(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->step_expression(), step_expression_max_stack_size);
+      translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->step_expression(), step_expression_max_stack_size);
       auto initialize_upper_limit_inst = torricelly_instruction::make(torricelly_inst_code::STORE_INTEGER, step_variable_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(initialize_upper_limit_inst);
    }
@@ -449,7 +449,7 @@ void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<g
 
    // execute the body
    auto body_max_stack_size = 0U;
-   translate_statement(torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
+   translate_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, statement->body(), body_max_stack_size);
 
    // Increment the indexer
    load_indexer_inst = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, variable_indexer_index, torricelly_inst_ref_type::SUBROUTINE);
