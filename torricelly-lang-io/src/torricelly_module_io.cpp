@@ -8,7 +8,7 @@ using namespace gasp::torricelly;
 
 torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const std::shared_ptr<const torricelly_module> module)
 {
-   os << ".torricelly " << std::endl; 
+   os << ".torricelly-text" << std::endl; 
    os << ".version " << os.version_major() << "." << os.version_minor() << "." << os.version_build() << std::endl;
    os << ".module " << module->module_name() << std::endl;
    os << ".dependencies " << module->count_dependencies() << std::endl;
@@ -32,7 +32,8 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const
 
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, const std::shared_ptr<const torricelly_module> module)
 {
-   os << 'T' <<'O'<<'R'<<'R'<<'I'<<'C'<<'E'<<'L'<<'L'<<'Y';
+   std::string header {".torricelly-binary"};
+   for(const char c : header) os << c;
    os << os.version_major() << os.version_minor() << os.version_build();
    os << (int32_t) module->count_dependencies();
    for(auto dependency_index = 0; dependency_index < module->count_dependencies(); ++dependency_index)
