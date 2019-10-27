@@ -8,6 +8,6 @@ set_target_properties(gasp-torricelly-native-math PROPERTIES
 target_link_libraries(gasp-torricelly-native-math gasp-torricelly-interpreter)
 
 add_custom_command(TARGET gasp-torricelly-native-math POST_BUILD COMMAND 
-   ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/torricelly-native-library/math/src/math.blaise ${CMAKE_BINARY_DIR}/gasp/library)
+   ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/torricelly-native-library/math/src/math.mblaise ${CMAKE_BINARY_DIR}/gasp/library)
 
 add_subdirectory(src)

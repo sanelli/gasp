@@ -8,6 +8,6 @@ set_target_properties(gasp-torricelly-native-io PROPERTIES
 target_link_libraries(gasp-torricelly-native-io gasp-torricelly-interpreter)
 
 add_custom_command(TARGET gasp-torricelly-native-io POST_BUILD COMMAND 
-   ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/torricelly-native-library/io/src/io.blaise ${CMAKE_BINARY_DIR}/gasp/library)
+   ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/torricelly-native-library/io/src/io.mblaise ${CMAKE_BINARY_DIR}/gasp/library)
 
 add_subdirectory(src)
