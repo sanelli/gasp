@@ -4,10 +4,10 @@ function native read_integer() : integer;
 function native read_float() : float;
 function native read_double() : double;
 
-procecure native print(value: boolean);
-procecure native print(value: char);
-procecure native print(value: integer);
-procecure native print(value: float);
-procecure native print(value: double);
+procedure native print(value: boolean);
+procedure native print(value: char);
+procedure native print(value: integer);
+procedure native print(value: float);
+procedure native print(value: double);
 
 end.
