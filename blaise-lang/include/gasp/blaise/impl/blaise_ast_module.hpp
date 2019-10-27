@@ -7,38 +7,49 @@
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/blaise_ast_subroutine.hpp>
 
-namespace gasp::blaise::ast {
+namespace gasp::blaise::ast
+{
 
-enum class blaise_ast_module_type {
+enum class blaise_ast_module_type
+{
    PROGRAM,
    MODULE
 };
 
-class blaise_ast_module : public blaise_ast {
+class blaise_ast_module : public blaise_ast
+{
    blaise_ast_module_type _type;
    std::string _name;
    std::vector<std::shared_ptr<blaise_ast_subroutine>> _subroutines;
    std::weak_ptr<blaise_ast_module> _self;
 
-   blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type);
+   std::vector<std::shared_ptr<blaise_ast_module>> _dependencies;
+
+   blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type> &reference, const std::string &module_name, blaise_ast_module_type type);
 
 public:
    std::string name() const;
    blaise_ast_module_type type() const;
    void self(std::weak_ptr<blaise_ast_module> module);
-   
-   std::shared_ptr<blaise_ast_subroutine> add_subroutine(const sanelli::token<gasp::blaise::blaise_token_type>& identifier);
+
+   bool has_dependency(std::string dependency) const;
+   void add_dependency(std::shared_ptr<blaise_ast_module> dependency);
+   unsigned int count_dependencies() const;
+   std::shared_ptr<blaise_ast_module> get_dependency(std::string dependency) const;
+   std::shared_ptr<blaise_ast_module> get_dependency(unsigned int index) const;
+
+   std::shared_ptr<blaise_ast_subroutine> add_subroutine(const sanelli::token<gasp::blaise::blaise_token_type> &identifier);
 
    std::shared_ptr<blaise_ast_subroutine> get_subroutine(
-      const sanelli::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
+       const sanelli::token<gasp::blaise::blaise_token_type> &identifier,
+       const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const;
    std::shared_ptr<blaise_ast_subroutine> expect_exact_subroutine(
-      const sanelli::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
-      
+       const sanelli::token<gasp::blaise::blaise_token_type> &identifier,
+       const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const;
+
    unsigned int count_subroutine(
-      const sanelli::token<gasp::blaise::blaise_token_type>& identifier,
-      const std::vector<std::shared_ptr<blaise_ast_type>>& param_types) const;
+       const sanelli::token<gasp::blaise::blaise_token_type> &identifier,
+       const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const;
 
    unsigned int count_subroutines() const;
    std::shared_ptr<blaise_ast_subroutine> get_subroutine(unsigned int index) const;
@@ -46,7 +57,6 @@ public:
    friend sanelli::memory;
 };
 
- std::shared_ptr<blaise_ast_module> make_blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type>& reference, const std::string& module_name, blaise_ast_module_type type);
+std::shared_ptr<blaise_ast_module> make_blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type> &reference, const std::string &module_name, blaise_ast_module_type type);
 
-
-}
+} // namespace gasp::blaise::ast
