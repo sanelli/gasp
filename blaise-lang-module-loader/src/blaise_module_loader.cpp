@@ -55,6 +55,9 @@ std::shared_ptr<ast::blaise_ast_module> blaise_module_loader::get_module(std::st
    {
       tokenizer.tokenize(input_stream, context);
       parser.parse(context);
+      auto module = context.module();
+      module->set_path(module_path);
+      return module;
    }
    catch (const sanelli::tokenizer_error &error)
    {
@@ -76,5 +79,5 @@ std::shared_ptr<ast::blaise_ast_module> blaise_module_loader::get_module(std::st
       auto message = sanelli::make_string(" @", module," (",module_path,"): ", error.what());
       throw gasp::common::gasp_internal_error(message);
    }
-   return context.module();
+   
 }
