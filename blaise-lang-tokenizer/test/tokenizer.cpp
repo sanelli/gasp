@@ -702,9 +702,9 @@ SCENARIO("Parse all keyword and punctuation tokens", "[blaise-lang][tokenizer][p
          }
 
          THEN("it matches the 'uses' keyword"){
-            tokenizer.tokenize("uses", 0, tokens);
+            tokenizer.tokenize("use", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::USES);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::USE);
          }
 
          THEN("it matches the 'begin' keyword"){

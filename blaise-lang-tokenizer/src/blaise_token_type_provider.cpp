@@ -11,7 +11,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    // KEYWORDS
    add_token(blaise_token_type::PROGRAM, "program", "PROGRAM");
    add_token(blaise_token_type::MODULE, "module", "MODULE");
-   add_token(blaise_token_type::USES, "uses", "USES");
+   add_token(blaise_token_type::USE, "use", "USE");
    add_token(blaise_token_type::BEGIN, "begin", "BEGIN");
    add_token(blaise_token_type::END, "end", "END");
    add_token(blaise_token_type::VAR, "var", "VAR");

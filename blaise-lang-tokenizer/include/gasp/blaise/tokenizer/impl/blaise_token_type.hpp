@@ -10,7 +10,7 @@ enum class blaise_token_type : unsigned char
    // KEYWORDS
    PROGRAM = 1,
    MODULE,
-   USES,
+   USE,
    BEGIN,
    END,
    VAR,
