@@ -16,6 +16,7 @@ class blaise_module_loader
    std::vector<std::string> _path;
 
    blaise_module_loader(std::string current_folder, const std::vector<std::string> path);
+   std::string get_path_for_module(std::string module) const;
 
 public:
    std::shared_ptr<ast::blaise_ast_module> get_module(std::string module) const;
