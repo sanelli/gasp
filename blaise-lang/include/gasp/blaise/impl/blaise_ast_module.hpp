@@ -20,6 +20,7 @@ class blaise_ast_module : public blaise_ast
 {
    blaise_ast_module_type _type;
    std::string _name;
+   std::string _path;
    std::vector<std::shared_ptr<blaise_ast_subroutine>> _subroutines;
    std::weak_ptr<blaise_ast_module> _self;
 
@@ -31,6 +32,9 @@ public:
    std::string name() const;
    blaise_ast_module_type type() const;
    void self(std::weak_ptr<blaise_ast_module> module);
+
+   void set_path(std::string path);
+   std::string get_path() const;
 
    bool has_dependency(std::string dependency) const;
    void add_dependency(std::shared_ptr<blaise_ast_module> dependency);

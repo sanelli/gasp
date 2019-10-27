@@ -15,13 +15,16 @@ using namespace gasp::blaise;
 using namespace std;
 
 gasp::blaise::ast::blaise_ast_module::blaise_ast_module(const token<blaise_token_type> &reference, const std::string &module_name, blaise_ast_module_type type)
-    : blaise_ast(reference, blaise_token_type::IDENTIFIER), _name(module_name), _type(type)
+    : blaise_ast(reference, blaise_token_type::IDENTIFIER), _name(module_name), _type(type), _path("")
 {
 }
 
 std::string gasp::blaise::ast::blaise_ast_module::name() const { return _name; }
 blaise_ast_module_type gasp::blaise::ast::blaise_ast_module::type() const { return _type; }
 void gasp::blaise::ast::blaise_ast_module::self(std::weak_ptr<blaise_ast_module> module) { _self = module; }
+
+void gasp::blaise::ast::blaise_ast_module::set_path(std::string path) { _path = path;}
+std::string gasp::blaise::ast::blaise_ast_module::get_path() const { return _path; }
 
 bool gasp::blaise::ast::blaise_ast_module::has_dependency(std::string dependency) const
 {
@@ -40,7 +43,8 @@ std::shared_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_module::get_dep
 {
    auto it = std::find_if(_dependencies.begin(), _dependencies.end(),
                           [dependency](const std::shared_ptr<blaise_ast_module> m) { return m->name() == dependency; });
-   if (it == _dependencies.end()) return nullptr;
+   if (it == _dependencies.end())
+      return nullptr;
    return *it;
 }
 std::shared_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_module::get_dependency(unsigned int index) const
@@ -74,15 +78,16 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get
    switch (matching_subs_with_cast.size())
    {
    case 0:
+   {
+      // Look into dependencies
+      for (const auto dependency : _dependencies)
       {
-         // Look into dependencies
-         for(const auto dependency : _dependencies){
-            auto subroutine = dependency->get_subroutine(identifier, param_types);
-            if(subroutine != nullptr)
-               return subroutine;
-         }
-         return nullptr;
+         auto subroutine = dependency->get_subroutine(identifier, param_types);
+         if (subroutine != nullptr)
+            return subroutine;
       }
+      return nullptr;
+   }
    case 1:
       return matching_subs_with_cast.at(0);
    default:
