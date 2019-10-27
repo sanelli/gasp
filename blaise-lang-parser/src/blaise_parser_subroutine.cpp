@@ -74,10 +74,9 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
    {
       auto compound_statement = parse_compound_statement(context);
       context.current_subroutine()->push_back(compound_statement);
+      match_token(context, blaise_token_type::SEMICOLON);
    }
-
-   match_token(context, blaise_token_type::SEMICOLON);
-
+   
    if (context.module()->count_subroutine(subroutine_token_identifier, param_types) > 1)
    {
       auto subroutine = context.module()->expect_exact_subroutine(subroutine_token_identifier, param_types);
