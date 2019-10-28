@@ -96,3 +96,105 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
    }
    return os;
 }
+
+torricelly_type_type torricelly::torricelly_type_type_from_binary(char byte)
+{
+   switch (byte)
+   {
+   case 'u':
+      return torricelly_type_type::UNDEFINED;
+   case 's':
+      return torricelly_type_type::SYSTEM;
+   case 'a':
+      return torricelly_type_type::ARRAY;
+   case 'z':
+      return torricelly_type_type::STRUCTURED;
+   default:
+      throw torricelly_error(sanelli::make_string("Cannot convert binary value '", (int)byte, "' into torricelly type type"));
+   }
+}
+
+torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(char byte)
+{
+   switch (byte)
+   {
+   case 'u':
+      return torricelly_system_type_type::UNDEFINED;
+   case 'v':
+      return torricelly_system_type_type::VOID;
+   case 'i':
+      return torricelly_system_type_type::INTEGER;
+   case 'f':
+      return torricelly_system_type_type::FLOAT;
+   case 'd':
+      return torricelly_system_type_type::DOUBLE;
+   case 'c':
+      return torricelly_system_type_type::CHAR;
+   case 'b':
+      return torricelly_system_type_type::BOOLEAN;
+   case 's':
+      return torricelly_system_type_type::STRING_LITERAL;
+   default:
+      throw torricelly_error(sanelli::make_string("Cannot convert binary value '", (int)byte, "' into torricelly system type type"));
+   }
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_type_type &type)
+{
+   char byte;
+   is >> byte;
+   type = torricelly_type_type_from_binary(byte);
+   return is;
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_system_type_type &type)
+{
+   char byte;
+   is >> byte;
+   type = torricelly_system_type_type_from_binary(byte);
+   return is;
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::shared_ptr<torricelly_type> &type)
+{
+   torricelly_type_type type_type;
+   is >> type;
+
+   switch (type_type)
+   {
+   case torricelly_type_type::UNDEFINED:
+      throw torricelly_error("Type undefined cannot be deserialized");
+   case torricelly_type_type::SYSTEM:
+   {
+      torricelly_system_type_type system_type;
+      is >> system_type;
+      type = torricelly::make_torricelly_system_type(system_type);
+   }
+   break;
+   case torricelly_type_type::ARRAY:
+   {
+      std::shared_ptr<torricelly_type> underlying_type;
+      is >> underlying_type;
+      int32_t number_of_dimentions;
+      is >> number_of_dimentions;
+      std::vector<unsigned int> dimensions;
+      for (auto dimension_index = 0U; dimension_index < number_of_dimentions; ++dimension_index)
+      {
+         int32_t dimension;
+         is >> dimension;
+         dimensions.push_back(dimension != 0
+                                  ? (unsigned int)dimension
+                                  : torricelly_array_type::undefined_dimension());
+      }
+      type = torricelly::make_torricelly_array_type(underlying_type, dimensions);
+   }
+   break;
+   case torricelly_type_type::STRUCTURED:
+      throw torricelly_error("Type structured cannot be deserialized");
+      break;
+   default:
+      throw torricelly_error(sanelli::make_string("Cannot convert binary type with value '", (int)type->type_type(), "' into torricelly system type type"));
+   }
+
+   return is;
+}

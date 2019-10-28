@@ -136,3 +136,87 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
 
    return os;
 }
+
+torricelly_subroutine_flag torricelly::torricelly_subroutine_flag_from_binary(char byte)
+{
+   switch (byte)
+   {
+   case 'm':
+      return torricelly_subroutine_flag::MAIN;
+   case 's':
+      return torricelly_subroutine_flag::STATIC;
+   case 'v':
+      return torricelly_subroutine_flag::VIRTUAL;
+   case 'o':
+      return torricelly_subroutine_flag::OVERRIDE;
+   case 'f':
+      return torricelly_subroutine_flag::FINAL;
+   case 'p':
+      return torricelly_subroutine_flag::PUBLIC;
+   case 'r':
+      return torricelly_subroutine_flag::PRIVATE;
+   case 't':
+      return torricelly_subroutine_flag::PROTECTED;
+   case 'n':
+      return torricelly_subroutine_flag::NATIVE;
+   default:
+      throw torricelly_error(sanelli::make_string("Cannot convert binary '", (int)byte, "' code into subroutine flag"));
+   }
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_subroutine_flag &flags)
+{
+   int32_t size;
+   is >> size;
+
+   flags = torricelly_subroutine_flag::NOTHING;
+   for (int flag_index = 0; flag_index < size; ++flag_index)
+   {
+      char byte;
+      is >> byte;
+      auto flag = torricelly_subroutine_flag_from_binary(byte);
+      flags = flags | flag;
+   }
+
+   return is;
+}
+
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::shared_ptr<const torricelly_subroutine> &subroutine)
+{
+   std::string name;
+   is >> name;
+   torricelly_subroutine_flag flags;
+   is >> flags;
+   std::shared_ptr<torricelly_type> return_type;
+   is >> return_type;
+   auto result = torricelly::make_torricelly_subroutine(name, return_type);
+   result->set_flags(flags);
+
+   int32_t max_stack_size;
+   is >> max_stack_size;
+   result->max_stack_size(max_stack_size);
+
+   int32_t number_of_locals;
+   is >> number_of_locals;
+   for (auto local_index = 0; local_index < number_of_locals; ++local_index)
+   {
+      bool is_parameter;
+      is >> is_parameter;
+      std::shared_ptr<torricelly_type> local_type;
+      is >> local_type;
+      torricelly_value local_value = torricelly_value_from_binary(is, local_type);
+      result->add_local(local_type, local_value, is_parameter);
+   }
+
+   int32_t number_of_instructions;
+   for (auto instruction_index = 0; instruction_index < number_of_instructions; ++instruction_index)
+   {
+      torricelly_instruction instruction = torricelly_instruction::make(torricelly_inst_code::NOOP);
+      is >> instruction;
+      result->append_instruction(instruction);
+   }
+
+   subroutine = result;
+
+   return is;
+}
