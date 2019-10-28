@@ -1,0 +1,9 @@
+module random;
+
+function native random_boolean() : integer;
+function native random_char() : integer;
+function native random_integer() : integer;
+function native random_float() : integer;
+function native random_double() : integer;
+
+end.

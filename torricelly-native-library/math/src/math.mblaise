@@ -1,4 +1,4 @@
-module io;
+module math;
 
 function native pi() : double;
 function native e() : double;
@@ -15,10 +15,14 @@ function native sqrt(value: integer) : integer;
 function native sqrt(value: float) : float;
 function native sqrt(value: double) : double;
 
-function native random_boolean() : integer;
-function native random_char() : integer;
-function native random_integer() : integer;
-function native random_float() : integer;
-function native random_double() : integer;
+function native log(value: integer) : integer;
+function native log(value: float) : float;
+function native log(value: double) : double;
+function native log10(value: integer) : integer;
+function native log10(value: float) : float;
+function native log10(value: double) : double;
+function native log2(value: integer) : integer;
+function native log2(value: float) : float;
+function native log2(value: double) : double;
 
 end.
