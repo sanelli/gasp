@@ -16,6 +16,7 @@ target_link_libraries(gasp gasp-torricelly-debugger)
 
 add_dependencies(gasp gasp-torricelly-native-io)
 add_dependencies(gasp gasp-torricelly-native-math)
+add_dependencies(gasp gasp-torricelly-native-random)
 
 target_include_directories(gasp PUBLIC include)
 
