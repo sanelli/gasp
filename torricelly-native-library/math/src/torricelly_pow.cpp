@@ -13,6 +13,7 @@ namespace gasp::torricelly::native::math
 extern "C" void pow_i(std::vector<interpreter::torricelly_activation_record_local> &stack)
 {
    auto exponent_value = stack.back();
+   stack.pop_back();
    auto base_value = stack.back();
    stack.pop_back();
    auto numeric_result = (int)std::pow(base_value.get_integer(), exponent_value.get_integer());
@@ -23,6 +24,7 @@ extern "C" void pow_i(std::vector<interpreter::torricelly_activation_record_loca
 extern "C" void pow_f(std::vector<interpreter::torricelly_activation_record_local> &stack)
 {
    auto exponent_value = stack.back();
+   stack.pop_back();
    auto base_value = stack.back();
    stack.pop_back();
    auto numeric_result = std::powf(base_value.get_float(), exponent_value.get_float());
@@ -33,6 +35,7 @@ extern "C" void pow_f(std::vector<interpreter::torricelly_activation_record_loca
 extern "C" void pow_d(std::vector<interpreter::torricelly_activation_record_local> &stack)
 {
    auto exponent_value = stack.back();
+   stack.pop_back();
    auto base_value = stack.back();
    stack.pop_back();
    auto numeric_result = std::pow(base_value.get_double(), exponent_value.get_double());

@@ -1,8 +1,15 @@
 module io;
 
+function native pi() : double;
+function native e() : double;
+
 function native pow(base: integer, exponent: integer) : integer;
 function native pow(base: float, exponent: float) : float;
-function native pow(base: double, exponent: doble) : double;
+function native pow(base: double, exponent: double) : double;
+
+function native exp(exponent: integer) : integer;
+function native exp(exponent: float) : float;
+function native exp(exponent: double) : double;
 
 function native sqrt(value: integer) : integer;
 function native sqrt(value: float) : float;
