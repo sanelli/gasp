@@ -181,7 +181,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
    return is;
 }
 
-torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::shared_ptr<const torricelly_subroutine> &subroutine)
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::shared_ptr<torricelly_subroutine> &subroutine)
 {
    std::string name;
    is >> name;
