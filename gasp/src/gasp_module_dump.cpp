@@ -20,6 +20,8 @@ bool gasp_module_dump::run(int argc, char *argv[])
    set_input_format("torricelly-binary");
    set_output_format("torricelly-text");
 
+   parse_command_line(argc, argv);
+
    if (is_help())
    {
       std::cerr << "Command line: " << argv[0] << " " << name() << " [options]" << std::endl;
