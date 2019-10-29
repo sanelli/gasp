@@ -59,7 +59,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
       inst_ref_type = torricelly_inst_ref_type::UNDEFINED;
       break;
    case 'm':
-      inst_ref_type = torricelly_inst_ref_type::UNDEFINED;
+      inst_ref_type = torricelly_inst_ref_type::MODULE;
       break;
    case 's':
       inst_ref_type = torricelly_inst_ref_type::SUBROUTINE;
