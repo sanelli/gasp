@@ -209,6 +209,8 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std
    }
 
    int32_t number_of_instructions;
+   is >> number_of_instructions;
+
    for (auto instruction_index = 0; instruction_index < number_of_instructions; ++instruction_index)
    {
       torricelly_instruction instruction = torricelly_instruction::make(torricelly_inst_code::NOOP);

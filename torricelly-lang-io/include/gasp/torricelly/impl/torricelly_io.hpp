@@ -82,6 +82,8 @@ public:
    torricelly_binary_input(std::istream &is);
    ~torricelly_binary_input();
 
+   void debug() const;
+
    int32_t version_major() const;
    int32_t version_minor() const;
    int32_t version_build() const;

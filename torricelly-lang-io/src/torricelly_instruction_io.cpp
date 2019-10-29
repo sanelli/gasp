@@ -32,14 +32,20 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
 
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, const torricelly_instruction &instruction)
 {
-   return os << (instruction.has_label()
+   os << (instruction.has_label()
                      ? (int32_t)instruction.label()
                      : (int32_t)0)
              << instruction.code();
    if (instruction.has_parameter_reference())
-      os << instruction.ref_type() << (int32_t)instruction.parameter_reference();
+   {
+      os << instruction.ref_type();
+      os << (int32_t)instruction.parameter_reference();
+   }
    else
-      os << (char)0 << (int32_t)0;
+   {
+      os << (char)0;
+      os << (int32_t)0;
+   }
    return os;
 }
 
@@ -49,7 +55,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
    is >> code;
    switch (code)
    {
-   case '\0':
+   case 0:
       inst_ref_type = torricelly_inst_ref_type::UNDEFINED;
       break;
    case 'm':
@@ -79,6 +85,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
    is >> instruction_code;
    is >> ref_type;
    is >> reference;
+   
    instruction = torricelly_instruction::make(instruction_code);
    if (label > 0)
       instruction.set_label(label);

@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <istream>
+#include <cmath>
 
 #include <sanelli/sanelli.hpp>
 
@@ -140,7 +141,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, d
 }
 
 torricelly_binary_input::torricelly_binary_input(std::istream &is)
-    : _buffer(nullptr), _index(0)
+    : _buffer(nullptr), _index(0), _buffer_size(0)
 {
    is.seekg(0, is.end);
    _buffer_size = is.tellg();
@@ -160,10 +161,21 @@ int32_t torricelly_binary_input::version_major() const { return MAJOR_VERSION; }
 int32_t torricelly_binary_input::version_minor() const { return MINOR_VERSION; }
 int32_t torricelly_binary_input::version_build() const { return BUILD_VERSION; }
 
+void torricelly_binary_input::debug() const
+{
+   std::cout << "------DEBUG----" << std::endl;
+   std::cout << _index << std::endl;
+   std::cout << _buffer_size << std::endl;
+   for (int index = _index; index < std::min((int)_buffer_size, (int)(_index + 8)); ++index)
+      std::cout << std::hex << (int)_buffer[index] << std::dec << std::endl;
+   std::cout << "------END-DEBUG----" << std::endl;
+}
+
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::string &text)
 {
    int32_t string_length;
    is >> string_length;
+
    std::stringstream stream;
    for (auto i = 0U; i < string_length; ++i)
    {

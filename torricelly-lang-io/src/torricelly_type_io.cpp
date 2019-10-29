@@ -158,7 +158,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std::shared_ptr<torricelly_type> &type)
 {
    torricelly_type_type type_type;
-   is >> type;
+   is >> type_type;
 
    switch (type_type)
    {
