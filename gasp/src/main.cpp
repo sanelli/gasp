@@ -15,6 +15,7 @@
 #include <gasp/module/gasp_module_blaise_sample.hpp>
 #include <gasp/module/gasp_module_blaise_test.hpp>
 #include <gasp/module/gasp_module_debug.hpp>
+#include <gasp/module/gasp_module_dump.hpp>
 
 // TODO: Add error codes when I throw errors
 
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
    auto blaise_sample_module = std::make_shared<gasp::module::gasp_module_blaise_sample>();
    auto blaise_test_module = std::make_shared<gasp::module::gasp_module_blaise_test>(blaise_sample_module);
    auto debug_module = std::make_shared<gasp::module::gasp_module_debug>();
+   auto dump_module = std::make_shared<gasp::module::gasp_module_dump>();
 
    modules[tokenize_module->name()] = tokenize_module;
    modules[compile_module->name()] = compile_module;
@@ -61,6 +63,7 @@ int main(int argc, char *argv[])
    modules[debug_module->name()] = debug_module;
    modules[blaise_sample_module->name()] = blaise_sample_module;
    modules[blaise_test_module->name()] = blaise_test_module;
+   modules[dump_module->name()] = dump_module;
 
    if (argc < 2)
    {
