@@ -89,7 +89,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std
    {
       std::string dependency;
       is >> dependency;
-      auto dependency_module = torricelly::make_torricelly_module(module_name);
+      auto dependency_module = torricelly::make_torricelly_module(dependency);
       result->add_dependency(dependency_module);
    }
 
