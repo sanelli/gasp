@@ -41,6 +41,7 @@ class torricelly_interpreter : public std::enable_shared_from_this<torricelly_in
    // Need to force the creation of shared pointer in order to be able to use share_from_this feature
    torricelly_interpreter(std::shared_ptr<gasp::torricelly::torricelly_module> main_module, std::function<std::string(unsigned int)> get_parameter);
 
+   void store_module_locals(std::shared_ptr<gasp::torricelly::torricelly_module> module);
    void push_activation_record(std::shared_ptr<gasp::torricelly::torricelly_module> module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> subroutine);
    void pop_activation_record();
 

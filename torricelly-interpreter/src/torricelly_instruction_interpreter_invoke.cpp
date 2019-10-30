@@ -40,7 +40,5 @@ void torricelly_instruction_interpreter::execute_static_invoke(const torricelly:
 
    auto subroutine_to_call = target_module->get_subroutine(subroutine_name);
 
-   std::cout << subroutine_to_call->name() << std::endl;
-
    interpreter->push_activation_record(target_module, subroutine_to_call);
 }

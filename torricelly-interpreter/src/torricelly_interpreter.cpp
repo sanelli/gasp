@@ -56,6 +56,9 @@ void torricelly_interpreter::push_activation_record(std::shared_ptr<gasp::torric
    for (auto index = 1U; index <= subroutine->count_locals(); ++index)
       activation_record->store(index, torricelly_activation_record_local::make(subroutine->get_local_initial_value(index)));
 
+   // Create module variables if not there yet
+   store_module_locals(module);
+
    // Add module locals
    auto mapping = _module_locals_mapping[module->module_name()];
    for (auto index = 1U; index <= module->count_locals(); ++index)
@@ -106,6 +109,20 @@ void torricelly_interpreter::pop_activation_record()
    SANELLI_DEBUG("torricelly-interpreter", "[EXIT] pop_activation_record" << std::endl);
 }
 
+void torricelly_interpreter::store_module_locals(std::shared_ptr<gasp::torricelly::torricelly_module> module)
+{
+   if (_module_locals_mapping.count(module->module_name()) > 0)
+      return;
+   _module_locals_mapping[module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_local>>();
+
+   for (auto index = 1U; index <= module->count_locals(); ++index)
+   {
+      auto initial_value = module->get_local_initial_value(index);
+      auto local = torricelly_activation_record_local::make(initial_value);
+      _module_locals_mapping[module->module_name()]->operator[](index) = local;
+   }
+}
+
 void torricelly_interpreter::initialize()
 {
    SANELLI_DEBUG("torricelly-interpreter", "[ENTER] torricelly_interpreter::initialize" << std::endl);
@@ -120,17 +137,13 @@ void torricelly_interpreter::initialize()
    _native_module_loader->get_library("math");
 
    // Load main module
-   _module_locals_mapping[_main_module->module_name()] = std::make_shared<std::map<unsigned int, torricelly_activation_record_local>>();
    auto main_subroutine = _main_module->get_main();
    if (main_subroutine == nullptr)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get main subroutine from module '", _main_module->module_name(), "'."));
 
-   for (auto index = 1U; index <= _main_module->count_locals(); ++index)
-   {
-      auto initial_value = _main_module->get_local_initial_value(index);
-      auto local = torricelly_activation_record_local::make(initial_value);
-      _module_locals_mapping[_main_module->module_name()]->operator[](index) = local;
-   }
+   // Create module variables
+   store_module_locals(_main_module);
+
    push_activation_record(_main_module, main_subroutine);
 
    _status = torricelly_interpreter_status::INITIALIZED;
