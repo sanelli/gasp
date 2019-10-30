@@ -405,6 +405,13 @@ end.)__");
    return sample;
 }
 
+std::string sample_call_from_Library = R"__(program sample(value: integer): boolean;
+use math;
+begin
+   sample := is_even(value);
+end.
+)__";
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -528,6 +535,8 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-multuply-integer"] = {generate_function_expression_2_sample("integer", "*"), "1 2", "2"};
    _samples["expression-function-call-divide-integer"] = {generate_function_expression_2_sample("integer", "/"), "1 2", "0"};
    _samples["expression-function-call-remainder-integer"] = {generate_function_expression_2_sample("integer", "%"), "1 2", "1"};
+   _samples["expression-function-call-from-library-1"] = {sample_call_from_Library, "2", "true"};
+   _samples["expression-function-call-from-library-2"] = {sample_call_from_Library, "3", "false"};
 
    _samples["expression-array-integer"] = {generate_array_load_and_store("integer", 10), "", "45"};
    _samples["expression-array-float"] = {generate_array_load_and_store("float", 10), "", "45.000000"};
