@@ -29,6 +29,7 @@ public:
    bool has_dependency(std::string dependency) const;
    std::shared_ptr<torricelly_module> get_dependency(std::string dependency) const;
    std::shared_ptr<torricelly_module> get_dependency(unsigned int index) const;
+   void replace_dependency(unsigned int index, std::shared_ptr<torricelly_module> dependency);
 
    unsigned int add_subroutine(std::shared_ptr<torricelly_subroutine> subroutine);
    unsigned int get_number_of_subroutines() const;

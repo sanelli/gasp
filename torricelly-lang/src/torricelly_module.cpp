@@ -40,6 +40,13 @@ std::shared_ptr<torricelly_module> torricelly_module::get_dependency(unsigned in
 {
    return _dependencies.at(index);
 }
+void torricelly_module::replace_dependency(unsigned int index, std::shared_ptr<torricelly_module> dependency)
+{
+   auto current_dependency = _dependencies.at(index);
+   if (current_dependency->module_name() != dependency->module_name())
+      throw torricelly_error(sanelli::make_string("Cannot replace module '", current_dependency->module_name(), "' with module '", dependency->module_name(), "'. Names must match."));
+   _dependencies.at(index) = dependency;
+}
 
 unsigned int torricelly_module::add_subroutine(std::shared_ptr<torricelly_subroutine> subroutine)
 {
