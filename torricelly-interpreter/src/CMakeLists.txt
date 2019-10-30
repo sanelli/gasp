@@ -1,8 +1,8 @@
 target_sources(gasp-torricelly-interpreter
     PRIVATE
         torricelly_interpreter.cpp
-        activation_record_local.cpp
-        activation_record.cpp
+        torricelly_activation_record_local.cpp
+        torricelly_activation_record.cpp
         torricelly_instruction_interpreter.cpp
         torricelly_instruction_interpreter_general.cpp
         torricelly_instruction_interpreter_stack.cpp

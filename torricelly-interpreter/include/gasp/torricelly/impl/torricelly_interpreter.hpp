@@ -7,8 +7,8 @@
 #include <sanelli/sanelli.hpp>
 
 #include <gasp/torricelly/torricelly.hpp>
-#include <gasp/torricelly/impl/activation_record.hpp>
-#include <gasp/torricelly/impl/activation_record_local.hpp>
+#include <gasp/torricelly/impl/torricelly_activation_record.hpp>
+#include <gasp/torricelly/impl/torricelly_activation_record_local.hpp>
 #include <gasp/torricelly/impl/torricelly_instruction_interpreter.hpp>
 #include <gasp/torricelly/impl/torricelly_native_library_loader.hpp>
 
