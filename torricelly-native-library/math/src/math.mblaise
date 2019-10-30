@@ -25,4 +25,9 @@ function native log2(value: integer) : integer;
 function native log2(value: float) : float;
 function native log2(value: double) : double;
 
+function is_even(value: integer) : boolean;
+begin
+   is_even := (value % 2) == 0;
+end;
+
 end.
