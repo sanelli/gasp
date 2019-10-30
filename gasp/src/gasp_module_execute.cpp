@@ -14,6 +14,7 @@
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
 #include <gasp/torricelly/interpreter.hpp>
+#include <gasp/torricelly/torricelly_io.hpp>
 
 #include <gasp/module/gasp_module_execute.hpp>
 
@@ -40,15 +41,8 @@ bool gasp_module_execute::parse_command_line_hook(int &arg_index, int argc, char
 
 bool gasp_module_execute::run(int argc, char *argv[])
 {
-   set_input_format("blaise");
+   set_input_format("torricelly-binary");
    parse_command_line(argc, argv);
-
-   blaise_tokenizer tokenizer;
-   blaise_parser parser;
-   std::vector<std::string> module_loader_path{"library"};
-   auto loader = sanelli::memory::make_shared<blaise_module_loader>(std::filesystem::current_path().string(), module_loader_path);
-   blaise_parser_context context([loader](std::string dependency) { return loader->get_module(dependency); });
-   std::vector<std::shared_ptr<torricelly_module>> modules;
 
    if (is_help())
    {
@@ -58,20 +52,43 @@ bool gasp_module_execute::run(int argc, char *argv[])
       return true;
    }
 
-   if (input_format() != "blaise")
+   if (input_format() != "blaise" && input_format() != "torricelly-binary")
    {
-      std::cerr << "Input format '" << input_format() << "' is not supported." << std::endl;
+      std::cerr << "Input format '" << input_format() << "' is not supported (Supported format are 'blaise' and 'torricelly-binary')." << std::endl;
       return false;
    }
 
    try
    {
-      tokenizer.tokenize(input(), context);
-      parser.parse(context);
-      translator translator(context.module());
-      translator.execute(modules);
+      std::shared_ptr<torricelly_module> main_module;
+
+      if (input_format() == "blaise")
+      {
+         blaise_tokenizer tokenizer;
+         blaise_parser parser;
+         std::vector<std::string> module_loader_path{"library"};
+         auto loader = sanelli::memory::make_shared<blaise_module_loader>(std::filesystem::current_path().string(), module_loader_path);
+         blaise_parser_context context([loader](std::string dependency) { return loader->get_module(dependency); });
+         std::vector<std::shared_ptr<torricelly_module>> modules;
+         tokenizer.tokenize(input(), context);
+         parser.parse(context);
+         translator translator(context.module());
+         translator.execute(modules);
+         main_module = modules.at(0);
+      }
+      else if (input_format() == "torricelly-binary")
+      {
+         torricelly_binary_input binary_reader(input());
+         binary_reader >> main_module;
+      }
+      else
+      {
+         std::cerr << "Unknown unput format" << std::endl;
+         return false;
+      }
+
       auto interpreter = make_torricelly_interpreter(
-          modules.at(0),
+          main_module,
           [this](unsigned int index) { return index < _parameters.size() ? _parameters.at(index) : ""; });
       interpreter->initialize();
       interpreter->run();
