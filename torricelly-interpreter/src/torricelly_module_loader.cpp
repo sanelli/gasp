@@ -39,6 +39,7 @@ void torricelly_module_loader::load_module(std::string module_name)
    stream.close();
 
    enrich_library(module);
+   _modules[module_name] = module;
 }
 torricelly_module_loader::torricelly_module_loader()
 {
@@ -51,10 +52,11 @@ std::shared_ptr<torricelly_module_loader> torricelly_module_loader::get_instance
 }
 void torricelly_module_loader::enrich_library(std::shared_ptr<torricelly_module> module)
 {
-   for (auto dependency_index = 0u; dependency_index < 0; ++dependency_index)
+   for (auto dependency_index = 0u; dependency_index < module->count_dependencies(); ++dependency_index)
    {
       auto dependency = module->get_dependency(dependency_index);
       dependency = get_module(dependency->module_name());
       module->replace_dependency(dependency_index, dependency);
+      dependency = module->get_dependency(dependency_index);
    }
 }
