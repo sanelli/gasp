@@ -65,7 +65,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
       inst_ref_type = torricelly_inst_ref_type::SUBROUTINE;
       break;
    case 'l':
-      inst_ref_type = torricelly_inst_ref_type::MODULE;
+      inst_ref_type = torricelly_inst_ref_type::LABEL;
       break;
    default:
       throw torricelly_error(
