@@ -36,6 +36,7 @@ torricelly_interpreter::torricelly_interpreter(std::shared_ptr<gasp::torricelly:
       _main_module(main_module),
       _get_parameter(get_parameter)
 {
+   torricelly_module_loader::get_instance()->enrich_library(_main_module);
    _native_module_loader = sanelli::memory::make_shared<sanelli::shared_library_loader<torricelly_native_library>>(torricelly_native_library::get_library_path);
 }
 std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_interpreter::main_module() const { return _main_module; }

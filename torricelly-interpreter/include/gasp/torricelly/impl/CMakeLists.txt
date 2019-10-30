@@ -6,4 +6,5 @@ target_sources(gasp-torricelly-interpreter
         torricelly_interpreter_error.hpp
         torricelly_instruction_interpreter.hpp
         torricelly_native_library_loader.hpp
+        torricelly_module_loader.hpp
 )
