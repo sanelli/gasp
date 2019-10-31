@@ -412,6 +412,21 @@ begin
 end.
 )__";
 
+std::string generate_native_sqrt_call(const char *type)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+
+   std::string sample(R"__(program sample(number : {TYPE}) : {TYPE};
+use math;
+begin
+   sample := sqrt(number);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+
+   return sample;
+}
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -537,6 +552,9 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-remainder-integer"] = {generate_function_expression_2_sample("integer", "%"), "1 2", "1"};
    _samples["expression-function-call-from-library-1"] = {sample_call_from_Library, "2", "true"};
    _samples["expression-function-call-from-library-2"] = {sample_call_from_Library, "3", "false"};
+   _samples["expression-function-call-native-sqrt-integer"] = {generate_native_sqrt_call("integer"), "4", "2"};
+   _samples["expression-function-call-native-sqrt-float"] = {generate_native_sqrt_call("float"), "4", "2.000000"};
+   _samples["expression-function-call-native-sqrt-double"] = {generate_native_sqrt_call("double"), "4", "2.000000"};
 
    _samples["expression-array-integer"] = {generate_array_load_and_store("integer", 10), "", "45"};
    _samples["expression-array-float"] = {generate_array_load_and_store("float", 10), "", "45.000000"};
