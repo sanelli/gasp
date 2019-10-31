@@ -132,6 +132,7 @@ bool execute_jump_gt(const torricelly::torricelly_instruction& instruction, unsi
 // Invoke
 std::pair<std::shared_ptr<torricelly::torricelly_module>, std::shared_ptr<torricelly::torricelly_subroutine>> find_subroutine(std::shared_ptr<torricelly::torricelly_module> module, unsigned int parameter_index);
 void execute_static_invoke(const torricelly::torricelly_instruction& instruction);
+void execute_native_invoke(const torricelly::torricelly_instruction& instruction);
 
 friend gasp::torricelly::interpreter::torricelly_interpreter;
 friend sanelli::memory;

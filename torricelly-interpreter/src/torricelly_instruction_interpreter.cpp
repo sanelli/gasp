@@ -261,6 +261,9 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::STATIC_INVOKE:
       execute_static_invoke(instruction);
       break;
+   case torricelly_inst_code::NATIVE_INVOKE:
+      execute_native_invoke(instruction);
+      break;
    case torricelly_inst_code::RET:
       return false;
       break;
