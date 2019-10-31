@@ -11,6 +11,7 @@
 
 using namespace gasp;
 using namespace gasp::torricelly;
+using namespace gasp::torricelly::interpreter;
 
 std::shared_ptr<torricelly_module_loader> torricelly_module_loader::_instance = nullptr;
 std::shared_ptr<torricelly_module> torricelly_module_loader::get_module(std::string module_name)

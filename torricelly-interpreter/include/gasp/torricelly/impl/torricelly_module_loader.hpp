@@ -7,7 +7,7 @@
 #include <gasp/torricelly/torricelly.hpp>
 #include <sanelli/sanelli.hpp>
 
-namespace gasp::torricelly
+namespace gasp::torricelly::interpreter
 {
 
 class torricelly_module_loader
