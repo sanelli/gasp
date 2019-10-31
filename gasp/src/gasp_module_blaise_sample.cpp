@@ -546,6 +546,12 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-cast-boolean-to-integer-1"] = {generate_cast_sample("boolean", "integer"), "true", "1"};
    _samples["expression-cast-boolean-to-integer-2"] = {generate_cast_sample("boolean", "integer"), "false", "0"};
 
+   _samples["expression-array-integer"] = {generate_array_load_and_store("integer", 10), "", "45"};
+   _samples["expression-array-float"] = {generate_array_load_and_store("float", 10), "", "45.000000"};
+   _samples["expression-array-double"] = {generate_array_load_and_store("double", 10), "", "45.000000"};
+   _samples["expression-array-char"] = {generate_array_load_and_store_non_numeric("char", 66), "", "A"};
+   _samples["expression-array-boolean"] = {generate_array_load_and_store_non_numeric("boolean", 10), "", "true"};
+
    _samples["expression-function-call-duplicate-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
    _samples["expression-function-call-duplicate-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
    _samples["expression-function-call-duplicate-float"] = {generate_function_expression_sample("float"), "1", "2.000000"};
@@ -565,11 +571,6 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-native-log2-integer"] = {generate_native_single_parameter_call("integer", "math", "log2"), "8", "3"};
    _samples["expression-function-call-native-log2-float"] = {generate_native_single_parameter_call("float", "math", "log2"), "8", "3.000000"};
    _samples["expression-function-call-native-log2-double"] = {generate_native_single_parameter_call("double", "math", "log2"), "8", "3.000000"};
-   _samples["expression-array-integer"] = {generate_array_load_and_store("integer", 10), "", "45"};
-   _samples["expression-array-float"] = {generate_array_load_and_store("float", 10), "", "45.000000"};
-   _samples["expression-array-double"] = {generate_array_load_and_store("double", 10), "", "45.000000"};
-   _samples["expression-array-char"] = {generate_array_load_and_store_non_numeric("char", 66), "", "A"};
-   _samples["expression-array-boolean"] = {generate_array_load_and_store_non_numeric("boolean", 10), "", "true"};
    _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 101), "", "5050"};
    _samples["expression-function-call-array-float-unbound"] = {generate_array_passing_unbound("float", 10), "", "45.000000"};
    _samples["expression-function-call-array-double-unbound"] = {generate_array_passing_unbound("double", 10), "", "45.000000"};
