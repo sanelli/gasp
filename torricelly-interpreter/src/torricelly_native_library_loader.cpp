@@ -27,12 +27,12 @@ torricelly_native_library::torricelly_native_library(std::string name, std::stri
 {
 }
 
-std::function<void(std::vector<torricelly_activation_record_local> &)> torricelly_native_library::get_native(std::string symbol)
+std::function<void(std::shared_ptr<torricelly_native_context>)> torricelly_native_library::get_native(std::string symbol)
 {
    auto native_symbol_pointer = get_native_handler(symbol.c_str());
    if (native_symbol_pointer == nullptr)
       return nullptr;
-   auto symbol_pointer = (void (*)(std::vector<torricelly_activation_record_local> &))native_symbol_pointer;
+   auto symbol_pointer = (void (*)(std::shared_ptr<torricelly_native_context>))native_symbol_pointer;
    return symbol_pointer;
 }
 

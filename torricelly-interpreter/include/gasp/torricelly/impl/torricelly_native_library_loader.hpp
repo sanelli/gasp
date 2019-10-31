@@ -7,7 +7,7 @@
 #include <map>
 
 #include <sanelli/sanelli.hpp>
-#include <gasp/torricelly/impl/torricelly_activation_record_local.hpp>
+#include <gasp/torricelly/impl/torricelly_native_context.hpp>
 
 namespace gasp::torricelly::interpreter
 {
@@ -17,7 +17,7 @@ class torricelly_native_library : public sanelli::shared_library
    torricelly_native_library(std::string name, std::string path);
 
 public:
-   std::function<void(std::vector<torricelly_activation_record_local> &)> get_native(std::string symbol);
+   std::function<void(std::shared_ptr<torricelly_native_context>)> get_native(std::string symbol);
 
    static std::string get_library_path(std::string library);
 
