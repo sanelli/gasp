@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <functional>
+#include <utility>
 
 #include <sanelli/sanelli.hpp>
 
@@ -129,6 +130,7 @@ bool execute_jump_gte(const torricelly::torricelly_instruction& instruction, uns
 bool execute_jump_gt(const torricelly::torricelly_instruction& instruction, unsigned int& next_address);
 
 // Invoke
+std::pair<std::shared_ptr<torricelly::torricelly_module>, std::shared_ptr<torricelly::torricelly_subroutine>> find_subroutine(std::shared_ptr<torricelly::torricelly_module> module, unsigned int parameter_index);
 void execute_static_invoke(const torricelly::torricelly_instruction& instruction);
 
 friend gasp::torricelly::interpreter::torricelly_interpreter;
