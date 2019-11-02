@@ -18,7 +18,7 @@ using namespace gasp;
 using namespace gasp::torricelly;
 using namespace gasp::blaise;
 
-void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
                                                            std::map<std::string, unsigned int> &module_variables_mapping,
                                                            std::map<std::string, unsigned int> &variables_mapping,
                                                            std::shared_ptr<gasp::blaise::ast::blaise_ast_statement> statement,
@@ -84,13 +84,19 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
       translate_repeat_until_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, repeatuntil_statement, max_stack_size);
    }
    break;
+   case ast::blaise_ast_statement_type::DELETE:
+   {
+      auto delete_statement = ast::blaise_ast_statement_utility::as_delete(statement);
+      translate_delete_statement(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, delete_statement, max_stack_size);
+   }
+   break;
    default:
       throw blaise_to_torricelly_internal_error("Unknown statement type");
    }
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
                                                                  std::map<std::string, unsigned int> &module_variables_mapping,
                                                                  std::map<std::string, unsigned int> &variables_mapping,
                                                                  std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_empty> statement,
@@ -101,7 +107,7 @@ void blaise_to_torricelly::translator::translate_empty_statement(std::shared_ptr
    torricelly_subroutine->append_instruction(noop);
 }
 
-void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
+void blaise_to_torricelly::translator::translate_compound_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine,
                                                                     std::map<std::string, unsigned int> &module_variables_mapping,
                                                                     std::map<std::string, unsigned int> &variables_mapping,
                                                                     std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_compund> statement,
@@ -122,7 +128,7 @@ void blaise_to_torricelly::translator::translate_compound_statement(std::shared_
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_compound_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_assignment_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_assignment> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_assignment_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_assignment> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_assignment_statement" << std::endl);
 
@@ -194,7 +200,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_assignment_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_if> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_if> statement, unsigned int &max_stack_size) const
 {
    // <condition>
    // LOAD_BOOLEAN [true]
@@ -240,7 +246,7 @@ void blaise_to_torricelly::translator::translate_if_statement(std::shared_ptr<ga
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_if_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_subroutine_call> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_subroutine_call> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_subroutine_call_statement" << std::endl);
 
@@ -271,7 +277,7 @@ void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_subroutine_call_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_while_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_while_loop> statement, unsigned int &max_stack_size) const
 {
 
    // [start]: NOOP
@@ -313,7 +319,7 @@ void blaise_to_torricelly::translator::translate_while_statement(std::shared_ptr
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_while_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_dowhile_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_dowhile_loop> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_do_while_statement" << std::endl);
 
@@ -344,7 +350,7 @@ void blaise_to_torricelly::translator::translate_do_while_statement(std::shared_
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_do_while_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_repeat_until_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_repeatuntil_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_repeat_until_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_repeatuntil_loop> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_repeat_until_statement" << std::endl);
 
@@ -375,7 +381,7 @@ void blaise_to_torricelly::translator::translate_repeat_until_statement(std::sha
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_repeat_until_statement" << std::endl);
 }
 
-void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module,std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_for_loop> statement, unsigned int &max_stack_size) const
+void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_for_loop> statement, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_for_statement" << std::endl);
 
@@ -474,4 +480,30 @@ void blaise_to_torricelly::translator::translate_for_statement(std::shared_ptr<g
    max_stack_size = std::max({2U, from_expression_max_stack_size, upper_limit_max_stack_size, step_expression_max_stack_size, body_max_stack_size}, std::less<unsigned int>());
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_for_statement" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_delete_statement(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_statement_delete> statement, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_new_statement" << std::endl);
+
+   // Get the variable
+   auto variable_identifier = blaise::ast::blaise_ast_identifier_utility::as_variable_identifier(statement->identifier())->variable();
+   auto varaiable_iterator = variables_mapping.find(variable_identifier->name());
+   if (varaiable_iterator == variables_mapping.end())
+      throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Cannot find variable '", variable_identifier->name(), "'."));
+   auto variable_index = varaiable_iterator->second;
+
+   // Check the variable is an array
+   if (!ast::blaise_ast_utility::is_array(variable_identifier->type()))
+      throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating delete statemente. Variable '", variable_identifier->name(), "' must be of array type."));
+
+   // Check the array is with undefined dimensions
+   auto array_type = ast::blaise_ast_utility::as_array_type(variable_identifier->type());
+   if (!array_type->is_unbounded())
+      throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating delete statemente. Variable '", variable_identifier->name(), "' must be an unbounded array type."));
+
+   // Create the delete instrution
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::FREE_ARRAY, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_new_statement" << std::endl);
 }
