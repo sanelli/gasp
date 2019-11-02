@@ -68,7 +68,9 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_statement(blaise
       statement = parse_empty_statement(context);
       match_ending_semicolon = false;
       break;
-      // TODO: Add support for other kind of statement
+   case blaise_token_type::DELETE:
+      statement = parse_delete_statement(context);
+      break;
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("Unexpected token '", token_type, "' found."));
    }
@@ -240,14 +242,14 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_for_loop_stateme
    auto from_expression = parse_expression(context);
    if (!ast::blaise_ast_utility::is_integer(from_expression->result_type()) && !ast::blaise_ast_utility::can_auto_cast(from_expression->result_type(), integer_type))
       throw_parse_error_with_details(context, from_expression->line(), from_expression->column(),
-                                     sanelli::make_string("FROM expression must be integer."));
+                                     "FROM expression must be integer.");
    from_expression = ast::introduce_cast_if_required(loop_token, integer_type, from_expression);
 
    match_token(context, blaise_token_type::TO);
    auto to_expression = parse_expression(context);
    if (!ast::blaise_ast_utility::is_integer(to_expression->result_type()) && !ast::blaise_ast_utility::can_auto_cast(to_expression->result_type(), integer_type))
       throw_parse_error_with_details(context, to_expression->line(), to_expression->column(),
-                                     sanelli::make_string("TO expression must be integer."));
+                                     "TO expression must be integer.");
    to_expression = ast::introduce_cast_if_required(loop_token, integer_type, to_expression);
 
    std::shared_ptr<ast::blaise_ast_expression> step_expression;
@@ -256,7 +258,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_for_loop_stateme
       step_expression = parse_expression(context);
       if (!ast::blaise_ast_utility::is_integer(step_expression->result_type()) && !ast::blaise_ast_utility::can_auto_cast(step_expression->result_type(), integer_type))
          throw_parse_error_with_details(context, step_expression->line(), step_expression->column(),
-                                        sanelli::make_string("STEP expression must be integer."));
+                                        "STEP expression must be integer.");
       step_expression = ast::introduce_cast_if_required(loop_token, integer_type, step_expression);
    }
    auto body = parse_statement(context);
@@ -272,7 +274,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_while_loop_state
    auto condition = parse_expression(context);
    if (!ast::blaise_ast_utility::is_boolean(condition->result_type()) && !ast::blaise_ast_utility::can_auto_cast(condition->result_type(), boolean_type))
       throw_parse_error_with_details(context, condition->line(), condition->column(),
-                                     sanelli::make_string("Condition must be a boolean expression."));
+                                     "Condition must be a boolean expression.");
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    auto body = parse_statement(context);
    return ast::make_blaise_ast_statement_while_loop(loop_token, condition, body);
@@ -288,7 +290,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_do_while_loop_st
    auto condition = parse_expression(context);
    if (!ast::blaise_ast_utility::is_boolean(condition->result_type()) && !ast::blaise_ast_utility::can_auto_cast(condition->result_type(), boolean_type))
       throw_parse_error_with_details(context, condition->line(), condition->column(),
-                                     sanelli::make_string("Condition must be a boolean expression."));
+                                     "Condition must be a boolean expression.");
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    return ast::make_blaise_ast_statement_dowhile_loop(loop_token, condition, body);
 }
@@ -303,7 +305,7 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_repeat_until_loo
    auto condition = parse_expression(context);
    if (!ast::blaise_ast_utility::is_boolean(condition->result_type()) && !ast::blaise_ast_utility::can_auto_cast(condition->result_type(), boolean_type))
       throw_parse_error_with_details(context, condition->line(), condition->column(),
-                                     sanelli::make_string("Condition must be a boolean expression."));
+                                     "Condition must be a boolean expression.");
    condition = ast::introduce_cast_if_required(loop_token, boolean_type, condition);
    return ast::make_blaise_ast_statement_repeatuntil_loop(loop_token, condition, body);
 }
@@ -313,4 +315,26 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_empty_statement(
    auto token = context.peek_token();
    match_token(context, blaise_token_type::SEMICOLON);
    return ast::make_empty_statement(token);
+}
+
+std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_delete_statement(blaise_parser_context &context)
+{
+   auto token = context.peek_token();
+   match_token(context, blaise_token_type::DELETE);
+   match_token(context, blaise_token_type::LEFT_PARENTHESES);
+   auto identifier_token = context.peek_token();
+   auto variable = context.current_subroutine()->get_memory_location(identifier_token.value());
+   auto variable_identifier = ast::make_blaise_ast_variable_identifier(identifier_token, variable);
+
+   if (variable->variable_type() == ast::blaise_ast_variable_type::CONSTANT)
+      throw_parse_error_with_details(context, token.line(), token.column(),
+                                     "Delete operator cannot be applied to constants.");
+
+   if (!ast::blaise_ast_utility::is_array(variable->type()))
+      throw_parse_error_with_details(context, token.line(), token.column(),
+                                     sanelli::make_string("Delete operator cannot be applied to variable of type ", ast::to_string(variable->type()), "."));
+
+   match_token(context, blaise_token_type::IDENTIFIER);
+   match_token(context, blaise_token_type::RIGHT_PARENTHESES);
+   return ast::make_delete_statement(token, variable_identifier);
 }
