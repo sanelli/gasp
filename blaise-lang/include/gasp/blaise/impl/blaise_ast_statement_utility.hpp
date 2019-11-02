@@ -18,6 +18,7 @@ public:
    static std::shared_ptr<blaise_ast_statement_dowhile_loop> as_do_while_loop(std::shared_ptr<blaise_ast_statement> statement);
    static std::shared_ptr<blaise_ast_statement_while_loop> as_while_loop(std::shared_ptr<blaise_ast_statement> statement);
    static std::shared_ptr<blaise_ast_statement_repeatuntil_loop> as_repeat_until_loop(std::shared_ptr<blaise_ast_statement> statement);
+   static std::shared_ptr<blaise_ast_statement_delete> as_delete(std::shared_ptr<blaise_ast_statement> statement);
 };
 
 } // namespace gasp::blaise::ast

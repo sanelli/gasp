@@ -24,7 +24,8 @@ enum class blaise_ast_statement_type : unsigned char
    FOR_LOOP,
    DO_WHILE_LOOP,
    WHILE_LOOP,
-   REPEAT_UNTIL_LOOP
+   REPEAT_UNTIL_LOOP,
+   DELETE
 };
 
 class blaise_ast_statement : public blaise_ast
@@ -205,5 +206,19 @@ public:
 std::shared_ptr<blaise_ast_statement_repeatuntil_loop> make_blaise_ast_statement_repeatuntil_loop(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                                                                                                   std::shared_ptr<blaise_ast_expression> condition,
                                                                                                   std::shared_ptr<blaise_ast_statement> body);
+
+class blaise_ast_statement_delete : public blaise_ast_statement
+{
+   std::shared_ptr<blaise_ast_identifier> _identifier;
+   blaise_ast_statement_delete(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
+                                   std::shared_ptr<blaise_ast_identifier> identifier);
+
+public:
+   std::shared_ptr<blaise_ast_identifier> identifier() const;
+
+   friend class sanelli::memory;
+};
+std::shared_ptr<blaise_ast_statement_delete> make_delete_statement(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
+                                                                 std::shared_ptr<blaise_ast_identifier> identifier);
 
 } // namespace gasp::blaise::ast

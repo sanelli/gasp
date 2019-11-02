@@ -76,3 +76,10 @@ std::shared_ptr<blaise_ast_statement_repeatuntil_loop> blaise_ast_statement_util
 
    return std::static_pointer_cast<blaise_ast_statement_repeatuntil_loop>(statement);
 }
+std::shared_ptr<blaise_ast_statement_delete> blaise_ast_statement_utility::as_delete(std::shared_ptr<blaise_ast_statement> statement)
+{
+   if (statement->type() != blaise_ast_statement_type::DELETE)
+      throw blaise_ast_error(statement->line(), statement->column(), "Cannot convert statetemt into delete statement");
+
+   return std::static_pointer_cast<blaise_ast_statement_delete>(statement);
+}

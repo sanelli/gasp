@@ -250,3 +250,21 @@ std::shared_ptr<blaise_ast_statement_repeatuntil_loop> ast::make_blaise_ast_stat
 {
    return memory::make_shared<blaise_ast_statement_repeatuntil_loop>(reference, condition, body);
 }
+
+// DELETE
+
+blaise_ast_statement_delete::blaise_ast_statement_delete(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
+                                 std::shared_ptr<blaise_ast_identifier> identifier) 
+       : blaise_ast_statement(reference, blaise_ast_statement_type::DELETE),
+         _identifier(identifier)
+{}
+
+std::shared_ptr<blaise_ast_identifier> blaise_ast_statement_delete::identifier() const { return _identifier; }
+
+std::shared_ptr<blaise_ast_statement_delete> ast::make_delete_statement(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
+                                                                 std::shared_ptr<blaise_ast_identifier> identifier) 
+{
+   return sanelli::memory::make_shared<blaise_ast_statement_delete>(reference, identifier);
+}
+
+
