@@ -33,6 +33,7 @@ bool blaise_token_type_utility::is_unsigned_type(blaise_token_type token_type)
 
 bool blaise_token_type_utility::is_operator(blaise_token_type token_type){
    switch(token_type){
+      case blaise_token_type::NEW:
       case blaise_token_type::LOGICAL_NOT:
       case blaise_token_type::MULTIPLY:
       case blaise_token_type::DIVIDE:
@@ -58,6 +59,8 @@ bool blaise_token_type_utility::is_operator(blaise_token_type token_type){
 // Loosly following https://it.cppreference.com/w/cpp/language/operator_precedence
 bool blaise_token_type_utility::get_operator_precedence(blaise_token_type token_type){
    switch(token_type){
+      case blaise_token_type::NEW:
+         return 120;
       case blaise_token_type::LOGICAL_NOT:
       case blaise_token_type::CAST:
          return 100;
