@@ -17,4 +17,3 @@ target_link_libraries(gasp-blaise-lang-parser-test Catch2::Catch2)
 
 add_subdirectory(include)
 add_subdirectory(src)
-add_subdirectory(test)

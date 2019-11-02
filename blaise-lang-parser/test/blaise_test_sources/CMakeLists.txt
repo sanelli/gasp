@@ -1,7 +1,0 @@
-file(COPY 0000_simple_empty_program.blaise DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY 0001_variable_declaration.blaise DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY 0002_operations_on_integers.blaise DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY 0003_operations_on_booleans.blaise DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY 0004_declarations_of_arrays.blaise DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY 0005_operations_on_arrays.blaise DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY 0006_binary_operators_autocast.blaise DESTINATION ${CMAKE_BINARY_DIR})
