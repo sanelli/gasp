@@ -22,6 +22,7 @@ static bool is_integer(std::shared_ptr<blaise_ast_type> type);
 static bool is_boolean(std::shared_ptr<blaise_ast_type> type);
 static bool is_string(std::shared_ptr<blaise_ast_type> type);
 static bool is_char(std::shared_ptr<blaise_ast_type> type);
+static bool is_array(std::shared_ptr<blaise_ast_type> type);
 
 static std::shared_ptr<blaise_ast_type> get_binary_numeric_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right);
 static std::shared_ptr<blaise_ast_type> get_binary_boolean_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right);
