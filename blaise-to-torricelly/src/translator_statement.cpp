@@ -504,6 +504,9 @@ void blaise_to_torricelly::translator::translate_delete_statement(std::shared_pt
 
    // Create the delete instrution
    auto instruction = torricelly_instruction::make(torricelly_inst_code::FREE_ARRAY, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(instruction);
+
+   max_stack_size = 0U;
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_new_statement" << std::endl);
 }
