@@ -34,6 +34,8 @@ enum class blaise_token_type : unsigned char
    FROM,
    TO,
    STEP,
+   NEW,
+   DELETE,
 
    // TYPES
    TYPE_INTEGER,
