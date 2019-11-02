@@ -22,6 +22,7 @@ public:
    static std::shared_ptr<blaise_ast_expression_subroutine_call> as_subroutine_call(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_cast> as_cast(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_ternary> as_ternary(std::shared_ptr<blaise_ast_expression> expression);
+   static std::shared_ptr<blaise_ast_expression_new> as_new(std::shared_ptr<blaise_ast_expression> expression);
 
    static std::shared_ptr<blaise_ast_expression_memory_access> as_variable_memory_access(std::shared_ptr<blaise_ast_expression_generic_memory_access> expression);
    static std::shared_ptr<blaise_ast_expression_array_access> as_array_memory_access(std::shared_ptr<blaise_ast_expression_generic_memory_access> expression);

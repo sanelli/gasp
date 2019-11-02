@@ -201,3 +201,20 @@ std::shared_ptr<blaise_ast_expression_ternary> ast::make_blaise_ast_expression_t
 {
    return memory::make_shared<blaise_ast_expression_ternary>(reference, condition, then_expression, else_expression);
 }
+
+// NEW EXPRESSION
+blaise_ast_expression_new::blaise_ast_expression_new(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<blaise_ast_type> target_type,
+   const std::vector<std::shared_ptr<blaise_ast_expression>>& expressions
+) : blaise_ast_expression(reference, blaise_ast_expression_type::NEW, target_type) {
+   std::copy(expressions.begin(), expressions.end(), std::back_inserter(_expressions));
+}
+unsigned int blaise_ast_expression_new::count_parameters() const { return _expressions.size(); }
+std::shared_ptr<blaise_ast_expression> blaise_ast_expression_new::get_parameter(unsigned int index) const { return _expressions.at(index); }
+
+std::shared_ptr<blaise_ast_expression_new> ast::make_blaise_ast_expression_new(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
+   std::shared_ptr<blaise_ast_type> target_type,
+   const std::vector<std::shared_ptr<blaise_ast_expression>>& expressions) 
+{
+   return sanelli::memory::make_shared<blaise_ast_expression_new>(reference, target_type, expressions);
+}

@@ -27,6 +27,25 @@ class blaise_ast_expression : public blaise_ast {
       blaise_ast_expression_type expression_type() const;
 };
 
+
+// NEW EXPRESSION
+class blaise_ast_expression_new : public blaise_ast_expression {
+   std::vector<std::shared_ptr<blaise_ast_expression>> _expressions;
+   blaise_ast_expression_new(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_type> target_type,
+      const std::vector<std::shared_ptr<blaise_ast_expression>>& expressions
+   );
+   public:
+   unsigned int count_parameters() const;
+   std::shared_ptr<blaise_ast_expression> get_parameter(unsigned int index) const;
+
+   friend sanelli::memory;
+};
+std::shared_ptr<blaise_ast_expression_new> make_blaise_ast_expression_new(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
+      std::shared_ptr<blaise_ast_type> target_type,
+      const std::vector<std::shared_ptr<blaise_ast_expression>>& expressions
+   );
+
 // 
 // TERNARY EXPRESSION
 //

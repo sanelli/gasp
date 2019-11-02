@@ -64,6 +64,11 @@ std::shared_ptr<blaise_ast_expression_ternary> blaise_ast_expression_utility::as
    return std::static_pointer_cast<blaise_ast_expression_ternary>(expression);
 }
 
+std::shared_ptr<blaise_ast_expression_new> blaise_ast_expression_utility::as_new(std::shared_ptr<blaise_ast_expression> expression)
+{
+   return std::static_pointer_cast<blaise_ast_expression_new>(expression);
+}
+
 std::shared_ptr<blaise_ast_expression_memory_access> blaise_ast_expression_utility::as_variable_memory_access(std::shared_ptr<blaise_ast_expression_generic_memory_access> expression)
 {
    return std::static_pointer_cast<blaise_ast_expression_memory_access>(expression);
