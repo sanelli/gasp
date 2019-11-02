@@ -55,6 +55,7 @@ class blaise_parser : public sanelli::parser<blaise_token_type>
    static std::shared_ptr<ast::blaise_ast_expression> parse_boolean(blaise_parser_context& context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_cast_expression(blaise_parser_context& context);
    static std::shared_ptr<ast::blaise_ast_expression> parse_ternary_expression(blaise_parser_context& context);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_new_expression(blaise_parser_context& context);
 
 public:
    void parse(blaise_parser_context &context) const;

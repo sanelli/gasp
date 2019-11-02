@@ -195,6 +195,10 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
    {
       term_expression = parse_ternary_expression(context);
    }
+   case blaise_token_type::NEW:
+   {
+      term_expression = parse_new_expression(context);
+   }
    break;
    default:
       throw_parse_error_with_details(context, token.line(), token.column(), sanelli::make_string("Unexpected token '", token_type, "' found."));
@@ -314,4 +318,43 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_ternary_expression(b
 
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_ternary_expression" << std::endl);
    return ternary_expression;
+}
+
+std::shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_new_expression(blaise_parser_context &context)
+{
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_new_expression" << std::endl);
+
+   auto reference = context.peek_token();
+
+   match_token(context, blaise_token_type::NEW);
+   match_token(context, blaise_token_type::LESS_THAN);
+   auto type = parse_variable_type(context, true);
+   if (!ast::blaise_ast_utility::is_array(type))
+      throw_parse_error_with_details(context, reference.line(), reference.column(), "An array type was expected");
+   auto array_type = ast::blaise_ast_utility::as_array_type(type);
+   if (!array_type->is_unbounded())
+      throw_parse_error_with_details(context, reference.line(), reference.column(), "An array type without bounds was expected.");
+   match_token(context, blaise_token_type::GREAT_THAN);
+   match_token(context, blaise_token_type::LEFT_PARENTHESES);
+   std::vector<std::shared_ptr<ast::blaise_ast_expression>> expressions;
+   auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
+   do{
+      auto expression_reference = context.peek_token();
+      auto expression = parse_expression(context);
+      if (!ast::blaise_ast_utility::is_integer(expression->result_type()) && 
+         !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), integer_type))
+         throw_parse_error_with_details(context, reference.line(), reference.column(), "Expression was expected to be an integer");
+         
+      expression = ast::introduce_cast_if_required(expression_reference, integer_type, expression);
+      
+      expressions.push_back(expression);
+   } while(is_token_and_match(context,  blaise_token_type::COMMA));
+   if(expressions.size() > 1)
+         throw_parse_error_with_details(context, reference.line(), reference.column(), "Ony single dimension array are supported.");
+   match_token(context, blaise_token_type::RIGHT_PARENTHESES);
+
+   auto new_expression = ast::make_blaise_ast_expression_new(reference, type, expressions);
+
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_new_expression" << std::endl);
+   return new_expression;
 }

@@ -2,11 +2,8 @@
 
 #include <memory>
 
-
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
-
 #include <gasp/blaise/ast.hpp>
-
 #include <gasp/blaise/parser/impl/blaise_parser_context.hpp>
 
 namespace gasp::blaise {
