@@ -78,6 +78,8 @@ void execute_allocate_boolean_array(const torricelly::torricelly_instruction& in
 void execute_allocate_float_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_double_array(const torricelly::torricelly_instruction& instruction);
 
+void execute_free_array(const torricelly::torricelly_instruction& instruction);
+
 // Boolean
 void inline __execute_binary_boolean(const torricelly::torricelly_instruction &instruction, std::function<bool(bool,bool)> op);
 void execute_and(const torricelly::torricelly_instruction& instruction);

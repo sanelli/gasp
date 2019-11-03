@@ -327,3 +327,22 @@ void torricelly_instruction_interpreter::execute_allocate_double_array(const tor
 {
    __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::DOUBLE);
 }
+
+void torricelly_instruction_interpreter::execute_free_array(const torricelly::torricelly_instruction &instruction)
+{
+   auto activation_record = _interpreter.lock()->activation_record();
+   auto parameter = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::SUBROUTINE);
+
+   auto value = activation_record->load(parameter);
+
+   if (value.type() != torricelly_activation_record_local_type::POINTER)
+      throw torricelly::interpreter::torricelly_interpreter_execution_error(activation_record->subroutine()->name(),
+                                                                            activation_record->ip(),
+                                                                            "Cannot free a non array variable.");
+   if (value.get_pointer_underlying_type() != torricelly_activation_record_local_underlying_type::ARRAY)
+      throw torricelly::interpreter::torricelly_interpreter_execution_error(activation_record->subroutine()->name(),
+                                                                            activation_record->ip(),
+                                                                            "Cannot free a non array variable.");
+   auto pointer = value.get_pointer();
+   pointer.reset();
+}

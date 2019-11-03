@@ -285,6 +285,9 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY:
       execute_allocate_double_array(instruction);
       break;
+   case torricelly_inst_code::FREE_ARRAY:
+      execute_free_array(instruction);
+      break;
    default:
       throw torricelly_interpreter_error(sanelli::make_string("Cannot interpret instrution code '", to_string(code), "'."));
    }
