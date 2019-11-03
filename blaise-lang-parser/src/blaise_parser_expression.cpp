@@ -195,6 +195,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
    {
       term_expression = parse_ternary_expression(context);
    }
+   break;
    case blaise_token_type::NEW:
    {
       term_expression = parse_new_expression(context);
@@ -338,19 +339,20 @@ std::shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_new_expression(
    match_token(context, blaise_token_type::LEFT_PARENTHESES);
    std::vector<std::shared_ptr<ast::blaise_ast_expression>> expressions;
    auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
-   do{
+   do
+   {
       auto expression_reference = context.peek_token();
       auto expression = parse_expression(context);
-      if (!ast::blaise_ast_utility::is_integer(expression->result_type()) && 
-         !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), integer_type))
+      if (!ast::blaise_ast_utility::is_integer(expression->result_type()) &&
+          !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), integer_type))
          throw_parse_error_with_details(context, reference.line(), reference.column(), "Expression was expected to be an integer");
-         
+
       expression = ast::introduce_cast_if_required(expression_reference, integer_type, expression);
-      
+
       expressions.push_back(expression);
-   } while(is_token_and_match(context,  blaise_token_type::COMMA));
-   if(expressions.size() > 1)
-         throw_parse_error_with_details(context, reference.line(), reference.column(), "Ony single dimension array are supported.");
+   } while (is_token_and_match(context, blaise_token_type::COMMA));
+   if (expressions.size() > 1)
+      throw_parse_error_with_details(context, reference.line(), reference.column(), "Ony single dimension array are supported.");
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    auto new_expression = ast::make_blaise_ast_expression_new(reference, type, expressions);
