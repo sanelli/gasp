@@ -19,22 +19,22 @@ inline void read_template(std::shared_ptr<gasp::torricelly::interpreter::torrice
    context->push(result);
 }
 
-extern "C" void read_integer(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void read_integer_(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    read_template<int>(context);
 }
 
-extern "C" void read_double(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void read_double_(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    read_template<double>(context);
 }
 
-extern "C" void read_float(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void read_float_(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    read_template<float>(context);
 }
 
-extern "C" void read_char(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void read_char_(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    read_template<char>(context);
 }
