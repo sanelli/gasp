@@ -71,7 +71,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       if (variable->type()->type_type() == ast::blaise_ast_type_type::ARRAY) {
          auto array_type = ast::blaise_ast_utility::as_array_type(variable->type());
          if(!array_type->is_unbounded())
-            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "' Array with a defined dimensiosn cannot be used here."));
+            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", to_string(variable_real_type), "' Array with a defined dimensiosn cannot be used here."));
       }
    }
    break;
@@ -81,7 +81,7 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       variable = array_identifier->variable();
       variable_real_type = ast::blaise_ast_utility::as_array_type(variable->type())->underlying_type();
       if (variable->type()->type_type() != ast::blaise_ast_type_type::ARRAY)
-         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "'. An array was expected here."));
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", to_string(variable_real_type), "'. An array was expected here."));
    }
    break;
    default:
