@@ -91,7 +91,7 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
    break;
    default:
-      throw blaise_to_torricelly_internal_error("Unknown statement type");
+      throw blaise_to_torricelly_internal_error(sanelli::make_string("Unknown statement type (ID = ", (int) statement->type(),")"));
    }
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_statement" << std::endl);
 }
@@ -147,7 +147,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       variable_name = variable_identifier->variable()->name();
       auto variable_index_it = variables_mapping.find(variable_name);
       if (variable_index_it == variables_mapping.end())
-         throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
+         throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
       auto variable_index = variable_index_it->second;
 
       auto variable_type = variable_identifier->variable()->type();
@@ -164,20 +164,20 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       {
          auto array_type = ast::blaise_ast_utility::as_array_type(variable_type);
          if (!array_type->is_unbounded())
-            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' must be unbounded."));
+            throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' must be unbounded."));
 
          auto underlying_array_type = array_type->underlying_type();
 
          auto statement_expression_type = statement->expression()->result_type();
          if (!ast::blaise_ast_utility::is_array(variable_type))
-            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Cannot assigned expression to array '", variable_name, "'."));
+            throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt. Cannot assigned expression to array '", variable_name, "'."));
          // TODO: Check dimensions: right now it can only be just one
 
          auto expression_array_type = ast::blaise_ast_utility::as_array_type(statement_expression_type);
          auto expression_underlying_array_type = expression_array_type->underlying_type();
 
          if (!underlying_array_type->equals(expression_underlying_array_type))
-            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' has a different type of expression."));
+            throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' has a different type of expression."));
 
          auto store_instruction = torricelly_instruction::make(torricelly_inst_code::STORE_ARRAY, variable_index, torricelly_inst_ref_type::SUBROUTINE);
          torricelly_subroutine->append_instruction(store_instruction);
@@ -191,7 +191,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
 
       auto variable_index_it = variables_mapping.find(variable_name);
       if (variable_index_it == variables_mapping.end())
-         throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt for array. Cannot find varibale '", variable_name, "'."));
+         throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt for array. Cannot find varibale '", variable_name, "'."));
       auto variable_index = variable_index_it->second;
 
       // Translate expression of the
@@ -520,12 +520,12 @@ void blaise_to_torricelly::translator::translate_delete_statement(std::shared_pt
 
    // Check the variable is an array
    if (!ast::blaise_ast_utility::is_array(variable_identifier->type()))
-      throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating delete statemente. Variable '", variable_identifier->name(), "' must be of array type."));
+      throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating delete statemente. Variable '", variable_identifier->name(), "' must be of array type."));
 
    // Check the array is with undefined dimensions
    auto array_type = ast::blaise_ast_utility::as_array_type(variable_identifier->type());
    if (!array_type->is_unbounded())
-      throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating delete statemente. Variable '", variable_identifier->name(), "' must be an unbounded array type."));
+      throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating delete statemente. Variable '", variable_identifier->name(), "' must be an unbounded array type."));
 
    // Create the delete instrution
    auto instruction = torricelly_instruction::make(torricelly_inst_code::FREE_ARRAY, variable_index, torricelly_inst_ref_type::SUBROUTINE);

@@ -112,7 +112,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
             auto variable_name = parameter->name();
             auto variable_index_it = variables_mapping.find(variable_name);
             if (variable_index_it == variables_mapping.end())
-               throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(), "'."));
+               throw blaise_to_torricelly_error(parameter->line(), parameter->column(), sanelli::make_string("Error while creating STORE instructions for input parameters. Cannot find varibale '", variable_name, "' in subroutine '", subroutine->name(), "'."));
 
             auto store_instruction_code =
                 parameter->type()->type_type() == gasp::blaise::ast::blaise_ast_type_type::ARRAY

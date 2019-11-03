@@ -197,7 +197,7 @@ void blaise_to_torricelly::translator::translate_memory_access_expression(std::s
    }
    break;
    default:
-      throw blaise_to_torricelly_internal_error("Unexpected or unknown access memory type");
+      throw blaise_to_torricelly_internal_error(sanelli::make_string("Unexpected or unknown access memory type (id = ",(int)expression->memory_access_type(),")"));
    }
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_memory_access_expression" << std::endl);
 }
