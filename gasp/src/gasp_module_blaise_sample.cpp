@@ -412,7 +412,7 @@ begin
 end.
 )__";
 
-std::string generate_native_single_parameter_call(const char *type, const char* use, const char* function)
+std::string generate_native_single_parameter_call(const char *type, const char *use, const char *function)
 {
    std::regex type_regexp("\\{TYPE\\}");
    std::regex use_regexp("\\{USE\\}");
@@ -430,6 +430,88 @@ end.)__");
 
    return sample;
 }
+
+std::string generate_sample_allocate_array_with_math(const char *type)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::string sample = R"__(program sample : {TYPE};
+var v : array<{TYPE}>;
+    i : integer;
+begin
+ v := new<array<{TYPE}>>(10);
+ for i from 0 to 9 begin
+    v[i] := i;
+ end;
+ for i from 0 to 9 begin
+   sample := sample + v[i];
+ end;
+ delete(v);
+end.)__";
+
+   sample = std::regex_replace(sample, type_regexp, type);
+
+   return sample;
+}
+
+std::string generate_sample_allocate_array(const char *type, const char *value)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex value_regexp("\\{VALUE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+var v : array<{TYPE}>;
+    i : integer;
+begin
+ v := new<array<{TYPE}>>(10);
+ for i from 0 to 9 begin
+    v[i] := {VALUE};
+ end;
+ sample := v[9];
+ delete(v);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, value_regexp, value);
+
+   return sample;
+}
+
+std::string generate_sample_allocate_array_and_pass_as_parameter(const char *type)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::string sample = R"__(program sample(size : integer) : {TYPE};
+
+procedure initialize(values: array<{TYPE}>, size: integer);
+var i : integer;
+begin
+   for i from 0 to (size-1) begin
+      values[i] := i;
+    end;
+end;
+
+function sum(values: array<{TYPE}>, size: integer) : {TYPE};
+var i : integer;
+begin
+  sum := 0;
+  for i from 0 to (size-1) begin
+   sum := sum + values[i];
+ end;
+end;
+
+var v : array<{TYPE}>;
+begin
+ v := new<array<{TYPE}>>(size);
+ initialize(v, size);
+ sample := sum(v, size);
+ delete(v);
+end.)__";
+
+   sample = std::regex_replace(sample, type_regexp, type);
+
+   return sample;
+}
+
+
 
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
@@ -551,6 +633,14 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-array-double"] = {generate_array_load_and_store("double", 10), "", "45.000000"};
    _samples["expression-array-char"] = {generate_array_load_and_store_non_numeric("char", 66), "", "A"};
    _samples["expression-array-boolean"] = {generate_array_load_and_store_non_numeric("boolean", 10), "", "true"};
+   _samples["expression-array-allocate-integer-1"] = {generate_sample_allocate_array_with_math("integer"), "", "45"};
+   _samples["expression-array-allocate-integer-2"] = {generate_sample_allocate_array("integer", "1"), "", "1"};
+   _samples["expression-array-allocate-boolean"] = {generate_sample_allocate_array("boolean", "true"), "", "true"};
+   _samples["expression-array-allocate-char"] = {generate_sample_allocate_array("char", "'X'"), "", "X"};
+   _samples["expression-array-allocate-float-1"] = {generate_sample_allocate_array_with_math("float"), "", "45.000000"};
+   _samples["expression-array-allocate-float-2"] = {generate_sample_allocate_array("float", "cast<float>(1.0)"), "", "1.000000"};
+   _samples["expression-array-allocate-double-1"] = {generate_sample_allocate_array_with_math("double"), "", "45.000000"};
+   _samples["expression-array-allocate-double-2"] = {generate_sample_allocate_array("double", "1.0"), "", "1.000000"};
 
    _samples["expression-function-call-duplicate-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
    _samples["expression-function-call-duplicate-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
@@ -582,6 +672,9 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-array-double-byref"] = {generate_array_passed_by_reference("double", 10), "", "9.000000"};
    _samples["expression-function-call-array-char-byref"] = {generate_array_passed_by_reference("char", 66), "", "A"};
    _samples["expression-function-call-array-boolean-byref"] = {generate_array_passed_by_reference("boolean", 10), "", "true"};
+   _samples["expression-function-call-array-integer-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("integer"), "10", "45"};
+   _samples["expression-function-call-array-float-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("float"), "10", "45.000000"};
+   _samples["expression-function-call-array-double-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("double"), "10", "45.000000"};
 
    _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
