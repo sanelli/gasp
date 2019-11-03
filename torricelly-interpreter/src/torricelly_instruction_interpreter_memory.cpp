@@ -128,8 +128,8 @@ void torricelly_instruction_interpreter::execute_store_array(const torricelly::t
    auto activation_record = _interpreter.lock()->activation_record();
    auto parameter = get_paramter_and_validate(activation_record, instruction, torricelly_inst_ref_type::SUBROUTINE);
    auto value = pop_and_validate(activation_record, gasp::torricelly::interpreter::torricelly_activation_record_local_type::POINTER);
-   
-    if (_validate_during_executions)
+
+   if (_validate_during_executions)
    {
       if (value.get_pointer_underlying_type() != gasp::torricelly::interpreter::torricelly_activation_record_local_underlying_type::ARRAY)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
@@ -137,7 +137,7 @@ void torricelly_instruction_interpreter::execute_store_array(const torricelly::t
                                                                            to_string(gasp::torricelly::interpreter::torricelly_activation_record_local_underlying_type::ARRAY), ">'. ",
                                                                            "Local is '", to_string(value.type()), "<", to_string(value.get_pointer_underlying_type()), ">'."));
    }
-   
+
    activation_record->store(parameter, value);
 }
 
@@ -276,4 +276,54 @@ void torricelly_instruction_interpreter::execute_store_array_char(const torricel
                             u._char = value.get_char();
                             return u;
                          });
+}
+
+void torricelly_instruction_interpreter::__execute_allocate_array(const torricelly::torricelly_instruction &instruction, torricelly_activation_record_local_type extpected_type)
+{
+   auto activation_record = _interpreter.lock()->activation_record();
+
+   // Pop the initial value if present
+   auto has_initial_value = pop_and_validate(activation_record, gasp::torricelly::interpreter::torricelly_activation_record_local_type::BOOLEAN);
+   if (!has_initial_value.get_boolean())
+      throw torricelly::interpreter::torricelly_interpreter_execution_error(activation_record->subroutine()->name(),
+                                                                            activation_record->ip(),
+                                                                            "Cannot execute allocate instruction if an initial value is not present");
+
+   auto initial_value = pop_and_validate(activation_record, extpected_type);
+
+   // Pop the number of dimensions from the stack
+   auto number_of_dimensions = pop_and_validate(activation_record, gasp::torricelly::interpreter::torricelly_activation_record_local_type::INTEGER);
+
+   std::vector<unsigned int> dimensions;
+   dimensions.resize(number_of_dimensions.get_integer());
+   for (auto dimension_index = 0; dimension_index < number_of_dimensions.get_integer(); ++dimension_index)
+   {
+      auto dimension = pop_and_validate(activation_record, gasp::torricelly::interpreter::torricelly_activation_record_local_type::INTEGER);
+      dimensions.at(dimension_index) = (unsigned int)dimension.get_integer();
+   }
+
+   // Get the value and push it on the stack
+   auto array_value = torricelly_activation_record_local::make(dimensions, initial_value);
+   activation_record->push(array_value);
+}
+
+void torricelly_instruction_interpreter::execute_allocate_integer_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::INTEGER);
+}
+void torricelly_instruction_interpreter::execute_allocate_char_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::CHAR);
+}
+void torricelly_instruction_interpreter::execute_allocate_boolean_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::BOOLEAN);
+}
+void torricelly_instruction_interpreter::execute_allocate_float_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::FLOAT);
+}
+void torricelly_instruction_interpreter::execute_allocate_double_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::DOUBLE);
 }

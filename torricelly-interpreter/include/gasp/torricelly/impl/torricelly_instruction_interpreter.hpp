@@ -71,6 +71,13 @@ void execute_store_float(const torricelly::torricelly_instruction& instruction);
 void execute_store_double(const torricelly::torricelly_instruction& instruction);
 void execute_store_char(const torricelly::torricelly_instruction& instruction);
 
+void __execute_allocate_array(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
+void execute_allocate_integer_array(const torricelly::torricelly_instruction& instruction);
+void execute_allocate_char_array(const torricelly::torricelly_instruction& instruction);
+void execute_allocate_boolean_array(const torricelly::torricelly_instruction& instruction);
+void execute_allocate_float_array(const torricelly::torricelly_instruction& instruction);
+void execute_allocate_double_array(const torricelly::torricelly_instruction& instruction);
+
 // Boolean
 void inline __execute_binary_boolean(const torricelly::torricelly_instruction &instruction, std::function<bool(bool,bool)> op);
 void execute_and(const torricelly::torricelly_instruction& instruction);

@@ -270,6 +270,21 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::HALT:
       _interpreter.lock()->_status = torricelly_interpreter_status::HALTED;
       break;
+   case torricelly_inst_code::ALLOCATE_INT_ARRAY:
+      execute_allocate_integer_array(instruction);
+      break;
+   case torricelly_inst_code::ALLOCATE_CHAR_ARRAY:
+      execute_allocate_char_array(instruction);
+      break;
+   case torricelly_inst_code::ALLOCATE_BOOLEAN_ARRAY:
+      execute_allocate_boolean_array(instruction);
+      break;
+   case torricelly_inst_code::ALLOCATE_FLOAT_ARRAY:
+      execute_allocate_float_array(instruction);
+      break;
+   case torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY:
+      execute_allocate_double_array(instruction);
+      break;
    default:
       throw torricelly_interpreter_error(sanelli::make_string("Cannot interpret instrution code '", to_string(code), "'."));
    }
