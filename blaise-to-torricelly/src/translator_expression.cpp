@@ -197,7 +197,7 @@ void blaise_to_torricelly::translator::translate_memory_access_expression(std::s
    }
    break;
    default:
-      throw blaise_to_torricelly_internal_error(sanelli::make_string("Unexpected or unknown access memory type (id = ",(int)expression->memory_access_type(),")"));
+      throw blaise_to_torricelly_internal_error(sanelli::make_string("Unexpected or unknown access memory type (id = ", (int)expression->memory_access_type(), ")"));
    }
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_memory_access_expression" << std::endl);
 }
@@ -655,10 +655,12 @@ void blaise_to_torricelly::translator::translate_new_expression(std::shared_ptr<
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_new_expression" << std::endl);
 
+   auto array_type = ast::blaise_ast_utility::as_array_type(expression->result_type());
+   auto array_underlying_type = array_type->underlying_type();
+
    max_stack_size = 2U;
 
    // Translate expressions from left to right
-
    for (auto parameter_index = 0; parameter_index < expression->count_parameters(); ++parameter_index)
    {
       unsigned int expression_max_stack_size;
@@ -676,14 +678,29 @@ void blaise_to_torricelly::translator::translate_new_expression(std::shared_ptr<
        torricelly_inst_code::LOAD_INTEGER, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(load_dimensions_instruction);
 
-   // Create the ALLOCATE instruction
-   auto array_type = ast::blaise_ast_utility::as_array_type(expression->result_type());
-   auto array_underlying_type = array_type->underlying_type();
+   // Push on the stack the initial value for the content of the array
+   auto initial_value = get_type_initial_value(array_underlying_type);
+   auto variable_initial_value_index = add_temporary(torricelly_module, torricelly_subroutine,
+                                                     variables_mapping, initial_value);
+   auto load_initial_value_inst_code = compute_instruction_code(array_underlying_type,
+                                                                torricelly_inst_code::LOAD_INTEGER, torricelly_inst_code::LOAD_FLOAT,
+                                                                torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
+                                                                torricelly_inst_code::LOAD_BOOLEAN);
+   auto load_initial_value_instruction = torricelly_instruction::make(load_initial_value_inst_code, variable_initial_value_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_initial_value_instruction);
 
+   // Push on the stack the value true to indicate we are passing the initial value
+   auto variable_have_initial_value = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping,
+                                                    torricelly_value::make(true));
+   auto load_has_initial_value = torricelly_instruction::make(
+       torricelly_inst_code::LOAD_BOOLEAN, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(load_has_initial_value);
+
+   // Create the ALLOCATE instruction
    auto allocate_instrution_code = compute_instruction_code(array_underlying_type,
-      torricelly_inst_code::ALLOCATE_INT_ARRAY, torricelly_inst_code::ALLOCATE_FLOAT_ARRAY,
-      torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY, torricelly_inst_code::ALLOCATE_CHAR_ARRAY,
-      torricelly_inst_code::ALLOCATE_BOOLEAN_ARRAY);
+                                                            torricelly_inst_code::ALLOCATE_INT_ARRAY, torricelly_inst_code::ALLOCATE_FLOAT_ARRAY,
+                                                            torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY, torricelly_inst_code::ALLOCATE_CHAR_ARRAY,
+                                                            torricelly_inst_code::ALLOCATE_BOOLEAN_ARRAY);
    auto allocate_instruction = torricelly_instruction::make(allocate_instrution_code);
    torricelly_subroutine->append_instruction(allocate_instruction);
 
