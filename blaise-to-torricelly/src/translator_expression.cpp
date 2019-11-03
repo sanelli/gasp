@@ -693,7 +693,7 @@ void blaise_to_torricelly::translator::translate_new_expression(std::shared_ptr<
    auto variable_have_initial_value = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping,
                                                     torricelly_value::make(true));
    auto load_has_initial_value = torricelly_instruction::make(
-       torricelly_inst_code::LOAD_BOOLEAN, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+       torricelly_inst_code::LOAD_BOOLEAN, variable_have_initial_value, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(load_has_initial_value);
 
    // Create the ALLOCATE instruction
