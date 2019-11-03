@@ -68,8 +68,11 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       auto variable_identifier = std::static_pointer_cast<blaise_ast_variable_identifier>(identifier);
       variable = variable_identifier->variable();
       variable_real_type = variable->type();
-      if (variable->type()->type_type() == ast::blaise_ast_type_type::ARRAY)
-         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "'. An array should not be used here."));
+      if (variable->type()->type_type() == ast::blaise_ast_type_type::ARRAY) {
+         auto array_type = ast::blaise_ast_utility::as_array_type(variable->type());
+         if(!array_type->is_unbounded())
+            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", variable_real_type, "' Array with a defined dimensiosn cannot be used here."));
+      }
    }
    break;
    case blaise_ast_identifier_type::ARRAY:
@@ -96,8 +99,10 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unexpected variable type"));
    }
 
-   if (expression->result_type() != variable_real_type && !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable_real_type))
-      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot cast '", expression->result_type(), "' into '", variable_real_type, "'."));
+   if (expression->result_type() != variable_real_type && 
+      !ast::blaise_ast_utility::is_array(expression->result_type()) &&
+      !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable_real_type))
+      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot cast '", to_string(expression->result_type()), "' into '", to_string(variable_real_type), "'."));
 
    if (variable_real_type == nullptr)
       throw blaise_ast_error(reference.line(), reference.column(), "Variable type or underlying type cannot be detected.");
