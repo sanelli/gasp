@@ -1,0 +1,49 @@
+{
+   // Use IntelliSense to learn about possible attributes.
+   // Hover to view descriptions of existing attributes.
+   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+   "version": "0.2.0",
+   "configurations": [
+      {
+         "name": "Run blaise-vscode",
+         "type": "extensionHost",
+         "request": "launch",
+         "runtimeExecutable": "${execPath}",
+         "args": [
+            "--extensionDevelopmentPath=${workspaceFolder}/blaise-vscode"
+         ]
+      },
+      {
+         "name": "Run execute on sample",
+         "type": "cppdbg",
+         "request": "launch",
+         "program": "${workspaceFolder}/build/gasp/gasp",
+         "args": [
+            "execute",
+            "-i",
+            "${workspaceFolder}/build/gasp/sample.tb"
+         ],
+         "stopAtEntry": false,
+         "cwd": "${workspaceFolder}/build/gasp",
+         "environment": [],
+         "externalConsole": false,
+         "MIMode": "lldb"
+      },
+      {
+         "name": "Run compile on sample",
+         "type": "cppdbg",
+         "request": "launch",
+         "program": "${workspaceFolder}/build/gasp/gasp",
+         "args": [
+            "compile",
+            "-i",
+            "${workspaceFolder}/build/gasp/sample.blaise"
+         ],
+         "stopAtEntry": false,
+         "cwd": "${workspaceFolder}/build/gasp",
+         "environment": [],
+         "externalConsole": false,
+         "MIMode": "lldb"
+      }
+   ]
+}

@@ -1,0 +1,42 @@
+{
+   "name": "blaise-vscode",
+   "displayName": "blaise-vscode",
+   "description": "Visual Studio Code support for Blaise language",
+   "version": "0.0.1",
+   "engines": {
+      "vscode": "^1.39.0"
+   },
+   "categories": [
+      "Other"
+   ],
+   "activationEvents": [
+      "onCommand:blaise-vscode.compile"
+   ],
+   "main": "./extension.js",
+   "contributes": {
+      "commands": [
+         {
+            "command": "blaise-vscode.compile",
+            "title": "Blaise compile"
+         }
+      ],
+      "keybindings": [
+         {
+            "key": "Ctrl+f7",
+            "command": "blaise-vscode.compile",
+            "when": "editorTextFocus"
+         }
+      ]
+   },
+   "devDependencies": {
+      "@types/glob": "^7.1.1",
+      "@types/mocha": "^5.2.7",
+      "@types/node": "^12.11.7",
+      "@types/vscode": "^1.39.0",
+      "eslint": "^6.6.0",
+      "glob": "^7.1.5",
+      "mocha": "^6.2.2",
+      "typescript": "^3.6.4",
+      "vscode-test": "^1.2.2"
+   }
+}

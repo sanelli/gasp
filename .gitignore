@@ -8,5 +8,8 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 
-.vscode/
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+.vscode/tasks.json
+
 build/
