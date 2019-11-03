@@ -145,18 +145,43 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
    {
       auto variable_identifier = blaise::ast::blaise_ast_identifier_utility::as_variable_identifier(identifier);
       variable_name = variable_identifier->variable()->name();
-
       auto variable_index_it = variables_mapping.find(variable_name);
       if (variable_index_it == variables_mapping.end())
          throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
       auto variable_index = variable_index_it->second;
 
-      auto store_instruction_code = compute_instruction_code(statement->expression()->result_type(),
-                                                             torricelly_inst_code::STORE_INTEGER,
-                                                             torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
-                                                             torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
-      auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
-      torricelly_subroutine->append_instruction(store_instruction);
+      auto variable_type = variable_identifier->variable()->type();
+      if (!ast::blaise_ast_utility::is_array(variable_type))
+      {
+         auto store_instruction_code = compute_instruction_code(statement->expression()->result_type(),
+                                                                torricelly_inst_code::STORE_INTEGER,
+                                                                torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
+                                                                torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
+         auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+         torricelly_subroutine->append_instruction(store_instruction);
+      }
+      else
+      {
+         auto array_type = ast::blaise_ast_utility::as_array_type(variable_type);
+         if (!array_type->is_unbounded())
+            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' must be unbounded."));
+
+         auto underlying_array_type = array_type->underlying_type();
+
+         auto statement_expression_type = statement->expression()->result_type();
+         if (!ast::blaise_ast_utility::is_array(variable_type))
+            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Cannot assigned expression to array '", variable_name, "'."));
+         // TODO: Check dimensions: right now it can only be just one
+
+         auto expression_array_type = ast::blaise_ast_utility::as_array_type(statement_expression_type);
+         auto expression_underlying_array_type = expression_array_type->underlying_type();
+
+         if (!underlying_array_type->equals(expression_underlying_array_type))
+            throw blaise_to_torricelly_internal_error(sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' has a different type of expression."));
+
+         auto store_instruction = torricelly_instruction::make(torricelly_inst_code::STORE_ARRAY, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+         torricelly_subroutine->append_instruction(store_instruction);
+      }
    }
    break;
    case blaise::ast::blaise_ast_identifier_type::ARRAY:

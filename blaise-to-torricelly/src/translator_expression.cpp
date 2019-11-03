@@ -104,7 +104,9 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    case ast::blaise_ast_expression_type::NEW:
    {
       auto new_expression = ast::blaise_ast_expression_utility::as_new(expression);
+      translate_new_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, new_expression, max_stack_size);
    }
+   break;
    default:
       throw blaise_to_torricelly_internal_error("Unknown or unsupported expression type found during translation.");
    }
