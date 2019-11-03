@@ -658,7 +658,8 @@ void blaise_to_torricelly::translator::translate_new_expression(std::shared_ptr<
    max_stack_size = 2U;
 
    // Translate expressions from left to right
-   for (auto parameter_index = 0; expression->count_parameters(); ++parameter_index)
+
+   for (auto parameter_index = 0; parameter_index < expression->count_parameters(); ++parameter_index)
    {
       unsigned int expression_max_stack_size;
       auto parameter_expression = expression->get_parameter(parameter_index);
