@@ -120,6 +120,29 @@ torricelly_activation_record_local_array_underlying_type gasp::torricelly::inter
    }
 }
 
+torricelly_activation_record_local_array_underlying_type gasp::torricelly::interpreter::to_underlying_type(torricelly_activation_record_local_type type)
+{
+   switch (type)
+   {
+   case torricelly_activation_record_local_type::BOOLEAN:
+      return torricelly_activation_record_local_array_underlying_type::BOOLEAN;
+   case torricelly_activation_record_local_type::INTEGER:
+      return torricelly_activation_record_local_array_underlying_type::INTEGER;
+   case torricelly_activation_record_local_type::FLOAT:
+      return torricelly_activation_record_local_array_underlying_type::FLOAT;
+   case torricelly_activation_record_local_type::DOUBLE:
+      return torricelly_activation_record_local_array_underlying_type::DOUBLE;
+   case torricelly_activation_record_local_type::CHAR:
+      return torricelly_activation_record_local_array_underlying_type::CHAR;
+   case torricelly_activation_record_local_type::POINTER:
+   case torricelly_activation_record_local_type::VOID:
+   case torricelly_activation_record_local_type::UNDEFINED:
+      throw torricelly_interpreter_error(sanelli::make_string("Connt convert record type ", to_string(type), " into underlying type"));
+   default:
+      throw torricelly_interpreter_error(sanelli::make_string("Unknown type with ID ", (int)type, " cannot be converted into underlying type"));
+   }
+}
+
 torricelly_activation_record_local_multidimensional_array::torricelly_activation_record_local_multidimensional_array(
     const std::vector<unsigned int> &dimensions, torricelly_activation_record_local_array_underlying_type underlying_type)
     : _underlying_type(underlying_type)
@@ -551,6 +574,16 @@ torricelly_activation_record_local torricelly_activation_record_local::make(int 
 torricelly_activation_record_local torricelly_activation_record_local::make(float f) { return torricelly_activation_record_local(f); }
 torricelly_activation_record_local torricelly_activation_record_local::make(double d) { return torricelly_activation_record_local(d); }
 torricelly_activation_record_local torricelly_activation_record_local::make(char c) { return torricelly_activation_record_local(c); }
+
+torricelly_activation_record_local torricelly_activation_record_local::make(const std::vector<unsigned int> &dimensions, torricelly_activation_record_local initial_value)
+{
+   auto underlying_type = to_underlying_type(initial_value.type());
+   auto pointer = std::shared_ptr<torricelly_activation_record_local_multidimensional_array>(
+       new torricelly_activation_record_local_multidimensional_array(dimensions, underlying_type));
+   for (auto index = 0; index < pointer->size(); ++index)
+      pointer->set(index, initial_value._value);
+   return torricelly_activation_record_local(pointer, torricelly_activation_record_local_underlying_type::ARRAY);
+}
 
 std::string gasp::torricelly::interpreter::to_string(const torricelly_activation_record_local &value)
 {

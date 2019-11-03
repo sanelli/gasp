@@ -56,6 +56,7 @@ std::string to_string(torricelly_activation_record_local_underlying_type type);
 std::string to_string(torricelly_activation_record_local_array_underlying_type type);
 
 torricelly_activation_record_local_array_underlying_type to_underlying_type(std::shared_ptr<torricelly_type> type);
+torricelly_activation_record_local_array_underlying_type to_underlying_type(torricelly_activation_record_local_type type);
 
 class torricelly_activation_record_local_multidimensional_array
 {
@@ -133,6 +134,7 @@ public:
    static torricelly_activation_record_local make(float f);
    static torricelly_activation_record_local make(double d);
    static torricelly_activation_record_local make(char c);
+   static torricelly_activation_record_local make(const std::vector<unsigned int>& dimensions, torricelly_activation_record_local initial_value);
 
    friend sanelli::memory;
 };
