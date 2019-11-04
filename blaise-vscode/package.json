@@ -26,7 +26,17 @@
             "command": "blaise-vscode.compile",
             "when": "editorTextFocus"
          }
-      ]
+      ],
+      "configuration": {
+         "title": "Blaise",
+         "properties": {
+            "blaise.gasp.path": {
+               "type": "string",
+               "default": "${workspaceFolder}/gasp",
+               "description": "Path to gasp executable"
+            }
+         }
+      }
    },
    "devDependencies": {
       "@types/glob": "^7.1.1",

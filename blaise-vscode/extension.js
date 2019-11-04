@@ -20,9 +20,13 @@ function activate(context) {
    let disposable = vscode.commands.registerCommand('blaise-vscode.compile', function () {
 
       var editor = vscode.window.activeTextEditor;
-      if(editor === undefined) return;
+      if (editor === undefined) return;
       var path = editor.document.uri.fsPath;
-      vscode.window.showInformationMessage("Compiling Blaise ! YAY!", `Path: ${path}`);
+      var gaspPath = vscode.workspace.getConfiguration().get("blaise.gasp.path");
+      var workspaceRoot = vscode.workspace.workspaceFolders[0].uri.path;
+      gaspPath = gaspPath.replace('${workspaceFolder}', workspaceRoot);
+      vscode.window.showInformationMessage(`touch ${path}.t`);
+      vscode.ShellExecution(`touch ${path}.t`);
    });
 
    context.subscriptions.push(disposable);
