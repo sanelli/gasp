@@ -24,9 +24,9 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
                      torricelly_value::make(module_name + "." + "main_"));
    auto print_char_local_id = module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
-                                                torricelly_value::make("io.print_c"));
+                                                torricelly_value::make(std::string("io.print_c")));
    auto read_char_local_id = module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
-                                               torricelly_value::make("io.read_char_"));
+                                               torricelly_value::make(std::string("io.read_char_")));
 
    // Add module dependencies
    auto io_dependency = torricelly::make_torricelly_module("io");
@@ -43,7 +43,6 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
 
    // Create temporaries for setting up the array allocation
    auto array_size_id = main->add_local(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), torricelly_value::make(30000));
-   auto array_dimensions_id = main->add_local(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), torricelly_value::make(1));
    auto array_initial_value_id = main->add_local(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), torricelly_value::make(0));
    auto array_has_initial_value_id = main->add_local(torricelly::make_torricelly_system_type(torricelly_system_type_type::BOOLEAN), torricelly_value::make(true));
 
@@ -53,7 +52,7 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    // Initialize the array
    auto load_array_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, array_size_id, torricelly_inst_ref_type::SUBROUTINE);
    main->append_instruction(load_array_size_instruction);
-   auto load_array_dimensions_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, array_dimensions_id, torricelly_inst_ref_type::SUBROUTINE);
+   auto load_array_dimensions_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, one_id, torricelly_inst_ref_type::SUBROUTINE);
    main->append_instruction(load_array_dimensions_instruction);
    auto load_array_initial_value_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, array_initial_value_id, torricelly_inst_ref_type::SUBROUTINE);
    main->append_instruction(load_array_initial_value_instruction);
@@ -65,7 +64,7 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    while (!input.eof())
    {
       char current;
-      input >> current;
+      input.get(current);
 
       switch (current)
       {
@@ -202,6 +201,10 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    // Free the array
    auto free_array_instruction = torricelly_instruction::make(torricelly_inst_code::FREE_ARRAY, array_pointer_id, torricelly_inst_ref_type::SUBROUTINE);
    main->append_instruction(free_array_instruction);
+
+   // Add final RET instruction
+   auto ret = torricelly_instruction::make(torricelly_inst_code::RET);
+   main->append_instruction(ret);
 
    if (_labels.size() > 0)
       throw bf_to_torricelly_error("Missing closing ] in code");
