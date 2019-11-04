@@ -13,6 +13,7 @@ target_link_libraries(gasp gasp-torricelly-lang-io)
 target_link_libraries(gasp gasp-torricelly-interpreter)
 target_link_libraries(gasp gasp-blaise-to-torricelly)
 target_link_libraries(gasp gasp-torricelly-debugger)
+target_link_libraries(gasp gasp-bf-to-torricelly)
 
 add_dependencies(gasp gasp-torricelly-native-io)
 add_dependencies(gasp gasp-torricelly-native-math)
