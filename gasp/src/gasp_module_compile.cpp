@@ -12,6 +12,7 @@
 #include <gasp/blaise/blaise_module_loader.hpp>
 #include <gasp/torricelly/torricelly.hpp>
 #include <gasp/blaise-to-torricelly/blaise-to-torricelly.hpp>
+#include <gasp/bf/bf-to-torricelly.hpp>
 #include <gasp/torricelly/torricelly_io.hpp>
 
 #include <gasp/module/gasp_module_compile.hpp>
@@ -23,6 +24,7 @@ using namespace gasp::blaise;
 using namespace gasp::blaise::ast;
 using namespace gasp::torricelly;
 using namespace gasp::blaise_to_torricelly;
+using namespace gasp::bf;
 
 gasp_module_compile::gasp_module_compile() {}
 gasp_module_compile::~gasp_module_compile() {}
@@ -35,17 +37,17 @@ std::string __get_target_path(std::string original_path, std::string module_name
    if (original_path == "")
       return "";
    std::filesystem::path path{original_path};
-   auto target_path = path.parent_path() / (module_name +  (format == "torricelly-binary" ? ".tb" : ".t"));
+   auto target_path = path.parent_path() / (module_name + (format == "torricelly-binary" ? ".tb" : ".t"));
 
    if (!std::filesystem::exists(target_path))
       return target_path;
 
    auto original_last_modified = std::filesystem::last_write_time(original_path);
    auto target_last_modified = std::filesystem::last_write_time(target_path);
-   
-   if(target_last_modified < original_last_modified)
+
+   if (target_last_modified < original_last_modified)
       return target_path;
-   
+
    return "";
 }
 
@@ -103,13 +105,6 @@ bool gasp_module_compile::run(int argc, char *argv[])
    set_output_format("torricelly-binary");
    parse_command_line(argc, argv);
 
-   blaise_tokenizer tokenizer;
-   blaise_parser parser;
-   std::vector<std::string> module_loader_path{"library"};
-   auto loader = sanelli::memory::make_shared<blaise_module_loader>(std::filesystem::current_path().string(), module_loader_path);
-   blaise_parser_context context([loader](std::string dependency) { return loader->get_module(dependency); });
-   std::vector<std::shared_ptr<torricelly_module>> modules;
-
    if (is_help())
    {
       std::cerr << "Command line: " << argv[0] << " " << name() << " [options]" << std::endl;
@@ -118,9 +113,9 @@ bool gasp_module_compile::run(int argc, char *argv[])
       return true;
    }
 
-   if (input_format() != "blaise")
+   if (input_format() != "blaise" && input_format() != "bf")
    {
-      std::cerr << "Input format '" << input_format() << "' is not supported." << std::endl;
+      std::cerr << "Input format '" << input_format() << "' is not supported (Supported formats are blaise and bf)." << std::endl;
       return false;
    }
 
@@ -132,19 +127,36 @@ bool gasp_module_compile::run(int argc, char *argv[])
 
    try
    {
-      tokenizer.tokenize(input(), context);
-      parser.parse(context);
-      __translate_dependencies(output(), output_format(), context.module(), modules);
-     
+      std::shared_ptr<torricelly_module> module;
+
+      if (input_format() == "blaise")
+      {
+         blaise_tokenizer tokenizer;
+         blaise_parser parser;
+         std::vector<std::string> module_loader_path{"library"};
+         auto loader = sanelli::memory::make_shared<blaise_module_loader>(std::filesystem::current_path().string(), module_loader_path);
+         blaise_parser_context context([loader](std::string dependency) { return loader->get_module(dependency); });
+         std::vector<std::shared_ptr<torricelly_module>> modules;
+         tokenizer.tokenize(input(), context);
+         parser.parse(context);
+         __translate_dependencies(output(), output_format(), context.module(), modules);
+         module = modules.at(0);
+      }
+      else if (input_format() == "bf")
+      {
+         bf_to_torricelly_translator translator;
+         module = translator.translate("brainfuck", input());
+      }
+
       if (output_format() == "torricelly-text")
       {
          torricelly_text_output torricelly_output(output());
-         torricelly_output << modules.at(0);
+         torricelly_output << module;
       }
       else if (output_format() == "torricelly-binary")
       {
          torricelly_binary_output torricelly_output(output());
-         torricelly_output << modules.at(0);
+         torricelly_output << module;
       }
       return true;
    }
