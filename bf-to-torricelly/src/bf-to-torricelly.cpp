@@ -18,6 +18,7 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    // Create module and subroutine
    auto module = torricelly::make_torricelly_module(module_name);
    auto main = torricelly::make_torricelly_subroutine("main_", torricelly::make_torricelly_system_type(torricelly_system_type_type::VOID));
+   main->set_flags(torricelly_subroutine_flag::MAIN | torricelly_subroutine_flag::STATIC);
    module->add_subroutine(main);
 
    // Add subroutines used locals
@@ -37,9 +38,10 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    auto index_variable_id = main->add_local(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), torricelly_value::make(0));
    std::vector<unsigned int> array_dimensions;
    array_dimensions.push_back(torricelly::torricelly_array_type::undefined_dimension());
-   auto array_pointer_id = main->add_local(
-       torricelly::make_torricelly_array_type(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), array_dimensions),
-       torricelly_value::make(0));
+   auto array_type = torricelly::make_torricelly_array_type(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), array_dimensions);
+   auto array_underlying_type = array_type->underlying_type();
+   auto array_initial_value = torricelly_value::get_default_value(array_underlying_type);
+   auto array_pointer_id = main->add_local(array_type, torricelly_value::make(array_type, array_initial_value));
 
    // Create temporaries for setting up the array allocation
    auto array_size_id = main->add_local(torricelly::make_torricelly_system_type(torricelly_system_type_type::INTEGER), torricelly_value::make(30000));
