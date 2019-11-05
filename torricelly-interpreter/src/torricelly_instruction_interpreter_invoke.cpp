@@ -11,7 +11,8 @@ using namespace gasp;
 using namespace gasp::torricelly;
 using namespace gasp::torricelly::interpreter;
 
-std::pair<std::shared_ptr<torricelly::torricelly_module>, std::shared_ptr<torricelly::torricelly_subroutine>> torricelly_instruction_interpreter::find_subroutine(std::shared_ptr<torricelly::torricelly_module> module, unsigned int parameter_index) {
+std::pair<std::shared_ptr<torricelly::torricelly_module>, std::shared_ptr<torricelly::torricelly_subroutine>> torricelly_instruction_interpreter::find_subroutine(std::shared_ptr<torricelly::torricelly_module> module, unsigned int parameter_index)
+{
    auto interpreter = _interpreter.lock();
    auto activation_record = interpreter->activation_record();
 
@@ -50,7 +51,8 @@ void torricelly_instruction_interpreter::execute_static_invoke(const torricelly:
    interpreter->push_activation_record(result.first, result.second);
 }
 
-void torricelly_instruction_interpreter::execute_native_invoke(const torricelly::torricelly_instruction& instruction){
+void torricelly_instruction_interpreter::execute_native_invoke(const torricelly::torricelly_instruction &instruction)
+{
 
    auto interpreter = _interpreter.lock();
    auto activation_record = interpreter->activation_record();
@@ -63,16 +65,16 @@ void torricelly_instruction_interpreter::execute_native_invoke(const torricelly:
    auto target_subroutine = result.second;
    auto native_library = interpreter->_native_module_loader->get_library(target_module->module_name());
    auto target_subroutine_name = target_subroutine->name();
-   auto target_subroutine_name_without_module = target_subroutine_name.substr(target_subroutine_name.find(".")+1);
+   auto target_subroutine_name_without_module = target_subroutine_name.substr(target_subroutine_name.find(".") + 1);
    auto native_subroutine = native_library->get_native(target_subroutine_name_without_module);
 
    // Setup the call context
    auto context = interpreter::make_torricelly_native_context();
    std::vector<torricelly_activation_record_local> temp_stack;
-   for(auto parameter_index = 0; parameter_index < target_subroutine->count_parameters(); ++parameter_index)
+   for (auto parameter_index = 0; parameter_index < target_subroutine->count_parameters(); ++parameter_index)
       temp_stack.push_back(activation_record->pop());
-   for(auto parameter_index = 0; parameter_index < target_subroutine->count_parameters(); ++parameter_index)
-   { 
+   for (auto parameter_index = 0; parameter_index < target_subroutine->count_parameters(); ++parameter_index)
+   {
       context->push(temp_stack.back());
       temp_stack.pop_back();
    }
@@ -81,7 +83,8 @@ void torricelly_instruction_interpreter::execute_native_invoke(const torricelly:
    native_subroutine(context);
 
    // Push return values if not void
-   if(!torricelly_type_utility::is_void(target_subroutine->return_type())){
+   if (!torricelly_type_utility::is_void(target_subroutine->return_type()))
+   {
       auto return_value = context->pop();
       activation_record->push(return_value);
    }
