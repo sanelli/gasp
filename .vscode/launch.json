@@ -5,6 +5,22 @@
    "version": "0.2.0",
    "configurations": [
       {
+         "name": "Run dump on helloworld.tb",
+         "type": "cppdbg",
+         "request": "launch",
+         "program": "${workspaceFolder}/build/gasp/gasp",
+         "args": [
+            "dump",
+            "-i",
+            "${workspaceFolder}/build/gasp/helloworld.tb"
+         ],
+         "stopAtEntry": false,
+         "cwd": "${workspaceFolder}/build/gasp",
+         "environment": [],
+         "externalConsole": false,
+         "MIMode": "lldb"
+      },
+      {
          "name": "Run blaise-vscode",
          "type": "extensionHost",
          "request": "launch",
@@ -12,38 +28,6 @@
          "args": [
             "--extensionDevelopmentPath=${workspaceFolder}/blaise-vscode"
          ]
-      },
-      {
-         "name": "Run execute on sample",
-         "type": "cppdbg",
-         "request": "launch",
-         "program": "${workspaceFolder}/build/gasp/gasp",
-         "args": [
-            "execute",
-            "-i",
-            "${workspaceFolder}/build/gasp/sample.tb"
-         ],
-         "stopAtEntry": false,
-         "cwd": "${workspaceFolder}/build/gasp",
-         "environment": [],
-         "externalConsole": false,
-         "MIMode": "lldb"
-      },
-      {
-         "name": "Run compile on sample",
-         "type": "cppdbg",
-         "request": "launch",
-         "program": "${workspaceFolder}/build/gasp/gasp",
-         "args": [
-            "compile",
-            "-i",
-            "${workspaceFolder}/build/gasp/sample.blaise"
-         ],
-         "stopAtEntry": false,
-         "cwd": "${workspaceFolder}/build/gasp",
-         "environment": [],
-         "externalConsole": false,
-         "MIMode": "lldb"
       }
    ]
 }
