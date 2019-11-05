@@ -83,7 +83,7 @@ bool torricelly_debugger_command_code::execute(std::ostream &out, const std::vec
          out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
-         out << "   show: display the instruction pointed by the instruction pointer (defult option)." << std::endl;
+         out << "   show: display the instruction pointed by the instruction pointer (defuault option)." << std::endl;
          out << "   sub: display the instructions of the current subroutine being executed." << std::endl;
          out << "   module: display the instructions of the subroutines of the module being executed." << std::endl;
       }

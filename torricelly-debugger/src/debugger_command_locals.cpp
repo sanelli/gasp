@@ -91,7 +91,7 @@ bool torricelly_debugger_command_locals::execute(std::ostream &out, const std::v
          out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
-         out << "   all: display all the locals (defult option)" << std::endl;
+         out << "   all: display all the locals (defuault option)" << std::endl;
          out << "   count: display the number of locals" << std::endl;
          out << "   module: display the locals of the module" << std::endl;
          out << "   <number>: display the local at the specified index" << std::endl;

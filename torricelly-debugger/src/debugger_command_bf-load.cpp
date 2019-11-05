@@ -74,7 +74,7 @@ bool torricelly_debugger_command_bf_load::execute(std::ostream &out, const std::
          out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
-         out << "   <filename>: Load filename (defult option)" << std::endl;
+         out << "   <filename>: Load filename (defuault option)" << std::endl;
       }
       else
       {

@@ -96,7 +96,7 @@ bool torricelly_debugger_command_blaise_load::execute(std::ostream &out, const s
          out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
-         out << "   <filename> [parameters]: Load filename with the given parameters (defult option)" << std::endl;
+         out << "   <filename> [parameters]: Load filename with the given parameters (defuault option)" << std::endl;
       }
       else
       {

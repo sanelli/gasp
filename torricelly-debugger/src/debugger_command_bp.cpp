@@ -75,7 +75,7 @@ bool torricelly_debugger_command_bp::execute(std::ostream &out, const std::vecto
          out << "Usage: " << command() << " [option]" << std::endl;
          out << "Options:" << std::endl;
          out << "   help: display this message" << std::endl;
-         out << "   list: display the list of breakpoints for the currenct subroutine (defult option)" << std::endl;
+         out << "   list: display the list of breakpoints for the currenct subroutine (defuault option)" << std::endl;
          out << "   all: display all the breakpoints" << std::endl;
          out << "   add <ip>: add a breakpoint to the current subroutine at the given instruction number" << std::endl;
          out << "   add <subroutine> <ip>: add a breakpoint to the given subroutine at the given instruction number" << std::endl;
