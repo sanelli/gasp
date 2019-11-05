@@ -10,6 +10,7 @@ target_sources(gasp-torricelly-debugger
         debugger_command_code.hpp
         debugger_command_help.hpp
         debugger_command_stop.hpp
+        debugger_command_load.hpp
         debugger_command_blaise-load.hpp
         debugger_command_bf-load.hpp
 )

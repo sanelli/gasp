@@ -10,5 +10,6 @@
 #include <gasp/torricelly/impl/debugger_command_code.hpp>
 #include <gasp/torricelly/impl/debugger_command_help.hpp>
 #include <gasp/torricelly/impl/debugger_command_stop.hpp>
+#include <gasp/torricelly/impl/debugger_command_load.hpp>
 #include <gasp/torricelly/impl/debugger_command_blaise-load.hpp>
 #include <gasp/torricelly/impl/debugger_command_bf-load.hpp>
