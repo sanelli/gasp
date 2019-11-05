@@ -36,7 +36,10 @@ extern "C" void read_float_(std::shared_ptr<gasp::torricelly::interpreter::torri
 
 extern "C" void read_char_(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
-   read_template<char>(context);
+   char value;
+   std::cin.get(value);
+   auto result = interpreter::torricelly_activation_record_local::make(value);
+   context->push(result);
 }
 
 } // namespace gasp::torricelly::native::io

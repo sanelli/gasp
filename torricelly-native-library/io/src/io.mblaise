@@ -3,6 +3,7 @@ module io;
 function native read_integer() : integer;
 function native read_float() : float;
 function native read_double() : double;
+function native read_char() : char;
 
 procedure native print(value: boolean);
 procedure native print(value: char);
