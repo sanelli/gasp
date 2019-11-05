@@ -45,7 +45,7 @@ void torricelly_debugger::unload()
    _breakpoints.clear();
 }
 
- void torricelly_debugger::stop() { _stop = true; }
+void torricelly_debugger::stop() { _stop = true; }
 
 torricelly_debugger_status torricelly_debugger::status() const { return _status; }
 std::shared_ptr<interpreter::torricelly_interpreter> torricelly_debugger::interpreter() const { return _interpreter; }
@@ -122,8 +122,10 @@ std::shared_ptr<torricelly_debugger> gasp::torricelly::debugger::make_torricelly
    debugger->install_command(std::make_shared<torricelly_debugger_command_stack>(debugger));
    debugger->install_command(std::make_shared<torricelly_debugger_command_step>(debugger));
    debugger->install_command(std::make_shared<torricelly_debugger_command_help>(debugger));
-   debugger->install_command(std::make_shared<torricelly_debugger_command_blaise_load>(debugger));
    debugger->install_command(std::make_shared<torricelly_debugger_command_stop>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_blaise_load>(debugger));
+   debugger->install_command(std::make_shared<torricelly_debugger_command_bf_load>(debugger));
+
    return debugger;
 }
 

@@ -75,7 +75,7 @@ bool torricelly_debugger_command_blaise_load::load(std::ostream &out, const std:
 std::string torricelly_debugger_command_blaise_load::command() const { return "blaise-load"; }
 std::string torricelly_debugger_command_blaise_load::description() const
 {
-   return "Load a blaise program and covnert into torricelly code to be debugged";
+   return "Load a blaise program and convert it into torricelly code to be debugged";
 }
 bool torricelly_debugger_command_blaise_load::execute(std::ostream &out, const std::vector<std::string> &parameters)
 {

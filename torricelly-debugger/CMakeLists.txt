@@ -10,6 +10,7 @@ target_link_libraries(gasp-torricelly-debugger gasp-torricelly-lang)
 target_link_libraries(gasp-torricelly-debugger gasp-torricelly-lang-io)
 target_link_libraries(gasp-torricelly-debugger gasp-torricelly-interpreter)
 target_link_libraries(gasp-torricelly-debugger gasp-blaise-to-torricelly)
+target_link_libraries(gasp-torricelly-debugger gasp-bf-to-torricelly)
 target_include_directories(gasp-torricelly-debugger PUBLIC include)
 
 add_subdirectory(include)
