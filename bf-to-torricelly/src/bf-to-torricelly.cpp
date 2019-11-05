@@ -60,8 +60,10 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    main->append_instruction(load_array_initial_value_instruction);
    auto load_array_has_initial_value_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_BOOLEAN, array_has_initial_value_id, torricelly_inst_ref_type::SUBROUTINE);
    main->append_instruction(load_array_has_initial_value_instruction);
-   auto allocate_array_instruction = torricelly_instruction::make(torricelly_inst_code::ALLOCATE_INT_ARRAY, array_pointer_id, torricelly_inst_ref_type::SUBROUTINE);
+   auto allocate_array_instruction = torricelly_instruction::make(torricelly_inst_code::ALLOCATE_INT_ARRAY);
    main->append_instruction(allocate_array_instruction);
+   auto store_array_instruction = torricelly_instruction::make(torricelly_inst_code::STORE_ARRAY, array_pointer_id, torricelly_inst_ref_type::SUBROUTINE);
+   main->append_instruction(store_array_instruction);
 
    while (!input.eof())
    {
