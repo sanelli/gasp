@@ -188,7 +188,7 @@ void torricelly_interpreter::step()
                // TODO: Check that the type matches with the expected return type
                _return_value = current_activation_record->peek();
             else
-               throw torricelly_interpreter_error(sanelli::make_string("Stack does not contain function return value for main function."));
+               _return_value = torricelly_activation_record_local::make(0);
 
             _status = torricelly_interpreter_status::FINISHED;
          }
