@@ -46,7 +46,7 @@ char torricelly::to_binary(torricelly_system_type_type type)
       return 'c';
    case torricelly_system_type_type::BOOLEAN:
       return 'b';
-   case torricelly_system_type_type::STRING_LITERAL:
+   case torricelly_system_type_type::LITERAL_STRING:
       return 's';
    default:
       throw torricelly_error("Unknown torricelly system type while converting type to binary format");
@@ -133,7 +133,7 @@ torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(
    case 'b':
       return torricelly_system_type_type::BOOLEAN;
    case 's':
-      return torricelly_system_type_type::STRING_LITERAL;
+      return torricelly_system_type_type::LITERAL_STRING;
    default:
       throw torricelly_error(sanelli::make_string("Cannot convert binary value '", (int)byte, "' into torricelly system type type"));
    }

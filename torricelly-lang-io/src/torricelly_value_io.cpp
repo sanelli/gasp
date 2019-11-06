@@ -46,7 +46,7 @@ std::string gasp::torricelly::to_string(torricelly_value value)
       case torricelly_system_type_type::BOOLEAN:
          os << (value.get_boolean() ? "true" : "false");
          break;
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
          os << "[" << value.get_string_literal().length() << "]" << value.get_string_literal();
          break;
       default:
@@ -127,7 +127,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
       case torricelly_system_type_type::BOOLEAN:
          os << value.get_boolean();
          break;
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
          os << value.get_string_literal();
          break;
       default:
@@ -206,7 +206,7 @@ torricelly_value torricelly::torricelly_value_from_binary(torricelly_binary_inpu
          is >> value;
          return torricelly_value::make(value);
       }
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
       {
          std::string value;
          is >> value;
