@@ -45,6 +45,9 @@ enum class blaise_token_type : unsigned char
    TYPE_DOUBLE,
    TYPE_BOOLEAN,
    TYPE_ARRAY,
+   TYPE_LONG,
+   TYPE_SHORT,
+   TYPE_BYTE,
 
    // PUNCTUATION
    ASSIGNMENT,
@@ -64,6 +67,9 @@ enum class blaise_token_type : unsigned char
    INTEGER_LITERAL,
    FLOAT_LITERAL,
    DOUBLE_LITERAL,
+   BYTE_LITERAL,
+   SHORT_LITERAL,
+   LONG_LITERAL,
    INTEGER_BASE_TWO_LITERAL,
    INTEGER_BASE_EIGHT_LITERAL,
    INTEGER_BASE_SIXTEEN_LITERAL,

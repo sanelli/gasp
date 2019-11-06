@@ -7,7 +7,7 @@ using namespace gasp::blaise;
 using namespace sanelli;
 
 blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_provider_constructor()
-{   
+{
    // KEYWORDS
    add_token(blaise_token_type::PROGRAM, "program", "PROGRAM");
    add_token(blaise_token_type::MODULE, "module", "MODULE");
@@ -40,6 +40,9 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
 
    // TYPES
    add_token(blaise_token_type::TYPE_INTEGER, "integer", "TYPE_INTEGER");
+   add_token(blaise_token_type::TYPE_LONG, "long", "TYPE_LONG");
+   add_token(blaise_token_type::TYPE_SHORT, "short", "TYPE_SHORT");
+   add_token(blaise_token_type::TYPE_BYTE, "byte", "TYPE_BYTE");
    add_token(blaise_token_type::TYPE_CHAR, "char", "TYPE_CHAR");
    add_token(blaise_token_type::TYPE_STRING, "string", "TYPE_STRING");
    add_token(blaise_token_type::TYPE_FLOAT, "float", "TYPE_FLOAT");
@@ -73,11 +76,14 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::INTEGER_BASE_TWO_LITERAL, "0b[0-1]+", "INTEGER_BASE_TWO_LITERAL", true);
    add_token(blaise_token_type::INTEGER_BASE_EIGHT_LITERAL, "0o[0-7]+", "INTEGER_BASE_EIGHT_LITERAL", true);
    add_token(blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL, "0x[0-9A-Fa-f]+", "INTEGER_BASE_SIXTEEN_LITERAL", true);
-   add_token(blaise_token_type::FLOAT_LITERAL, "[0-9]+\\.[0-9]+f", "FLOAT_LITERAL", true);
-   add_token(blaise_token_type::DOUBLE_LITERAL, "[0-9]+\\.[0-9]+d?", "DOUBLE_LITERAL", true);
+   add_token(blaise_token_type::FLOAT_LITERAL, "[0-9]+\\.[0-9]+(f|F)", "FLOAT_LITERAL", true);
+   add_token(blaise_token_type::DOUBLE_LITERAL, "[0-9]+\\.[0-9]+(d|D)?", "DOUBLE_LITERAL", true);
+   add_token(blaise_token_type::LONG_LITERAL, "[0-9]+(l|L)", "INTEGER_LITERAL", true);
+   add_token(blaise_token_type::SHORT_LITERAL, "[0-9]+(s|S)", "INTEGER_LITERAL", true);
+   add_token(blaise_token_type::BYTE_LITERAL, "[0-9]+(b|B)", "INTEGER_LITERAL", true);
    add_token(blaise_token_type::INTEGER_LITERAL, "[0-9]+", "INTEGER_LITERAL", true);
-   add_token(blaise_token_type::STRING_LITERAL, "\"(?:\\\\.|[^\"\\\\])*\"", "STIRNG_LITERAL", true, true, true);
-   add_token(blaise_token_type::CHAR_LITERAL, "'(?:\\\\.|\\\\u[0-9A-Fa-f]{4}|[^'\\\\])'", "CHAR_LITERAL", true, true, true);
+   add_token(blaise_token_type::STRING_LITERAL, "\"(?:[^\"\\\\]|\\\\(?:a|b|n|t|0|r|f|\")|\\\\u[0-9a-fA-F]{2})*\"", "STIRNG_LITERAL", true, true, true);
+   add_token(blaise_token_type::CHAR_LITERAL, "'(?:[^'\\\\]|\\\\(?:a|b|n|st|0|r|f|')|\\\\u[0-9a-fA-F]{2})'", "CHAR_LITERAL", true, true, true);
    add_token(blaise_token_type::BOOLEAN_LITERAL, "true|false", "BOOLEAN_LITERAL", true);
    add_token(blaise_token_type::IDENTIFIER, "[a-zA-Z_][a-zA-Z0-9_]*", "IDENTIFIER", true);
 }
