@@ -143,7 +143,7 @@ void torricelly_module::validate() const
       auto subroutine = get_subroutine(subroutine_index);
       auto subroutine_name = subroutine->name();
       if (!get_local_with_string_literal(subroutine_name))
-         throw torricelly_error(sanelli::make_string("Cannot find a local of type '", torricelly_system_type_type::STRING_LITERAL, "' and value '", subroutine_name, "' in module '", module_name(), "'."));
+         throw torricelly_error(sanelli::make_string("Cannot find a local of type '", torricelly_system_type_type::LITERAL_STRING, "' and value '", subroutine_name, "' in module '", module_name(), "'."));
       subroutine->validate(num_of_vars);
    }
 }

@@ -88,7 +88,7 @@ bool torricelly_type_utility::is_string_literal(std::shared_ptr<torricelly_type>
    if (torricelly_type_utility::is_system_type(type))
       return false;
    auto system_type = torricelly_type_utility::as_system_type(type);
-   return system_type->system_type() == torricelly_system_type_type::STRING_LITERAL;
+   return system_type->system_type() == torricelly_system_type_type::LITERAL_STRING;
 }
 
 std::shared_ptr<torricelly_system_type> torricelly::make_torricelly_system_type(torricelly_system_type_type system_type)
@@ -150,7 +150,7 @@ std::string torricelly::to_string(torricelly_system_type_type type)
       return "char";
    case torricelly_system_type_type::BOOLEAN:
       return "boolean";
-   case torricelly_system_type_type::STRING_LITERAL:
+   case torricelly_system_type_type::LITERAL_STRING:
       return "string_literal";
    default:
       throw torricelly_error("Unknown torricelly system type");

@@ -87,7 +87,7 @@ void torricelly_value::copy_value(const torricelly_value_union &value)
       case torricelly_system_type_type::BOOLEAN:
          _value._boolean = value._boolean;
          break;
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
          _value._string_literal = value._string_literal;
          break;
       default:
@@ -158,7 +158,7 @@ double torricelly_value::get_double() const
 }
 std::string torricelly_value::get_string_literal() const
 {
-   throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL));
+   throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::LITERAL_STRING));
    return _value._string_literal;
 }
 std::shared_ptr<std::vector<torricelly_value>> torricelly_value::get_array() const
@@ -202,7 +202,7 @@ torricelly_value torricelly_value::make(std::string value)
 {
    torricelly_value_union value_union;
    value_union._string_literal = value;
-   return torricelly_value(torricelly_system_type_type::STRING_LITERAL, value_union);
+   return torricelly_value(torricelly_system_type_type::LITERAL_STRING, value_union);
 }
 torricelly_value torricelly_value::make(std::shared_ptr<torricelly_array_type> type, torricelly_value initial_value)
 {
@@ -234,7 +234,7 @@ torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_
          return torricelly_value::make('\0');
       case torricelly_system_type_type::BOOLEAN:
          return torricelly_value::make(false);
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
          return torricelly_value::make("");
       default:
          throw torricelly_error("Cannot get default value for unknwon system type.");
@@ -280,7 +280,7 @@ torricelly_value torricelly_value::get_value_from_string(const std::string &valu
          return torricelly_value::make(value.length() > 0 ? value[0] : '\0');
       case torricelly_system_type_type::BOOLEAN:
          return torricelly_value::make(value == "true");
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
          return torricelly_value::make(value);
       default:
          throw torricelly_error("Cannot get default value for unknwon system type.");
