@@ -55,8 +55,14 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sa
       return make_plain_type(blaise_ast_system_type::DOUBLE);
    case blaise_token_type::TYPE_BOOLEAN:
       return make_plain_type(blaise_ast_system_type::BOOLEAN);
+   case blaise_token_type::TYPE_BYTE:
+      return make_plain_type(blaise_ast_system_type::BYTE);
+   case blaise_token_type::TYPE_SHORT:
+      return make_plain_type(blaise_ast_system_type::SHORT);
+   case blaise_token_type::TYPE_LONG:
+      return make_plain_type(blaise_ast_system_type::BYTE);
    default:
-      throw blaise_ast_error(token.line(), token.column(), sanelli::make_string("Canno convert token '", token.type(), "' into a type."));
+      throw blaise_ast_error(token.line(), token.column(), sanelli::make_string("Cannot convert token '", token.type(), "' into a type."));
    }
 }
 
@@ -105,8 +111,14 @@ std::string gasp::blaise::ast::to_string(std::shared_ptr<blaise_ast_type> type)
          return "double";
       case blaise_ast_system_type::FLOAT:
          return "float";
+      case blaise_ast_system_type::BYTE:
+         return "byte";
+      case blaise_ast_system_type::SHORT:
+         return "short";
       case blaise_ast_system_type::INTEGER:
          return "integer";
+      case blaise_ast_system_type::LONG:
+         return "long";
       case blaise_ast_system_type::STRING:
          return "string";
       case blaise_ast_system_type::VOID:
@@ -121,7 +133,7 @@ std::string gasp::blaise::ast::to_string(std::shared_ptr<blaise_ast_type> type)
       auto array_type = blaise_ast_utility::as_array_type(type);
       std::stringstream output;
       output << "array<" << to_string(array_type->underlying_type()) << ">";
-      if(!array_type->is_unbounded())
+      if (!array_type->is_unbounded())
          output << "[" << array_type->size() << "]";
       return output.str();
    }

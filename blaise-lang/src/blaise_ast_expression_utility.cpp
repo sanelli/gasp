@@ -34,6 +34,21 @@ std::shared_ptr<blaise_ast_expression_integer_value> blaise_ast_expression_utili
    return std::static_pointer_cast<blaise_ast_expression_integer_value>(expression);
 }
 
+std::shared_ptr<blaise_ast_expression_byte_value> blaise_ast_expression_utility::as_byte_literal(std::shared_ptr<blaise_ast_expression> expression)
+{
+   return std::static_pointer_cast<blaise_ast_expression_byte_value>(expression);
+}
+
+std::shared_ptr<blaise_ast_expression_short_value> blaise_ast_expression_utility::as_short_literal(std::shared_ptr<blaise_ast_expression> expression)
+{
+   return std::static_pointer_cast<blaise_ast_expression_short_value>(expression);
+}
+
+std::shared_ptr<blaise_ast_expression_long_value> blaise_ast_expression_utility::as_long_literal(std::shared_ptr<blaise_ast_expression> expression)
+{
+   return std::static_pointer_cast<blaise_ast_expression_long_value>(expression);
+}
+
 std::shared_ptr<blaise_ast_expression_generic_memory_access> blaise_ast_expression_utility::as_memory_access(std::shared_ptr<blaise_ast_expression> expression)
 {
    return std::static_pointer_cast<blaise_ast_expression_generic_memory_access>(expression);

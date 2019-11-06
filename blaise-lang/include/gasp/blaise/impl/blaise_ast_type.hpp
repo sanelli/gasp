@@ -22,7 +22,10 @@ enum class blaise_ast_system_type {
    DOUBLE,
    CHAR,
    STRING,
-   BOOLEAN
+   BOOLEAN,
+   BYTE,
+   SHORT,
+   LONG
 };
 
 class blaise_ast_type {

@@ -29,11 +29,16 @@ std::shared_ptr<const blaise_ast_array_type> blaise_ast_utility::as_array_type(c
    return std::dynamic_pointer_cast<const blaise_ast_array_type>(type);
 }
 
-bool blaise_ast_utility::is_integer(std::shared_ptr<blaise_ast_type> type)
+bool blaise_ast_utility::is_numeric(std::shared_ptr<blaise_ast_type> type, blaise_ast_system_type system_type)
 {
    if (!is_numeric(type))
       return false;
-   return as_plain_type(type)->system_type() == blaise_ast_system_type::INTEGER;
+   return as_plain_type(type)->system_type() == system_type;
+}
+
+bool blaise_ast_utility::is_integer(std::shared_ptr<blaise_ast_type> type)
+{
+   return is_numeric(type, blaise_ast_system_type::INTEGER);
 }
 
 bool blaise_ast_utility::is_numeric(std::shared_ptr<blaise_ast_type> type)
@@ -43,9 +48,29 @@ bool blaise_ast_utility::is_numeric(std::shared_ptr<blaise_ast_type> type)
    auto plain_type = as_plain_type(type);
    switch (plain_type->system_type())
    {
+   case blaise_ast_system_type::BYTE:
+   case blaise_ast_system_type::SHORT:
    case blaise_ast_system_type::INTEGER:
+   case blaise_ast_system_type::LONG:
    case blaise_ast_system_type::FLOAT:
    case blaise_ast_system_type::DOUBLE:
+      return true;
+   default:
+      return false;
+   }
+}
+
+bool blaise_ast_utility::is_integral_number(std::shared_ptr<blaise_ast_type> type)
+{
+   if (type->type_type() != ast::blaise_ast_type_type::PLAIN)
+      return false;
+   auto plain_type = as_plain_type(type);
+   switch (plain_type->system_type())
+   {
+   case blaise_ast_system_type::BYTE:
+   case blaise_ast_system_type::SHORT:
+   case blaise_ast_system_type::INTEGER:
+   case blaise_ast_system_type::LONG:
       return true;
    default:
       return false;
@@ -57,45 +82,83 @@ bool blaise_ast_utility::is_array(std::shared_ptr<blaise_ast_type> type)
    return type->type_type() == ast::blaise_ast_type_type::ARRAY;
 }
 
-bool blaise_ast_utility::is_boolean(std::shared_ptr<blaise_ast_type> type)
+bool blaise_ast_utility::is_system_type(std::shared_ptr<blaise_ast_type> type, blaise_ast_system_type system_type)
 {
    if (type->type_type() != ast::blaise_ast_type_type::PLAIN)
       return false;
    auto plain_type = as_plain_type(type);
-   switch (plain_type->system_type())
-   {
-   case blaise_ast_system_type::BOOLEAN:
-      return true;
-   default:
-      return false;
-   }
+   return system_type == plain_type->system_type();
+}
+
+bool blaise_ast_utility::is_boolean(std::shared_ptr<blaise_ast_type> type)
+{
+   return is_system_type(type, blaise_ast_system_type::BOOLEAN);
 }
 
 bool blaise_ast_utility::is_string(std::shared_ptr<blaise_ast_type> type)
 {
-   if (type->type_type() != ast::blaise_ast_type_type::PLAIN)
-      return false;
-   auto plain_type = as_plain_type(type);
-   switch (plain_type->system_type())
-   {
-   case blaise_ast_system_type::STRING:
-      return true;
-   default:
-      return false;
-   }
+   return is_system_type(type, blaise_ast_system_type::STRING);
 }
 
 bool blaise_ast_utility::is_char(std::shared_ptr<blaise_ast_type> type)
 {
-   if (type->type_type() != ast::blaise_ast_type_type::PLAIN)
-      return false;
-   auto plain_type = as_plain_type(type);
-   switch (plain_type->system_type())
+   return is_system_type(type, blaise_ast_system_type::CHAR);
+}
+
+bool blaise_ast_utility::is_long(std::shared_ptr<blaise_ast_type> type)
+{
+   return is_numeric(type, blaise_ast_system_type::LONG);
+}
+
+bool blaise_ast_utility::is_short(std::shared_ptr<blaise_ast_type> type)
+{
+   return is_numeric(type, blaise_ast_system_type::SHORT);
+}
+
+bool blaise_ast_utility::is_byte(std::shared_ptr<blaise_ast_type> type)
+{
+   return is_numeric(type, blaise_ast_system_type::BYTE);
+}
+
+uint8_t blaise_ast_utility::get_numeric_size(blaise_ast_system_type system_type)
+{
+   switch (system_type)
    {
-   case blaise_ast_system_type::CHAR:
-      return true;
+   case blaise_ast_system_type::BYTE:
+      return 1;
+   case blaise_ast_system_type::SHORT:
+      return 2;
+   case blaise_ast_system_type::INTEGER:
+      return 3;
+   case blaise_ast_system_type::LONG:
+      return 4;
+   case blaise_ast_system_type::FLOAT:
+      return 5;
+   case blaise_ast_system_type::DOUBLE:
+      return 6;
    default:
-      return false;
+      throw std::runtime_error("Type is not a numeric type and cannot get the size");
+   }
+}
+
+blaise_ast_system_type blaise_ast_utility::get_system_numeric_type_from_size(uint8_t size)
+{
+   switch (size)
+   {
+   case 1:
+      return blaise_ast_system_type::BYTE;
+   case 2:
+      return blaise_ast_system_type::SHORT;
+   case 3:
+      return blaise_ast_system_type::INTEGER;
+   case 4:
+      return blaise_ast_system_type::LONG;
+   case 5:
+      return blaise_ast_system_type::FLOAT;
+   case 6:
+      return blaise_ast_system_type::DOUBLE;
+   default:
+      throw std::runtime_error("Invalid size");
    }
 }
 
@@ -109,16 +172,12 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_binary_numeric_result(s
    auto system_type_left = as_plain_type(left)->system_type();
    auto system_type_right = as_plain_type(right)->system_type();
 
-   if (system_type_left == blaise_ast_system_type::INTEGER && system_type_right == blaise_ast_system_type::INTEGER)
-      return ast::make_plain_type(blaise_ast_system_type::INTEGER);
-   if ((system_type_left == blaise_ast_system_type::FLOAT && system_type_right == blaise_ast_system_type::FLOAT) ||
-       (system_type_left == blaise_ast_system_type::INTEGER && system_type_right == blaise_ast_system_type::FLOAT) ||
-       (system_type_left == blaise_ast_system_type::FLOAT && system_type_right == blaise_ast_system_type::INTEGER))
-      return ast::make_plain_type(blaise_ast_system_type::FLOAT);
-   if (system_type_left == blaise_ast_system_type::DOUBLE || system_type_right == blaise_ast_system_type::DOUBLE)
-      return ast::make_plain_type(blaise_ast_system_type::DOUBLE);
+   auto left_size = get_numeric_size(system_type_left);
+   auto right_size = get_numeric_size(system_type_right);
+   auto max_size = std::max(left_size, right_size);
+   auto max_type = get_system_numeric_type_from_size(max_size);
 
-   throw std::runtime_error("Unexpected runtime combination");
+   return ast::make_plain_type(max_type);
 }
 
 std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_binary_boolean_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right)
@@ -133,38 +192,6 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_binary_boolean_result(s
 
    if (system_type_left == blaise_ast_system_type::BOOLEAN && system_type_right == blaise_ast_system_type::BOOLEAN)
       return ast::make_plain_type(blaise_ast_system_type::BOOLEAN);
-   throw std::runtime_error("Unexpected runtime combination");
-}
-
-std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_binary_char_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right)
-{
-   if (!is_char(left))
-      throw std::runtime_error("left operand is not a char type");
-   if (!is_char(right))
-      throw std::runtime_error("right operand is not a char type");
-
-   auto system_type_left = as_plain_type(left)->system_type();
-   auto system_type_right = as_plain_type(right)->system_type();
-
-   if (system_type_left == blaise_ast_system_type::CHAR && system_type_right == blaise_ast_system_type::CHAR)
-      return ast::make_plain_type(blaise_ast_system_type::CHAR);
-   throw std::runtime_error("Unexpected runtime combination");
-}
-
-std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_binary_string_result(std::shared_ptr<blaise_ast_type> left, std::shared_ptr<blaise_ast_type> right)
-{
-   if (!is_char(left) && !is_string(left))
-      throw std::runtime_error("left operand is not a string/char type");
-   if (!is_char(right) && !is_string(right))
-      throw std::runtime_error("right operand is not a string/char type");
-   if (!is_string(left) && !is_string(right))
-      throw std::runtime_error("either the left or the right operand must be a string type");
-
-   auto system_type_left = as_plain_type(left)->system_type();
-   auto system_type_right = as_plain_type(right)->system_type();
-
-   if (system_type_left == blaise_ast_system_type::STRING || system_type_right == blaise_ast_system_type::STRING)
-      return ast::make_plain_type(blaise_ast_system_type::STRING);
    throw std::runtime_error("Unexpected runtime combination");
 }
 
@@ -205,18 +232,6 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const to
    }
    break;
    case blaise_token_type::PLUS:
-   {
-      if (is_numeric(left) && is_numeric(right))
-         return get_binary_numeric_result(left, right);
-
-      if (is_char(left) && is_char(right))
-         return get_binary_char_result(left, right);
-
-      if ((is_string(left) && (is_string(right) || is_char(right))) ||
-          (is_string(right) && (is_string(left) || is_char(left))))
-         return get_binary_string_result(left, right);
-   }
-   break;
    case blaise_token_type::MINUS:
    case blaise_token_type::MULTIPLY:
    case blaise_token_type::DIVIDE:
@@ -227,10 +242,18 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const to
    break;
    case blaise_token_type::REMAINDER:
    {
-      auto system_type_left = as_plain_type(left)->system_type();
-      auto system_type_right = as_plain_type(right)->system_type();
-      if (system_type_left == blaise_ast_system_type::INTEGER && system_type_right == blaise_ast_system_type::INTEGER)
-         return make_plain_type(blaise_ast_system_type::INTEGER);
+      if (is_integral_number(left) && is_integral_number(right))
+      {
+         auto system_type_left = as_plain_type(left)->system_type();
+         auto system_type_right = as_plain_type(right)->system_type();
+
+         auto left_size = get_numeric_size(system_type_left);
+         auto right_size = get_numeric_size(system_type_right);
+         auto max_size = std::max(left_size, right_size);
+         auto max_type = get_system_numeric_type_from_size(max_size);
+
+         return make_plain_type(max_type);
+      }
    }
    break;
    case blaise_token_type::GREAT_THAN:
@@ -262,10 +285,55 @@ bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, st
       auto system_type_to = as_plain_type(to)->system_type();
       switch (system_type_from)
       {
+      case blaise_ast_system_type::BYTE:
+         switch (system_type_to)
+         {
+         case blaise_ast_system_type::BYTE:
+         case blaise_ast_system_type::SHORT:
+         case blaise_ast_system_type::INTEGER:
+         case blaise_ast_system_type::LONG:
+         case blaise_ast_system_type::FLOAT:
+         case blaise_ast_system_type::DOUBLE:
+            return true;
+         default:
+            throw std::runtime_error(sanelli::make_string("Unsupported type '", to, "' passed as 'to' parameter"));
+         }
+      case blaise_ast_system_type::SHORT:
+         switch (system_type_to)
+         {
+         case blaise_ast_system_type::BYTE:
+            return false;
+         case blaise_ast_system_type::SHORT:
+         case blaise_ast_system_type::INTEGER:
+         case blaise_ast_system_type::LONG:
+         case blaise_ast_system_type::FLOAT:
+         case blaise_ast_system_type::DOUBLE:
+            return true;
+         default:
+            throw std::runtime_error(sanelli::make_string("Unsupported type '", to, "' passed as 'to' parameter"));
+         }
       case blaise_ast_system_type::INTEGER:
          switch (system_type_to)
          {
+         case blaise_ast_system_type::BYTE:
+         case blaise_ast_system_type::SHORT:
+            return false;
          case blaise_ast_system_type::INTEGER:
+         case blaise_ast_system_type::LONG:
+         case blaise_ast_system_type::FLOAT:
+         case blaise_ast_system_type::DOUBLE:
+            return true;
+         default:
+            throw std::runtime_error(sanelli::make_string("Unsupported type '", to, "' passed as 'to' parameter"));
+         }
+      case blaise_ast_system_type::LONG:
+         switch (system_type_to)
+         {
+         case blaise_ast_system_type::BYTE:
+         case blaise_ast_system_type::SHORT:
+         case blaise_ast_system_type::INTEGER:
+            return false;
+         case blaise_ast_system_type::LONG:
          case blaise_ast_system_type::FLOAT:
          case blaise_ast_system_type::DOUBLE:
             return true;
@@ -275,7 +343,10 @@ bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, st
       case blaise_ast_system_type::FLOAT:
          switch (system_type_to)
          {
+         case blaise_ast_system_type::BYTE:
+         case blaise_ast_system_type::SHORT:
          case blaise_ast_system_type::INTEGER:
+         case blaise_ast_system_type::LONG:
             return false;
          case blaise_ast_system_type::FLOAT:
          case blaise_ast_system_type::DOUBLE:
@@ -286,7 +357,10 @@ bool blaise_ast_utility::can_auto_cast(std::shared_ptr<blaise_ast_type> from, st
       case blaise_ast_system_type::DOUBLE:
          switch (system_type_to)
          {
+         case blaise_ast_system_type::BYTE:
+         case blaise_ast_system_type::SHORT:
          case blaise_ast_system_type::INTEGER:
+         case blaise_ast_system_type::LONG:
          case blaise_ast_system_type::FLOAT:
             return false;
          case blaise_ast_system_type::DOUBLE:
@@ -314,10 +388,34 @@ bool blaise_ast_utility::can_force_cast(std::shared_ptr<blaise_ast_type> from, s
    if (is_string(from) && is_string(to))
       return true;
 
+   // byte <--> boolean
+   if (is_byte(from) && is_boolean(to))
+      return true;
+   if (is_boolean(from) && is_byte(to))
+      return true;
+
+   // short <--> boolean
+   if (is_short(from) && is_boolean(to))
+      return true;
+   if (is_boolean(from) && is_short(to))
+      return true;
+
    // integer <--> boolean
    if (is_integer(from) && is_boolean(to))
       return true;
    if (is_boolean(from) && is_integer(to))
+      return true;
+
+   // byte <--> char
+   if (is_byte(from) && is_char(to))
+      return true;
+   if (is_char(from) && is_byte(to))
+      return true;
+
+   // short <--> char
+   if (is_short(from) && is_char(to))
+      return true;
+   if (is_char(from) && is_short(to))
       return true;
 
    // integer <--> char
@@ -325,6 +423,7 @@ bool blaise_ast_utility::can_force_cast(std::shared_ptr<blaise_ast_type> from, s
       return true;
    if (is_char(from) && is_integer(to))
       return true;
+
    return false;
 }
 

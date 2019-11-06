@@ -15,7 +15,10 @@ public:
    static std::shared_ptr<blaise_ast_expression_char_value> as_char_literal(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_double_value> as_double_literal(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_float_value> as_float_literal(std::shared_ptr<blaise_ast_expression> expression);
+   static std::shared_ptr<blaise_ast_expression_byte_value> as_byte_literal(std::shared_ptr<blaise_ast_expression> expression);
+   static std::shared_ptr<blaise_ast_expression_short_value> as_short_literal(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_integer_value> as_integer_literal(std::shared_ptr<blaise_ast_expression> expression);
+   static std::shared_ptr<blaise_ast_expression_long_value> as_long_literal(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_generic_memory_access> as_memory_access(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_unary> as_unary(std::shared_ptr<blaise_ast_expression> expression);
    static std::shared_ptr<blaise_ast_expression_binary> as_binary(std::shared_ptr<blaise_ast_expression> expression);
