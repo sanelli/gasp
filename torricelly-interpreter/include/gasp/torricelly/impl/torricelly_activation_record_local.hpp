@@ -37,7 +37,7 @@ enum class torricelly_activation_record_local_type
 enum class torricelly_activation_record_local_underlying_type
 {
    UNDEFINED,
-   STRING_LITERAL,
+   LITERAL_STRING,
    ARRAY
 };
 

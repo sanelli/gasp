@@ -48,7 +48,7 @@ std::string gasp::torricelly::interpreter::to_string(torricelly_activation_recor
    {
    case torricelly_activation_record_local_underlying_type::UNDEFINED:
       return "undefined";
-   case torricelly_activation_record_local_underlying_type::STRING_LITERAL:
+   case torricelly_activation_record_local_underlying_type::LITERAL_STRING:
       return "string_literal";
    case torricelly_activation_record_local_underlying_type::ARRAY:
       return "array";
@@ -100,8 +100,8 @@ torricelly_activation_record_local_array_underlying_type gasp::torricelly::inter
          return torricelly_activation_record_local_array_underlying_type::BOOLEAN;
       case torricelly::torricelly_system_type_type::CHAR:
          return torricelly_activation_record_local_array_underlying_type::CHAR;
-      case torricelly::torricelly_system_type_type::STRING_LITERAL:
-         throw torricelly_interpreter_error("STRING_LITERAL torricelly type unsupported for underlying type.");
+      case torricelly::torricelly_system_type_type::LITERAL_STRING:
+         throw torricelly_interpreter_error("LITERAL_STRING torricelly type unsupported for underlying type.");
       case torricelly::torricelly_system_type_type::VOID:
          throw torricelly_interpreter_error("VOID torricelly type unsupported for underlying type.");
       case torricelly::torricelly_system_type_type::UNDEFINED:
@@ -371,7 +371,7 @@ bool torricelly_activation_record_local::match(std::shared_ptr<torricelly::torri
          return _type == torricelly_activation_record_local_type::CHAR;
       case torricelly_system_type_type::BOOLEAN:
          return _type == torricelly_activation_record_local_type::BOOLEAN;
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
          return _type == torricelly_activation_record_local_type::POINTER;
       default:
          throw torricelly_interpreter_error("Unknown or unsupported torricelly system type when matching with activation record type.");
@@ -500,11 +500,11 @@ torricelly_activation_record_local torricelly_activation_record_local::make(cons
          return torricelly_activation_record_local(value.get_char());
       case torricelly_system_type_type::BOOLEAN:
          return torricelly_activation_record_local(value.get_boolean());
-      case torricelly_system_type_type::STRING_LITERAL:
+      case torricelly_system_type_type::LITERAL_STRING:
       {
          auto string_literal = value.get_string_literal();
          auto pointer = std::shared_ptr<std::string>(new std::string(string_literal));
-         return torricelly_activation_record_local(pointer, torricelly_activation_record_local_underlying_type::STRING_LITERAL);
+         return torricelly_activation_record_local(pointer, torricelly_activation_record_local_underlying_type::LITERAL_STRING);
       }
       default:
          throw torricelly_interpreter_error("Unknown or unsupported torricelly system type when creating a new activation record type.");
@@ -613,12 +613,12 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
       std::stringstream sstream;
       switch (value.get_pointer_underlying_type())
       {
-      case torricelly_activation_record_local_underlying_type::STRING_LITERAL:
+      case torricelly_activation_record_local_underlying_type::LITERAL_STRING:
       {
          auto string_pointer = value.get_string_pointer();
          sstream << "'" << *string_pointer << "'"
                  << " (" << value.get_pointer() << ")"
-                 << " [" << to_string(torricelly_activation_record_local_underlying_type::STRING_LITERAL) << "]";
+                 << " [" << to_string(torricelly_activation_record_local_underlying_type::LITERAL_STRING) << "]";
       }
       case torricelly_activation_record_local_underlying_type::ARRAY:
       {
