@@ -94,12 +94,12 @@ bool blaise_token_type_utility::get_operator_precedence(blaise_token_type token_
 
 bool blaise_token_type_utility::is_number(blaise_token_type token_type){
    switch(token_type){
-      case blaise_token_type::INTEGER_LITERAL:
-      case blaise_token_type::DOUBLE_LITERAL: 
-      case blaise_token_type::FLOAT_LITERAL: 
-      case blaise_token_type::INTEGER_BASE_TWO_LITERAL: 
-      case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
-      case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
+      case blaise_token_type::LITERAL_INTEGER:
+      case blaise_token_type::LITERAL_DOUBLE: 
+      case blaise_token_type::LITERAL_FLOAT: 
+      case blaise_token_type::LITERAL_INTEGER_BINARY: 
+      case blaise_token_type::LITERAL_INTEGER_OCTAL:
+      case blaise_token_type::LITERAL_INTEGER_HEX:
          return true;
       default:
          return false;
@@ -108,7 +108,7 @@ bool blaise_token_type_utility::is_number(blaise_token_type token_type){
 
 bool blaise_token_type_utility::is_boolean(blaise_token_type token_type){
    switch(token_type){
-      case blaise_token_type::BOOLEAN_LITERAL:
+      case blaise_token_type::LITERAL_BOOLEAN:
          return true;
       default:
          return false;

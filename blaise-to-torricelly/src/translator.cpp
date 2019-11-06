@@ -50,7 +50,7 @@ std::shared_ptr<gasp::torricelly::torricelly_module> blaise_to_torricelly::trans
    {
       auto subroutine = blaise_module->get_subroutine(subroutine_index);
       auto subroutine_mangled_name = get_mangled_subroutine_name(subroutine);
-      auto variable_index = torricelly_module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
+      auto variable_index = torricelly_module->add_local(make_torricelly_system_type(torricelly_system_type_type::LITERAL_STRING),
                                                          torricelly_value::make(subroutine_mangled_name));
       module_variables_mapping[subroutine_mangled_name] = variable_index;
    }
@@ -337,7 +337,7 @@ unsigned int blaise_to_torricelly::translator::add_module_subroutine_reference_l
     std::string subroutine_mangled_name,
     std::map<std::string, unsigned int> &module_variables_mapping) const
 {
-   auto index = module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
+   auto index = module->add_local(make_torricelly_system_type(torricelly_system_type_type::LITERAL_STRING),
                                   torricelly_value::make(subroutine_mangled_name));
    module_variables_mapping[subroutine_mangled_name] = index;
    return index;

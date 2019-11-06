@@ -99,7 +99,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the string"){
             tokenizer.tokenize("\"hello world\"", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"hello world\"");
          }
 
@@ -107,7 +107,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("\"hello \\n world\"", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"hello \\n world\"");
          }
 
@@ -115,7 +115,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("\"hello \\u0A0f world\"", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"hello \\u0A0f world\"");
          }
 
@@ -123,7 +123,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("\"ste \\\" fano\"", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"ste \\\" fano\"");
          }
 
@@ -131,7 +131,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("\"hello world\"     ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"hello world\"");
          }
 
@@ -139,7 +139,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("    \"hello world\"", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"hello world\"");
          }
 
@@ -147,7 +147,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("    \"hello world\"       ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::STRING_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_STRING);
             REQUIRE(tokens.at(0).value() == "\"hello world\"");
          }  
       }
@@ -160,7 +160,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the character"){
             tokenizer.tokenize("'c'", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'c'");
          }
 
@@ -168,7 +168,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("'\\n'", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'\\n'");
          }
 
@@ -176,7 +176,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("'\\''", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'\\''");
          }
 
@@ -184,7 +184,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("'\\u9F0a'", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'\\u9F0a'");
          }
 
@@ -192,7 +192,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("'c'  ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'c'");
          }
 
@@ -200,7 +200,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("    'c'", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'c'");
          }
 
@@ -208,7 +208,7 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          {
             tokenizer.tokenize("    'c'    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::CHAR_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_CHAR);
             REQUIRE(tokens.at(0).value() == "'c'");
          }
       }
@@ -221,35 +221,35 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the 'true' literal"){
             tokenizer.tokenize("true", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_BOOLEAN);
             REQUIRE(tokens.at(0).value() == "true");
          }
 
          THEN("it can match the 'false' literal"){
             tokenizer.tokenize("false", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_BOOLEAN);
             REQUIRE(tokens.at(0).value() == "false");
          }
 
          THEN("it can match the boolean literal with trailing spaces"){
             tokenizer.tokenize("true   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_BOOLEAN);
             REQUIRE(tokens.at(0).value() == "true");
          }
 
          THEN("it can match the boolean literal with heading spaces"){
             tokenizer.tokenize("   true", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_BOOLEAN);
             REQUIRE(tokens.at(0).value() == "true");
          }
 
          THEN("it can match the boolean literal with heading and trailing spaces"){
             tokenizer.tokenize("   true    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::BOOLEAN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_BOOLEAN);
             REQUIRE(tokens.at(0).value() == "true");
          }
       }
@@ -263,35 +263,35 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the integer literal"){
             tokenizer.tokenize("17", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER);
             REQUIRE(tokens.at(0).value() == "17");
          }
 
          THEN("it can match 0"){
             tokenizer.tokenize("0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER);
             REQUIRE(tokens.at(0).value() == "0");
          }
 
          THEN("it can match the integer literal with trailing spaces"){
             tokenizer.tokenize("17   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER);
             REQUIRE(tokens.at(0).value() == "17");
          }
 
          THEN("it can match the integer literal with heading spaces"){
             tokenizer.tokenize("   17", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER);
             REQUIRE(tokens.at(0).value() == "17");
          }
 
          THEN("it can match the integer literal with heading and trailing spaces"){
             tokenizer.tokenize("   17    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER);
             REQUIRE(tokens.at(0).value() == "17");
          }
       }
@@ -304,35 +304,35 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the integer literal"){
             tokenizer.tokenize("0b100101", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_TWO_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_BINARY);
             REQUIRE(tokens.at(0).value() == "0b100101");
          }
 
          THEN("it can match 0b0"){
             tokenizer.tokenize("0b0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_TWO_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_BINARY);
             REQUIRE(tokens.at(0).value() == "0b0");
          }
 
          THEN("it can match the integer base 2 literal with trailing spaces"){
             tokenizer.tokenize("0b100101   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_TWO_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_BINARY);
             REQUIRE(tokens.at(0).value() == "0b100101");
          }
 
          THEN("it can match the integer base 2 literal with heading spaces"){
             tokenizer.tokenize("   0b100101", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_TWO_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_BINARY);
             REQUIRE(tokens.at(0).value() == "0b100101");
          }
 
          THEN("it can match the integer base 2 literal with heading and trailing spaces"){
             tokenizer.tokenize("   0b100101    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_TWO_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_BINARY);
             REQUIRE(tokens.at(0).value() == "0b100101");
          }
       }
@@ -345,35 +345,35 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the integer literal"){
             tokenizer.tokenize("0o176", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_EIGHT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_OCTAL);
             REQUIRE(tokens.at(0).value() == "0o176");
          }
 
          THEN("it can match 0o0"){
             tokenizer.tokenize("0o0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_EIGHT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_OCTAL);
             REQUIRE(tokens.at(0).value() == "0o0");
          }
 
          THEN("it can match the integer base 8 literal with trailing spaces"){
             tokenizer.tokenize("0o176   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_EIGHT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_OCTAL);
             REQUIRE(tokens.at(0).value() == "0o176");
          }
 
          THEN("it can match the integer base 8 literal with heading spaces"){
             tokenizer.tokenize("   0o176", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_EIGHT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_OCTAL);
             REQUIRE(tokens.at(0).value() == "0o176");
          }
 
          THEN("it can match the integer base 8 literal with heading and trailing spaces"){
             tokenizer.tokenize("   0o176    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_EIGHT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_OCTAL);
             REQUIRE(tokens.at(0).value() == "0o176");
          }
       }
@@ -386,35 +386,35 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the integer literal"){
             tokenizer.tokenize("0x1fA0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_HEX);
             REQUIRE(tokens.at(0).value() == "0x1fA0");
          }
 
          THEN("it can match 0x0"){
             tokenizer.tokenize("0x0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_HEX);
             REQUIRE(tokens.at(0).value() == "0x0");
          }
 
          THEN("it can match the integer base 16 literal with trailing spaces"){
             tokenizer.tokenize("0x1fA0   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_HEX);
             REQUIRE(tokens.at(0).value() == "0x1fA0");
          }
 
          THEN("it can match the integer base 16 literal with heading spaces"){
             tokenizer.tokenize("   0x1fA0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_HEX);
             REQUIRE(tokens.at(0).value() == "0x1fA0");
          }
 
          THEN("it can match the integer base 16 literal with heading and trailing spaces"){
             tokenizer.tokenize("   0x1fA0    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_INTEGER_HEX);
             REQUIRE(tokens.at(0).value() == "0x1fA0");
          }
       }
@@ -427,42 +427,42 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the double literal"){
             tokenizer.tokenize("17.13", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_DOUBLE);
             REQUIRE(tokens.at(0).value() == "17.13");
          }
 
          THEN("it can match the double literal with final d"){
             tokenizer.tokenize("17.13d", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_DOUBLE);
             REQUIRE(tokens.at(0).value() == "17.13d");
          }
 
          THEN("it can match 0.0"){
             tokenizer.tokenize("0.0", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_DOUBLE);
             REQUIRE(tokens.at(0).value() == "0.0");
          }
 
          THEN("it can match the double literal with trailing spaces"){
             tokenizer.tokenize("17.13   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_DOUBLE);
             REQUIRE(tokens.at(0).value() == "17.13");
          }
 
          THEN("it can match the double literal with heading spaces"){
             tokenizer.tokenize("   17.13", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_DOUBLE);
             REQUIRE(tokens.at(0).value() == "17.13");
          }
 
          THEN("it can match the double literal with heading and trailing spaces"){
             tokenizer.tokenize("   17.13    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::DOUBLE_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_DOUBLE);
             REQUIRE(tokens.at(0).value() == "17.13");
          }
       }
@@ -475,35 +475,35 @@ SCENARIO("Parse single tokens", "[blaise-lang][tokenizer][base]")
          THEN("it can match the float literal"){
             tokenizer.tokenize("17.13f", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_FLOAT);
             REQUIRE(tokens.at(0).value() == "17.13f");
          }
 
          THEN("it can match 0.0f"){
             tokenizer.tokenize("0.0f", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_FLOAT);
             REQUIRE(tokens.at(0).value() == "0.0f");
          }
 
          THEN("it can match the float literal with trailing spaces"){
             tokenizer.tokenize("17.13f   ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_FLOAT);
             REQUIRE(tokens.at(0).value() == "17.13f");
          }
 
          THEN("it can match the float literal with heading spaces"){
             tokenizer.tokenize("   17.13f", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_FLOAT);
             REQUIRE(tokens.at(0).value() == "17.13f");
          }
 
          THEN("it can match the float literal with heading and trailing spaces"){
             tokenizer.tokenize("   17.13f    ", 0, tokens);
             REQUIRE(tokens.size() == 1);
-            REQUIRE(tokens.at(0).type() == blaise_token_type::FLOAT_LITERAL);
+            REQUIRE(tokens.at(0).type() == blaise_token_type::LITERAL_FLOAT);
             REQUIRE(tokens.at(0).value() == "17.13f");
          }
       }

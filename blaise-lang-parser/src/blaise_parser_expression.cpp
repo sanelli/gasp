@@ -157,12 +157,12 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       term_expression = ast::make_blaise_ast_expression_unary(token, expression);
    }
    break;
-   case blaise_token_type::INTEGER_LITERAL: // It is a number
-   case blaise_token_type::DOUBLE_LITERAL:
-   case blaise_token_type::FLOAT_LITERAL:
-   case blaise_token_type::INTEGER_BASE_TWO_LITERAL:
-   case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
-   case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
+   case blaise_token_type::LITERAL_INTEGER: // It is a number
+   case blaise_token_type::LITERAL_DOUBLE:
+   case blaise_token_type::LITERAL_FLOAT:
+   case blaise_token_type::LITERAL_INTEGER_BINARY:
+   case blaise_token_type::LITERAL_INTEGER_OCTAL:
+   case blaise_token_type::LITERAL_INTEGER_HEX:
    {
       term_expression = parse_number(context);
    }
@@ -174,13 +174,13 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       match_token(context, blaise_token_type::RIGHT_PARENTHESES);
    }
    break;
-   case blaise_token_type::BOOLEAN_LITERAL:
+   case blaise_token_type::LITERAL_BOOLEAN:
    {
       term_expression = parse_boolean(context);
    }
    break;
-   case blaise_token_type::STRING_LITERAL:
-   case blaise_token_type::CHAR_LITERAL:
+   case blaise_token_type::LITERAL_STRING:
+   case blaise_token_type::LITERAL_CHAR:
    {
       term_expression = make_blaise_ast_expression_value(context, token);
       match_token(context, token_type);
@@ -231,23 +231,23 @@ shared_ptr<ast::blaise_ast_expression> gasp::blaise::make_blaise_ast_expression_
 {
    switch (token_literal.type())
    {
-   case blaise_token_type::INTEGER_LITERAL:
+   case blaise_token_type::LITERAL_INTEGER:
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value()));
-   case blaise_token_type::INTEGER_BASE_TWO_LITERAL:
+   case blaise_token_type::LITERAL_INTEGER_BINARY:
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 2));
-   case blaise_token_type::INTEGER_BASE_EIGHT_LITERAL:
+   case blaise_token_type::LITERAL_INTEGER_OCTAL:
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 8));
-   case blaise_token_type::INTEGER_BASE_SIXTEEN_LITERAL:
+   case blaise_token_type::LITERAL_INTEGER_HEX:
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 16));
-   case blaise_token_type::FLOAT_LITERAL:
+   case blaise_token_type::LITERAL_FLOAT:
       return memory::make_shared<ast::blaise_ast_expression_float_value>(token_literal, stof(token_literal.value()));
-   case blaise_token_type::DOUBLE_LITERAL:
+   case blaise_token_type::LITERAL_DOUBLE:
       return memory::make_shared<ast::blaise_ast_expression_double_value>(token_literal, stod(token_literal.value()));
-   case blaise_token_type::CHAR_LITERAL:
+   case blaise_token_type::LITERAL_CHAR:
       return memory::make_shared<ast::blaise_ast_expression_char_value>(token_literal, token_literal.value()[1]);
-   case blaise_token_type::STRING_LITERAL:
+   case blaise_token_type::LITERAL_STRING:
       return memory::make_shared<ast::blaise_ast_expression_string_value>(token_literal, token_literal.value().substr(1, token_literal.value().length() - 2));
-   case blaise_token_type::BOOLEAN_LITERAL:
+   case blaise_token_type::LITERAL_BOOLEAN:
       return memory::make_shared<ast::blaise_ast_expression_boolean_value>(token_literal, token_literal.value() == "true");
    default:
       gasp::blaise::blaise_parser::throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Cannot extract literal from token '", token_literal, "'"));

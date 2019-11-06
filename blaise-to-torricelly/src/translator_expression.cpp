@@ -86,7 +86,7 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    break;
    case ast::blaise_ast_expression_type::LITERAL_STRING:
    {
-      throw blaise_to_torricelly_internal_error("STRING_LITERAL expression type is not supported yet.");
+      throw blaise_to_torricelly_internal_error("LITERAL_STRING expression type is not supported yet.");
    }
    break;
    case ast::blaise_ast_expression_type::TERNARY:
@@ -301,8 +301,8 @@ torricelly_inst_code blaise_to_torricelly::translator::compute_instruction_code(
          throw blaise_to_torricelly_internal_error("BOOLEAN torricelly type unsupported.");
       case torricelly::torricelly_system_type_type::CHAR:
          throw blaise_to_torricelly_internal_error("CHAR torricelly type unsupported.");
-      case torricelly::torricelly_system_type_type::STRING_LITERAL:
-         throw blaise_to_torricelly_internal_error("STRING_LITERAL torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::LITERAL_STRING:
+         throw blaise_to_torricelly_internal_error("LITERAL_STRING torricelly type unsupported.");
       case torricelly::torricelly_system_type_type::VOID:
          throw blaise_to_torricelly_internal_error("VOID torricelly type unsupported.");
       case torricelly::torricelly_system_type_type::UNDEFINED:
@@ -340,8 +340,8 @@ torricelly::torricelly_inst_code blaise_to_torricelly::translator::compute_instr
          return boolean_op;
       case torricelly::torricelly_system_type_type::CHAR:
          return char_op;
-      case torricelly::torricelly_system_type_type::STRING_LITERAL:
-         throw blaise_to_torricelly_internal_error("STRING_LITERAL torricelly type unsupported.");
+      case torricelly::torricelly_system_type_type::LITERAL_STRING:
+         throw blaise_to_torricelly_internal_error("LITERAL_STRING torricelly type unsupported.");
       case torricelly::torricelly_system_type_type::VOID:
          throw blaise_to_torricelly_internal_error("VOID torricelly type unsupported.");
       case torricelly::torricelly_system_type_type::UNDEFINED:
