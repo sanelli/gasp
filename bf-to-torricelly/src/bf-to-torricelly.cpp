@@ -22,11 +22,11 @@ std::shared_ptr<torricelly_module> bf_to_torricelly_translator::translate(std::s
    module->add_subroutine(main);
 
    // Add subroutines used locals
-   module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
+   module->add_local(make_torricelly_system_type(torricelly_system_type_type::LITERAL_STRING),
                      torricelly_value::make(module_name + "." + "main_"));
-   auto print_char_local_id = module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
+   auto print_char_local_id = module->add_local(make_torricelly_system_type(torricelly_system_type_type::LITERAL_STRING),
                                                 torricelly_value::make(std::string("io.print_c")));
-   auto read_char_local_id = module->add_local(make_torricelly_system_type(torricelly_system_type_type::STRING_LITERAL),
+   auto read_char_local_id = module->add_local(make_torricelly_system_type(torricelly_system_type_type::LITERAL_STRING),
                                                torricelly_value::make(std::string("io.read_char_")));
 
    // Add module dependencies
