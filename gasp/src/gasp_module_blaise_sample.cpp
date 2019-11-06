@@ -511,8 +511,6 @@ end.)__";
    return sample;
 }
 
-
-
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -638,7 +636,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-array-allocate-boolean"] = {generate_sample_allocate_array("boolean", "true"), "", "true"};
    _samples["expression-array-allocate-char"] = {generate_sample_allocate_array("char", "'X'"), "", "X"};
    _samples["expression-array-allocate-float-1"] = {generate_sample_allocate_array_with_math("float"), "", "45.000000"};
-   _samples["expression-array-allocate-float-2"] = {generate_sample_allocate_array("float", "cast<float>(1.0)"), "", "1.000000"};
+   _samples["expression-array-allocate-float-2"] = {generate_sample_allocate_array("float", "1.0f"), "", "1.000000"};
    _samples["expression-array-allocate-double-1"] = {generate_sample_allocate_array_with_math("double"), "", "45.000000"};
    _samples["expression-array-allocate-double-2"] = {generate_sample_allocate_array("double", "1.0"), "", "1.000000"};
 
@@ -680,10 +678,17 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
    _samples["literal-integer-hexadecimal"] = {generate_literal_assignment_sample("integer", "integer", "0xFF"), "", "255"};
    _samples["literal-integer-decimal"] = {generate_literal_assignment_sample("integer", "integer", "10"), "", "10"};
-   _samples["literal-char"] = {generate_literal_assignment_sample("char", "char", "'A'"), "", "A"};
+   _samples["literal-char-1"] = {generate_literal_assignment_sample("char", "char", "'A'"), "", "A"};
+   _samples["literal-char-2"] = {generate_literal_assignment_sample("char", "char", "'\\n'"), "", "\\n"};
+   _samples["literal-char-3"] = {generate_literal_assignment_sample("char", "char", "'\\''"), "", "'"};
+   _samples["literal-char-4"] = {generate_literal_assignment_sample("char", "char", "'\\u41"), "", "A"};
    _samples["literal-boolean-true"] = {generate_literal_assignment_sample("boolean", "boolean", "true"), "", "true"};
    _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
-   _samples["literal-double"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
+   _samples["literal-double-1"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
+   _samples["literal-double-2"] = {generate_literal_assignment_sample("double", "double", "1.5d"), "", "1.500000"};
+   _samples["literal-double-2"] = {generate_literal_assignment_sample("double", "double", "1.5D"), "", "1.500000"};
+   _samples["literal-float"] = {generate_literal_assignment_sample("float", "float", "1.5f"), "", "1.500000"};
+   _samples["literal-float-2"] = {generate_literal_assignment_sample("float", "float", "1.5F"), "", "1.500000"};
 
    _samples["statement-empty"] = {sample_statement_empty, "", "0"};
    _samples["statement-if-then-true"] = {sample_statement_if_then, "true", "2"};
