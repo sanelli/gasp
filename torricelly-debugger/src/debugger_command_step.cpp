@@ -37,6 +37,8 @@ void torricelly_debugger_command_step::step(std::ostream &out, unsigned int coun
          if (debugger()->is_breakpoint(subroutine, activation_record->ip()))
             break;
       }
+      else
+         break;
    }
 }
 
