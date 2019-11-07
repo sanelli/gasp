@@ -13,8 +13,14 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "noop";
    case torricelly_inst_code::DUP:
       return "dup";
+   case torricelly_inst_code::POP_BYTE:
+      return "ypop";
+   case torricelly_inst_code::POP_SHORT:
+      return "spop";
    case torricelly_inst_code::POP_INTEGER:
       return "ipop";
+   case torricelly_inst_code::POP_LONG:
+      return "lpop";
    case torricelly_inst_code::POP_BOOLEAN:
       return "bpop";
    case torricelly_inst_code::POP_CHAR:
@@ -23,8 +29,14 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "fpop";
    case torricelly_inst_code::POP_DOUBLE:
       return "dpop";
+   case torricelly_inst_code::LOAD_BYTE:
+      return "yload";
+   case torricelly_inst_code::LOAD_SHORT:
+      return "sload";
    case torricelly_inst_code::LOAD_INTEGER:
       return "iload";
+   case torricelly_inst_code::LOAD_LONG:
+      return "lload";
    case torricelly_inst_code::LOAD_BOOLEAN:
       return "bload";
    case torricelly_inst_code::LOAD_CHAR:
@@ -35,8 +47,14 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "dload";
    case torricelly_inst_code::LOAD_ARRAY:
       return "aload";
+   case torricelly_inst_code::LOAD_ARRAY_BYTE:
+      return "ayload";
+   case torricelly_inst_code::LOAD_ARRAY_SHORT:
+      return "asload";
    case torricelly_inst_code::LOAD_ARRAY_INTEGER:
       return "aiload";
+   case torricelly_inst_code::LOAD_ARRAY_LONG:
+      return "alload";
    case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
       return "abload";
    case torricelly_inst_code::LOAD_ARRAY_CHAR:
@@ -45,8 +63,14 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "afload";
    case torricelly_inst_code::LOAD_ARRAY_DOUBLE:
       return "adload";
+   case torricelly_inst_code::STORE_BYTE:
+      return "ystore";
+   case torricelly_inst_code::STORE_SHORT:
+      return "sstore";
    case torricelly_inst_code::STORE_INTEGER:
       return "istore";
+   case torricelly_inst_code::STORE_LONG:
+      return "lstore";
    case torricelly_inst_code::STORE_BOOLEAN:
       return "bstore";
    case torricelly_inst_code::STORE_CHAR:
@@ -57,8 +81,14 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "dstore";
    case torricelly_inst_code::STORE_ARRAY:
       return "astore";
+   case torricelly_inst_code::STORE_ARRAY_BYTE:
+      return "aystore";
+   case torricelly_inst_code::STORE_ARRAY_SHORT:
+      return "asstore";
    case torricelly_inst_code::STORE_ARRAY_INTEGER:
       return "aistore";
+   case torricelly_inst_code::STORE_ARRAY_LONG:
+      return "alstore";
    case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
       return "abstore";
    case torricelly_inst_code::STORE_ARRAY_CHAR:
@@ -67,40 +97,82 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "afstore";
    case torricelly_inst_code::STORE_ARRAY_DOUBLE:
       return "adstore";
+   case torricelly_inst_code::ADD_BYTE:
+      return "yadd";
+   case torricelly_inst_code::ADD_SHORT:
+      return "sadd";
+   case torricelly_inst_code::ADD_LONG:
+      return "ladd";
    case torricelly_inst_code::ADD_INTEGER:
       return "iadd";
    case torricelly_inst_code::ADD_FLOAT:
       return "fadd";
    case torricelly_inst_code::ADD_DOUBLE:
       return "dadd";
+   case torricelly_inst_code::SUBTRACT_BYTE:
+      return "ysub";
+   case torricelly_inst_code::SUBTRACT_SHORT:
+      return "ssub";
    case torricelly_inst_code::SUBTRACT_INTEGER:
       return "isub";
+   case torricelly_inst_code::SUBTRACT_LONG:
+      return "lsub";
    case torricelly_inst_code::SUBTRACT_FLOAT:
       return "fsub";
    case torricelly_inst_code::SUBTRACT_DOUBLE:
       return "dsub";
+   case torricelly_inst_code::MULTIPLY_BYTE:
+      return "ymul";
+   case torricelly_inst_code::MULTIPLY_SHORT:
+      return "smul";
    case torricelly_inst_code::MULTIPLY_INTEGER:
       return "imul";
+   case torricelly_inst_code::MULTIPLY_LONG:
+      return "lmul";
    case torricelly_inst_code::MULTIPLY_FLOAT:
       return "fmul";
    case torricelly_inst_code::MULTIPLY_DOUBLE:
       return "dmul";
+   case torricelly_inst_code::DIVIDE_BYTE:
+      return "ydiv";
+   case torricelly_inst_code::DIVIDE_SHORT:
+      return "sdiv";
    case torricelly_inst_code::DIVIDE_INTEGER:
       return "idiv";
+   case torricelly_inst_code::DIVIDE_LONG:
+      return "ldiv";
    case torricelly_inst_code::DIVIDE_FLOAT:
       return "fdiv";
    case torricelly_inst_code::DIVIDE_DOUBLE:
       return "ddiv";
+   case torricelly_inst_code::REMINDER_BYTE:
+      return "yrem";
+   case torricelly_inst_code::REMINDER_SHORT:
+      return "srem";
    case torricelly_inst_code::REMINDER_INTEGER:
       return "irem";
+   case torricelly_inst_code::REMINDER_LONG:
+      return "lrem";
+   case torricelly_inst_code::NEGATE_BYTE:
+      return "yneg";
+   case torricelly_inst_code::NEGATE_SHORT:
+      return "sneg";
    case torricelly_inst_code::NEGATE_INTEGER:
       return "ineg";
+   case torricelly_inst_code::NEGATE_LONG:
+      return "lneg";
    case torricelly_inst_code::NEGATE_FLOAT:
       return "fneg";
    case torricelly_inst_code::NEGATE_DOUBLE:
       return "dneg";
+   case torricelly_inst_code::CMP_BYTE:
+      return "ycmp";
+   case torricelly_inst_code::CMP_SHORT:
+      return "scmp";
    case torricelly_inst_code::CMP_INTEGER:
       return "icmp";
+   case torricelly_inst_code::CMP_LONG:
+      return "lcmp";
    case torricelly_inst_code::CMP_BOOLEAN:
       return "bcmp";
    case torricelly_inst_code::CMP_CHAR:
@@ -123,6 +195,40 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "jgez";
    case torricelly_inst_code::JUMP_NOT_ZERO:
       return "jnz";
+   case torricelly_inst_code::CAST_BYTE_SHORT:
+      return "ytos";
+   case torricelly_inst_code::CAST_BYTE_INT:
+      return "ytoi";
+   case torricelly_inst_code::CAST_BYTE_LONG:
+      return "ytol";
+   case torricelly_inst_code::CAST_BYTE_FLOAT:
+      return "ytof";
+   case torricelly_inst_code::CAST_BYTE_DOUBLE:
+      return "ytod";
+   case torricelly_inst_code::CAST_BYTE_BOOLEAN:
+      return "ytob";
+   case torricelly_inst_code::CAST_BYTE_CHAR:
+      return "ytoc";
+   case torricelly_inst_code::CAST_SHORT_BYTE:
+      return "stoy";
+   case torricelly_inst_code::CAST_SHORT_INT:
+      return "stoi";
+   case torricelly_inst_code::CAST_SHORT_LONG:
+      return "stol";
+   case torricelly_inst_code::CAST_SHORT_FLOAT:
+      return "stof";
+   case torricelly_inst_code::CAST_SHORT_DOUBLE:
+      return "stod";
+   case torricelly_inst_code::CAST_SHORT_BOOLEAN:
+      return "stob";
+   case torricelly_inst_code::CAST_SHORT_CHAR:
+      return "stoc";
+   case torricelly_inst_code::CAST_INT_BYTE:
+      return "itoy";
+   case torricelly_inst_code::CAST_INT_SHORT:
+      return "itos";
+   case torricelly_inst_code::CAST_INT_LONG:
+      return "itol";
    case torricelly_inst_code::CAST_INT_BOOLEAN:
       return "itob";
    case torricelly_inst_code::CAST_INT_CHAR:
@@ -131,16 +237,50 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "itof";
    case torricelly_inst_code::CAST_INT_DOUBLE:
       return "itod";
+   case torricelly_inst_code::CAST_LONG_BYTE:
+      return "ltoy";
+   case torricelly_inst_code::CAST_LONG_SHORT:
+      return "ltos";
+   case torricelly_inst_code::CAST_LONG_INT:
+      return "ltoi";
+   case torricelly_inst_code::CAST_LONG_FLOAT:
+      return "ltof";
+   case torricelly_inst_code::CAST_LONG_DOUBLE:
+      return "ltod";
+   case torricelly_inst_code::CAST_LONG_BOOLEAN:
+      return "ltob";
+   case torricelly_inst_code::CAST_LONG_CHAR:
+      return "ltoc";
+   case torricelly_inst_code::CAST_BOOLEAN_BYTE:
+      return "btoy";
+   case torricelly_inst_code::CAST_BOOLEAN_SHORT:
+      return "btos";
    case torricelly_inst_code::CAST_BOOLEAN_INT:
       return "btoi";
+   case torricelly_inst_code::CAST_CHAR_BYTE:
+      return "ctoy";
+   case torricelly_inst_code::CAST_CHAR_SHORT:
+      return "ctos";
    case torricelly_inst_code::CAST_CHAR_INT:
       return "ctoi";
+   case torricelly_inst_code::CAST_FLOAT_BYTE:
+      return "ftoy";
+   case torricelly_inst_code::CAST_FLOAT_SHORT:
+      return "ftos";
    case torricelly_inst_code::CAST_FLOAT_INT:
       return "ftoi";
+   case torricelly_inst_code::CAST_FLOAT_LONG:
+      return "ftol";
    case torricelly_inst_code::CAST_FLOAT_DOUBLE:
       return "ftod";
+   case torricelly_inst_code::CAST_DOUBLE_BYTE:
+      return "dtoy";
+   case torricelly_inst_code::CAST_DOUBLE_SHORT:
+      return "dtos";
    case torricelly_inst_code::CAST_DOUBLE_INT:
       return "dtoi";
+   case torricelly_inst_code::CAST_DOUBLE_LONG:
+      return "dtol";
    case torricelly_inst_code::CAST_DOUBLE_FLOAT:
       return "dtof";
    case torricelly_inst_code::NOT:
@@ -161,8 +301,14 @@ const char *torricelly::to_string(torricelly_inst_code code)
       return "ret";
    case torricelly_inst_code::HALT:
       return "ret";
+   case torricelly_inst_code::ALLOCATE_BYTE_ARRAY:
+      return "aynew";   
+   case torricelly_inst_code::ALLOCATE_SHORT_ARRAY:
+      return "asnew";   
    case torricelly_inst_code::ALLOCATE_INT_ARRAY:
-      return "ainew";
+      return "ainew";   
+   case torricelly_inst_code::ALLOCATE_LONG_ARRAY:
+      return "alnew";
    case torricelly_inst_code::ALLOCATE_CHAR_ARRAY:
       return "acnew";
    case torricelly_inst_code::ALLOCATE_FLOAT_ARRAY:
@@ -187,24 +333,36 @@ bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
 {
    switch (code)
    {
+   case torricelly_inst_code::LOAD_BYTE:
+   case torricelly_inst_code::LOAD_SHORT:
    case torricelly_inst_code::LOAD_INTEGER:
+   case torricelly_inst_code::LOAD_LONG:
    case torricelly_inst_code::LOAD_BOOLEAN:
    case torricelly_inst_code::LOAD_CHAR:
    case torricelly_inst_code::LOAD_FLOAT:
    case torricelly_inst_code::LOAD_DOUBLE:
    case torricelly_inst_code::LOAD_ARRAY:
+   case torricelly_inst_code::LOAD_ARRAY_BYTE:
+   case torricelly_inst_code::LOAD_ARRAY_SHORT:
    case torricelly_inst_code::LOAD_ARRAY_INTEGER:
+   case torricelly_inst_code::LOAD_ARRAY_LONG:
    case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
    case torricelly_inst_code::LOAD_ARRAY_CHAR:
    case torricelly_inst_code::LOAD_ARRAY_FLOAT:
    case torricelly_inst_code::LOAD_ARRAY_DOUBLE:
+   case torricelly_inst_code::STORE_BYTE:
+   case torricelly_inst_code::STORE_SHORT:
    case torricelly_inst_code::STORE_INTEGER:
+   case torricelly_inst_code::STORE_LONG:
    case torricelly_inst_code::STORE_BOOLEAN:
    case torricelly_inst_code::STORE_CHAR:
    case torricelly_inst_code::STORE_FLOAT:
    case torricelly_inst_code::STORE_DOUBLE:
    case torricelly_inst_code::STORE_ARRAY:
+   case torricelly_inst_code::STORE_ARRAY_BYTE:
+   case torricelly_inst_code::STORE_ARRAY_SHORT:
    case torricelly_inst_code::STORE_ARRAY_INTEGER:
+   case torricelly_inst_code::STORE_ARRAY_LONG:
    case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
    case torricelly_inst_code::STORE_ARRAY_CHAR:
    case torricelly_inst_code::STORE_ARRAY_FLOAT:
@@ -213,7 +371,10 @@ bool torricelly_inst_code_helper::accept_reference(torricelly_inst_code code)
    case torricelly_inst_code::VIRTUAL_INVOKE:
    case torricelly_inst_code::DYNAMIC_INVOKE:
    case torricelly_inst_code::NATIVE_INVOKE:
+   case torricelly_inst_code::ALLOCATE_BYTE_ARRAY:
+   case torricelly_inst_code::ALLOCATE_SHORT_ARRAY:
    case torricelly_inst_code::ALLOCATE_INT_ARRAY:
+   case torricelly_inst_code::ALLOCATE_LONG_ARRAY:
    case torricelly_inst_code::ALLOCATE_CHAR_ARRAY:
    case torricelly_inst_code::ALLOCATE_FLOAT_ARRAY:
    case torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY:
