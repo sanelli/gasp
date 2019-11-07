@@ -518,7 +518,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-return-float"] = {generate_empty_with_return_type_sample("float"), "", "0.000000"};
    _samples["empty-return-boolean"] = {generate_empty_with_return_type_sample("boolean"), "", "false"};
    _samples["empty-return-double"] = {generate_empty_with_return_type_sample("double"), "", "0.000000"};
-   _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\\0"};
+   _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\\u00"};
    _samples["empty-parameters-1"] = {sample_empty_with_parameters, "7 true", "0"};
 
    _samples["expression-math-integer-sum"] = {generate_binary_operator_sample("integer", "integer", "+"), "3 4", "7"};
@@ -679,9 +679,9 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["literal-integer-hexadecimal"] = {generate_literal_assignment_sample("integer", "integer", "0xFF"), "", "255"};
    _samples["literal-integer-decimal"] = {generate_literal_assignment_sample("integer", "integer", "10"), "", "10"};
    _samples["literal-char-1"] = {generate_literal_assignment_sample("char", "char", "'A'"), "", "A"};
-   _samples["literal-char-2"] = {generate_literal_assignment_sample("char", "char", "'\\n'"), "", "\\n"};
+   _samples["literal-char-2"] = {generate_literal_assignment_sample("char", "char", "'\\n'"), "", "\\u0a"};
    _samples["literal-char-3"] = {generate_literal_assignment_sample("char", "char", "'\\''"), "", "'"};
-   _samples["literal-char-4"] = {generate_literal_assignment_sample("char", "char", "'\\u41"), "", "A"};
+   _samples["literal-char-4"] = {generate_literal_assignment_sample("char", "char", "'\\u41'"), "", "A"};
    _samples["literal-boolean-true"] = {generate_literal_assignment_sample("boolean", "boolean", "true"), "", "true"};
    _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
    _samples["literal-double-1"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
