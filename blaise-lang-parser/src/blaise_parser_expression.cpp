@@ -1,6 +1,9 @@
 #include <memory>
 #include <string>
 #include <sstream>
+#include <limits>
+#include <regex>
+#include <map>
 
 #include <sanelli/sanelli.hpp>
 
@@ -227,10 +230,32 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_number(blaise_parser
    return number_literal;
 }
 
-shared_ptr<ast::blaise_ast_expression> gasp::blaise::make_blaise_ast_expression_value(blaise_parser_context &context, const token<blaise_token_type> &token_literal)
+shared_ptr<ast::blaise_ast_expression> blaise_parser::make_blaise_ast_expression_value(blaise_parser_context &context, const token<blaise_token_type> &token_literal)
 {
    switch (token_literal.type())
    {
+   case blaise_token_type::LITERAL_BYTE:
+   {
+      auto token_value = token_literal.value();
+      auto last_char = token_value.size() > 1 ? token_value.at(token_value.size() - 1) : '\0';
+      auto has_postfix = last_char == 'B' || last_char == 'b';
+      auto value = !has_postfix ? stoi(token_value) : stoi(token_value.substr(0, token_value.size() - 1));
+      if (value > std::numeric_limits<int8_t>::max() || value < std::numeric_limits<int8_t>::min())
+         throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
+
+      return memory::make_shared<ast::blaise_ast_expression_byte_value>(token_literal, value);
+   }
+   case blaise_token_type::LITERAL_SHORT:
+   {
+      auto token_value = token_literal.value();
+      auto last_char = token_value.size() > 1 ? token_value.at(token_value.size() - 1) : '\0';
+      auto has_postfix = last_char == 'S' || last_char == 's';
+      auto value = !has_postfix ? stoi(token_value) : stoi(token_value.substr(0, token_value.size() - 1));
+      if (value > std::numeric_limits<int16_t>::max() || value < std::numeric_limits<int16_t>::min())
+         throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
+
+      return memory::make_shared<ast::blaise_ast_expression_short_value>(token_literal, value);
+   }
    case blaise_token_type::LITERAL_INTEGER:
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value()));
    case blaise_token_type::LITERAL_INTEGER_BINARY:
@@ -239,19 +264,94 @@ shared_ptr<ast::blaise_ast_expression> gasp::blaise::make_blaise_ast_expression_
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 8));
    case blaise_token_type::LITERAL_INTEGER_HEX:
       return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 16));
+   case blaise_token_type::LITERAL_LONG:
+   {
+      auto token_value = token_literal.value();
+      auto last_char = token_value.size() > 1 ? token_value.at(token_value.size() - 1) : '\0';
+      auto has_postfix = last_char == 'L' || last_char == 'l';
+      auto value = !has_postfix ? stol(token_value) : stol(token_value.substr(0, token_value.size() - 1));
+      if (value > std::numeric_limits<int64_t>::max() || value < std::numeric_limits<int64_t>::min())
+         throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
+
+      return memory::make_shared<ast::blaise_ast_expression_long_value>(token_literal, value);
+   }
    case blaise_token_type::LITERAL_FLOAT:
-      return memory::make_shared<ast::blaise_ast_expression_float_value>(token_literal, stof(token_literal.value()));
+   {
+      auto token_value = token_literal.value();
+      auto last_char = token_value.size() > 1 ? token_value.at(token_value.size() - 1) : '\0';
+      auto has_postfix = last_char == 'F' || last_char == 'f';
+      auto value = !has_postfix ? stof(token_value) : stof(token_value.substr(0, token_value.size() - 1));
+      if (value > std::numeric_limits<float>::max() || value < std::numeric_limits<float>::min())
+         throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
+
+      return memory::make_shared<ast::blaise_ast_expression_float_value>(token_literal, value);
+   }
    case blaise_token_type::LITERAL_DOUBLE:
-      return memory::make_shared<ast::blaise_ast_expression_double_value>(token_literal, stod(token_literal.value()));
+   {
+      auto token_value = token_literal.value();
+      auto last_char = token_value.size() > 1 ? token_value.at(token_value.size() - 1) : '\0';
+      auto has_postfix = last_char == 'D' || last_char == 'd';
+      auto value = !has_postfix ? stod(token_value) : stod(token_value.substr(0, token_value.size() - 1));
+      if (value > std::numeric_limits<double>::max() || value < std::numeric_limits<double>::min())
+         throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
+
+      return memory::make_shared<ast::blaise_ast_expression_double_value>(token_literal, value);
+   }
    case blaise_token_type::LITERAL_CHAR:
-      return memory::make_shared<ast::blaise_ast_expression_char_value>(token_literal, token_literal.value()[1]);
+   {
+      auto token_value = token_literal.value();
+      auto unquote = token_value.substr(1, token_value.size() - 2);
+      auto without_escapes = remove_escapes_from_string(unquote);
+      return memory::make_shared<ast::blaise_ast_expression_char_value>(token_literal, without_escapes.at(0));
+   }
    case blaise_token_type::LITERAL_STRING:
-      return memory::make_shared<ast::blaise_ast_expression_string_value>(token_literal, token_literal.value().substr(1, token_literal.value().length() - 2));
+   {
+      auto token_value = token_literal.value();
+      auto unquote = token_value.substr(1, token_value.size() - 2);
+      auto without_escapes = remove_escapes_from_string(unquote);
+      return memory::make_shared<ast::blaise_ast_expression_string_value>(token_literal, without_escapes);
+   }
    case blaise_token_type::LITERAL_BOOLEAN:
       return memory::make_shared<ast::blaise_ast_expression_boolean_value>(token_literal, token_literal.value() == "true");
    default:
       gasp::blaise::blaise_parser::throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Cannot extract literal from token '", token_literal, "'"));
    }
+}
+std::string gasp::blaise::remove_escapes_from_string(const std::string s)
+{
+   std::map<std::string, std::regex> replaces;
+   replaces["\a"] = std::regex("\\\\a");
+   replaces["\n"] = std::regex("\\\\n");
+   replaces["\f"] = std::regex("\\\\f");
+   replaces["\r"] = std::regex("\\\\r");
+   replaces["\b"] = std::regex("\\\\b");
+   replaces["\0"] = std::regex("\\\\0");
+   replaces["\t"] = std::regex("\\\\t");
+   replaces["'"] = std::regex("\\\\'");
+   replaces["\""] = std::regex("\\\\\"");
+
+   auto result = s;
+
+   for (auto it = replaces.begin(); it != replaces.end(); ++it)
+      result = std::regex_replace(result, it->second, it->first);
+
+   // Replace \u[0-9a-fA-F]
+   std::regex hexadecimal("\\\\u([0-9a-fA-F]{2})");
+   std::smatch sm;
+   while (regex_search(result, sm, hexadecimal))
+   {
+      auto escape_sequence = sm[0].str();
+      auto hex_string = sm[1].str();
+
+      std::stringstream stream;
+      stream << std::hex << hex_string;
+      int value;
+      stream >> value;
+      auto start_index = result.find(escape_sequence);
+      result = result.replace(start_index, escape_sequence.size(), std::string{} + (char)value);
+   }
+
+   return result;
 }
 
 // NOTE: I have a specific parser for boolean becaus ein the future I would like to add
