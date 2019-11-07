@@ -40,7 +40,12 @@ std::string gasp::torricelly::to_string(torricelly_value value)
          if (std::isprint(cvalue))
             os << cvalue;
          else
-            os << '\\' << (int)cvalue;
+         {
+            std::stringstream s;
+            s << std::hex << (int) cvalue;
+            auto hex = s.str();
+            os << "\\u" << (hex.size() < 2 ? ("0" + hex) : hex);
+         }
       }
       break;
       case torricelly_system_type_type::BOOLEAN:
