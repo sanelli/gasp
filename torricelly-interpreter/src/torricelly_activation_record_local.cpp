@@ -600,7 +600,10 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
       auto cvalue = value.get_char();
       if (std::isprint(cvalue))
          return std::string(1, cvalue);
-      return std::string("\\") + std::to_string((int)cvalue);
+      std::stringstream s;
+      s << std::hex << (int)cvalue;
+      auto hex = s.str();
+      return std::string("\\u") + (hex.size() < 2 ? ("0" + hex) : hex);
    }
    case torricelly_activation_record_local_type::BOOLEAN:
       return value.get_boolean() ? "true" : "false";
