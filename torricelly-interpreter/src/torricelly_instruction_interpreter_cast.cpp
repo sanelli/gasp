@@ -22,7 +22,7 @@ void torricelly_instruction_interpreter::execute_cast_i2c(const torricelly::torr
 {
    auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER);
-   auto converted_result = (char)value.get_integer();
+   auto converted_result = (unsigned char)value.get_integer();
    auto result = torricelly_activation_record_local::make(converted_result);
    activation_record->push(result);
 }
