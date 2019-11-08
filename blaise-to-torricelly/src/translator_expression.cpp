@@ -718,6 +718,50 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
    auto instruction_code = torricelly_inst_code::NOOP;
    switch (source_system_type->system_type())
    {
+   case torricelly::torricelly_system_type_type::BYTE:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
+         instruction_code = torricelly_inst_code::CAST_BYTE_BOOLEAN;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::CHAR)
+         instruction_code = torricelly_inst_code::CAST_BYTE_CHAR;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
+         instruction_code = torricelly_inst_code::CAST_BYTE_FLOAT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
+         instruction_code = torricelly_inst_code::CAST_BYTE_DOUBLE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::NOOP;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_BYTE_SHORT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_BYTE_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::LONG)
+         instruction_code = torricelly_inst_code::CAST_BYTE_LONG;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from BYTE type.");
+   }
+   break;
+   case torricelly::torricelly_system_type_type::SHORT:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
+         instruction_code = torricelly_inst_code::CAST_SHORT_BOOLEAN;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::CHAR)
+         instruction_code = torricelly_inst_code::CAST_SHORT_CHAR;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
+         instruction_code = torricelly_inst_code::CAST_SHORT_FLOAT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
+         instruction_code = torricelly_inst_code::CAST_SHORT_DOUBLE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_SHORT_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::NOOP;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_SHORT_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::LONG)
+         instruction_code = torricelly_inst_code::CAST_SHORT_LONG;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from SHORT type.");
+   }
+   break;
    case torricelly::torricelly_system_type_type::INTEGER:
    {
       if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
@@ -728,15 +772,47 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
          instruction_code = torricelly_inst_code::CAST_INT_FLOAT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
          instruction_code = torricelly_inst_code::CAST_INT_DOUBLE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_INT_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_INT_SHORT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::NOOP;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::LONG)
+         instruction_code = torricelly_inst_code::CAST_INT_LONG;
       else
          throw blaise_to_torricelly_internal_error("Target system type cannot be casted from INTEGER type.");
    }
    break;
+   case torricelly::torricelly_system_type_type::LONG:
+   {
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
+         instruction_code = torricelly_inst_code::CAST_LONG_BOOLEAN;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::CHAR)
+         instruction_code = torricelly_inst_code::CAST_LONG_CHAR;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
+         instruction_code = torricelly_inst_code::CAST_LONG_FLOAT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
+         instruction_code = torricelly_inst_code::CAST_LONG_DOUBLE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_LONG_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_LONG_SHORT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+         instruction_code = torricelly_inst_code::CAST_LONG_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::LONG)
+         instruction_code = torricelly_inst_code::NOOP;
+      else
+         throw blaise_to_torricelly_internal_error("Target system type cannot be casted from LONG type.");
+   }
+   break;
    case torricelly::torricelly_system_type_type::BOOLEAN:
    {
-      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_BOOLEAN_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_BOOLEAN_SHORT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::CAST_BOOLEAN_INT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BOOLEAN)
          instruction_code = torricelly_inst_code::NOOP;
@@ -746,7 +822,11 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
    break;
    case torricelly::torricelly_system_type_type::CHAR:
    {
-      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_CHAR_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_CHAR_SHORT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::CAST_CHAR_INT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::CHAR)
          instruction_code = torricelly_inst_code::NOOP;
@@ -756,8 +836,14 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
    break;
    case torricelly::torricelly_system_type_type::FLOAT:
    {
-      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_FLOAT_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_FLOAT_SHORT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::CAST_FLOAT_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::LONG)
+         instruction_code = torricelly_inst_code::CAST_FLOAT_LONG;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
          instruction_code = torricelly_inst_code::CAST_FLOAT_DOUBLE;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
@@ -768,8 +854,14 @@ void blaise_to_torricelly::translator::translate_cast_expression(std::shared_ptr
    break;
    case torricelly::torricelly_system_type_type::DOUBLE:
    {
-      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
+      if (target_system_type->system_type() == torricelly::torricelly_system_type_type::BYTE)
+         instruction_code = torricelly_inst_code::CAST_DOUBLE_BYTE;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::SHORT)
+         instruction_code = torricelly_inst_code::CAST_DOUBLE_SHORT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::INTEGER)
          instruction_code = torricelly_inst_code::CAST_DOUBLE_INT;
+      else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::LONG)
+         instruction_code = torricelly_inst_code::CAST_DOUBLE_LONG;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::FLOAT)
          instruction_code = torricelly_inst_code::CAST_DOUBLE_FLOAT;
       else if (target_system_type->system_type() == torricelly::torricelly_system_type_type::DOUBLE)
