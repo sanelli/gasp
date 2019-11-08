@@ -210,8 +210,14 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
          return make_torricelly_system_type(torricelly_system_type_type::DOUBLE);
       case blaise::ast::blaise_ast_system_type::FLOAT:
          return make_torricelly_system_type(torricelly_system_type_type::FLOAT);
+      case blaise::ast::blaise_ast_system_type::BYTE:
+         return make_torricelly_system_type(torricelly_system_type_type::BYTE);
+      case blaise::ast::blaise_ast_system_type::SHORT:
+         return make_torricelly_system_type(torricelly_system_type_type::SHORT);
       case blaise::ast::blaise_ast_system_type::INTEGER:
          return make_torricelly_system_type(torricelly_system_type_type::INTEGER);
+      case blaise::ast::blaise_ast_system_type::LONG:
+         return make_torricelly_system_type(torricelly_system_type_type::LONG);
       case blaise::ast::blaise_ast_system_type::VOID:
          return make_torricelly_system_type(torricelly_system_type_type::VOID);
       default:
