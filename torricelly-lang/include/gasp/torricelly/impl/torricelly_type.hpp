@@ -22,7 +22,10 @@ enum class torricelly_system_type_type : unsigned char
 {
    UNDEFINED,
    VOID,
+   BYTE,
+   SHORT,
    INTEGER,
+   LONG,
    FLOAT,
    DOUBLE,
    CHAR,

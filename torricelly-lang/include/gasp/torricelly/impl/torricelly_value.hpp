@@ -15,13 +15,16 @@ namespace gasp::torricelly
 union torricelly_value_union {
 
    static_assert(sizeof(int32_t) == 4);
-   static_assert(sizeof(char) == 1);
+   static_assert(sizeof(unsigned char) == 1);
    static_assert(sizeof(bool) == 1);
    static_assert(sizeof(float) == 4);
    static_assert(sizeof(double) == 8);
 
+   int8_t _byte;
+   int16_t _short;
    int32_t _integer;
-   char _char;
+   int64_t _long;
+   unsigned char _char;
    bool _boolean;
    float _float;
    double _double;
@@ -48,8 +51,11 @@ public:
 
    std::shared_ptr<torricelly_type> type() const;
 
+   int8_t get_byte() const;
+   int16_t get_short() const;
    int32_t get_integer() const;
-   char get_char() const;
+   int64_t get_long() const;
+   unsigned char get_char() const;
    bool get_boolean() const;
    float get_float() const;
    double get_double() const;
@@ -58,9 +64,12 @@ public:
 
    bool match(std::shared_ptr<torricelly_type> type) const;
 
+   static torricelly_value make(int8_t value);
+   static torricelly_value make(int16_t value);
    static torricelly_value make(int32_t value);
+   static torricelly_value make(int64_t value);
    static torricelly_value make(bool value);
-   static torricelly_value make(char value);
+   static torricelly_value make(unsigned char value);
    static torricelly_value make(float value);
    static torricelly_value make(double value);
    static torricelly_value make(std::string value);

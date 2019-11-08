@@ -78,7 +78,8 @@ bool torricelly_type_utility::is_system_type(std::shared_ptr<torricelly_type> ty
 
 bool torricelly_type_utility::is_void(std::shared_ptr<torricelly_type> type)
 {
-   if (!torricelly_type_utility::is_system_type(type)) return false;
+   if (!torricelly_type_utility::is_system_type(type))
+      return false;
    auto system_type = torricelly_type_utility::as_system_type(type);
    return system_type->system_type() == torricelly_system_type_type::VOID;
 }
@@ -140,8 +141,14 @@ std::string torricelly::to_string(torricelly_system_type_type type)
       return "undefined";
    case torricelly_system_type_type::VOID:
       return "void";
+   case torricelly_system_type_type::BYTE:
+      return "byte";
+   case torricelly_system_type_type::SHORT:
+      return "short";
    case torricelly_system_type_type::INTEGER:
       return "integer";
+   case torricelly_system_type_type::LONG:
+      return "long";
    case torricelly_system_type_type::FLOAT:
       return "float";
    case torricelly_system_type_type::DOUBLE:

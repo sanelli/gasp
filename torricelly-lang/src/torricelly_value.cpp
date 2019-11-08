@@ -72,8 +72,17 @@ void torricelly_value::copy_value(const torricelly_value_union &value)
          throw torricelly_error("Cannot create a value out of undefined system type");
       case torricelly_system_type_type::VOID:
          throw torricelly_error("Cannot create a value out of 'void' system type");
+      case torricelly_system_type_type::BYTE:
+         _value._byte = value._byte;
+         break;
+      case torricelly_system_type_type::SHORT:
+         _value._short = value._short;
+         break;
       case torricelly_system_type_type::INTEGER:
          _value._integer = value._integer;
+         break;
+      case torricelly_system_type_type::LONG:
+         _value._long = value._long;
          break;
       case torricelly_system_type_type::FLOAT:
          _value._float = value._float;
@@ -112,8 +121,8 @@ void torricelly_value::copy_array(std::shared_ptr<std::vector<torricelly_value>>
       break;
    case torricelly_type_type::ARRAY:
       _array = std::make_shared<std::vector<torricelly_value>>();
-      for(auto index = 0; index < array->size(); ++index)
-          _array->push_back(array->at(index));
+      for (auto index = 0; index < array->size(); ++index)
+         _array->push_back(array->at(index));
       break;
    default:
       throw torricelly_error(sanelli::make_string("Unsupported torricelly type"));
@@ -131,16 +140,36 @@ void torricelly_value::throw_if_is_not(std::shared_ptr<torricelly_type> check_ty
       throw torricelly_error(sanelli::make_string("Expected type '", to_string(check_type), "' but found '", to_string(type()), "'."));
 }
 
+int8_t torricelly_value::get_byte() const
+{
+   throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::BYTE));
+   return _value._byte;
+}
+
+int16_t torricelly_value::get_short() const
+{
+   throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::SHORT));
+   return _value._short;
+}
+
 int32_t torricelly_value::get_integer() const
 {
    throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::INTEGER));
    return _value._integer;
 }
-char torricelly_value::get_char() const
+
+int64_t torricelly_value::get_long() const
+{
+   throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::LONG));
+   return _value._long;
+}
+
+unsigned char torricelly_value::get_char() const
 {
    throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::CHAR));
    return _value._char;
 }
+
 bool torricelly_value::get_boolean() const
 {
    throw_if_is_not(make_torricelly_system_type(torricelly_system_type_type::BOOLEAN));
@@ -168,19 +197,41 @@ std::shared_ptr<std::vector<torricelly_value>> torricelly_value::get_array() con
    return _array;
 }
 
+torricelly_value torricelly_value::make(int8_t value)
+{
+   torricelly_value_union value_union;
+   value_union._byte = value;
+   return torricelly_value(torricelly_system_type_type::BYTE, value_union);
+}
+
+torricelly_value torricelly_value::make(int16_t value)
+{
+   torricelly_value_union value_union;
+   value_union._short = value;
+   return torricelly_value(torricelly_system_type_type::SHORT, value_union);
+}
+
 torricelly_value torricelly_value::make(int32_t value)
 {
    torricelly_value_union value_union;
    value_union._integer = value;
    return torricelly_value(torricelly_system_type_type::INTEGER, value_union);
 }
+
+torricelly_value torricelly_value::make(int32_t value)
+{
+   torricelly_value_union value_union;
+   value_union._long = value;
+   return torricelly_value(torricelly_system_type_type::LONG, value_union);
+}
+
 torricelly_value torricelly_value::make(bool value)
 {
    torricelly_value_union value_union;
    value_union._boolean = value;
    return torricelly_value(torricelly_system_type_type::BOOLEAN, value_union);
 }
-torricelly_value torricelly_value::make(char value)
+torricelly_value torricelly_value::make(unsigned char value)
 {
    torricelly_value_union value_union;
    value_union._char = value;
@@ -224,8 +275,14 @@ torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_
          throw torricelly_error("Cannot get default value for undefined system type.");
       case torricelly_system_type_type::VOID:
          throw torricelly_error("Cannot get default value for void system type.");
+      case torricelly_system_type_type::BYTE:
+         return torricelly_value::make((int8_t)0);
+      case torricelly_system_type_type::SHORT:
+         return torricelly_value::make((int16_t)0);
       case torricelly_system_type_type::INTEGER:
-         return torricelly_value::make(0);
+         return torricelly_value::make((int32_t)0);
+      case torricelly_system_type_type::LONG:
+         return torricelly_value::make((int64_t)0);
       case torricelly_system_type_type::FLOAT:
          return torricelly_value::make(0.00f);
       case torricelly_system_type_type::DOUBLE:
@@ -270,8 +327,14 @@ torricelly_value torricelly_value::get_value_from_string(const std::string &valu
          throw torricelly_error("Cannot get default value for undefined system type.");
       case torricelly_system_type_type::VOID:
          throw torricelly_error("Cannot get default value for void system type.");
+      case torricelly_system_type_type::BYTE:
+         return torricelly_value::make((int8_t)stoi(value));
+      case torricelly_system_type_type::SHORT:
+         return torricelly_value::make((int16_t)stoi(value));
       case torricelly_system_type_type::INTEGER:
-         return torricelly_value::make(stoi(value));
+         return torricelly_value::make((int32_t)stoi(value));
+      case torricelly_system_type_type::LONG:
+         return torricelly_value::make((int64_t)stol(value));
       case torricelly_system_type_type::FLOAT:
          return torricelly_value::make(stof(value));
       case torricelly_system_type_type::DOUBLE:
