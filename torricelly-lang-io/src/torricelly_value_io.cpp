@@ -26,7 +26,7 @@ std::string gasp::torricelly::to_string(torricelly_value value)
       case torricelly_system_type_type::VOID:
          break;
       case torricelly_system_type_type::BYTE:
-         os << value.get_byte();
+         os << (int)value.get_byte(); // Need cast otherwise compiler thinks this is a character
          break;
       case torricelly_system_type_type::SHORT:
          os << value.get_short();
