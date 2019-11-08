@@ -38,17 +38,33 @@ void execute_pop_char(const torricelly::torricelly_instruction& instruction);
 // Memory management
 void inline __execute_load(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
 void execute_load_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_load_byte(const torricelly::torricelly_instruction& instruction);
+void execute_load_short(const torricelly::torricelly_instruction& instruction);
+void execute_load_long(const torricelly::torricelly_instruction& instruction);
 void execute_load_integer(const torricelly::torricelly_instruction& instruction);
 void execute_load_float(const torricelly::torricelly_instruction& instruction);
 void execute_load_double(const torricelly::torricelly_instruction& instruction);
 void execute_load_char(const torricelly::torricelly_instruction& instruction);
+
+void inline __execute_store(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
+void execute_store_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_store_byte(const torricelly::torricelly_instruction& instruction);
+void execute_store_short(const torricelly::torricelly_instruction& instruction);
+void execute_store_integer(const torricelly::torricelly_instruction& instruction);
+void execute_store_long(const torricelly::torricelly_instruction& instruction);
+void execute_store_float(const torricelly::torricelly_instruction& instruction);
+void execute_store_double(const torricelly::torricelly_instruction& instruction);
+void execute_store_char(const torricelly::torricelly_instruction& instruction);
 
 void execute_load_array(const torricelly::torricelly_instruction& instruction);
 void inline __execute_load_array(const torricelly::torricelly_instruction& instruction, 
                                  torricelly::interpreter::torricelly_activation_record_local_array_underlying_type extpected_type,
                                  std::function<torricelly_activation_record_local(torricelly::interpreter::torricelly_activation_record_local_union)> get_value);
 void execute_load_array_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_byte(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_short(const torricelly::torricelly_instruction& instruction);
 void execute_load_array_integer(const torricelly::torricelly_instruction& instruction);
+void execute_load_array_long(const torricelly::torricelly_instruction& instruction);
 void execute_load_array_float(const torricelly::torricelly_instruction& instruction);
 void execute_load_array_double(const torricelly::torricelly_instruction& instruction);
 void execute_load_array_char(const torricelly::torricelly_instruction& instruction);
@@ -59,20 +75,20 @@ void inline __execute_store_array(const torricelly::torricelly_instruction& inst
                                  torricelly::interpreter::torricelly_activation_record_local_array_underlying_type extpected_type,
                                  std::function<torricelly::interpreter::torricelly_activation_record_local_union(torricelly_activation_record_local)> get_value);
 void execute_store_array_boolean(const torricelly::torricelly_instruction& instruction);
+void execute_store_array_byte(const torricelly::torricelly_instruction& instruction);
+void execute_store_array_short(const torricelly::torricelly_instruction& instruction);
 void execute_store_array_integer(const torricelly::torricelly_instruction& instruction);
+void execute_store_array_long(const torricelly::torricelly_instruction& instruction);
 void execute_store_array_float(const torricelly::torricelly_instruction& instruction);
 void execute_store_array_double(const torricelly::torricelly_instruction& instruction);
 void execute_store_array_char(const torricelly::torricelly_instruction& instruction);
 
-void inline __execute_store(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
-void execute_store_boolean(const torricelly::torricelly_instruction& instruction);
-void execute_store_integer(const torricelly::torricelly_instruction& instruction);
-void execute_store_float(const torricelly::torricelly_instruction& instruction);
-void execute_store_double(const torricelly::torricelly_instruction& instruction);
-void execute_store_char(const torricelly::torricelly_instruction& instruction);
-
 void __execute_allocate_array(const torricelly::torricelly_instruction& instruction, torricelly_activation_record_local_type extpected_type);
+void execute_allocate_short_array(const torricelly::torricelly_instruction& instruction);
+void execute_allocate_byte_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_integer_array(const torricelly::torricelly_instruction& instruction);
+void execute_allocate_long_array(const torricelly::torricelly_instruction& instruction);
+
 void execute_allocate_char_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_boolean_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_float_array(const torricelly::torricelly_instruction& instruction);

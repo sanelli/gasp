@@ -146,9 +146,21 @@ void torricelly_instruction_interpreter::execute_load_boolean(const torricelly::
    __execute_load(instruction, torricelly_activation_record_local_type::BOOLEAN);
 }
 
+void torricelly_instruction_interpreter::execute_load_byte(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_load(instruction, torricelly_activation_record_local_type::BYTE);
+}
+void torricelly_instruction_interpreter::execute_load_short(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_load(instruction, torricelly_activation_record_local_type::SHORT);
+}
 void torricelly_instruction_interpreter::execute_load_integer(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load(instruction, torricelly_activation_record_local_type::INTEGER);
+}
+void torricelly_instruction_interpreter::execute_load_long(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_load(instruction, torricelly_activation_record_local_type::LONG);
 }
 
 void torricelly_instruction_interpreter::execute_load_float(const torricelly::torricelly_instruction &instruction)
@@ -171,9 +183,21 @@ void torricelly_instruction_interpreter::execute_store_boolean(const torricelly:
    __execute_store(instruction, torricelly_activation_record_local_type::BOOLEAN);
 }
 
+void torricelly_instruction_interpreter::execute_store_byte(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_store(instruction, torricelly_activation_record_local_type::BYTE);
+}
+void torricelly_instruction_interpreter::execute_store_short(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_store(instruction, torricelly_activation_record_local_type::SHORT);
+}
 void torricelly_instruction_interpreter::execute_store_integer(const torricelly::torricelly_instruction &instruction)
 {
    __execute_store(instruction, torricelly_activation_record_local_type::INTEGER);
+}
+void torricelly_instruction_interpreter::execute_store_long(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_store(instruction, torricelly_activation_record_local_type::LONG);
 }
 
 void torricelly_instruction_interpreter::execute_store_float(const torricelly::torricelly_instruction &instruction)
@@ -197,11 +221,29 @@ void torricelly_instruction_interpreter::execute_load_array_boolean(const torric
                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::BOOLEAN,
                         [](auto u) { return torricelly_activation_record_local::make(u._boolean); });
 }
+void torricelly_instruction_interpreter::execute_load_array_byte(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_load_array(instruction,
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::BYTE,
+                        [](auto u) { return torricelly_activation_record_local::make(u._byte); });
+}
+void torricelly_instruction_interpreter::execute_load_array_short(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_load_array(instruction,
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::SHORT,
+                        [](auto u) { return torricelly_activation_record_local::make(u._short); });
+}
 void torricelly_instruction_interpreter::execute_load_array_integer(const torricelly::torricelly_instruction &instruction)
 {
    __execute_load_array(instruction,
                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::INTEGER,
                         [](auto u) { return torricelly_activation_record_local::make(u._integer); });
+}
+void torricelly_instruction_interpreter::execute_load_array_long(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_load_array(instruction,
+                        torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::LONG,
+                        [](auto u) { return torricelly_activation_record_local::make(u._long); });
 }
 void torricelly_instruction_interpreter::execute_load_array_float(const torricelly::torricelly_instruction &instruction)
 {
@@ -233,6 +275,28 @@ void torricelly_instruction_interpreter::execute_store_array_boolean(const torri
                             return u;
                          });
 }
+void torricelly_instruction_interpreter::execute_store_array_byte(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_store_array(instruction,
+                         torricelly_activation_record_local_type::BYTE,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::BYTE,
+                         [](auto value) {
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
+                            u._byte = value.get_byte();
+                            return u;
+                         });
+}
+void torricelly_instruction_interpreter::execute_store_array_short(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_store_array(instruction,
+                         torricelly_activation_record_local_type::SHORT,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::SHORT,
+                         [](auto value) {
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
+                            u._short = value.get_short();
+                            return u;
+                         });
+}
 void torricelly_instruction_interpreter::execute_store_array_integer(const torricelly::torricelly_instruction &instruction)
 {
    __execute_store_array(instruction,
@@ -241,6 +305,17 @@ void torricelly_instruction_interpreter::execute_store_array_integer(const torri
                          [](auto value) {
                             torricelly::interpreter::torricelly_activation_record_local_union u;
                             u._integer = value.get_integer();
+                            return u;
+                         });
+}
+void torricelly_instruction_interpreter::execute_store_array_long(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_store_array(instruction,
+                         torricelly_activation_record_local_type::LONG,
+                         torricelly::interpreter::torricelly_activation_record_local_array_underlying_type::LONG,
+                         [](auto value) {
+                            torricelly::interpreter::torricelly_activation_record_local_union u;
+                            u._long = value.get_long();
                             return u;
                          });
 }
@@ -307,9 +382,21 @@ void torricelly_instruction_interpreter::__execute_allocate_array(const torricel
    activation_record->push(array_value);
 }
 
+void torricelly_instruction_interpreter::execute_allocate_byte_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::BYTE);
+}
+void torricelly_instruction_interpreter::execute_allocate_short_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::SHORT);
+}
 void torricelly_instruction_interpreter::execute_allocate_integer_array(const torricelly::torricelly_instruction &instruction)
 {
    __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::INTEGER);
+}
+void torricelly_instruction_interpreter::execute_allocate_long_array(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_allocate_array(instruction, gasp::torricelly::interpreter::torricelly_activation_record_local_type::LONG);
 }
 void torricelly_instruction_interpreter::execute_allocate_char_array(const torricelly::torricelly_instruction &instruction)
 {

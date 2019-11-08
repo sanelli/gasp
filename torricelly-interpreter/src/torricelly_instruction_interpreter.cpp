@@ -69,8 +69,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::POP_DOUBLE:
       execute_pop_double(instruction);
       break;
+   case torricelly_inst_code::LOAD_BYTE:
+      execute_load_byte(instruction);
+      break;
+   case torricelly_inst_code::LOAD_SHORT:
+      execute_load_short(instruction);
+      break;
    case torricelly_inst_code::LOAD_INTEGER:
       execute_load_integer(instruction);
+      break;
+   case torricelly_inst_code::LOAD_LONG:
+      execute_load_long(instruction);
       break;
    case torricelly_inst_code::LOAD_BOOLEAN:
       execute_load_boolean(instruction);
@@ -87,8 +96,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::LOAD_ARRAY:
       execute_load_array(instruction);
       break;
+   case torricelly_inst_code::LOAD_ARRAY_BYTE:
+      execute_load_array_byte(instruction);
+      break;
+   case torricelly_inst_code::LOAD_ARRAY_SHORT:
+      execute_load_array_short(instruction);
+      break;
    case torricelly_inst_code::LOAD_ARRAY_INTEGER:
       execute_load_array_integer(instruction);
+      break;
+   case torricelly_inst_code::LOAD_ARRAY_LONG:
+      execute_load_array_long(instruction);
       break;
    case torricelly_inst_code::LOAD_ARRAY_BOOLEAN:
       execute_load_array_boolean(instruction);
@@ -102,8 +120,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::LOAD_ARRAY_DOUBLE:
       execute_load_array_double(instruction);
       break;
+   case torricelly_inst_code::STORE_BYTE:
+      execute_store_byte(instruction);
+      break;
+   case torricelly_inst_code::STORE_SHORT:
+      execute_store_short(instruction);
+      break;
    case torricelly_inst_code::STORE_INTEGER:
       execute_store_integer(instruction);
+      break;
+   case torricelly_inst_code::STORE_LONG:
+      execute_store_long(instruction);
       break;
    case torricelly_inst_code::STORE_BOOLEAN:
       execute_store_boolean(instruction);
@@ -120,8 +147,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::STORE_ARRAY:
       execute_store_array(instruction);
       break;
+   case torricelly_inst_code::STORE_ARRAY_BYTE:
+      execute_store_array_byte(instruction);
+      break;
+   case torricelly_inst_code::STORE_ARRAY_SHORT:
+      execute_store_array_short(instruction);
+      break;
    case torricelly_inst_code::STORE_ARRAY_INTEGER:
       execute_store_array_integer(instruction);
+      break;
+   case torricelly_inst_code::STORE_ARRAY_LONG:
+      execute_store_array_long(instruction);
       break;
    case torricelly_inst_code::STORE_ARRAY_BOOLEAN:
       execute_store_array_boolean(instruction);
@@ -270,8 +306,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::HALT:
       _interpreter.lock()->_status = torricelly_interpreter_status::HALTED;
       break;
+   case torricelly_inst_code::ALLOCATE_BYTE_ARRAY:
+      execute_allocate_byte_array(instruction);
+      break;
+   case torricelly_inst_code::ALLOCATE_SHORT_ARRAY:
+      execute_allocate_short_array(instruction);
+      break;
    case torricelly_inst_code::ALLOCATE_INT_ARRAY:
       execute_allocate_integer_array(instruction);
+      break;
+   case torricelly_inst_code::ALLOCATE_LONG_ARRAY:
+      execute_allocate_long_array(instruction);
       break;
    case torricelly_inst_code::ALLOCATE_CHAR_ARRAY:
       execute_allocate_char_array(instruction);
