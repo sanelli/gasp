@@ -91,7 +91,7 @@ void blaise_to_torricelly::translator::translate_statement(std::shared_ptr<gasp:
    }
    break;
    default:
-      throw blaise_to_torricelly_internal_error(sanelli::make_string("Unknown statement type (ID = ", (int) statement->type(),")"));
+      throw blaise_to_torricelly_internal_error(sanelli::make_string("Unknown statement type (ID = ", (int)statement->type(), ")"));
    }
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_statement" << std::endl);
 }
@@ -147,14 +147,14 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       variable_name = variable_identifier->variable()->name();
       auto variable_index_it = variables_mapping.find(variable_name);
       if (variable_index_it == variables_mapping.end())
-         throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
+         throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating assignemt. Cannot find varibale '", variable_name, "'."));
       auto variable_index = variable_index_it->second;
 
       auto variable_type = variable_identifier->variable()->type();
       if (!ast::blaise_ast_utility::is_array(variable_type))
       {
          auto store_instruction_code = compute_instruction_code(statement->expression()->result_type(),
-                                                                torricelly_inst_code::STORE_INTEGER,
+                                                                torricelly_inst_code::STORE_BYTE, torricelly_inst_code::STORE_SHORT, torricelly_inst_code::STORE_INTEGER, torricelly_inst_code::STORE_LONG,
                                                                 torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
                                                                 torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
          auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
@@ -164,13 +164,13 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       {
          auto array_type = ast::blaise_ast_utility::as_array_type(variable_type);
          if (!array_type->is_unbounded())
-            throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' must be unbounded."));
+            throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' must be unbounded."));
 
          auto underlying_array_type = array_type->underlying_type();
 
          auto statement_expression_type = statement->expression()->result_type();
          if (!ast::blaise_ast_utility::is_array(variable_type))
-            throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt. Cannot assigned expression to array '", variable_name, "'."));
+            throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating assignemt. Cannot assigned expression to array '", variable_name, "'."));
          // TODO: Check dimensions: right now it can only be just one
 
          auto expression_array_type = ast::blaise_ast_utility::as_array_type(statement_expression_type);
@@ -191,7 +191,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
 
       auto variable_index_it = variables_mapping.find(variable_name);
       if (variable_index_it == variables_mapping.end())
-         throw blaise_to_torricelly_error(statement->line(), statement->column(),sanelli::make_string("Error while translating assignemt for array. Cannot find varibale '", variable_name, "'."));
+         throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating assignemt for array. Cannot find varibale '", variable_name, "'."));
       auto variable_index = variable_index_it->second;
 
       // Translate expression of the
@@ -211,7 +211,7 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       max_stack_size = std::max(max_stack_size, 2U);
       auto array_type = gasp::blaise::ast::blaise_ast_utility::as_array_type(array_identifier->variable()->type());
       auto store_instruction_code = compute_instruction_code(array_type->underlying_type(),
-                                                             torricelly_inst_code::STORE_ARRAY_INTEGER,
+                                                             torricelly_inst_code::STORE_ARRAY_BYTE, torricelly_inst_code::STORE_ARRAY_SHORT, torricelly_inst_code::STORE_ARRAY_INTEGER, torricelly_inst_code::STORE_ARRAY_LONG,
                                                              torricelly_inst_code::STORE_ARRAY_FLOAT, torricelly_inst_code::STORE_ARRAY_DOUBLE,
                                                              torricelly_inst_code::STORE_ARRAY_CHAR, torricelly_inst_code::STORE_ARRAY_BOOLEAN);
       auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index, torricelly_inst_ref_type::SUBROUTINE);
@@ -291,7 +291,8 @@ void blaise_to_torricelly::translator::translate_subroutine_call_statement(std::
    // If not returning void we gotta pop up what's left on the stack;
    if (!returns_void)
    {
-      auto pop_instruction_code = compute_instruction_code(subroutine->return_type(), torricelly_inst_code::POP_INTEGER,
+      auto pop_instruction_code = compute_instruction_code(subroutine->return_type(),
+                                                           torricelly_inst_code::POP_BYTE, torricelly_inst_code::POP_SHORT, torricelly_inst_code::POP_INTEGER, torricelly_inst_code::POP_LONG,
                                                            torricelly_inst_code::POP_FLOAT, torricelly_inst_code::POP_DOUBLE,
                                                            torricelly_inst_code::POP_CHAR, torricelly_inst_code::POP_CHAR);
 

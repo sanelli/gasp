@@ -117,7 +117,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
             auto store_instruction_code =
                 parameter->type()->type_type() == gasp::blaise::ast::blaise_ast_type_type::ARRAY
                     ? torricelly_inst_code::STORE_ARRAY
-                    : compute_instruction_code(parameter->type(), torricelly_inst_code::STORE_INTEGER,
+                    : compute_instruction_code(parameter->type(),
+                                               torricelly_inst_code::STORE_BYTE, torricelly_inst_code::STORE_SHORT, torricelly_inst_code::STORE_INTEGER, torricelly_inst_code::STORE_LONG,
                                                torricelly_inst_code::STORE_FLOAT, torricelly_inst_code::STORE_DOUBLE,
                                                torricelly_inst_code::STORE_CHAR, torricelly_inst_code::STORE_BOOLEAN);
             auto store_instruction = torricelly_instruction::make(store_instruction_code, variable_index_it->second, torricelly_inst_ref_type::SUBROUTINE);
@@ -168,7 +169,8 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
          auto return_variable_index = return_variable_it->second;
 
          // LOAD_XXX [subroutine_name]
-         auto load_instruction_code = compute_instruction_code(subroutine->return_type(), torricelly_inst_code::LOAD_INTEGER,
+         auto load_instruction_code = compute_instruction_code(subroutine->return_type(),
+                                                               torricelly_inst_code::LOAD_BYTE, torricelly_inst_code::LOAD_SHORT, torricelly_inst_code::LOAD_INTEGER, torricelly_inst_code::LOAD_LONG,
                                                                torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
                                                                torricelly_inst_code::LOAD_BOOLEAN);
          auto load_instruction = torricelly_instruction::make(load_instruction_code, return_variable_index, torricelly_inst_ref_type::SUBROUTINE);
