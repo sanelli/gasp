@@ -288,7 +288,7 @@ torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_
       case torricelly_system_type_type::DOUBLE:
          return torricelly_value::make(0.00);
       case torricelly_system_type_type::CHAR:
-         return torricelly_value::make('\0');
+         return torricelly_value::make((unsigned char)'\0');
       case torricelly_system_type_type::BOOLEAN:
          return torricelly_value::make(false);
       case torricelly_system_type_type::LITERAL_STRING:

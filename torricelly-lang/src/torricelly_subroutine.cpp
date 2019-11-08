@@ -245,6 +245,6 @@ std::string torricelly::to_string(torricelly_subroutine_flag flag)
    case torricelly_subroutine_flag::NATIVE:
       return "native";
    default:
-      throw torricelly_error("Cannot write flag into output stream: unknown flag");
+      throw torricelly_error(sanelli::make_string("Cannot write flag into output stream: unknown flag (" , (int)flag, ")"));
    }
 }
