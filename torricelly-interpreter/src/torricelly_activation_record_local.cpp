@@ -25,8 +25,14 @@ std::string gasp::torricelly::interpreter::to_string(torricelly_activation_recor
       return "undefined";
    case torricelly_activation_record_local_type::VOID:
       return "void";
+   case torricelly_activation_record_local_type::BYTE:
+      return "byte";
+   case torricelly_activation_record_local_type::SHORT:
+      return "short";
    case torricelly_activation_record_local_type::INTEGER:
       return "integer";
+   case torricelly_activation_record_local_type::LONG:
+      return "long";
    case torricelly_activation_record_local_type::CHAR:
       return "char";
    case torricelly_activation_record_local_type::BOOLEAN:
@@ -63,8 +69,14 @@ std::string gasp::torricelly::interpreter::to_string(torricelly_activation_recor
    {
    case torricelly_activation_record_local_array_underlying_type::UNDEFINED:
       return "undefined";
+   case torricelly_activation_record_local_array_underlying_type::BYTE:
+      return "byte";
+   case torricelly_activation_record_local_array_underlying_type::SHORT:
+      return "short";
    case torricelly_activation_record_local_array_underlying_type::INTEGER:
       return "integer";
+   case torricelly_activation_record_local_array_underlying_type::LONG:
+      return "long";
    case torricelly_activation_record_local_array_underlying_type::CHAR:
       return "char";
    case torricelly_activation_record_local_array_underlying_type::BOOLEAN:
@@ -94,8 +106,14 @@ torricelly_activation_record_local_array_underlying_type gasp::torricelly::inter
          return torricelly_activation_record_local_array_underlying_type::DOUBLE;
       case torricelly::torricelly_system_type_type::FLOAT:
          return torricelly_activation_record_local_array_underlying_type::FLOAT;
+      case torricelly::torricelly_system_type_type::BYTE:
+         return torricelly_activation_record_local_array_underlying_type::BYTE;
+      case torricelly::torricelly_system_type_type::SHORT:
+         return torricelly_activation_record_local_array_underlying_type::SHORT;
       case torricelly::torricelly_system_type_type::INTEGER:
          return torricelly_activation_record_local_array_underlying_type::INTEGER;
+      case torricelly::torricelly_system_type_type::LONG:
+         return torricelly_activation_record_local_array_underlying_type::LONG;
       case torricelly::torricelly_system_type_type::BOOLEAN:
          return torricelly_activation_record_local_array_underlying_type::BOOLEAN;
       case torricelly::torricelly_system_type_type::CHAR:
@@ -126,8 +144,14 @@ torricelly_activation_record_local_array_underlying_type gasp::torricelly::inter
    {
    case torricelly_activation_record_local_type::BOOLEAN:
       return torricelly_activation_record_local_array_underlying_type::BOOLEAN;
+   case torricelly_activation_record_local_type::BYTE:
+      return torricelly_activation_record_local_array_underlying_type::BYTE;
+   case torricelly_activation_record_local_type::SHORT:
+      return torricelly_activation_record_local_array_underlying_type::SHORT;
    case torricelly_activation_record_local_type::INTEGER:
       return torricelly_activation_record_local_array_underlying_type::INTEGER;
+   case torricelly_activation_record_local_type::LONG:
+      return torricelly_activation_record_local_array_underlying_type::LONG;
    case torricelly_activation_record_local_type::FLOAT:
       return torricelly_activation_record_local_array_underlying_type::FLOAT;
    case torricelly_activation_record_local_type::DOUBLE:
@@ -210,25 +234,43 @@ torricelly_activation_record_local::torricelly_activation_record_local()
     : _type(torricelly_activation_record_local_type::UNDEFINED), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
 {
 }
+torricelly_activation_record_local::torricelly_activation_record_local(int8_t y)
+    : _type(torricelly_activation_record_local_type::BYTE), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
+{
+   _value._byte = y;
+}
+torricelly_activation_record_local::torricelly_activation_record_local(int16_t s)
+    : _type(torricelly_activation_record_local_type::SHORT), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
+{
+   _value._short = s;
+}
 torricelly_activation_record_local::torricelly_activation_record_local(int i)
     : _type(torricelly_activation_record_local_type::INTEGER), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
 {
    _value._integer = i;
 }
-torricelly_activation_record_local::torricelly_activation_record_local(char c)
+torricelly_activation_record_local::torricelly_activation_record_local(int64_t l)
+    : _type(torricelly_activation_record_local_type::LONG), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
+{
+   _value._long = l;
+}
+torricelly_activation_record_local::torricelly_activation_record_local(unsigned char c)
     : _type(torricelly_activation_record_local_type::CHAR), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
 {
    _value._char = c;
 }
-torricelly_activation_record_local::torricelly_activation_record_local(bool b) : _type(torricelly_activation_record_local_type::BOOLEAN), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
+torricelly_activation_record_local::torricelly_activation_record_local(bool b)
+    : _type(torricelly_activation_record_local_type::BOOLEAN), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
 {
    _value._boolean = b;
 }
-torricelly_activation_record_local::torricelly_activation_record_local(float f) : _type(torricelly_activation_record_local_type::FLOAT), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
+torricelly_activation_record_local::torricelly_activation_record_local(float f)
+    : _type(torricelly_activation_record_local_type::FLOAT), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
 {
    _value._float = f;
 }
-torricelly_activation_record_local::torricelly_activation_record_local(double d) : _type(torricelly_activation_record_local_type::DOUBLE), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
+torricelly_activation_record_local::torricelly_activation_record_local(double d)
+    : _type(torricelly_activation_record_local_type::DOUBLE), _pointer_unerlying_type(torricelly_activation_record_local_underlying_type::UNDEFINED)
 {
    _value._double = d;
 }
@@ -251,8 +293,17 @@ torricelly_activation_record_local::torricelly_activation_record_local(torricell
    case torricelly_activation_record_local_type::UNDEFINED:
    case torricelly_activation_record_local_type::VOID:
       break;
+   case torricelly_activation_record_local_type::BYTE:
+      _value._byte = std::move(other._value._byte);
+      break;
+   case torricelly_activation_record_local_type::SHORT:
+      _value._short = std::move(other._value._short);
+      break;
    case torricelly_activation_record_local_type::INTEGER:
       _value._integer = std::move(other._value._integer);
+      break;
+   case torricelly_activation_record_local_type::LONG:
+      _value._long = std::move(other._value._long);
       break;
    case torricelly_activation_record_local_type::CHAR:
       _value._char = std::move(other._value._char);
@@ -291,8 +342,17 @@ torricelly_activation_record_local &torricelly_activation_record_local::operator
    case torricelly_activation_record_local_type::UNDEFINED:
    case torricelly_activation_record_local_type::VOID:
       break;
+   case torricelly_activation_record_local_type::BYTE:
+      _value._byte = std::move(other._value._byte);
+      break;
+   case torricelly_activation_record_local_type::SHORT:
+      _value._short = std::move(other._value._short);
+      break;
    case torricelly_activation_record_local_type::INTEGER:
       _value._integer = std::move(other._value._integer);
+      break;
+   case torricelly_activation_record_local_type::LONG:
+      _value._long = std::move(other._value._long);
       break;
    case torricelly_activation_record_local_type::CHAR:
       _value._char = std::move(other._value._char);
@@ -324,9 +384,19 @@ void torricelly_activation_record_local::copy_value_from(const torricelly_activa
    case torricelly_activation_record_local_type::UNDEFINED:
    case torricelly_activation_record_local_type::VOID:
       break;
+   case torricelly_activation_record_local_type::BYTE:
+      _value._byte = other._value._byte;
+      break;
+   case torricelly_activation_record_local_type::SHORT:
+      _value._short = other._value._short;
+      break;
    case torricelly_activation_record_local_type::INTEGER:
       _value._integer = other._value._integer;
       break;
+   case torricelly_activation_record_local_type::LONG:
+      _value._long = other._value._long;
+      break;
+      ;
    case torricelly_activation_record_local_type::CHAR:
       _value._char = other._value._char;
       break;
@@ -361,8 +431,14 @@ bool torricelly_activation_record_local::match(std::shared_ptr<torricelly::torri
          return false;
       case torricelly_system_type_type::VOID:
          return _type == torricelly_activation_record_local_type::VOID;
+      case torricelly_system_type_type::BYTE:
+         return _type == torricelly_activation_record_local_type::BYTE;
+      case torricelly_system_type_type::SHORT:
+         return _type == torricelly_activation_record_local_type::SHORT;
       case torricelly_system_type_type::INTEGER:
          return _type == torricelly_activation_record_local_type::INTEGER;
+      case torricelly_system_type_type::LONG:
+         return _type == torricelly_activation_record_local_type::LONG;
       case torricelly_system_type_type::FLOAT:
          return _type == torricelly_activation_record_local_type::FLOAT;
       case torricelly_system_type_type::DOUBLE:
@@ -386,13 +462,31 @@ bool torricelly_activation_record_local::match(std::shared_ptr<torricelly::torri
    }
 }
 
-int torricelly_activation_record_local::get_integer() const
+int8_t torricelly_activation_record_local::get_byte() const
+{
+   if (_type != torricelly_activation_record_local_type::BYTE)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get byte type. local is of type ", to_string(_type), "."));
+   return _value._byte;
+}
+int16_t torricelly_activation_record_local::get_short() const
+{
+   if (_type != torricelly_activation_record_local_type::SHORT)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get short type. local is of type ", to_string(_type), "."));
+   return _value._short;
+}
+int32_t torricelly_activation_record_local::get_integer() const
 {
    if (_type != torricelly_activation_record_local_type::INTEGER)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get integer type. local is of type ", to_string(_type), "."));
    return _value._integer;
 }
-char torricelly_activation_record_local::get_char() const
+int64_t torricelly_activation_record_local::get_long() const
+{
+   if (_type != torricelly_activation_record_local_type::LONG)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot get long type. local is of type ", to_string(_type), "."));
+   return _value._long;
+}
+unsigned char torricelly_activation_record_local::get_char() const
 {
    if (_type != torricelly_activation_record_local_type::CHAR)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot get char type. local is of type ", to_string(_type), "."));
@@ -439,16 +533,34 @@ torricelly_activation_record_local_underlying_type torricelly_activation_record_
    return _pointer_unerlying_type;
 }
 
-void torricelly_activation_record_local::set_integer(int i)
+void torricelly_activation_record_local::set_byte(int8_t y)
+{
+   if (_type != torricelly_activation_record_local_type::BYTE)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set byte type. local is of type ", to_string(_type), "."));
+   _value._byte = y;
+}
+void torricelly_activation_record_local::set_short(int16_t s)
+{
+   if (_type != torricelly_activation_record_local_type::SHORT)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set short type. local is of type ", to_string(_type), "."));
+   _value._short = s;
+}
+void torricelly_activation_record_local::set_integer(int32_t i)
 {
    if (_type != torricelly_activation_record_local_type::INTEGER)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot set integer type. local is of type ", to_string(_type), "."));
    _value._integer = i;
 }
-
-void torricelly_activation_record_local::set_char(char c)
+void torricelly_activation_record_local::set_long(int64_t l)
 {
-   if (_type != torricelly_activation_record_local_type::INTEGER)
+   if (_type != torricelly_activation_record_local_type::LONG)
+      throw torricelly_interpreter_error(sanelli::make_string("Cannot set long type. local is of type ", to_string(_type), "."));
+   _value._long = l;
+}
+
+void torricelly_activation_record_local::set_char(unsigned char c)
+{
+   if (_type != torricelly_activation_record_local_type::CHAR)
       throw torricelly_interpreter_error(sanelli::make_string("Cannot set char type. local is of type ", to_string(_type), "."));
    _value._char = c;
 }
@@ -490,8 +602,14 @@ torricelly_activation_record_local torricelly_activation_record_local::make(cons
          throw torricelly_interpreter_error("Cannot create activation record local from UNDEFINED torricelly type");
       case torricelly_system_type_type::VOID:
          throw torricelly_interpreter_error("Cannot create activation record local from VOID torricelly type");
+      case torricelly_system_type_type::BYTE:
+         return torricelly_activation_record_local(value.get_byte());
+      case torricelly_system_type_type::SHORT:
+         return torricelly_activation_record_local(value.get_short());
       case torricelly_system_type_type::INTEGER:
          return torricelly_activation_record_local(value.get_integer());
+      case torricelly_system_type_type::LONG:
+         return torricelly_activation_record_local(value.get_long());
       case torricelly_system_type_type::FLOAT:
          return torricelly_activation_record_local(value.get_float());
       case torricelly_system_type_type::DOUBLE:
@@ -538,8 +656,17 @@ torricelly_activation_record_local torricelly_activation_record_local::make(cons
          {
          case torricelly_activation_record_local_array_underlying_type::UNDEFINED:
             throw torricelly_interpreter_error("Cannot copy undefined underlying type");
+         case torricelly_activation_record_local_array_underlying_type::BYTE:
+            u._byte = array_value->at(index).get_byte();
+            break;
+         case torricelly_activation_record_local_array_underlying_type::SHORT:
+            u._short = array_value->at(index).get_short();
+            break;
          case torricelly_activation_record_local_array_underlying_type::INTEGER:
             u._integer = array_value->at(index).get_integer();
+            break;
+         case torricelly_activation_record_local_array_underlying_type::LONG:
+            u._long = array_value->at(index).get_long();
             break;
          case torricelly_activation_record_local_array_underlying_type::CHAR:
             u._char = array_value->at(index).get_char();
@@ -569,11 +696,14 @@ torricelly_activation_record_local torricelly_activation_record_local::make(cons
    }
 }
 
+torricelly_activation_record_local torricelly_activation_record_local::make(int8_t y) { return torricelly_activation_record_local(y); }
+torricelly_activation_record_local torricelly_activation_record_local::make(int16_t s) { return torricelly_activation_record_local(s); }
+torricelly_activation_record_local torricelly_activation_record_local::make(int32_t i) { return torricelly_activation_record_local(i); }
+torricelly_activation_record_local torricelly_activation_record_local::make(int64_t l) { return torricelly_activation_record_local(l); }
 torricelly_activation_record_local torricelly_activation_record_local::make(bool b) { return torricelly_activation_record_local(b); }
-torricelly_activation_record_local torricelly_activation_record_local::make(int i) { return torricelly_activation_record_local(i); }
 torricelly_activation_record_local torricelly_activation_record_local::make(float f) { return torricelly_activation_record_local(f); }
 torricelly_activation_record_local torricelly_activation_record_local::make(double d) { return torricelly_activation_record_local(d); }
-torricelly_activation_record_local torricelly_activation_record_local::make(char c) { return torricelly_activation_record_local(c); }
+torricelly_activation_record_local torricelly_activation_record_local::make(unsigned char c) { return torricelly_activation_record_local(c); }
 
 torricelly_activation_record_local torricelly_activation_record_local::make(const std::vector<unsigned int> &dimensions, torricelly_activation_record_local initial_value)
 {
@@ -593,8 +723,14 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
       return "undefined";
    case torricelly_activation_record_local_type::VOID:
       return "void";
+   case torricelly_activation_record_local_type::BYTE:
+      return std::to_string(value.get_byte());
+   case torricelly_activation_record_local_type::SHORT:
+      return std::to_string(value.get_short());
    case torricelly_activation_record_local_type::INTEGER:
       return std::to_string(value.get_integer());
+   case torricelly_activation_record_local_type::LONG:
+      return std::to_string(value.get_long());
    case torricelly_activation_record_local_type::CHAR:
    {
       auto cvalue = value.get_char();
@@ -642,8 +778,17 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
                case torricelly_activation_record_local_array_underlying_type::UNDEFINED:
                   sstream << "undefined";
                   break;
+               case torricelly_activation_record_local_array_underlying_type::BYTE:
+                  sstream << array_pointer->get(index)._byte;
+                  break;
+               case torricelly_activation_record_local_array_underlying_type::SHORT:
+                  sstream << array_pointer->get(index)._short;
+                  break;
                case torricelly_activation_record_local_array_underlying_type::INTEGER:
                   sstream << array_pointer->get(index)._integer;
+                  break;
+               case torricelly_activation_record_local_array_underlying_type::LONG:
+                  sstream << array_pointer->get(index)._long;
                   break;
                case torricelly_activation_record_local_array_underlying_type::CHAR:
                   sstream << array_pointer->get(index)._char;

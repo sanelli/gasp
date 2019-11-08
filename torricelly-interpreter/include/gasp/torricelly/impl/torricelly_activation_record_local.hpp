@@ -12,8 +12,11 @@ namespace gasp::torricelly::interpreter
 {
 
 union torricelly_activation_record_local_union {
-   int _integer;
-   char _char;
+   int8_t _byte;
+   int16_t _short;
+   int32_t _integer;
+   int64_t _long;
+   unsigned char _char;
    bool _boolean;
    float _float;
    double _double;
@@ -26,7 +29,10 @@ enum class torricelly_activation_record_local_type
 {
    UNDEFINED,
    VOID,
+   BYTE,
+   SHORT,
    INTEGER,
+   LONG,
    CHAR,
    BOOLEAN,
    FLOAT,
@@ -44,7 +50,10 @@ enum class torricelly_activation_record_local_underlying_type
 enum class torricelly_activation_record_local_array_underlying_type
 {
    UNDEFINED,
+   BYTE,
+   SHORT,
    INTEGER,
+   LONG,
    CHAR,
    BOOLEAN,
    FLOAT,
@@ -67,7 +76,7 @@ class torricelly_activation_record_local_multidimensional_array
    void copy_from(const torricelly_activation_record_local_multidimensional_array &other);
 
 public:
-   torricelly_activation_record_local_multidimensional_array(const std::vector<unsigned int>& dimensions, torricelly_activation_record_local_array_underlying_type underlying_type);
+   torricelly_activation_record_local_multidimensional_array(const std::vector<unsigned int> &dimensions, torricelly_activation_record_local_array_underlying_type underlying_type);
    torricelly_activation_record_local_multidimensional_array(const torricelly_activation_record_local_multidimensional_array &other);
    torricelly_activation_record_local_multidimensional_array &operator=(const torricelly_activation_record_local_multidimensional_array &other);
    ~torricelly_activation_record_local_multidimensional_array();
@@ -91,8 +100,11 @@ class torricelly_activation_record_local
    std::shared_ptr<void> _pointer;
    torricelly_activation_record_local_underlying_type _pointer_unerlying_type;
 
-   torricelly_activation_record_local(int i);
-   torricelly_activation_record_local(char c);
+   torricelly_activation_record_local(int8_t y);
+   torricelly_activation_record_local(int16_t s);
+   torricelly_activation_record_local(int32_t i);
+   torricelly_activation_record_local(int64_t l);
+   torricelly_activation_record_local(unsigned char c);
    torricelly_activation_record_local(bool b);
    torricelly_activation_record_local(float f);
    torricelly_activation_record_local(double d);
@@ -111,8 +123,11 @@ public:
    torricelly_activation_record_local_type type() const;
    bool match(std::shared_ptr<torricelly::torricelly_type> torricelly_type) const;
 
-   int get_integer() const;
-   char get_char() const;
+   int8_t get_byte() const;
+   int16_t get_short() const;
+   int32_t get_integer() const;
+   int64_t get_long() const;
+   unsigned char get_char() const;
    bool get_boolean() const;
    float get_float() const;
    double get_double() const;
@@ -121,8 +136,11 @@ public:
    std::shared_ptr<torricelly_activation_record_local_multidimensional_array> get_array_pointer() const;
    torricelly_activation_record_local_underlying_type get_pointer_underlying_type() const;
 
-   void set_integer(int i);
-   void set_char(char c);
+   void set_byte(int8_t y);
+   void set_short(int16_t s);
+   void set_integer(int32_t i);
+   void set_long(int64_t l);
+   void set_char(unsigned char c);
    void set_boolean(bool b);
    void set_float(float f);
    void set_double(double d);
@@ -130,11 +148,14 @@ public:
 
    static torricelly_activation_record_local make(const torricelly_value &value);
    static torricelly_activation_record_local make(bool b);
-   static torricelly_activation_record_local make(int i);
+   static torricelly_activation_record_local make(int8_t y);
+   static torricelly_activation_record_local make(int16_t s);
+   static torricelly_activation_record_local make(int32_t i);
+   static torricelly_activation_record_local make(int64_t l);
    static torricelly_activation_record_local make(float f);
    static torricelly_activation_record_local make(double d);
-   static torricelly_activation_record_local make(char c);
-   static torricelly_activation_record_local make(const std::vector<unsigned int>& dimensions, torricelly_activation_record_local initial_value);
+   static torricelly_activation_record_local make(unsigned char c);
+   static torricelly_activation_record_local make(const std::vector<unsigned int> &dimensions, torricelly_activation_record_local initial_value);
 
    friend sanelli::memory;
 };
