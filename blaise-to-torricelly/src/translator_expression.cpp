@@ -78,10 +78,28 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
       translate_literal_float_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, float_expression, max_stack_size);
    }
    break;
+   case ast::blaise_ast_expression_type::LITERAL_BYTE:
+   {
+      auto byte_expression = ast::blaise_ast_expression_utility::as_byte_literal(expression);
+      translate_literal_byte_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, byte_expression, max_stack_size);
+   }
+   break;
+   case ast::blaise_ast_expression_type::LITERAL_SHORT:
+   {
+      auto short_expression = ast::blaise_ast_expression_utility::as_short_literal(expression);
+      translate_literal_short_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, short_expression, max_stack_size);
+   }
+   break;
    case ast::blaise_ast_expression_type::LITERAL_INTEGER:
    {
       auto integer_expression = ast::blaise_ast_expression_utility::as_integer_literal(expression);
       translate_literal_integer_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, integer_expression, max_stack_size);
+   }
+   break;
+   case ast::blaise_ast_expression_type::LITERAL_LONG:
+   {
+      auto long_expression = ast::blaise_ast_expression_utility::as_long_literal(expression);
+      translate_literal_long_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, long_expression, max_stack_size);
    }
    break;
    case ast::blaise_ast_expression_type::LITERAL_STRING:
@@ -114,6 +132,30 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_expression" << std::endl);
 }
 
+void blaise_to_torricelly::translator::translate_literal_byte_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_byte_value> expression, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_byte_expression" << std::endl);
+   auto variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
+
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_BYTE, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(instruction);
+
+   max_stack_size = 1;
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_literal_byte_expression" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_literal_short_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_short_value> expression, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_short_expression" << std::endl);
+   auto variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
+
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_SHORT, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(instruction);
+
+   max_stack_size = 1;
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_literal_short_expression" << std::endl);
+}
+
 void blaise_to_torricelly::translator::translate_literal_integer_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_integer_value> expression, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_integer_expression" << std::endl);
@@ -124,6 +166,18 @@ void blaise_to_torricelly::translator::translate_literal_integer_expression(std:
 
    max_stack_size = 1;
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_literal_integer_expression" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_literal_long_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_long_value> expression, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_long_expression" << std::endl);
+   auto variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(expression->value()));
+
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_LONG, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(instruction);
+
+   max_stack_size = 1;
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_literal_long_expression" << std::endl);
 }
 
 void blaise_to_torricelly::translator::translate_literal_float_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_float_value> expression, unsigned int &max_stack_size) const
