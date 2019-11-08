@@ -514,7 +514,10 @@ end.)__";
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
+   _samples["empty-return-byte"] = {generate_empty_with_return_type_sample("byte"), "", "0"};
+   _samples["empty-return-short"] = {generate_empty_with_return_type_sample("short"), "", "0"};
    _samples["empty-return-integer"] = {generate_empty_with_return_type_sample("integer"), "", "0"};
+   _samples["empty-return-long"] = {generate_empty_with_return_type_sample("long"), "", "0"};
    _samples["empty-return-float"] = {generate_empty_with_return_type_sample("float"), "", "0.000000"};
    _samples["empty-return-boolean"] = {generate_empty_with_return_type_sample("boolean"), "", "false"};
    _samples["empty-return-double"] = {generate_empty_with_return_type_sample("double"), "", "0.000000"};
@@ -674,10 +677,16 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-array-float-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("float"), "10", "45.000000"};
    _samples["expression-function-call-array-double-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("double"), "10", "45.000000"};
 
+   _samples["literal-byte-1"] = {generate_literal_assignment_sample("byte", "byte", "11b"), "", "11"};
+   _samples["literal-byte-2"] = {generate_literal_assignment_sample("byte", "byte", "11B"), "", "11"};
+   _samples["literal-short-1"] = {generate_literal_assignment_sample("short", "short", "11s"), "", "11"};
+   _samples["literal-short-2"] = {generate_literal_assignment_sample("short", "short", "11S"), "", "11"};
    _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
    _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
    _samples["literal-integer-hexadecimal"] = {generate_literal_assignment_sample("integer", "integer", "0xFF"), "", "255"};
    _samples["literal-integer-decimal"] = {generate_literal_assignment_sample("integer", "integer", "10"), "", "10"};
+   _samples["literal-long-1"] = {generate_literal_assignment_sample("long", "long", "11l"), "", "11"};
+   _samples["literal-long-2"] = {generate_literal_assignment_sample("long", "long", "11L"), "", "11"};
    _samples["literal-char-1"] = {generate_literal_assignment_sample("char", "char", "'A'"), "", "A"};
    _samples["literal-char-2"] = {generate_literal_assignment_sample("char", "char", "'\\n'"), "", "\\u0a"};
    _samples["literal-char-3"] = {generate_literal_assignment_sample("char", "char", "'\\''"), "", "'"};
