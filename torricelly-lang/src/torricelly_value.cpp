@@ -340,7 +340,7 @@ torricelly_value torricelly_value::get_value_from_string(const std::string &valu
       case torricelly_system_type_type::DOUBLE:
          return torricelly_value::make(stod(value));
       case torricelly_system_type_type::CHAR:
-         return torricelly_value::make(value.length() > 0 ? value[0] : '\0');
+         return torricelly_value::make((unsigned char) (value.length() > 0 ? value[0] : '\0'));
       case torricelly_system_type_type::BOOLEAN:
          return torricelly_value::make(value == "true");
       case torricelly_system_type_type::LITERAL_STRING:
