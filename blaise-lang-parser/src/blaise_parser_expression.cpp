@@ -302,7 +302,8 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::make_blaise_ast_expression
       auto token_value = token_literal.value();
       auto unquote = token_value.substr(1, token_value.size() - 2);
       auto without_escapes = remove_escapes_from_string(unquote);
-      return memory::make_shared<ast::blaise_ast_expression_char_value>(token_literal, without_escapes.at(0));
+      auto char_literal = (unsigned char) without_escapes.at(0);
+      return memory::make_shared<ast::blaise_ast_expression_char_value>(token_literal, char_literal);
    }
    case blaise_token_type::LITERAL_STRING:
    {

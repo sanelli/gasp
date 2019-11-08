@@ -266,10 +266,10 @@ class blaise_ast_expression_double_value : public blaise_ast_expression_value<bl
    friend sanelli::memory;
    blaise_ast_expression_double_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, double value) : blaise_ast_expression_value(reference, value) {}
 };
-class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_system_type::CHAR, char>
+class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_system_type::CHAR, unsigned char>
 {
    friend sanelli::memory;
-   blaise_ast_expression_char_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, char value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_char_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, unsigned char value) : blaise_ast_expression_value(reference, value) {}
 };
 class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, blaise_ast_system_type::STRING, std::string>
 {
