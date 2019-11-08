@@ -36,8 +36,14 @@ char torricelly::to_binary(torricelly_system_type_type type)
       return 'u';
    case torricelly_system_type_type::VOID:
       return 'v';
+   case torricelly_system_type_type::BYTE:
+      return 'y';
+   case torricelly_system_type_type::SHORT:
+      return 's';
    case torricelly_system_type_type::INTEGER:
       return 'i';
+   case torricelly_system_type_type::LONG:
+      return 'l';
    case torricelly_system_type_type::FLOAT:
       return 'f';
    case torricelly_system_type_type::DOUBLE:
@@ -47,7 +53,7 @@ char torricelly::to_binary(torricelly_system_type_type type)
    case torricelly_system_type_type::BOOLEAN:
       return 'b';
    case torricelly_system_type_type::LITERAL_STRING:
-      return 's';
+      return 't';
    default:
       throw torricelly_error("Unknown torricelly system type while converting type to binary format");
    }
@@ -122,8 +128,14 @@ torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(
       return torricelly_system_type_type::UNDEFINED;
    case 'v':
       return torricelly_system_type_type::VOID;
+   case 'y':
+      return torricelly_system_type_type::BYTE;
+   case 's':
+      return torricelly_system_type_type::SHORT;
    case 'i':
       return torricelly_system_type_type::INTEGER;
+   case 'l':
+      return torricelly_system_type_type::LONG;
    case 'f':
       return torricelly_system_type_type::FLOAT;
    case 'd':
@@ -132,7 +144,7 @@ torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(
       return torricelly_system_type_type::CHAR;
    case 'b':
       return torricelly_system_type_type::BOOLEAN;
-   case 's':
+   case 't':
       return torricelly_system_type_type::LITERAL_STRING;
    default:
       throw torricelly_error(sanelli::make_string("Cannot convert binary value '", (int)byte, "' into torricelly system type type"));

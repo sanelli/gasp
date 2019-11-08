@@ -25,8 +25,17 @@ std::string gasp::torricelly::to_string(torricelly_value value)
          break;
       case torricelly_system_type_type::VOID:
          break;
+      case torricelly_system_type_type::BYTE:
+         os << value.get_byte();
+         break;
+      case torricelly_system_type_type::SHORT:
+         os << value.get_short();
+         break;
       case torricelly_system_type_type::INTEGER:
          os << value.get_integer();
+         break;
+      case torricelly_system_type_type::LONG:
+         os << value.get_long();
          break;
       case torricelly_system_type_type::FLOAT:
          os << value.get_float();
@@ -42,7 +51,7 @@ std::string gasp::torricelly::to_string(torricelly_value value)
          else
          {
             std::stringstream s;
-            s << std::hex << (int) cvalue;
+            s << std::hex << (int)cvalue;
             auto hex = s.str();
             os << "\\u" << (hex.size() < 2 ? ("0" + hex) : hex);
          }
@@ -117,8 +126,17 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
          break;
       case torricelly_system_type_type::VOID:
          break;
+      case torricelly_system_type_type::BYTE:
+         os << value.get_byte();
+         break;
+      case torricelly_system_type_type::SHORT:
+         os << value.get_short();
+         break;
       case torricelly_system_type_type::INTEGER:
          os << value.get_integer();
+         break;
+      case torricelly_system_type_type::LONG:
+         os << value.get_long();
          break;
       case torricelly_system_type_type::FLOAT:
          os << value.get_float();
@@ -181,9 +199,27 @@ torricelly_value torricelly::torricelly_value_from_binary(torricelly_binary_inpu
          throw torricelly_error("Cannot deserialize a value of type system undefined");
       case torricelly_system_type_type::VOID:
          throw torricelly_error("Cannot deserialize a value of type system void");
+      case torricelly_system_type_type::BYTE:
+      {
+         int8_t value;
+         is >> value;
+         return torricelly_value::make(value);
+      }
+      case torricelly_system_type_type::SHORT:
+      {
+         int16_t value;
+         is >> value;
+         return torricelly_value::make(value);
+      }
       case torricelly_system_type_type::INTEGER:
       {
          int32_t value;
+         is >> value;
+         return torricelly_value::make(value);
+      }
+      case torricelly_system_type_type::LONG:
+      {
+         int64_t value;
          is >> value;
          return torricelly_value::make(value);
       }

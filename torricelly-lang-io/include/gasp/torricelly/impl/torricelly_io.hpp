@@ -55,8 +55,10 @@ public:
 
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, const char *text);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, const std::string &text);
-   friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int32_t number);
+   friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int8_t number);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int16_t number);
+   friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int32_t number);
+   friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int64_t number);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, bool boolean);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, char character);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, float number);
@@ -65,8 +67,10 @@ public:
 
 torricelly_binary_output &operator<<(torricelly_binary_output &os, const char *text);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, const std::string &text);
-torricelly_binary_output &operator<<(torricelly_binary_output &os, int32_t number);
+torricelly_binary_output &operator<<(torricelly_binary_output &os, int8_t number);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, int16_t number);
+torricelly_binary_output &operator<<(torricelly_binary_output &os, int32_t number);
+torricelly_binary_output &operator<<(torricelly_binary_output &os, int64_t number);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, bool boolean);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, char character);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, float number);
@@ -89,8 +93,10 @@ public:
    int32_t version_build() const;
 
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, std::string &text);
-   friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int32_t &number);
+   friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int8_t &number);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int16_t &number);
+   friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int32_t &number);
+   friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int64_t &number);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, bool &boolean);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, char &character);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, float &number);
@@ -98,8 +104,10 @@ public:
 };
 
 torricelly_binary_input &operator>>(torricelly_binary_input &is, std::string &text);
-torricelly_binary_input &operator>>(torricelly_binary_input &is, int32_t &number);
+torricelly_binary_input &operator>>(torricelly_binary_input &is, int8_t &number);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, int16_t &number);
+torricelly_binary_input &operator>>(torricelly_binary_input &is, int32_t &number);
+torricelly_binary_input &operator>>(torricelly_binary_input &is, int64_t &number);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, bool &boolean);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, char &character);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, float &number);

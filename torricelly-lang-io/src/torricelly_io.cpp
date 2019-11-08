@@ -107,7 +107,7 @@ inline void __write_binary(TStream &stream, TType value)
    stream.write(bytes, sizeof(TType));
 }
 
-torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, int32_t number)
+torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, int8_t number)
 {
    __write_binary(os._os, number);
    return os;
@@ -119,6 +119,17 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, i
    return os;
 }
 
+torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, int32_t number)
+{
+   __write_binary(os._os, number);
+   return os;
+}
+
+torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, int64_t number)
+{
+   __write_binary(os._os, number);
+   return os;
+}
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, bool boolean)
 {
    __write_binary(os._os, boolean);
@@ -187,15 +198,24 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std
    return is;
 }
 
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int8_t &number)
+{
+   number = sanelli::binary_converter::from_binary<int8_t>(is._buffer, &is._index);
+   return is;
+}
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int16_t &number)
+{
+   number = sanelli::binary_converter::from_binary<int16_t>(is._buffer, &is._index);
+   return is;
+}
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int32_t &number)
 {
    number = sanelli::binary_converter::from_binary<int32_t>(is._buffer, &is._index);
    return is;
 }
-
-torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int16_t &number)
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, int64_t &number)
 {
-   number = sanelli::binary_converter::from_binary<int16_t>(is._buffer, &is._index);
+   number = sanelli::binary_converter::from_binary<int64_t>(is._buffer, &is._index);
    return is;
 }
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, bool &boolean)
