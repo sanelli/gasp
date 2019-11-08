@@ -129,6 +129,7 @@ bool gasp_module_compile::run(int argc, char *argv[])
    {
       std::shared_ptr<torricelly_module> module;
 
+      auto do_output = true;
       if (input_format() == "blaise")
       {
          blaise_tokenizer tokenizer;
@@ -141,23 +142,25 @@ bool gasp_module_compile::run(int argc, char *argv[])
          parser.parse(context);
          __translate_dependencies(output(), output_format(), context.module(), modules);
          module = modules.at(0);
+         do_output = false; // Blaise dependency transaction takes care of everything already
       }
       else if (input_format() == "bf")
       {
          bf_to_torricelly_translator translator;
          module = translator.translate("brainfuck", input());
       }
-
-      if (output_format() == "torricelly-text")
+      
+      if (do_output && output_format() == "torricelly-text")
       {
          torricelly_text_output torricelly_output(output());
          torricelly_output << module;
       }
-      else if (output_format() == "torricelly-binary")
+      else if (do_output && output_format() == "torricelly-binary")
       {
          torricelly_binary_output torricelly_output(output());
          torricelly_output << module;
       }
+
       return true;
    }
    catch (const sanelli::tokenizer_error &error)
