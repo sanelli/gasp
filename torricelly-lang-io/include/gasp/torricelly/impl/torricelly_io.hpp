@@ -60,7 +60,7 @@ public:
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int32_t number);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, int64_t number);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, bool boolean);
-   friend torricelly_binary_output &operator<<(torricelly_binary_output &os, char character);
+   friend torricelly_binary_output &operator<<(torricelly_binary_output &os, unsigned char character);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, float number);
    friend torricelly_binary_output &operator<<(torricelly_binary_output &os, double number);
 };
@@ -72,7 +72,7 @@ torricelly_binary_output &operator<<(torricelly_binary_output &os, int16_t numbe
 torricelly_binary_output &operator<<(torricelly_binary_output &os, int32_t number);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, int64_t number);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, bool boolean);
-torricelly_binary_output &operator<<(torricelly_binary_output &os, char character);
+torricelly_binary_output &operator<<(torricelly_binary_output &os, unsigned char character);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, float number);
 torricelly_binary_output &operator<<(torricelly_binary_output &os, double number);
 
@@ -98,7 +98,7 @@ public:
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int32_t &number);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, int64_t &number);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, bool &boolean);
-   friend torricelly_binary_input &operator>>(torricelly_binary_input &is, char &character);
+   friend torricelly_binary_input &operator>>(torricelly_binary_input &is, unsigned char &character);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, float &number);
    friend torricelly_binary_input &operator>>(torricelly_binary_input &is, double &number);
 };
@@ -109,7 +109,7 @@ torricelly_binary_input &operator>>(torricelly_binary_input &is, int16_t &number
 torricelly_binary_input &operator>>(torricelly_binary_input &is, int32_t &number);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, int64_t &number);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, bool &boolean);
-torricelly_binary_input &operator>>(torricelly_binary_input &is, char &character);
+torricelly_binary_input &operator>>(torricelly_binary_input &is, unsigned char &character);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, float &number);
 torricelly_binary_input &operator>>(torricelly_binary_input &is, double &number);
 

@@ -135,7 +135,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, b
    __write_binary(os._os, boolean);
    return os;
 }
-torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, char character)
+torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, unsigned char character)
 {
    __write_binary(os._os, character);
    return os;
@@ -190,7 +190,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std
    std::stringstream stream;
    for (auto i = 0U; i < string_length; ++i)
    {
-      char c;
+      unsigned char c;
       is >> c;
       stream << c;
    }
@@ -223,9 +223,9 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, boo
    boolean = sanelli::binary_converter::from_binary<bool>(is._buffer, &is._index);
    return is;
 }
-torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, char &character)
+torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, unsigned char &character)
 {
-   character = sanelli::binary_converter::from_binary<char>(is._buffer, &is._index);
+   character = sanelli::binary_converter::from_binary<unsigned char>(is._buffer, &is._index);
    return is;
 }
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, float &number)

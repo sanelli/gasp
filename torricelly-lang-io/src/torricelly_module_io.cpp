@@ -30,13 +30,14 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const
    for (auto subroutine_index = 1u; subroutine_index <= module->get_number_of_subroutines(); ++subroutine_index)
       os << module->get_subroutine(subroutine_index) << std::endl;
    os << ".end module" << std::endl;
+
    return os;
 }
 
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, const std::shared_ptr<const torricelly_module> module)
 {
    for (const char c : torricelly_binary_header)
-      os << c;
+      os << (unsigned char) c;
    os << os.version_major() << os.version_minor() << os.version_build();
    os << module->module_name();
    os << (int32_t)module->count_dependencies();
@@ -58,7 +59,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std
 {
    int header_size = torricelly_binary_header.size();
    std::string header;
-   char byte;
+   unsigned char byte;
    for (auto index = 0; index < header_size; ++index)
    {
       is >> byte;

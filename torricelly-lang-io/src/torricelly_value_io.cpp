@@ -237,7 +237,7 @@ torricelly_value torricelly::torricelly_value_from_binary(torricelly_binary_inpu
       }
       case torricelly_system_type_type::CHAR:
       {
-         char value;
+         unsigned char value;
          is >> value;
          return torricelly_value::make(value);
       }

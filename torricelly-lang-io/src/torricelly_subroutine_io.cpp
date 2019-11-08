@@ -81,7 +81,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
    return os;
 }
 
-char torricelly::to_binary(torricelly_subroutine_flag flag)
+int8_t torricelly::to_binary(torricelly_subroutine_flag flag)
 {
    switch (flag)
    {
@@ -110,7 +110,7 @@ char torricelly::to_binary(torricelly_subroutine_flag flag)
 
 torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, torricelly_subroutine_flag flags)
 {
-   std::vector<char> vectorized;
+   std::vector<int8_t> vectorized;
    if ((flags & torricelly_subroutine_flag::MAIN) == torricelly_subroutine_flag::MAIN)
       vectorized.push_back(to_binary(torricelly_subroutine_flag::MAIN));
    if ((flags & torricelly_subroutine_flag::STATIC) == torricelly_subroutine_flag::STATIC)
@@ -137,7 +137,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
    return os;
 }
 
-torricelly_subroutine_flag torricelly::torricelly_subroutine_flag_from_binary(char byte)
+torricelly_subroutine_flag torricelly::torricelly_subroutine_flag_from_binary(int8_t byte)
 {
    switch (byte)
    {
@@ -172,7 +172,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
    flags = torricelly_subroutine_flag::NOTHING;
    for (int flag_index = 0; flag_index < size; ++flag_index)
    {
-      char byte;
+      int8_t byte;
       is >> byte;
       auto flag = torricelly_subroutine_flag_from_binary(byte);
       flags = flags | flag;
@@ -198,10 +198,12 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, std
 
    int32_t number_of_locals;
    is >> number_of_locals;
+
    for (auto local_index = 0; local_index < number_of_locals; ++local_index)
    {
       bool is_parameter;
       is >> is_parameter;
+
       std::shared_ptr<torricelly_type> local_type;
       is >> local_type;
       torricelly_value local_value = torricelly_value_from_binary(is, local_type);

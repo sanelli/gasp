@@ -20,11 +20,11 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, t
    switch (inst_ref_type)
    {
    case torricelly_inst_ref_type::SUBROUTINE:
-      return os << 's';
+      return os << (unsigned char) 's';
    case torricelly_inst_ref_type::MODULE:
-      return os << 'm';
+      return os << (unsigned char) 'm';
    case torricelly_inst_ref_type::LABEL:
-      return os << 'l';
+      return os << (unsigned char) 'l';
    default:
       throw torricelly_error("Unknown instruction reference type while converting into binary");
    }
@@ -43,7 +43,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
    }
    else
    {
-      os << (char)0;
+      os << (int8_t)0;
       os << (int32_t)0;
    }
    return os;
@@ -51,7 +51,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
 
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_inst_ref_type &inst_ref_type)
 {
-   char code;
+   unsigned char code;
    is >> code;
    switch (code)
    {

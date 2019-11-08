@@ -11,7 +11,7 @@ torricelly_text_output &torricelly::operator<<(torricelly_text_output &os, const
    return os << to_string(type);
 }
 
-char torricelly::to_binary(torricelly_type_type type)
+int8_t torricelly::to_binary(torricelly_type_type type)
 {
    switch (type)
    {
@@ -28,7 +28,7 @@ char torricelly::to_binary(torricelly_type_type type)
    }
 }
 
-char torricelly::to_binary(torricelly_system_type_type type)
+int8_t torricelly::to_binary(torricelly_system_type_type type)
 {
    switch (type)
    {
@@ -103,7 +103,7 @@ torricelly_binary_output &torricelly::operator<<(torricelly_binary_output &os, c
    return os;
 }
 
-torricelly_type_type torricelly::torricelly_type_type_from_binary(char byte)
+torricelly_type_type torricelly::torricelly_type_type_from_binary(int8_t byte)
 {
    switch (byte)
    {
@@ -120,7 +120,7 @@ torricelly_type_type torricelly::torricelly_type_type_from_binary(char byte)
    }
 }
 
-torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(char byte)
+torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(int8_t byte)
 {
    switch (byte)
    {
@@ -153,7 +153,7 @@ torricelly_system_type_type torricelly::torricelly_system_type_type_from_binary(
 
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_type_type &type)
 {
-   char byte;
+   int8_t byte;
    is >> byte;
    type = torricelly_type_type_from_binary(byte);
    return is;
@@ -161,7 +161,7 @@ torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, tor
 
 torricelly_binary_input &torricelly::operator>>(torricelly_binary_input &is, torricelly_system_type_type &type)
 {
-   char byte;
+   int8_t byte;
    is >> byte;
    type = torricelly_system_type_type_from_binary(byte);
    return is;
