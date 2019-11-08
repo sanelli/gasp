@@ -133,15 +133,47 @@ void execute_cmp_boolean(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_char(const torricelly::torricelly_instruction& instruction);
 
 // Cast
+void execute_cast_y2s(const torricelly::torricelly_instruction& instruction);
+void execute_cast_y2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_y2l(const torricelly::torricelly_instruction& instruction);
+void execute_cast_y2b(const torricelly::torricelly_instruction& instruction);
+void execute_cast_y2c(const torricelly::torricelly_instruction& instruction);
+void execute_cast_y2f(const torricelly::torricelly_instruction& instruction);
+void execute_cast_y2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2l(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2b(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2c(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2f(const torricelly::torricelly_instruction& instruction);
+void execute_cast_s2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_l2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_l2s(const torricelly::torricelly_instruction& instruction);
+void execute_cast_l2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_l2f(const torricelly::torricelly_instruction& instruction);
+void execute_cast_l2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_i2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_i2s(const torricelly::torricelly_instruction& instruction);
+void execute_cast_i2l(const torricelly::torricelly_instruction& instruction);
 void execute_cast_i2b(const torricelly::torricelly_instruction& instruction);
 void execute_cast_i2c(const torricelly::torricelly_instruction& instruction);
 void execute_cast_i2f(const torricelly::torricelly_instruction& instruction);
 void execute_cast_i2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_b2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_b2s(const torricelly::torricelly_instruction& instruction);
 void execute_cast_b2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_c2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_c2s(const torricelly::torricelly_instruction& instruction);
 void execute_cast_c2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_f2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_f2s(const torricelly::torricelly_instruction& instruction);
 void execute_cast_f2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_f2l(const torricelly::torricelly_instruction& instruction);
 void execute_cast_f2d(const torricelly::torricelly_instruction& instruction);
+void execute_cast_d2y(const torricelly::torricelly_instruction& instruction);
+void execute_cast_d2s(const torricelly::torricelly_instruction& instruction);
 void execute_cast_d2i(const torricelly::torricelly_instruction& instruction);
+void execute_cast_d2l(const torricelly::torricelly_instruction& instruction);
 void execute_cast_d2f(const torricelly::torricelly_instruction& instruction);
 
 // Jumps

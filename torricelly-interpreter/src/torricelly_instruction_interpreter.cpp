@@ -255,6 +255,57 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::JUMP_NOT_ZERO:
       is_jump = execute_jump_neq(instruction, next_instruction);
       break;
+   case torricelly_inst_code::CAST_BYTE_SHORT:
+      execute_cast_y2s(instruction);
+      break;
+   case torricelly_inst_code::CAST_BYTE_INT:
+      execute_cast_y2i(instruction);
+      break;
+   case torricelly_inst_code::CAST_BYTE_LONG:
+      execute_cast_y2l(instruction);
+      break;
+   case torricelly_inst_code::CAST_BYTE_BOOLEAN:
+      execute_cast_y2b(instruction);
+      break;
+   case torricelly_inst_code::CAST_BYTE_CHAR:
+      execute_cast_y2c(instruction);
+      break;
+   case torricelly_inst_code::CAST_BYTE_FLOAT:
+      execute_cast_y2f(instruction);
+      break;
+   case torricelly_inst_code::CAST_BYTE_DOUBLE:
+      execute_cast_y2d(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_BYTE:
+      execute_cast_s2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_INT:
+      execute_cast_s2i(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_LONG:
+      execute_cast_s2l(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_BOOLEAN:
+      execute_cast_s2b(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_CHAR:
+      execute_cast_s2c(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_FLOAT:
+      execute_cast_s2f(instruction);
+      break;
+   case torricelly_inst_code::CAST_SHORT_DOUBLE:
+      execute_cast_s2d(instruction);
+      break;
+   case torricelly_inst_code::CAST_INT_BYTE:
+      execute_cast_i2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_INT_SHORT:
+      execute_cast_i2s(instruction);
+      break;
+   case torricelly_inst_code::CAST_INT_LONG:
+      execute_cast_i2l(instruction);
+      break;
    case torricelly_inst_code::CAST_INT_BOOLEAN:
       execute_cast_i2b(instruction);
       break;
@@ -267,20 +318,65 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::CAST_INT_DOUBLE:
       execute_cast_i2d(instruction);
       break;
+   case torricelly_inst_code::CAST_LONG_BYTE:
+      execute_cast_l2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_LONG_SHORT:
+      execute_cast_l2s(instruction);
+      break;
+   case torricelly_inst_code::CAST_LONG_INT:
+      execute_cast_l2i(instruction);
+      break;
+   case torricelly_inst_code::CAST_LONG_FLOAT:
+      execute_cast_l2f(instruction);
+      break;
+   case torricelly_inst_code::CAST_LONG_DOUBLE:
+      execute_cast_l2d(instruction);
+      break;
+   case torricelly_inst_code::CAST_BOOLEAN_BYTE:
+      execute_cast_b2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_BOOLEAN_SHORT:
+      execute_cast_b2s(instruction);
+      break;
    case torricelly_inst_code::CAST_BOOLEAN_INT:
       execute_cast_b2i(instruction);
+      break;
+   case torricelly_inst_code::CAST_CHAR_BYTE:
+      execute_cast_c2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_CHAR_SHORT:
+      execute_cast_c2s(instruction);
       break;
    case torricelly_inst_code::CAST_CHAR_INT:
       execute_cast_c2i(instruction);
       break;
+   case torricelly_inst_code::CAST_FLOAT_BYTE:
+      execute_cast_f2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_FLOAT_SHORT:
+      execute_cast_f2s(instruction);
+      break;
    case torricelly_inst_code::CAST_FLOAT_INT:
       execute_cast_f2i(instruction);
+      break;
+   case torricelly_inst_code::CAST_FLOAT_LONG:
+      execute_cast_f2l(instruction);
       break;
    case torricelly_inst_code::CAST_FLOAT_DOUBLE:
       execute_cast_f2d(instruction);
       break;
+   case torricelly_inst_code::CAST_DOUBLE_BYTE:
+      execute_cast_d2y(instruction);
+      break;
+   case torricelly_inst_code::CAST_DOUBLE_SHORT:
+      execute_cast_d2s(instruction);
+      break;
    case torricelly_inst_code::CAST_DOUBLE_INT:
       execute_cast_d2i(instruction);
+      break;
+   case torricelly_inst_code::CAST_DOUBLE_LONG:
+      execute_cast_d2l(instruction);
       break;
    case torricelly_inst_code::CAST_DOUBLE_FLOAT:
       execute_cast_d2f(instruction);
