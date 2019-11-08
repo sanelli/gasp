@@ -218,7 +218,7 @@ torricelly_value torricelly_value::make(int32_t value)
    return torricelly_value(torricelly_system_type_type::INTEGER, value_union);
 }
 
-torricelly_value torricelly_value::make(int32_t value)
+torricelly_value torricelly_value::make(int64_t value)
 {
    torricelly_value_union value_union;
    value_union._long = value;
