@@ -54,8 +54,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::DUP:
       execute_dup(instruction);
       break;
+   case torricelly_inst_code::POP_BYTE:
+      execute_pop_byte(instruction);
+      break;
+   case torricelly_inst_code::POP_SHORT:
+      execute_pop_short(instruction);
+      break;
    case torricelly_inst_code::POP_INTEGER:
       execute_pop_integer(instruction);
+      break;
+   case torricelly_inst_code::POP_LONG:
+      execute_pop_long(instruction);
       break;
    case torricelly_inst_code::POP_BOOLEAN:
       execute_pop_boolean(instruction);

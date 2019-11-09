@@ -22,7 +22,7 @@ void inline torricelly_instruction_interpreter::__execute_pop(const torricelly::
       auto top_value = activation_record->peek();
       if (top_value.type() != extpected_type)
          throw torricelly_interpreter_execution_error(activation_record->subroutine()->name(), activation_record->ip(),
-                                                      sanelli::make_string("Cannot pop a '", to_string(extpected_type),"'. Top of stack is '", to_string(top_value.type()), "'."));
+                                                      sanelli::make_string("Cannot pop a '", to_string(extpected_type), "'. Top of stack is '", to_string(top_value.type()), "'."));
    }
    activation_record->pop();
 }
@@ -32,9 +32,24 @@ void torricelly_instruction_interpreter::execute_pop_boolean(const torricelly::t
    __execute_pop(instruction, torricelly_activation_record_local_type::BOOLEAN);
 }
 
+void torricelly_instruction_interpreter::execute_pop_byte(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_pop(instruction, torricelly_activation_record_local_type::BYTE);
+}
+
+void torricelly_instruction_interpreter::execute_pop_short(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_pop(instruction, torricelly_activation_record_local_type::SHORT);
+}
+
 void torricelly_instruction_interpreter::execute_pop_integer(const torricelly::torricelly_instruction &instruction)
 {
    __execute_pop(instruction, torricelly_activation_record_local_type::INTEGER);
+}
+
+void torricelly_instruction_interpreter::execute_pop_long(const torricelly::torricelly_instruction &instruction)
+{
+   __execute_pop(instruction, torricelly_activation_record_local_type::LONG);
 }
 
 void torricelly_instruction_interpreter::execute_pop_float(const torricelly::torricelly_instruction &instruction)
