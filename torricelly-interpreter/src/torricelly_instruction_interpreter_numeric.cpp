@@ -170,7 +170,7 @@ void torricelly_instruction_interpreter::execute_negate_byte(const torricelly::t
 {
    auto activation_record = _interpreter.lock()->activation_record();
    auto value = pop_and_validate(activation_record, torricelly_activation_record_local_type::BYTE);
-   auto integer_result = (int8_t) -value.get_integer();
+   auto integer_result = (int8_t) -value.get_byte();
    auto result = torricelly_activation_record_local::make(integer_result);
    activation_record->push(result);
 }
