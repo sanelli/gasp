@@ -524,6 +524,22 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\\u00"};
    _samples["empty-parameters-1"] = {sample_empty_with_parameters, "7 true", "0"};
 
+   _samples["expression-math-byte-sum"] = {generate_binary_operator_sample("byte", "byte", "+"), "3 4", "7"};
+   _samples["expression-math-byte-subtract"] = {generate_binary_operator_sample("byte", "byte", "-"), "3 4", "-1"};
+   _samples["expression-math-byte-multiply"] = {generate_binary_operator_sample("byte", "byte", "*"), "3 4", "12"};
+   _samples["expression-math-byte-divide"] = {generate_binary_operator_sample("byte", "byte", "/"), "15 5", "3"};
+   _samples["expression-math-byte-remainder"] = {generate_binary_operator_sample("byte", "byte", "%"), "6 4", "2"};
+   _samples["expression-math-byte-negate-1"] = {generate_unary_operator_sample("byte", "byte", "-"), "4", "-4"};
+   _samples["expression-math-byte-negate-2"] = {generate_unary_operator_sample("byte", "byte", "-"), "-4", "4"};
+   _samples["expression-math-byte-negate-3"] = {generate_unary_operator_sample("byte", "byte", "-"), "0", "0"};
+   _samples["expression-math-short-sum"] = {generate_binary_operator_sample("short", "short", "+"), "3 4", "7"};
+   _samples["expression-math-short-subtract"] = {generate_binary_operator_sample("short", "short", "-"), "3 4", "-1"};
+   _samples["expression-math-short-multiply"] = {generate_binary_operator_sample("short", "short", "*"), "3 4", "12"};
+   _samples["expression-math-short-divide"] = {generate_binary_operator_sample("short", "short", "/"), "15 5", "3"};
+   _samples["expression-math-short-remainder"] = {generate_binary_operator_sample("short", "short", "%"), "6 4", "2"};
+   _samples["expression-math-short-negate-1"] = {generate_unary_operator_sample("short", "short", "-"), "4", "-4"};
+   _samples["expression-math-short-negate-2"] = {generate_unary_operator_sample("short", "short", "-"), "-4", "4"};
+   _samples["expression-math-short-negate-3"] = {generate_unary_operator_sample("short", "short", "-"), "0", "0"};
    _samples["expression-math-integer-sum"] = {generate_binary_operator_sample("integer", "integer", "+"), "3 4", "7"};
    _samples["expression-math-integer-subtract"] = {generate_binary_operator_sample("integer", "integer", "-"), "3 4", "-1"};
    _samples["expression-math-integer-multiply"] = {generate_binary_operator_sample("integer", "integer", "*"), "3 4", "12"};
@@ -532,6 +548,14 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-math-integer-negate-1"] = {generate_unary_operator_sample("integer", "integer", "-"), "4", "-4"};
    _samples["expression-math-integer-negate-2"] = {generate_unary_operator_sample("integer", "integer", "-"), "-4", "4"};
    _samples["expression-math-integer-negate-3"] = {generate_unary_operator_sample("integer", "integer", "-"), "0", "0"};
+   _samples["expression-math-long-sum"] = {generate_binary_operator_sample("long", "long", "+"), "3 4", "7"};
+   _samples["expression-math-long-subtract"] = {generate_binary_operator_sample("long", "long", "-"), "3 4", "-1"};
+   _samples["expression-math-long-multiply"] = {generate_binary_operator_sample("long", "long", "*"), "3 4", "12"};
+   _samples["expression-math-long-divide"] = {generate_binary_operator_sample("long", "long", "/"), "15 5", "3"};
+   _samples["expression-math-long-remainder"] = {generate_binary_operator_sample("long", "long", "%"), "6 4", "2"};
+   _samples["expression-math-long-negate-1"] = {generate_unary_operator_sample("long", "long", "-"), "4", "-4"};
+   _samples["expression-math-long-negate-2"] = {generate_unary_operator_sample("long", "long", "-"), "-4", "4"};
+   _samples["expression-math-long-negate-3"] = {generate_unary_operator_sample("long", "long", "-"), "0", "0"};
    _samples["expression-math-float-sum"] = {generate_binary_operator_sample("float", "float", "+"), "3.5 4.5", "8.000000"};
    _samples["expression-math-float-subtract"] = {generate_binary_operator_sample("float", "float", "-"), "3.5 4.5", "-1.000000"};
    _samples["expression-math-float-multiply"] = {generate_binary_operator_sample("float", "float", "*"), "3.5 4.5", "15.750000"};
