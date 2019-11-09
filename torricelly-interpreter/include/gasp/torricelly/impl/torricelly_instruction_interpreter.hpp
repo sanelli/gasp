@@ -152,7 +152,10 @@ void execute_div_double(const torricelly::torricelly_instruction& instruction);
 void execute_negate_double(const torricelly::torricelly_instruction& instruction);
 
 // Comparison
+void execute_cmp_byte(const torricelly::torricelly_instruction& instruction);
+void execute_cmp_short(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_integer(const torricelly::torricelly_instruction& instruction);
+void execute_cmp_long(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_float(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_double(const torricelly::torricelly_instruction& instruction);
 void execute_cmp_boolean(const torricelly::torricelly_instruction& instruction);

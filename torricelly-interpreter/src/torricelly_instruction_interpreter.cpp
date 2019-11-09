@@ -282,8 +282,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::NEGATE_DOUBLE:
       execute_negate_double(instruction);
       break;
+   case torricelly_inst_code::CMP_BYTE:
+      execute_cmp_byte(instruction);
+      break;
+   case torricelly_inst_code::CMP_SHORT:
+      execute_cmp_short(instruction);
+      break;
    case torricelly_inst_code::CMP_INTEGER:
       execute_cmp_integer(instruction);
+      break;
+   case torricelly_inst_code::CMP_LONG:
+      execute_cmp_long(instruction);
       break;
    case torricelly_inst_code::CMP_BOOLEAN:
       execute_cmp_boolean(instruction);
