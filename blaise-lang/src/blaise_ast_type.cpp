@@ -43,8 +43,14 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sa
 {
    switch (token.type())
    {
+   case blaise_token_type::TYPE_BYTE:
+      return make_plain_type(blaise_ast_system_type::BYTE);
    case blaise_token_type::TYPE_INTEGER:
       return make_plain_type(blaise_ast_system_type::INTEGER);
+   case blaise_token_type::TYPE_SHORT:
+      return make_plain_type(blaise_ast_system_type::SHORT);
+   case blaise_token_type::TYPE_LONG:
+      return make_plain_type(blaise_ast_system_type::LONG);
    case blaise_token_type::TYPE_CHAR:
       return make_plain_type(blaise_ast_system_type::CHAR);
    case blaise_token_type::TYPE_STRING:
@@ -55,12 +61,6 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sa
       return make_plain_type(blaise_ast_system_type::DOUBLE);
    case blaise_token_type::TYPE_BOOLEAN:
       return make_plain_type(blaise_ast_system_type::BOOLEAN);
-   case blaise_token_type::TYPE_BYTE:
-      return make_plain_type(blaise_ast_system_type::BYTE);
-   case blaise_token_type::TYPE_SHORT:
-      return make_plain_type(blaise_ast_system_type::SHORT);
-   case blaise_token_type::TYPE_LONG:
-      return make_plain_type(blaise_ast_system_type::BYTE);
    default:
       throw blaise_ast_error(token.line(), token.column(), sanelli::make_string("Cannot convert token '", token.type(), "' into a type."));
    }
