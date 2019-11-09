@@ -88,7 +88,6 @@ void execute_allocate_short_array(const torricelly::torricelly_instruction& inst
 void execute_allocate_byte_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_integer_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_long_array(const torricelly::torricelly_instruction& instruction);
-
 void execute_allocate_char_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_boolean_array(const torricelly::torricelly_instruction& instruction);
 void execute_allocate_float_array(const torricelly::torricelly_instruction& instruction);
@@ -103,13 +102,37 @@ void execute_or(const torricelly::torricelly_instruction& instruction);
 void execute_not(const torricelly::torricelly_instruction& instruction);
 
 // Mathematics
-void inline __execute_binary_integer(const torricelly::torricelly_instruction &instruction, std::function<int(int,int)> op);
+void inline __execute_binary_byte(const torricelly::torricelly_instruction &instruction, std::function<int8_t(int8_t,int8_t)> op);
+void execute_add_byte(const torricelly::torricelly_instruction& instruction);
+void execute_sub_byte(const torricelly::torricelly_instruction& instruction);
+void execute_mul_byte(const torricelly::torricelly_instruction& instruction);
+void execute_div_byte(const torricelly::torricelly_instruction& instruction);
+void execute_rem_byte(const torricelly::torricelly_instruction& instruction);
+void execute_negate_byte(const torricelly::torricelly_instruction& instruction);
+
+void inline __execute_binary_short(const torricelly::torricelly_instruction &instruction, std::function<int16_t(int16_t,int16_t)> op);
+void execute_add_short(const torricelly::torricelly_instruction& instruction);
+void execute_sub_short(const torricelly::torricelly_instruction& instruction);
+void execute_mul_short(const torricelly::torricelly_instruction& instruction);
+void execute_div_short(const torricelly::torricelly_instruction& instruction);
+void execute_rem_short(const torricelly::torricelly_instruction& instruction);
+void execute_negate_short(const torricelly::torricelly_instruction& instruction);
+
+void inline __execute_binary_integer(const torricelly::torricelly_instruction &instruction, std::function<int32_t(int32_t,int32_t)> op);
 void execute_add_integer(const torricelly::torricelly_instruction& instruction);
 void execute_sub_integer(const torricelly::torricelly_instruction& instruction);
 void execute_mul_integer(const torricelly::torricelly_instruction& instruction);
 void execute_div_integer(const torricelly::torricelly_instruction& instruction);
 void execute_rem_integer(const torricelly::torricelly_instruction& instruction);
 void execute_negate_integer(const torricelly::torricelly_instruction& instruction);
+
+void inline __execute_binary_long(const torricelly::torricelly_instruction &instruction, std::function<int64_t(int64_t,int64_t)> op);
+void execute_add_long(const torricelly::torricelly_instruction& instruction);
+void execute_sub_long(const torricelly::torricelly_instruction& instruction);
+void execute_mul_long(const torricelly::torricelly_instruction& instruction);
+void execute_div_long(const torricelly::torricelly_instruction& instruction);
+void execute_rem_long(const torricelly::torricelly_instruction& instruction);
+void execute_negate_long(const torricelly::torricelly_instruction& instruction);
 
 void inline __execute_binary_float(const torricelly::torricelly_instruction &instruction, std::function<float(float,float)> op);
 void execute_add_float(const torricelly::torricelly_instruction& instruction);

@@ -171,8 +171,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::STORE_ARRAY_DOUBLE:
       execute_store_array_double(instruction);
       break;
+   case torricelly_inst_code::ADD_BYTE:
+      execute_add_byte(instruction);
+      break;
+   case torricelly_inst_code::ADD_SHORT:
+      execute_add_short(instruction);
+      break;
    case torricelly_inst_code::ADD_INTEGER:
       execute_add_integer(instruction);
+      break;
+   case torricelly_inst_code::ADD_LONG:
+      execute_add_long(instruction);
       break;
    case torricelly_inst_code::ADD_FLOAT:
       execute_add_float(instruction);
@@ -180,8 +189,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::ADD_DOUBLE:
       execute_add_double(instruction);
       break;
+   case torricelly_inst_code::SUBTRACT_BYTE:
+      execute_sub_byte(instruction);
+      break;
+   case torricelly_inst_code::SUBTRACT_SHORT:
+      execute_sub_short(instruction);
+      break;
    case torricelly_inst_code::SUBTRACT_INTEGER:
       execute_sub_integer(instruction);
+      break;
+   case torricelly_inst_code::SUBTRACT_LONG:
+      execute_sub_long(instruction);
       break;
    case torricelly_inst_code::SUBTRACT_FLOAT:
       execute_sub_float(instruction);
@@ -189,8 +207,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::SUBTRACT_DOUBLE:
       execute_sub_double(instruction);
       break;
+   case torricelly_inst_code::MULTIPLY_BYTE:
+      execute_mul_byte(instruction);
+      break;
+   case torricelly_inst_code::MULTIPLY_SHORT:
+      execute_mul_short(instruction);
+      break;
    case torricelly_inst_code::MULTIPLY_INTEGER:
       execute_mul_integer(instruction);
+      break;
+   case torricelly_inst_code::MULTIPLY_LONG:
+      execute_mul_long(instruction);
       break;
    case torricelly_inst_code::MULTIPLY_FLOAT:
       execute_mul_float(instruction);
@@ -198,8 +225,17 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::MULTIPLY_DOUBLE:
       execute_mul_double(instruction);
       break;
+   case torricelly_inst_code::DIVIDE_BYTE:
+      execute_div_byte(instruction);
+      break;
+   case torricelly_inst_code::DIVIDE_SHORT:
+      execute_div_short(instruction);
+      break;
    case torricelly_inst_code::DIVIDE_INTEGER:
       execute_div_integer(instruction);
+      break;
+   case torricelly_inst_code::DIVIDE_LONG:
+      execute_div_long(instruction);
       break;
    case torricelly_inst_code::DIVIDE_FLOAT:
       execute_div_float(instruction);
@@ -207,11 +243,29 @@ bool torricelly_instruction_interpreter::execute(const torricelly::torricelly_in
    case torricelly_inst_code::DIVIDE_DOUBLE:
       execute_div_double(instruction);
       break;
+   case torricelly_inst_code::REMINDER_BYTE:
+      execute_rem_byte(instruction);
+      break;
+   case torricelly_inst_code::REMINDER_SHORT:
+      execute_rem_short(instruction);
+      break;
    case torricelly_inst_code::REMINDER_INTEGER:
       execute_rem_integer(instruction);
       break;
+   case torricelly_inst_code::REMINDER_LONG:
+      execute_rem_long(instruction);
+      break;
+   case torricelly_inst_code::NEGATE_BYTE:
+      execute_negate_byte(instruction);
+      break;
+   case torricelly_inst_code::NEGATE_SHORT:
+      execute_negate_short(instruction);
+      break;
    case torricelly_inst_code::NEGATE_INTEGER:
       execute_negate_integer(instruction);
+      break;
+   case torricelly_inst_code::NEGATE_LONG:
+      execute_negate_long(instruction);
       break;
    case torricelly_inst_code::NEGATE_FLOAT:
       execute_negate_float(instruction);
