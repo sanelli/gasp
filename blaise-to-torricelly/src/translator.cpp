@@ -293,6 +293,14 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
       auto plain_type = blaise::ast::blaise_ast_utility::as_plain_type(type);
       switch (plain_type->system_type())
       {
+      case blaise::ast::blaise_ast_system_type::BYTE:
+         return "y";
+      case blaise::ast::blaise_ast_system_type::SHORT:
+         return "s";
+      case blaise::ast::blaise_ast_system_type::INTEGER:
+         return "i";
+      case blaise::ast::blaise_ast_system_type::LONG:
+         return "l";
       case blaise::ast::blaise_ast_system_type::BOOLEAN:
          return "b";
       case blaise::ast::blaise_ast_system_type::CHAR:
@@ -301,8 +309,6 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
          return "v";
       case blaise::ast::blaise_ast_system_type::FLOAT:
          return "f";
-      case blaise::ast::blaise_ast_system_type::INTEGER:
-         return "i";
       case blaise::ast::blaise_ast_system_type::DOUBLE:
          return "d";
       default:
