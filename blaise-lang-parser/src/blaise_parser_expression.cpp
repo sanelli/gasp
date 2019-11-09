@@ -160,7 +160,10 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       term_expression = ast::make_blaise_ast_expression_unary(token, expression);
    }
    break;
-   case blaise_token_type::LITERAL_INTEGER: // It is a number
+   case blaise_token_type::LITERAL_BYTE:  // It is a number
+   case blaise_token_type::LITERAL_SHORT:
+   case blaise_token_type::LITERAL_INTEGER:
+   case blaise_token_type::LITERAL_LONG:
    case blaise_token_type::LITERAL_DOUBLE:
    case blaise_token_type::LITERAL_FLOAT:
    case blaise_token_type::LITERAL_INTEGER_BINARY:
@@ -243,7 +246,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::make_blaise_ast_expression
       if (value > std::numeric_limits<int8_t>::max() || value < std::numeric_limits<int8_t>::min())
          throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
 
-      return memory::make_shared<ast::blaise_ast_expression_byte_value>(token_literal, value);
+      return memory::make_shared<ast::blaise_ast_expression_byte_value>(token_literal, (int8_t) value);
    }
    case blaise_token_type::LITERAL_SHORT:
    {
@@ -254,16 +257,16 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::make_blaise_ast_expression
       if (value > std::numeric_limits<int16_t>::max() || value < std::numeric_limits<int16_t>::min())
          throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
 
-      return memory::make_shared<ast::blaise_ast_expression_short_value>(token_literal, value);
+      return memory::make_shared<ast::blaise_ast_expression_short_value>(token_literal, (int16_t) value);
    }
    case blaise_token_type::LITERAL_INTEGER:
-      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value()));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, (int32_t) stoi(token_literal.value()));
    case blaise_token_type::LITERAL_INTEGER_BINARY:
-      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 2));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, (int32_t) stoi(token_literal.value().substr(2), nullptr, 2));
    case blaise_token_type::LITERAL_INTEGER_OCTAL:
-      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 8));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, (int32_t) stoi(token_literal.value().substr(2), nullptr, 8));
    case blaise_token_type::LITERAL_INTEGER_HEX:
-      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, stoi(token_literal.value().substr(2), nullptr, 16));
+      return memory::make_shared<ast::blaise_ast_expression_integer_value>(token_literal, (int32_t) stoi(token_literal.value().substr(2), nullptr, 16));
    case blaise_token_type::LITERAL_LONG:
    {
       auto token_value = token_literal.value();
@@ -273,7 +276,7 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::make_blaise_ast_expression
       if (value > std::numeric_limits<int64_t>::max() || value < std::numeric_limits<int64_t>::min())
          throw_parse_error_with_details(context, token_literal.line(), token_literal.column(), sanelli::make_string("Token cannot be converted into a number of the correct format '", token_value, "'"));
 
-      return memory::make_shared<ast::blaise_ast_expression_long_value>(token_literal, value);
+      return memory::make_shared<ast::blaise_ast_expression_long_value>(token_literal, (int64_t) value);
    }
    case blaise_token_type::LITERAL_FLOAT:
    {
