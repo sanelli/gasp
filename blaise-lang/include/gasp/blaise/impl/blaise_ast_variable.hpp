@@ -47,12 +47,20 @@ std::shared_ptr<blaise_ast_variable> make_blaise_ast_variable(const sanelli::tok
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
 
+
+class blaise_ast_expression; // Forward declaration
+
 class blaise_ast_constant : public blaise_ast_generic_memory_location
 {
+   std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> _literal;
+
    friend sanelli::memory;
    blaise_ast_constant(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type);
+   public:
+      void literal_expression(std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> literal);
+      std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> literal_expression() const;
 };
 std::shared_ptr<blaise_ast_constant> make_blaise_ast_constant(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,

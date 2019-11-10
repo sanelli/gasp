@@ -2,9 +2,8 @@
 
 #include <memory>
 
-#include <gasp/blaise/ast.hpp>
-
-
+#include <gasp/blaise/impl/blaise_ast_type.hpp>
+#include <gasp/blaise/impl/blaise_ast_expression.hpp>
 
 namespace gasp::blaise::ast {
 
@@ -41,6 +40,8 @@ static std::shared_ptr<blaise_ast_type> get_common_type(const sanelli::token<gas
 
 static bool can_auto_cast(std::shared_ptr<blaise_ast_type> from, std::shared_ptr<blaise_ast_type> to);
 static bool can_force_cast(std::shared_ptr<blaise_ast_type> from, std::shared_ptr<blaise_ast_type> to);
+
+static bool is_allowed_for_constant(std::shared_ptr<blaise_ast_expression> expression);
 
 };
 

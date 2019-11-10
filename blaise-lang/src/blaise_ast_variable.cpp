@@ -49,6 +49,13 @@ gasp::blaise::ast::blaise_ast_constant::blaise_ast_constant(
     : blaise_ast_generic_memory_location(blaise_ast_variable_type::CONSTANT,
                                          reference, identifier, type) {}
 
+void gasp::blaise::ast::blaise_ast_constant::literal_expression(std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> literal) {
+   _literal = literal;
+}
+std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> gasp::blaise::ast::blaise_ast_constant::literal_expression() const {
+   return _literal;
+}
+
 std::shared_ptr<blaise_ast_variable> gasp::blaise::ast::make_blaise_ast_variable(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                        const std::string &identifier,
                        std::shared_ptr<blaise_ast_type> type){

@@ -435,3 +435,22 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_common_type(const sanel
       return typeA;
    throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Mismatch types '", typeA, "' and '", typeB, "'."));
 }
+
+bool blaise_ast_utility::is_allowed_for_constant(std::shared_ptr<gasp::blaise::ast::blaise_ast_expression> expression)
+{
+   switch (expression->expression_type())
+   {
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_BYTE:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_SHORT:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_INTEGER:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_LONG:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_FLOAT:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_DOUBLE:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_CHAR:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_BOOLEAN:
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_STRING:
+      return true;
+   default:
+      return false;
+   }
+}
