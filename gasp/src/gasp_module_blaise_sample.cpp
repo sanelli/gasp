@@ -186,15 +186,16 @@ begin
    end until index > first;
 end.)__";
 
-std::string generate_function_expression_sample(const char *type)
+std::string generate_function_expression_sample(const char *type, const char* postfix = nullptr)
 {
    std::regex type_regexp("\\{TYPE\\}");
+   std::regex postfix_regexp("\\{POSTFIX\\}");
 
    std::string sample(R"__(program sample(first: {TYPE}): {TYPE};
 
 function duplicate(p: {TYPE}) : {TYPE};
 begin
-   duplicate := 2 * p;
+   duplicate := 2{POSTFIX} * p;
 end;
 
 begin
@@ -202,7 +203,10 @@ begin
 end.)__");
 
    sample = std::regex_replace(sample, type_regexp, type);
-
+   if(postfix != nullptr)
+      sample = std::regex_replace(sample, postfix_regexp, postfix);
+   else
+      sample = std::regex_replace(sample, postfix_regexp, "");
    return sample;
 }
 
@@ -721,23 +725,50 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-array-allocate-double-1"] = {generate_sample_allocate_array_with_math("double"), "", "45.000000"};
    _samples["expression-array-allocate-double-2"] = {generate_sample_allocate_array("double", "1.0"), "", "1.000000"};
 
+   _samples["expression-function-call-duplicate-byte"] = {generate_function_expression_sample("byte","b"), "1", "2"};
+   _samples["expression-function-call-duplicate-short"] = {generate_function_expression_sample("short","s"), "1", "2"};
    _samples["expression-function-call-duplicate-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
+   _samples["expression-function-call-duplicate-long"] = {generate_function_expression_sample("long"), "1", "2"};
    _samples["expression-function-call-duplicate-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
    _samples["expression-function-call-duplicate-float"] = {generate_function_expression_sample("float"), "1", "2.000000"};
+   _samples["expression-function-call-sum-byte"] = {generate_function_expression_2_sample("byte", "+"), "1 2", "3"};
+   _samples["expression-function-call-subtract-byte"] = {generate_function_expression_2_sample("byte", "-"), "1 2", "-1"};
+   _samples["expression-function-call-multuply-byte"] = {generate_function_expression_2_sample("byte", "*"), "1 2", "2"};
+   _samples["expression-function-call-divide-byte"] = {generate_function_expression_2_sample("byte", "/"), "1 2", "0"};
+   _samples["expression-function-call-remainder-byte"] = {generate_function_expression_2_sample("byte", "%"), "1 2", "1"};
+   _samples["expression-function-call-sum-short"] = {generate_function_expression_2_sample("short", "+"), "1 2", "3"};
+   _samples["expression-function-call-subtract-short"] = {generate_function_expression_2_sample("short", "-"), "1 2", "-1"};
+   _samples["expression-function-call-multuply-short"] = {generate_function_expression_2_sample("short", "*"), "1 2", "2"};
+   _samples["expression-function-call-divide-short"] = {generate_function_expression_2_sample("short", "/"), "1 2", "0"};
+   _samples["expression-function-call-remainder-short"] = {generate_function_expression_2_sample("short", "%"), "1 2", "1"};
    _samples["expression-function-call-sum-integer"] = {generate_function_expression_2_sample("integer", "+"), "1 2", "3"};
    _samples["expression-function-call-subtract-integer"] = {generate_function_expression_2_sample("integer", "-"), "1 2", "-1"};
    _samples["expression-function-call-multuply-integer"] = {generate_function_expression_2_sample("integer", "*"), "1 2", "2"};
    _samples["expression-function-call-divide-integer"] = {generate_function_expression_2_sample("integer", "/"), "1 2", "0"};
    _samples["expression-function-call-remainder-integer"] = {generate_function_expression_2_sample("integer", "%"), "1 2", "1"};
+   _samples["expression-function-call-sum-long"] = {generate_function_expression_2_sample("long", "+"), "1 2", "3"};
+   _samples["expression-function-call-subtract-long"] = {generate_function_expression_2_sample("long", "-"), "1 2", "-1"};
+   _samples["expression-function-call-multuply-long"] = {generate_function_expression_2_sample("long", "*"), "1 2", "2"};
+   _samples["expression-function-call-divide-long"] = {generate_function_expression_2_sample("long", "/"), "1 2", "0"};
+   _samples["expression-function-call-remainder-long"] = {generate_function_expression_2_sample("long", "%"), "1 2", "1"};
    _samples["expression-function-call-from-library-1"] = {sample_call_from_Library, "2", "true"};
    _samples["expression-function-call-from-library-2"] = {sample_call_from_Library, "3", "false"};
+   _samples["expression-function-call-native-sqrt-byte"] = {generate_native_single_parameter_call("byte", "math", "sqrt"), "4", "2"};
+   _samples["expression-function-call-native-sqrt-short"] = {generate_native_single_parameter_call("short", "math", "sqrt"), "4", "2"};
    _samples["expression-function-call-native-sqrt-integer"] = {generate_native_single_parameter_call("integer", "math", "sqrt"), "4", "2"};
+   _samples["expression-function-call-native-sqrt-long"] = {generate_native_single_parameter_call("long", "math", "sqrt"), "4", "2"};
    _samples["expression-function-call-native-sqrt-float"] = {generate_native_single_parameter_call("float", "math", "sqrt"), "4", "2.000000"};
    _samples["expression-function-call-native-sqrt-double"] = {generate_native_single_parameter_call("double", "math", "sqrt"), "4", "2.000000"};
+   _samples["expression-function-call-native-log10-byte"] = {generate_native_single_parameter_call("byte", "math", "log10"), "100", "2"};
+   _samples["expression-function-call-native-log10-short"] = {generate_native_single_parameter_call("short", "math", "log10"), "100", "2"};
    _samples["expression-function-call-native-log10-integer"] = {generate_native_single_parameter_call("integer", "math", "log10"), "100", "2"};
+   _samples["expression-function-call-native-log10-long"] = {generate_native_single_parameter_call("long", "math", "log10"), "100", "2"};
    _samples["expression-function-call-native-log10-float"] = {generate_native_single_parameter_call("float", "math", "log10"), "100", "2.000000"};
    _samples["expression-function-call-native-log10-double"] = {generate_native_single_parameter_call("double", "math", "log10"), "100", "2.000000"};
+   _samples["expression-function-call-native-log2-byte"] = {generate_native_single_parameter_call("byte", "math", "log2"), "8", "3"};
+   _samples["expression-function-call-native-log2-short"] = {generate_native_single_parameter_call("short", "math", "log2"), "8", "3"};
    _samples["expression-function-call-native-log2-integer"] = {generate_native_single_parameter_call("integer", "math", "log2"), "8", "3"};
+   _samples["expression-function-call-native-log2-long"] = {generate_native_single_parameter_call("long", "math", "log2"), "8", "3"};
    _samples["expression-function-call-native-log2-float"] = {generate_native_single_parameter_call("float", "math", "log2"), "8", "3.000000"};
    _samples["expression-function-call-native-log2-double"] = {generate_native_single_parameter_call("double", "math", "log2"), "8", "3.000000"};
    _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 101), "", "5050"};
