@@ -17,6 +17,7 @@ LETTER = "A" | "B" | "C" | "D" | "E" | "F" | "G"
        | "x" | "y" | "z" ;
 DIGIT = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 UNSERSCORE = "_" ;
+ALL_CHARACTERS = ? all visible characters ? ;
 
 BINARY_DIGIT = "0" | "1" ;
 OCTAL_DIGIT = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" ;
@@ -50,9 +51,9 @@ DOUBLE_LITERAL = DECIMAL_INTEGER_LITERAL ["." DECIMAL_INTEGER_LITERAL ] ["d" | "
 
 (* Other literals *)
 STRING_ESCAPE_SEQUENCE = "\\" ('"' | "n" | "f" |"t" | "a" | "r" ) ;
-STRING_LITERAL = '"' { (all_characters - '"') | (STRING_ESCAPE_SEQUENCE) } '"' ;
+STRING_LITERAL = '"' { (ALL_CHARACTERS - '"') | (STRING_ESCAPE_SEQUENCE) } '"' ;
 CHAR_ESCAPE_SEQUENCE = "\\" ("'" | "n" | "f" |"t" | "a" | "r" ) ;
-CHAR_LITERAL = '"' ((all_characters - '"') | (CHAR_ESCAPE_SEQUENCE)) '"' ;
+CHAR_LITERAL = '"' ((ALL_CHARACTERS - '"') | (CHAR_ESCAPE_SEQUENCE)) '"' ;
 BOOLEAN_LITERAL = "true" | "false" ;
 
 (* Types and type definition  *)
@@ -105,13 +106,14 @@ ALLOCATE_EXPRESSION = 'new' '<' VARIABLE_TYPE '>' '(' IDENTTIFIER ')' ;
 
 (* Subroutines *)
 SUBROUTINE = (FUNCTION_SUBROUTINE_SIGNATURE | PROCEDURE_SUBROUTINE_SIGNATURE) ';'{VARIABLES_CLAUSES} [COMPOUND_STATEMENT] ';' ;
-FUNCTION_SUBROUTINE_SIGNATURE = 'function' ['native'] IDENTIFIER '(' SUBROUTINE_PARAMETERS? ')' ':' VARIABLE_TYPE ;
-PROCEDURE_SUBROUTINE_SIGNATURE = 'procedure' ['native'] IDENTIFIER '(' SUBROUTINE_PARAMETERS? ')' ;
+FUNCTION_SUBROUTINE_SIGNATURE = 'function' ['native'] IDENTIFIER '(' {SUBROUTINE_PARAMETERS} ')' ':' VARIABLE_TYPE ;
+PROCEDURE_SUBROUTINE_SIGNATURE = 'procedure' ['native'] IDENTIFIER '(' {SUBROUTINE_PARAMETERS} ')' ;
 SUBROUTINE_PARAMETERS = SUBROUTINE_PARAMETER {',' SUBROUTINE_PARAMETER} ;
 SUBROUTINE_PARAMETER = VARIABLE_NAME_LIST ':' VARIABLE_TYPE ;
 ```
 # Automatic type conversion
 This table shows the cast that automatically are performed inside `Blaise` parser.
+
 | From / To | byte | short | integer |long | float | double | char | boolean |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **byte** |  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |  |  |
@@ -126,6 +128,7 @@ This table shows the cast that automatically are performed inside `Blaise` parse
 
 # Forced type converstion
 This table shows the cast that automatically are performed via `cast<>` operator inside expressions in `Blaise`.
+
 | From / To | byte | short | integer |long | float | double | char | boolean |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **byte** | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
