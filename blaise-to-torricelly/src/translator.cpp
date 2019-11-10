@@ -132,7 +132,7 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
       {
          auto constant = subroutine->get_constant(index);
          auto torricelly_type = translate_type(constant->type());
-         auto initial_value = get_type_initial_value(constant->type());
+         auto initial_value = get_constant_initial_value(constant->literal_expression());
          auto torricelly_index = torricelly_subroutine->add_local(torricelly_type, initial_value, false);
          variables_mapping.insert(std::make_pair(constant->name(), torricelly_index));
       }
@@ -254,6 +254,64 @@ gasp::torricelly::torricelly_value blaise_to_torricelly::translator::get_type_in
    auto default_value = torricelly_value::get_default_value(torricelly_type);
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] get_type_initial_value" << std::endl);
    return default_value;
+}
+
+gasp::torricelly::torricelly_value blaise_to_torricelly::translator::get_constant_initial_value(std::shared_ptr<blaise::ast::blaise_ast_expression> expression) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] get_constant_initial_value" << std::endl);
+
+   switch (expression->expression_type())
+   {
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_BYTE:
+   {
+      auto byte_literal_expression = ast::blaise_ast_expression_utility::as_byte_literal(expression);
+      return torricelly_value::make(byte_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_SHORT:
+   {
+      auto short_literal_expression = ast::blaise_ast_expression_utility::as_short_literal(expression);
+      return torricelly_value::make(short_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_INTEGER:
+   {
+      auto integer_literal_expression = ast::blaise_ast_expression_utility::as_integer_literal(expression);
+      return torricelly_value::make(integer_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_LONG:
+   {
+      auto long_literal_expression = ast::blaise_ast_expression_utility::as_long_literal(expression);
+      return torricelly_value::make(long_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_FLOAT:
+   {
+      auto float_literal_expression = ast::blaise_ast_expression_utility::as_float_literal(expression);
+      return torricelly_value::make(float_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_DOUBLE:
+   {
+      auto double_literal_expression = ast::blaise_ast_expression_utility::as_double_literal(expression);
+      return torricelly_value::make(double_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_CHAR:
+   {
+      auto char_literal_expression = ast::blaise_ast_expression_utility::as_char_literal(expression);
+      return torricelly_value::make(char_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_BOOLEAN:
+   {
+      auto boolean_literal_expression = ast::blaise_ast_expression_utility::as_boolean_literal(expression);
+      return torricelly_value::make(boolean_literal_expression->value());
+   }
+   case gasp::blaise::ast::blaise_ast_expression_type::LITERAL_STRING:
+   {
+      auto string_literal_expression = ast::blaise_ast_expression_utility::as_string_literal(expression);
+      return torricelly_value::make(string_literal_expression->value());
+   }
+   default:
+      throw blaise_to_torricelly_internal_error("Unexpected expression type. Cannot obtain literal for constant");
+   }
+
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] get_constant_initial_value" << std::endl);
 }
 
 bool blaise_to_torricelly::translator::has_translated(const std::vector<std::shared_ptr<gasp::torricelly::torricelly_module>> &torricelly_modules,
