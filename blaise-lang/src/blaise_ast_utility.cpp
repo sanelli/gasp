@@ -224,8 +224,6 @@ std::shared_ptr<blaise_ast_type> blaise_ast_utility::get_resulting_type(const to
    {
    case blaise_token_type::LOGICAL_AND:
    case blaise_token_type::LOGICAL_OR:
-   case blaise_token_type::LOGICAL_EAGER_AND:
-   case blaise_token_type::LOGICAL_EAGER_OR:
    {
       if (is_boolean(left) && is_boolean(right))
          return get_binary_boolean_result(left, right);

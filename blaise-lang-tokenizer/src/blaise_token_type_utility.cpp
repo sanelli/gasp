@@ -56,8 +56,6 @@ bool blaise_token_type_utility::is_operator(blaise_token_type token_type)
    case blaise_token_type::NOT_EQUAL_TO:
    case blaise_token_type::LOGICAL_AND:
    case blaise_token_type::LOGICAL_OR:
-   case blaise_token_type::LOGICAL_EAGER_AND:
-   case blaise_token_type::LOGICAL_EAGER_OR:
       return true;
    default:
       return false;
@@ -90,10 +88,8 @@ bool blaise_token_type_utility::get_operator_precedence(blaise_token_type token_
    case blaise_token_type::NOT_EQUAL_TO:
       return 60;
    case blaise_token_type::LOGICAL_AND:
-   case blaise_token_type::LOGICAL_EAGER_AND:
       return 50;
    case blaise_token_type::LOGICAL_OR:
-   case blaise_token_type::LOGICAL_EAGER_OR:
       return 40;
    case blaise_token_type::IF: // Terary
       return 30;
