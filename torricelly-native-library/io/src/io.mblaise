@@ -1,13 +1,19 @@
 module io;
 
+function native read_byte() : byte;
+function native read_short() : short;
 function native read_integer() : integer;
+function native read_long() : long;
 function native read_float() : float;
 function native read_double() : double;
 function native read_char() : char;
 
+procedure native print(value: byte);
+procedure native print(value: short);
+procedure native print(value: integer);
+procedure native print(value: long);
 procedure native print(value: boolean);
 procedure native print(value: char);
-procedure native print(value: integer);
 procedure native print(value: float);
 procedure native print(value: double);
 

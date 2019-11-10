@@ -10,10 +10,28 @@ using namespace gasp::torricelly;
 namespace gasp::torricelly::native::io
 {
 
+extern "C" void print_y(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+{
+   auto value = context->pop();
+   std::cout << (int32_t)value.get_byte(); // Need to convert into integer or it is outputted as character
+}
+
+extern "C" void print_s(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+{
+   auto value = context->pop();
+   std::cout << value.get_short();
+}
+
 extern "C" void print_i(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    auto value = context->pop();
    std::cout << value.get_integer();
+}
+
+extern "C" void print_l(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+{
+   auto value = context->pop();
+   std::cout << value.get_long();
 }
 
 extern "C" void print_f(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
