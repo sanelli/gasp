@@ -1,5 +1,5 @@
 # Blaise
-Blaise is a simil-Pascal high leven languages anmed after the French mathematician, physicist, inventor and writer [Blaise Pascal](https://en.wikipedia.org/wiki/Blaise_Pasca)].
+Blaise is a simil-Pascal high leven languages anmed after the French mathematician, physicist, inventor and writer [Blaise Pascal](https://en.wikipedia.org/wiki/Blaise_Pasca).
 
 ## Capabilites
 This is a list of not exaustive supported features:
