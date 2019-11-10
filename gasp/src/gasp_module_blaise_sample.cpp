@@ -186,7 +186,7 @@ begin
    end until index > first;
 end.)__";
 
-std::string generate_function_expression_sample(const char *type, const char* postfix = nullptr)
+std::string generate_function_expression_sample(const char *type, const char *postfix = nullptr)
 {
    std::regex type_regexp("\\{TYPE\\}");
    std::regex postfix_regexp("\\{POSTFIX\\}");
@@ -203,7 +203,7 @@ begin
 end.)__");
 
    sample = std::regex_replace(sample, type_regexp, type);
-   if(postfix != nullptr)
+   if (postfix != nullptr)
       sample = std::regex_replace(sample, postfix_regexp, postfix);
    else
       sample = std::regex_replace(sample, postfix_regexp, "");
@@ -327,7 +327,7 @@ std::string generate_array_passing_unbound(const char *type, unsigned int size)
 function sum(size: integer, numbers: array<{TYPE}>) : {TYPE};
 var index: integer;
 begin
-   sum := 0;
+   sum := cast<{TYPE}>(0);
    for index from 0 to (size-1) begin
       sum := sum + numbers[index];
    end;
@@ -338,7 +338,7 @@ var
    index: integer;
 begin
    for index from 0 to ({SIZE}-1) begin
-      numbers[index] := index;
+      numbers[index] := cast<{TYPE}>(index);
    end
    sample := sum({SIZE}, numbers);
 end.)__");
@@ -359,7 +359,7 @@ std::string generate_array_passing_bound(const char *type, unsigned int size)
 function sum(size: integer, numbers: array<{TYPE}>[{SIZE}]) : {TYPE};
 var index: integer;
 begin
-   sum := 0;
+   sum := cast<{TYPE}>(0);
    for index from 0 to (size-1) begin
       sum := sum + numbers[index];
    end;
@@ -370,7 +370,7 @@ var
    index: integer;
 begin
    for index from 0 to ({SIZE}-1) begin
-      numbers[index] := index;
+      numbers[index] := cast<{TYPE}>(index);
    end
    sample := sum({SIZE}, numbers);
 end.)__");
@@ -444,7 +444,7 @@ var v : array<{TYPE}>;
 begin
  v := new<array<{TYPE}>>(10);
  for i from 0 to 9 begin
-    v[i] := i;
+    v[i] := cast<{TYPE}>(i);
  end;
  for i from 0 to 9 begin
    sample := sample + v[i];
@@ -468,7 +468,7 @@ var v : array<{TYPE}>;
 begin
  v := new<array<{TYPE}>>(10);
  for i from 0 to 9 begin
-    v[i] := {VALUE};
+    v[i] := cast<{TYPE}>({VALUE});
  end;
  sample := v[9];
  delete(v);
@@ -489,14 +489,14 @@ procedure initialize(values: array<{TYPE}>, size: integer);
 var i : integer;
 begin
    for i from 0 to (size-1) begin
-      values[i] := i;
+      values[i] := cast<{TYPE}>(i);
     end;
 end;
 
 function sum(values: array<{TYPE}>, size: integer) : {TYPE};
 var i : integer;
 begin
-  sum := 0;
+  sum := cast<{TYPE}>(0);
   for i from 0 to (size-1) begin
    sum := sum + values[i];
  end;
@@ -725,8 +725,8 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-array-allocate-double-1"] = {generate_sample_allocate_array_with_math("double"), "", "45.000000"};
    _samples["expression-array-allocate-double-2"] = {generate_sample_allocate_array("double", "1.0"), "", "1.000000"};
 
-   _samples["expression-function-call-duplicate-byte"] = {generate_function_expression_sample("byte","b"), "1", "2"};
-   _samples["expression-function-call-duplicate-short"] = {generate_function_expression_sample("short","s"), "1", "2"};
+   _samples["expression-function-call-duplicate-byte"] = {generate_function_expression_sample("byte", "b"), "1", "2"};
+   _samples["expression-function-call-duplicate-short"] = {generate_function_expression_sample("short", "s"), "1", "2"};
    _samples["expression-function-call-duplicate-integer"] = {generate_function_expression_sample("integer"), "1", "2"};
    _samples["expression-function-call-duplicate-long"] = {generate_function_expression_sample("long"), "1", "2"};
    _samples["expression-function-call-duplicate-double"] = {generate_function_expression_sample("double"), "1", "2.000000"};
@@ -771,18 +771,30 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-native-log2-long"] = {generate_native_single_parameter_call("long", "math", "log2"), "8", "3"};
    _samples["expression-function-call-native-log2-float"] = {generate_native_single_parameter_call("float", "math", "log2"), "8", "3.000000"};
    _samples["expression-function-call-native-log2-double"] = {generate_native_single_parameter_call("double", "math", "log2"), "8", "3.000000"};
+   _samples["expression-function-call-array-byte-unbound"] = {generate_array_passing_unbound("byte", 10), "", "45"};
+   _samples["expression-function-call-array-short-unbound"] = {generate_array_passing_unbound("short", 101), "", "5050"};
    _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 101), "", "5050"};
+   _samples["expression-function-call-array-long-unbound"] = {generate_array_passing_unbound("long", 101), "", "5050"};
    _samples["expression-function-call-array-float-unbound"] = {generate_array_passing_unbound("float", 10), "", "45.000000"};
    _samples["expression-function-call-array-double-unbound"] = {generate_array_passing_unbound("double", 10), "", "45.000000"};
+   _samples["expression-function-call-array-byte-bound"] = {generate_array_passing_bound("byte", 10), "", "45"};
+   _samples["expression-function-call-array-short-bound"] = {generate_array_passing_bound("short", 10), "", "45"};
    _samples["expression-function-call-array-integer-bound"] = {generate_array_passing_bound("integer", 10), "", "45"};
+   _samples["expression-function-call-array-long-bound"] = {generate_array_passing_bound("long", 10), "", "45"};
    _samples["expression-function-call-array-float-bound"] = {generate_array_passing_bound("float", 10), "", "45.000000"};
    _samples["expression-function-call-array-double-bound"] = {generate_array_passing_bound("double", 10), "", "45.000000"};
+   _samples["expression-function-call-array-byte-byref"] = {generate_array_passed_by_reference("byte", 10), "", "9"};
+   _samples["expression-function-call-array-short-byref"] = {generate_array_passed_by_reference("short", 10), "", "9"};
    _samples["expression-function-call-array-integer-byref"] = {generate_array_passed_by_reference("integer", 10), "", "9"};
+   _samples["expression-function-call-array-long-byref"] = {generate_array_passed_by_reference("long", 10), "", "9"};
    _samples["expression-function-call-array-float-byref"] = {generate_array_passed_by_reference("float", 10), "", "9.000000"};
    _samples["expression-function-call-array-double-byref"] = {generate_array_passed_by_reference("double", 10), "", "9.000000"};
    _samples["expression-function-call-array-char-byref"] = {generate_array_passed_by_reference("char", 66), "", "A"};
    _samples["expression-function-call-array-boolean-byref"] = {generate_array_passed_by_reference("boolean", 10), "", "true"};
+   _samples["expression-function-call-array-byte-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("byte"), "10", "45"};
+   _samples["expression-function-call-array-short-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("short"), "10", "45"};
    _samples["expression-function-call-array-integer-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("integer"), "10", "45"};
+   _samples["expression-function-call-array-long-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("long"), "10", "45"};
    _samples["expression-function-call-array-float-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("float"), "10", "45.000000"};
    _samples["expression-function-call-array-double-allocated"] = {generate_sample_allocate_array_and_pass_as_parameter("double"), "10", "45.000000"};
 
