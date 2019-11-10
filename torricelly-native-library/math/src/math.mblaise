@@ -3,29 +3,62 @@ module math;
 function native pi() : double;
 function native e() : double;
 
+function native pow(base: byte, exponent: byte) : byte;
+function native pow(base: short, exponent: short) : short;
 function native pow(base: integer, exponent: integer) : integer;
+function native pow(base: long, exponent: long) : long;
 function native pow(base: float, exponent: float) : float;
 function native pow(base: double, exponent: double) : double;
 
+function native exp(exponent: byte) : byte;
+function native exp(exponent: short) : short;
 function native exp(exponent: integer) : integer;
+function native exp(exponent: long) : long;
 function native exp(exponent: float) : float;
 function native exp(exponent: double) : double;
 
+function native sqrt(value: byte) : byte;
+function native sqrt(value: short) : short;
 function native sqrt(value: integer) : integer;
+function native sqrt(value: long) : long;
 function native sqrt(value: float) : float;
 function native sqrt(value: double) : double;
 
+function native log(value: byte) : byte;
+function native log(value: short) : short;
 function native log(value: integer) : integer;
+function native log(value: long) : long;
 function native log(value: float) : float;
 function native log(value: double) : double;
+function native log10(value: byte) : byte;
+function native log10(value: short) : short;
 function native log10(value: integer) : integer;
+function native log10(value: long) : long;
 function native log10(value: float) : float;
 function native log10(value: double) : double;
+function native log2(value: byte) : byte;
+function native log2(value: short) : short;
 function native log2(value: integer) : integer;
+function native log2(value: long) : long;
 function native log2(value: float) : float;
 function native log2(value: double) : double;
 
+function is_even(value: byte) : boolean;
+begin
+   is_even := (value % 2) == 0;
+end;
+
+function is_even(value: short) : boolean;
+begin
+   is_even := (value % 2) == 0;
+end;
+
 function is_even(value: integer) : boolean;
+begin
+   is_even := (value % 2) == 0;
+end;
+
+function is_even(value: long) : boolean;
 begin
    is_even := (value % 2) == 0;
 end;
