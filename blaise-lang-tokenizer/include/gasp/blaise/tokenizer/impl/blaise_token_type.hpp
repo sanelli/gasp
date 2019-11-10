@@ -14,6 +14,7 @@ enum class blaise_token_type : unsigned char
    BEGIN,
    END,
    VAR,
+   CONST,
    LOGICAL_AND,
    LOGICAL_OR,
    LOGICAL_NOT,
