@@ -68,6 +68,7 @@ void inline blaise_parser::parse_subroutine_declaration_impl(blaise_parser_conte
 
    match_token(context, blaise_token_type::SEMICOLON);
 
+   parse_constants_declaration(context);
    parse_variables_declaration(context);
 
    if (!is_native)

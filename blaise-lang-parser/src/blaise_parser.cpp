@@ -70,7 +70,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
 
    context.current_subroutine(main_subroutine);
 
-   // TODO: match constants
+   parse_constants_declaration(context);
    parse_variables_declaration(context);
 
    auto compound_statement = parse_compound_statement(context);
@@ -120,6 +120,40 @@ void blaise_parser::parse_uses_declaration(blaise_parser_context &context)
       } while (is_token_and_match(context, blaise_token_type::COMMA));
       match_token(context, blaise_token_type::SEMICOLON);
    }
+}
+
+void blaise_parser::parse_constants_declaration(blaise_parser_context &context)
+{
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_constants_declaration" << std::endl);
+
+   if (!is_token(context, blaise_token_type::CONST))
+      return; // No such variables
+   match_token(context, blaise_token_type::CONST);
+   while (is_token(context, blaise_token_type::IDENTIFIER))
+      parse_constant_declaration(context);
+
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_constants_declaration" << std::endl);
+}
+
+void blaise_parser::parse_constant_declaration(blaise_parser_context &context)
+{
+   SANELLI_DEBUG("blaise-parser", "[ENTER] blaise_parser::parse_constant_declaration" << std::endl);
+
+   auto identifier_token = context.peek_token();
+   match_token(context, blaise_token_type::IDENTIFIER);
+   match_token(context, blaise_token_type::ASSIGNMENT);
+
+   auto expression = parse_expression(context);
+   if(!ast::blaise_ast_utility::is_allowed_for_constant(expression))
+      throw_parse_error_with_details(context, expression->line(), expression->column(), 
+         "Cannot create a constant. Expression is not a literal.");
+
+   auto current_subroutine = context.current_subroutine();
+   auto constant = current_subroutine->add_constant(identifier_token, identifier_token.value(), expression->result_type());
+   constant->literal_expression(expression);   
+
+   match_token(context, blaise_token_type::SEMICOLON); 
+   SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_constant_declaration" << std::endl);
 }
 
 void blaise_parser::parse_variables_declaration(blaise_parser_context &context)

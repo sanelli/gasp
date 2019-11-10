@@ -21,6 +21,8 @@ class blaise_parser : public sanelli::parser<blaise_token_type>
                               const char* caller_name);
    static void parse_subroutine_parameters(blaise_parser_context &context, 
                               std::vector<std::shared_ptr<ast::blaise_ast_type>>& param_types);
+   static void parse_constants_declaration(blaise_parser_context &context);
+   static void parse_constant_declaration(blaise_parser_context &context);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);
    static void parse_variable_names_list(blaise_parser_context &context, 
