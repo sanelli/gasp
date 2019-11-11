@@ -15,7 +15,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::BEGIN, "begin", "BEGIN");
    add_token(blaise_token_type::END, "end", "END");
    add_token(blaise_token_type::VAR, "var", "VAR");
-    add_token(blaise_token_type::VAR, "const", "CONST");
+   add_token(blaise_token_type::CONST, "const", "CONST");
    add_token(blaise_token_type::LOGICAL_AND, "and", "LOGICAL_AND");
    add_token(blaise_token_type::LOGICAL_OR, "or", "LOGICAL_OR");
    add_token(blaise_token_type::LOGICAL_NOT, "not", "LOGICAL_NOT");
