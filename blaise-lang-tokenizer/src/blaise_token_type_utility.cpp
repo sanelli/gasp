@@ -63,7 +63,7 @@ bool blaise_token_type_utility::is_operator(blaise_token_type token_type)
 }
 
 // Loosly following https://it.cppreference.com/w/cpp/language/operator_precedence
-bool blaise_token_type_utility::get_operator_precedence(blaise_token_type token_type)
+uint8_t blaise_token_type_utility::get_operator_precedence(blaise_token_type token_type)
 {
    switch (token_type)
    {
