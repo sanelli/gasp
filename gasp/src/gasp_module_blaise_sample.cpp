@@ -33,6 +33,47 @@ end.)__");
    return sample;
 }
 
+std::string generate_return_constant_sample(const char *return_type, const char* value)
+{
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+   std::regex value_regexp("\\{VALUE\\}");
+
+   std::string sample(R"__(program sample: {RETURN_TYPE};
+const
+   value := {VALUE};
+begin
+   sample := value;
+end.)__");
+
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+   sample = std::regex_replace(sample, value_regexp, value);
+
+   return sample;
+}
+
+std::string generate_function_constant_sample(const char *return_type, const char* value)
+{
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+   std::regex value_regexp("\\{VALUE\\}");
+
+   std::string sample(R"__(program sample: {RETURN_TYPE};
+function test() : {RETURN_TYPE};
+const
+   value := {VALUE};
+begin
+   test := value;
+end;
+
+begin
+   sample := test();
+end.)__");
+
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+   sample = std::regex_replace(sample, value_regexp, value);
+
+   return sample;
+}
+
 std::string generate_binary_operator_sample(const char *operator_type, const char *return_type, const char *binary_operator)
 {
    std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
@@ -527,6 +568,24 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-return-double"] = {generate_empty_with_return_type_sample("double"), "", "0.000000"};
    _samples["empty-return-char"] = {generate_empty_with_return_type_sample("char"), "", "\\u00"};
    _samples["empty-parameters-1"] = {sample_empty_with_parameters, "7 true", "0"};
+
+   _samples["empty-const-byte"] = {generate_return_constant_sample("byte", "10b"), "", "10"};
+   _samples["empty-const-short"] = {generate_return_constant_sample("short", "10s"), "", "10"};
+   _samples["empty-const-integer"] = {generate_return_constant_sample("integer", "10"), "", "10"};
+   _samples["empty-const-long"] = {generate_return_constant_sample("long", "10l"), "", "10"};
+   _samples["empty-const-float"] = {generate_return_constant_sample("float", "10.00f"), "", "10.000000"};
+   _samples["empty-const-double"] = {generate_return_constant_sample("double", "10.00"), "", "10.000000"};
+   _samples["empty-const-char"] = {generate_return_constant_sample("char", "'A'"), "", "A"};
+   _samples["empty-const-boolean"] = {generate_return_constant_sample("boolean", "true"), "", "true"};
+
+   _samples["empty-const-subroutine-byte"] = {generate_function_constant_sample("byte", "10b"), "", "10"};
+   _samples["empty-const-subroutine-short"] = {generate_function_constant_sample("short", "10s"), "", "10"};
+   _samples["empty-const-subroutine-integer"] = {generate_function_constant_sample("integer", "10"), "", "10"};
+   _samples["empty-const-subroutine-long"] = {generate_function_constant_sample("long", "10l"), "", "10"};
+   _samples["empty-const-subroutine-float"] = {generate_function_constant_sample("float", "10.00f"), "", "10.000000"};
+   _samples["empty-const-subroutine-double"] = {generate_function_constant_sample("double", "10.00"), "", "10.000000"};
+   _samples["empty-const-subroutine-char"] = {generate_function_constant_sample("char", "'A'"), "", "A"};
+   _samples["empty-const-subroutine-boolean"] = {generate_function_constant_sample("boolean", "true"), "", "true"};
 
    _samples["expression-math-byte-sum"] = {generate_binary_operator_sample("byte", "byte", "+"), "3 4", "7"};
    _samples["expression-math-byte-subtract"] = {generate_binary_operator_sample("byte", "byte", "-"), "3 4", "-1"};
