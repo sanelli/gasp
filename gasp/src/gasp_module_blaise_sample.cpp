@@ -613,6 +613,11 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-precedence-math-integer-8"] = {generate_sample_expression("integer", "30 / 3 + 9"), "", "19"};
    _samples["expression-precedence-math-integer-9"] = {generate_sample_expression("integer", "6 * 5 / 3"), "", "10"};
 
+   _samples["expression-precedence-boolean-1"] = {generate_sample_expression("boolean", "false and true or true"), "", "true"};
+   _samples["expression-precedence-boolean-2"] = {generate_sample_expression("boolean", "true or true and false"), "", "true"};
+   _samples["expression-precedence-boolean-4"] = {generate_sample_expression("boolean", "false or not true"), "", "false"};
+   _samples["expression-precedence-boolean-5"] = {generate_sample_expression("boolean", "false or not false"), "", "true"};
+
    _samples["expression-math-byte-sum"] = {generate_binary_operator_sample("byte", "byte", "+"), "3 4", "7"};
    _samples["expression-math-byte-subtract"] = {generate_binary_operator_sample("byte", "byte", "-"), "3 4", "-1"};
    _samples["expression-math-byte-multiply"] = {generate_binary_operator_sample("byte", "byte", "*"), "3 4", "12"};
