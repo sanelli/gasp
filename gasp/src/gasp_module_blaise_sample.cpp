@@ -33,7 +33,7 @@ end.)__");
    return sample;
 }
 
-std::string generate_return_constant_sample(const char *return_type, const char* value)
+std::string generate_return_constant_sample(const char *return_type, const char *value)
 {
    std::regex return_type_regexp("\\{RETURN_TYPE\\}");
    std::regex value_regexp("\\{VALUE\\}");
@@ -51,7 +51,23 @@ end.)__");
    return sample;
 }
 
-std::string generate_function_constant_sample(const char *return_type, const char* value)
+std::string generate_sample_expression(const char *return_type, const char *expression)
+{
+   std::regex return_type_regexp("\\{RETURN_TYPE\\}");
+   std::regex expression_regexp("\\{EXPRESSION\\}");
+
+   std::string sample(R"__(program sample: {RETURN_TYPE};
+begin
+   sample := {EXPRESSION};
+end.)__");
+
+   sample = std::regex_replace(sample, return_type_regexp, return_type);
+   sample = std::regex_replace(sample, expression_regexp, expression);
+
+   return sample;
+}
+
+std::string generate_function_constant_sample(const char *return_type, const char *value)
 {
    std::regex return_type_regexp("\\{RETURN_TYPE\\}");
    std::regex value_regexp("\\{VALUE\\}");
@@ -586,6 +602,16 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-const-subroutine-double"] = {generate_function_constant_sample("double", "10.00"), "", "10.000000"};
    _samples["empty-const-subroutine-char"] = {generate_function_constant_sample("char", "'A'"), "", "A"};
    _samples["empty-const-subroutine-boolean"] = {generate_function_constant_sample("boolean", "true"), "", "true"};
+
+   _samples["expression-precedence-math-integer-1"] = {generate_sample_expression("integer", "10 + 10 - 10"), "", "10"};
+   _samples["expression-precedence-math-integer-2"] = {generate_sample_expression("integer", "20 + -10"), "", "10"};
+   _samples["expression-precedence-math-integer-3"] = {generate_sample_expression("integer", "10 + 30 * 0"), "", "10"};
+   _samples["expression-precedence-math-integer-4"] = {generate_sample_expression("integer", "10 + 0 * 30"), "", "10"};
+   _samples["expression-precedence-math-integer-5"] = {generate_sample_expression("integer", "30 * 0 + 10"), "", "10"};
+   _samples["expression-precedence-math-integer-6"] = {generate_sample_expression("integer", "0 * 30 + 10"), "", "10"};
+   _samples["expression-precedence-math-integer-7"] = {generate_sample_expression("integer", "9 + 30 / 3"), "", "19"};
+   _samples["expression-precedence-math-integer-8"] = {generate_sample_expression("integer", "30 / 3 + 9"), "", "19"};
+   _samples["expression-precedence-math-integer-9"] = {generate_sample_expression("integer", "6 * 5 / 3"), "", "10"};
 
    _samples["expression-math-byte-sum"] = {generate_binary_operator_sample("byte", "byte", "+"), "3 4", "7"};
    _samples["expression-math-byte-subtract"] = {generate_binary_operator_sample("byte", "byte", "-"), "3 4", "-1"};
