@@ -90,6 +90,21 @@ end.)__");
    return sample;
 }
 
+auto generate_call_undefined_subroutine = R"__(program sample;
+
+procedure test_first();
+begin
+  test_second();
+end;
+
+procedure test_second();
+begin
+end;
+
+begin
+  test_first();
+end.)__";
+
 std::string generate_binary_operator_sample(const char *operator_type, const char *return_type, const char *binary_operator)
 {
    std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
@@ -602,6 +617,8 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-const-subroutine-double"] = {generate_function_constant_sample("double", "10.00"), "", "10.000000"};
    _samples["empty-const-subroutine-char"] = {generate_function_constant_sample("char", "'A'"), "", "A"};
    _samples["empty-const-subroutine-boolean"] = {generate_function_constant_sample("boolean", "true"), "", "true"};
+
+   _samples["empty-subroutine-call-before-definition"] = {generate_call_undefined_subroutine, "", "0"};
 
    _samples["expression-precedence-math-integer-01"] = {generate_sample_expression("integer", "10 + 10 - 10"), "", "10"};
    _samples["expression-precedence-math-integer-02"] = {generate_sample_expression("integer", "20 + -10"), "", "10"};
