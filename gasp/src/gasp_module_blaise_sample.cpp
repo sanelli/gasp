@@ -90,7 +90,9 @@ end.)__");
    return sample;
 }
 
-auto generate_call_undefined_subroutine = R"__(program sample;
+auto generate_declare_procedure = R"__(program sample;
+
+declare procedure test_second();
 
 procedure test_first();
 begin
@@ -103,6 +105,59 @@ end;
 
 begin
   test_first();
+end.)__";
+
+auto generate_declare_procedure_with_params = R"__(program sample;
+
+declare procedure test_second(a:integer,b:float);
+
+procedure test_first(a:integer,b:float);
+begin
+  test_second(a,b);
+end;
+
+procedure test_second(a:integer,b:float);
+begin
+end;
+
+begin
+  test_first(10, 1.2f);
+end.)__";
+
+auto generate_declare_function = R"__(program sample : integer;
+
+declare function test_second() : integer;
+
+function test_first() : integer;
+begin
+  test_first := test_second();
+end;
+
+function test_second() : integer;
+begin
+   test_second := 99;
+end;
+
+begin
+  sample := test_first();
+end.)__";
+
+auto generate_declare_function_with_params = R"__(program sample : integer;
+
+declare function test_second(a: integer, b: integer) : integer;
+
+function test_first(a:integer) : integer;
+begin
+  test_first := test_second(a,a);
+end;
+
+function test_second(a: integer, b: integer) : integer;
+begin
+   test_second := a + b;
+end;
+
+begin
+  sample := test_first(8);
 end.)__";
 
 std::string generate_binary_operator_sample(const char *operator_type, const char *return_type, const char *binary_operator)
@@ -618,7 +673,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-const-subroutine-char"] = {generate_function_constant_sample("char", "'A'"), "", "A"};
    _samples["empty-const-subroutine-boolean"] = {generate_function_constant_sample("boolean", "true"), "", "true"};
 
-   _samples["empty-subroutine-call-before-definition"] = {generate_call_undefined_subroutine, "", "0"};
+   _samples["empty-subroutine-declare-procedure-no-params"] = {generate_declare_procedure, "", "0"};
+   _samples["empty-subroutine-declare-procedure-with-params"] = {generate_declare_procedure_with_params, "", "0"};
+   _samples["empty-subroutine-declare-function-no-params"] = {generate_declare_function, "", "99"};
+   _samples["empty-subroutine-declare-function-with-params"] = {generate_declare_function_with_params, "", "16"};
 
    _samples["expression-precedence-math-integer-01"] = {generate_sample_expression("integer", "10 + 10 - 10"), "", "10"};
    _samples["expression-precedence-math-integer-02"] = {generate_sample_expression("integer", "20 + -10"), "", "10"};
