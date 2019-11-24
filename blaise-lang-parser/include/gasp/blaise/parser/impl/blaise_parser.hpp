@@ -16,28 +16,33 @@ class blaise_parser : public sanelli::parser<blaise_token_type>
    static void parse_subroutines_declaration(blaise_parser_context &context);
    static void parse_function_declaration(blaise_parser_context &context);
    static void parse_procedure_declaration(blaise_parser_context &context);
-   static void inline parse_subroutine_declaration_impl(blaise_parser_context &context, 
-                              blaise_token_type expected_token_type, 
-                              const char* caller_name);
-   static void parse_subroutine_parameters(blaise_parser_context &context, 
-                              std::vector<std::shared_ptr<ast::blaise_ast_type>>& param_types);
+   static void inline parse_subroutine_declaration_impl(blaise_parser_context &context,
+                                                        blaise_token_type expected_token_type,
+                                                        const char *caller_name);
+   static void inline parse_subroutine_signature(blaise_parser_context &context,
+                                                 blaise_token_type expected_token_type,
+                                                 bool is_pure_declaration,
+                                                 sanelli::token<blaise_token_type> &subroutine_token_identifier,
+                                                 std::vector<std::shared_ptr<ast::blaise_ast_type>> &param_types);
+   static void parse_subroutine_parameters(blaise_parser_context &context,
+                                           std::vector<std::shared_ptr<ast::blaise_ast_type>> &param_types);
    static void parse_constants_declaration(blaise_parser_context &context);
    static void parse_constant_declaration(blaise_parser_context &context);
    static void parse_variables_declaration(blaise_parser_context &context);
    static void parse_variable_declaration(blaise_parser_context &context);
-   static void parse_variable_names_list(blaise_parser_context &context, 
-                              std::vector<sanelli::token<blaise_token_type>> &variable_names);
+   static void parse_variable_names_list(blaise_parser_context &context,
+                                         std::vector<sanelli::token<blaise_token_type>> &variable_names);
    static std::shared_ptr<ast::blaise_ast_type> parse_variable_type(blaise_parser_context &context, bool accept_unbounded_array);
 
    // Statement
    static std::shared_ptr<ast::blaise_ast_statement> parse_statement(blaise_parser_context &context,
-            std::shared_ptr<ast::blaise_ast_statement_compund> parent = nullptr);
+                                                                     std::shared_ptr<ast::blaise_ast_statement_compund> parent = nullptr);
    static std::shared_ptr<ast::blaise_ast_statement> parse_compound_statement(blaise_parser_context &context,
-            std::shared_ptr<ast::blaise_ast_statement_compund> parent = nullptr);
+                                                                              std::shared_ptr<ast::blaise_ast_statement_compund> parent = nullptr);
    static std::shared_ptr<ast::blaise_ast_statement> parse_subroutine_call_statement(blaise_parser_context &context);
-   static void parse_subroutine_call_parameters(blaise_parser_context &context, 
-                              std::vector<std::shared_ptr<ast::blaise_ast_expression>>& expressions,
-                              std::vector<std::shared_ptr<ast::blaise_ast_type>>& types);
+   static void parse_subroutine_call_parameters(blaise_parser_context &context,
+                                                std::vector<std::shared_ptr<ast::blaise_ast_expression>> &expressions,
+                                                std::vector<std::shared_ptr<ast::blaise_ast_type>> &types);
    static std::shared_ptr<ast::blaise_ast_statement> parse_assignamet_statement(blaise_parser_context &context);
    static std::shared_ptr<ast::blaise_ast_statement> parse_if_statement(blaise_parser_context &context);
    static std::shared_ptr<ast::blaise_ast_statement> parse_for_loop_statement(blaise_parser_context &context);
@@ -49,16 +54,16 @@ class blaise_parser : public sanelli::parser<blaise_token_type>
 
    // Expression
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression(blaise_parser_context &context);
-   static std::shared_ptr<ast::blaise_ast_expression> parse_expression_helper(blaise_parser_context &context, 
-                              std::shared_ptr<ast::blaise_ast_expression> lhs, 
-                              unsigned int min_precedence);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_expression_helper(blaise_parser_context &context,
+                                                                              std::shared_ptr<ast::blaise_ast_expression> lhs,
+                                                                              unsigned int min_precedence);
    static std::shared_ptr<ast::blaise_ast_expression> parse_expression_term(blaise_parser_context &context);
-   static std::shared_ptr<ast::blaise_ast_expression> parse_number(blaise_parser_context& context);
-   static std::shared_ptr<ast::blaise_ast_expression> parse_boolean(blaise_parser_context& context);
-   static std::shared_ptr<ast::blaise_ast_expression> parse_cast_expression(blaise_parser_context& context);
-   static std::shared_ptr<ast::blaise_ast_expression> parse_ternary_expression(blaise_parser_context& context);
-   static std::shared_ptr<ast::blaise_ast_expression> parse_new_expression(blaise_parser_context& context);
-   static std::shared_ptr<ast::blaise_ast_expression> make_blaise_ast_expression_value(blaise_parser_context &context, const sanelli::token<blaise_token_type>& token);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_number(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_boolean(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_cast_expression(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_ternary_expression(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_expression> parse_new_expression(blaise_parser_context &context);
+   static std::shared_ptr<ast::blaise_ast_expression> make_blaise_ast_expression_value(blaise_parser_context &context, const sanelli::token<blaise_token_type> &token);
 
 public:
    void parse(blaise_parser_context &context) const;

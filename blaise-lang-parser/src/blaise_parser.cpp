@@ -20,6 +20,12 @@ void blaise_parser::parse(blaise_parser_context &context) const
    else if (is_token(context, blaise_token_type::MODULE))
       parse_module(context);
 
+   for(auto subroutine_index = 0U; subroutine_index < context.module()->count_subroutines(); ++subroutine_index) {
+      auto subroutine = context.module()->get_subroutine(subroutine_index);
+      if(!subroutine->defined())
+         throw_parse_error_with_details(context, sanelli::make_string("Subroutine with signature '", subroutine->signature_as_string(),"' declared but not defined."));
+   }
+
    // If more tokens are available at this stage then the code is malformed
    if (context.has_more_tokens())
       throw_parse_error_with_details(context, "too many tokens at the end of the program");
@@ -35,6 +41,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    auto module = ast::make_blaise_ast_module(identifier, identifier.value(), ast::blaise_ast_module_type::PROGRAM);
    module->self(module);
    auto main_subroutine = module->add_subroutine(context.peek_token());
+   main_subroutine->define();
    main_subroutine->set(blaise::ast::blaise_ast_subroutine_flags::MAIN);
 
    context.module(module);
