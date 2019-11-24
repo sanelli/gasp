@@ -603,15 +603,17 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["empty-const-subroutine-char"] = {generate_function_constant_sample("char", "'A'"), "", "A"};
    _samples["empty-const-subroutine-boolean"] = {generate_function_constant_sample("boolean", "true"), "", "true"};
 
-   _samples["expression-precedence-math-integer-1"] = {generate_sample_expression("integer", "10 + 10 - 10"), "", "10"};
-   _samples["expression-precedence-math-integer-2"] = {generate_sample_expression("integer", "20 + -10"), "", "10"};
-   _samples["expression-precedence-math-integer-3"] = {generate_sample_expression("integer", "10 + 30 * 0"), "", "10"};
-   _samples["expression-precedence-math-integer-4"] = {generate_sample_expression("integer", "10 + 0 * 30"), "", "10"};
-   _samples["expression-precedence-math-integer-5"] = {generate_sample_expression("integer", "30 * 0 + 10"), "", "10"};
-   _samples["expression-precedence-math-integer-6"] = {generate_sample_expression("integer", "0 * 30 + 10"), "", "10"};
-   _samples["expression-precedence-math-integer-7"] = {generate_sample_expression("integer", "9 + 30 / 3"), "", "19"};
-   _samples["expression-precedence-math-integer-8"] = {generate_sample_expression("integer", "30 / 3 + 9"), "", "19"};
-   _samples["expression-precedence-math-integer-9"] = {generate_sample_expression("integer", "6 * 5 / 3"), "", "10"};
+   _samples["expression-precedence-math-integer-01"] = {generate_sample_expression("integer", "10 + 10 - 10"), "", "10"};
+   _samples["expression-precedence-math-integer-02"] = {generate_sample_expression("integer", "20 + -10"), "", "10"};
+   _samples["expression-precedence-math-integer-03"] = {generate_sample_expression("integer", "10 + 30 * 0"), "", "10"};
+   _samples["expression-precedence-math-integer-04"] = {generate_sample_expression("integer", "10 + 0 * 30"), "", "10"};
+   _samples["expression-precedence-math-integer-05"] = {generate_sample_expression("integer", "30 * 0 + 10"), "", "10"};
+   _samples["expression-precedence-math-integer-06"] = {generate_sample_expression("integer", "0 * 30 + 10"), "", "10"};
+   _samples["expression-precedence-math-integer-07"] = {generate_sample_expression("integer", "9 + 30 / 3"), "", "19"};
+   _samples["expression-precedence-math-integer-08"] = {generate_sample_expression("integer", "30 / 3 + 9"), "", "19"};
+   _samples["expression-precedence-math-integer-09"] = {generate_sample_expression("integer", "6 * 5 / 3"), "", "10"};
+   _samples["expression-precedence-math-integer-10"] = {generate_sample_expression("integer", "2 * (5+4)"), "", "18"};
+   _samples["expression-precedence-math-integer-11"] = {generate_sample_expression("integer", "(5+4)*2"), "", "18"};
 
    _samples["expression-precedence-boolean-1"] = {generate_sample_expression("boolean", "false and true or true"), "", "true"};
    _samples["expression-precedence-boolean-2"] = {generate_sample_expression("boolean", "true or true and false"), "", "true"};
