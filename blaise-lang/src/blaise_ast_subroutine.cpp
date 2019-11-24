@@ -16,9 +16,11 @@ using namespace gasp::blaise;
 using namespace std;
 
 gasp::blaise::ast::blaise_ast_subroutine::blaise_ast_subroutine(weak_ptr<blaise_ast_module> module, const string &name)
-    : _module(module), _name(name), _return_type(make_plain_type(blaise_ast_system_type::VOID)) {}
+    : _module(module), _name(name), _return_type(make_plain_type(blaise_ast_system_type::VOID)), _defined(false) {}
 
 std::string gasp::blaise::ast::blaise_ast_subroutine::name() const { return _name; }
+bool gasp::blaise::ast::blaise_ast_subroutine::defined() const { return _defined; }
+void gasp::blaise::ast::blaise_ast_subroutine::define() { _defined = true; }
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::blaise_ast_subroutine::return_type() const { return _return_type; }
 void gasp::blaise::ast::blaise_ast_subroutine::return_type(std::shared_ptr<blaise_ast_type> type) { _return_type = type; }
 std::weak_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_subroutine::module() const { return _module; }
@@ -55,9 +57,7 @@ bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const s
          auto _param_array = blaise_ast_utility::as_array_type(_param);
          if (!param_array->underlying_type()->equals(_param_array->underlying_type()))
             return false;
-         if (param_array->size() != param_array->size()
-              && !param_array->is_unbounded() 
-              && !_param_array->is_unbounded())
+         if (param_array->size() != param_array->size() && !param_array->is_unbounded() && !_param_array->is_unbounded())
             return false;
       }
       else if (!ast::blaise_ast_utility::can_auto_cast(param, _parameters.at(index)->type()))

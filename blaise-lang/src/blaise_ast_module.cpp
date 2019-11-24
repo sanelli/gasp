@@ -23,7 +23,7 @@ std::string gasp::blaise::ast::blaise_ast_module::name() const { return _name; }
 blaise_ast_module_type gasp::blaise::ast::blaise_ast_module::type() const { return _type; }
 void gasp::blaise::ast::blaise_ast_module::self(std::weak_ptr<blaise_ast_module> module) { _self = module; }
 
-void gasp::blaise::ast::blaise_ast_module::set_path(std::string path) { _path = path;}
+void gasp::blaise::ast::blaise_ast_module::set_path(std::string path) { _path = path; }
 std::string gasp::blaise::ast::blaise_ast_module::get_path() const { return _path; }
 
 bool gasp::blaise::ast::blaise_ast_module::has_dependency(std::string dependency) const
@@ -109,14 +109,24 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::exp
     const token<blaise_token_type> &identifier,
     const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const
 {
+   auto subroutine = get_exact_subroutine(identifier, param_types);
+   if (subroutine != nullptr)
+      return subroutine;
+
+   throw blaise_ast_error(identifier.line(), identifier.column(),
+                          sanelli::make_string("Cannot find subroutine  ", identifier.value(), "(", param_types, ")"));
+}
+
+std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_exact_subroutine(
+    const sanelli::token<gasp::blaise::blaise_token_type> &identifier,
+    const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const
+{
    for (auto subroutine : _subroutines)
    {
       if (subroutine->signature_match_exactly(identifier.value(), param_types))
          return subroutine;
    }
-
-   throw blaise_ast_error(identifier.line(), identifier.column(),
-                          sanelli::make_string("Cannot find subroutine  ", identifier.value(), "(", param_types, ")"));
+   return nullptr;
 }
 
 unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
@@ -130,7 +140,9 @@ unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
 
 unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutines() const { return _subroutines.size(); }
 std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(unsigned int index) const { return _subroutines.at(index); }
-
+void gasp::blaise::ast::blaise_ast_module::remove_last_subroutine() {
+   _subroutines.pop_back();
+}
 std::shared_ptr<blaise_ast_module> gasp::blaise::ast::make_blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type> &reference, const std::string &module_name, blaise_ast_module_type type)
 {
    return memory::make_shared<blaise_ast_module>(reference, module_name, type);

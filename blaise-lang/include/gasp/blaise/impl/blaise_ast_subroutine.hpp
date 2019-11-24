@@ -23,6 +23,7 @@ enum class blaise_ast_subroutine_flags : unsigned char {
 
 class blaise_ast_subroutine {
    std::string _name;
+   bool _defined;
    std::weak_ptr<blaise_ast_module> _module;
    std::shared_ptr<blaise_ast_type> _return_type;
    std::bitset<8 * sizeof(typename std::underlying_type<blaise_ast_subroutine_flags>::type)> _flags;
@@ -53,6 +54,8 @@ protected:
 
 public:
    std::string name() const;
+   bool defined() const;
+   void define();
    std::shared_ptr<blaise_ast_type> return_type() const;
    void return_type(std::shared_ptr<blaise_ast_type> type);
    std::weak_ptr<blaise_ast_module> module() const;
