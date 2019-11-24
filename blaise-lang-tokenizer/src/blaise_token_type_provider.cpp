@@ -19,6 +19,7 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::LOGICAL_AND, "and", "LOGICAL_AND");
    add_token(blaise_token_type::LOGICAL_OR, "or", "LOGICAL_OR");
    add_token(blaise_token_type::LOGICAL_NOT, "not", "LOGICAL_NOT");
+   add_token(blaise_token_type::DECLARE, "declare", "DECLARE");
    add_token(blaise_token_type::FUNCTION, "function", "FUNCTION");
    add_token(blaise_token_type::PROCEDURE, "procedure", "PROCEDURE");
    add_token(blaise_token_type::NATIVE, "native", "NATIVE");

@@ -18,6 +18,7 @@ enum class blaise_token_type : unsigned char
    LOGICAL_AND,
    LOGICAL_OR,
    LOGICAL_NOT,
+   DECLARE,
    FUNCTION,
    PROCEDURE,
    NATIVE,
