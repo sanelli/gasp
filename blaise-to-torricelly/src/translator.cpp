@@ -388,8 +388,7 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
       result << array_type->dimensions();
       for (auto d = 0; d < array_type->dimensions(); ++d)
       {
-         if (d > 0)
-            result << "x";
+         result << "x";
          if (array_type->is_unbounded())
             result << "u";
          else
