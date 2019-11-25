@@ -536,10 +536,22 @@ end.)__");
    return sample;
 }
 
-std::string sample_call_from_Library = R"__(program sample(value: integer): boolean;
+std::string sample_call_from_library = R"__(program sample(value: integer): boolean;
 use math;
 begin
    sample := is_even(value);
+end.
+)__";
+
+std::string sample_call_from_library_arrays = R"__(program sample(value: integer): integer;
+use arrays;
+var 
+ a : array<integer>[2];
+begin
+   a[0] := 0;
+   a[1] := 1;
+   swap(a, 0, 1);
+   sample := a[value];
 end.
 )__";
 
@@ -557,6 +569,35 @@ end.)__");
 
    sample = std::regex_replace(sample, type_regexp, type);
    sample = std::regex_replace(sample, use_regexp, use);
+   sample = std::regex_replace(sample, function_regexp, function);
+
+   return sample;
+}
+
+std::string generate_native_array_call_to_module(const char *type, const char *size, const char *function)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+   std::regex function_regexp("\\{FUNCTION\\}");
+
+   std::string sample(R"__(program sample(output_index:integer) : {TYPE};
+use math;
+const
+  size := {SIZE};
+var
+   input : array<{TYPE}>[{SIZE}];
+   output : array<{TYPE}>[{SIZE}];
+   index: integer;
+begin
+   for index from 0 to size-1 begin
+      input[index] := index;
+   end;
+   {FUNCTION}(input, output, size);
+   sample := output[output_index];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, size);
    sample = std::regex_replace(sample, function_regexp, function);
 
    return sample;
@@ -958,8 +999,10 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-multuply-long"] = {generate_function_expression_2_sample("long", "*"), "1 2", "2"};
    _samples["expression-function-call-divide-long"] = {generate_function_expression_2_sample("long", "/"), "1 2", "0"};
    _samples["expression-function-call-remainder-long"] = {generate_function_expression_2_sample("long", "%"), "1 2", "1"};
-   _samples["expression-function-call-from-library-1"] = {sample_call_from_Library, "2", "true"};
-   _samples["expression-function-call-from-library-2"] = {sample_call_from_Library, "3", "false"};
+   _samples["expression-function-call-from-library-1"] = {sample_call_from_library, "2", "true"};
+   _samples["expression-function-call-from-library-2"] = {sample_call_from_library, "3", "false"};
+   _samples["expression-function-call-from-library-arrays-swap-1"] = {sample_call_from_library_arrays, "0", "1"};
+   _samples["expression-function-call-from-library-arrays-swap-2"] = {sample_call_from_library_arrays, "1", "0"};
    _samples["expression-function-call-native-sqrt-byte"] = {generate_native_single_parameter_call("byte", "math", "sqrt"), "4", "2"};
    _samples["expression-function-call-native-sqrt-short"] = {generate_native_single_parameter_call("short", "math", "sqrt"), "4", "2"};
    _samples["expression-function-call-native-sqrt-integer"] = {generate_native_single_parameter_call("integer", "math", "sqrt"), "4", "2"};
@@ -978,6 +1021,8 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-native-log2-long"] = {generate_native_single_parameter_call("long", "math", "log2"), "8", "3"};
    _samples["expression-function-call-native-log2-float"] = {generate_native_single_parameter_call("float", "math", "log2"), "8", "3.000000"};
    _samples["expression-function-call-native-log2-double"] = {generate_native_single_parameter_call("double", "math", "log2"), "8", "3.000000"};
+   _samples["expression-function-call-native-arrays-sqrt-float"] = {generate_native_array_call_to_module("float", "10", "sqrt"), "4", "2.000000"};
+   _samples["expression-function-call-native-arrays-sqrt-double"] = {generate_native_array_call_to_module("double", "10", "sqrt"), "4", "2.000000"};
    _samples["expression-function-call-array-byte-unbound"] = {generate_array_passing_unbound("byte", 10), "", "45"};
    _samples["expression-function-call-array-short-unbound"] = {generate_array_passing_unbound("short", 101), "", "5050"};
    _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 101), "", "5050"};
