@@ -299,8 +299,8 @@ void blaise_to_torricelly::translator::translate_array_access_expression(std::sh
 
    // Add the number of dimnsions
    // At present only one because blaise do not support multiple arrays
-   auto dimensions = expression->count_indexes();
-   auto size_value_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(1));
+   int32_t dimensions = expression->count_indexes();
+   auto size_value_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(dimensions));
    auto load_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, size_value_variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(load_size_instruction);
 
