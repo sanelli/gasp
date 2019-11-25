@@ -451,7 +451,7 @@ std::string generate_array_passing_unbound(const char *type, unsigned int size)
 
    std::string sample(R"__(program sample : {TYPE};
 
-function sum(size: integer, numbers: array<{TYPE}>) : {TYPE};
+function sum(size: integer, numbers: array<{TYPE}>[]) : {TYPE};
 var index: integer;
 begin
    sum := cast<{TYPE}>(0);
@@ -515,7 +515,7 @@ std::string generate_array_passed_by_reference(const char *type, unsigned int si
 
    std::string sample(R"__(program sample : {TYPE};
 
-procedure fill(size: integer, numbers: array<{TYPE}>);
+procedure fill(size: integer, numbers: array<{TYPE}>[]);
 var index: integer;
 begin
    for index from 0 to (size-1) begin
@@ -566,10 +566,10 @@ std::string generate_sample_allocate_array_with_math(const char *type)
 {
    std::regex type_regexp("\\{TYPE\\}");
    std::string sample = R"__(program sample : {TYPE};
-var v : array<{TYPE}>;
+var v : array<{TYPE}>[];
     i : integer;
 begin
- v := new<array<{TYPE}>>(10);
+ v := new<array<{TYPE}>[]>(10);
  for i from 0 to 9 begin
     v[i] := cast<{TYPE}>(i);
  end;
@@ -590,10 +590,10 @@ std::string generate_sample_allocate_array(const char *type, const char *value)
    std::regex value_regexp("\\{VALUE\\}");
 
    std::string sample(R"__(program sample : {TYPE};
-var v : array<{TYPE}>;
+var v : array<{TYPE}>[];
     i : integer;
 begin
- v := new<array<{TYPE}>>(10);
+ v := new<array<{TYPE}>[]>(10);
  for i from 0 to 9 begin
     v[i] := cast<{TYPE}>({VALUE});
  end;
@@ -612,7 +612,7 @@ std::string generate_sample_allocate_array_and_pass_as_parameter(const char *typ
    std::regex type_regexp("\\{TYPE\\}");
    std::string sample = R"__(program sample(size : integer) : {TYPE};
 
-procedure initialize(values: array<{TYPE}>, size: integer);
+procedure initialize(values: array<{TYPE}>[], size: integer);
 var i : integer;
 begin
    for i from 0 to (size-1) begin
@@ -620,7 +620,7 @@ begin
     end;
 end;
 
-function sum(values: array<{TYPE}>, size: integer) : {TYPE};
+function sum(values: array<{TYPE}>[], size: integer) : {TYPE};
 var i : integer;
 begin
   sum := cast<{TYPE}>(0);
@@ -629,9 +629,9 @@ begin
  end;
 end;
 
-var v : array<{TYPE}>;
+var v : array<{TYPE}>[];
 begin
- v := new<array<{TYPE}>>(size);
+ v := new<array<{TYPE}>[]>(size);
  initialize(v, size);
  sample := sum(v, size);
  delete(v);
