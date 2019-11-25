@@ -444,6 +444,34 @@ end.)__");
    return sample;
 }
 
+std::string generate_two_dimension_array_load_and_store(const char *type, unsigned int size1, unsigned int size2)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size1_regexp("\\{SIZE_1\\}");
+   std::regex size2_regexp("\\{SIZE_2\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+const
+  size1 := {SIZE_1};
+  size2 := {SIZE_2};
+var
+   numbers: array<{TYPE}>[{SIZE_1},{SIZE_2}];
+   i, j: integer;
+begin
+   for i from 0 to (size1-1) 
+      for j from 0 to (size2-1) begin
+         numbers[i,j] := cast<{TYPE}>(i * j);
+      end;
+   sample := numbers[size1-1, size2-1];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size1_regexp, std::to_string(size1));
+   sample = std::regex_replace(sample, size2_regexp, std::to_string(size2));
+
+   return sample;
+}
+
 std::string generate_array_passing_unbound(const char *type, unsigned int size)
 {
    std::regex type_regexp("\\{TYPE\\}");
@@ -972,6 +1000,13 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-array-allocate-float-2"] = {generate_sample_allocate_array("float", "1.0f"), "", "1.000000"};
    _samples["expression-array-allocate-double-1"] = {generate_sample_allocate_array_with_math("double"), "", "45.000000"};
    _samples["expression-array-allocate-double-2"] = {generate_sample_allocate_array("double", "1.0"), "", "1.000000"};
+
+   _samples["expression-bidimensional-array-byte"] = {generate_two_dimension_array_load_and_store("byte", 5, 6), "", "20"};
+   _samples["expression-bidimensional-array-short"] = {generate_two_dimension_array_load_and_store("short", 5, 6), "", "20"};
+   _samples["expression-bidimensional-array-integer"] = {generate_two_dimension_array_load_and_store("integer", 5, 6), "", "20"};
+   _samples["expression-bidimensional-array-long"] = {generate_two_dimension_array_load_and_store("long", 5, 6), "", "20"};
+   _samples["expression-bidimensional-array-float"] = {generate_two_dimension_array_load_and_store("float", 5, 6), "", "20.000000"};
+   _samples["expression-bidimensional-array-double"] = {generate_two_dimension_array_load_and_store("double", 5, 6), "", "20.000000"};
 
    _samples["expression-function-call-duplicate-byte"] = {generate_function_expression_sample("byte", "b"), "1", "2"};
    _samples["expression-function-call-duplicate-short"] = {generate_function_expression_sample("short", "s"), "1", "2"};
