@@ -1,6 +1,6 @@
 module arrays;
 
-procedure swap(a: array<integer>[], size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<integer>[], from_index: integer, to_index: integer);
 var
    temp: integer;
 begin
@@ -9,7 +9,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<char>[], size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<char>[], from_index: integer, to_index: integer);
 var
    temp: char;
 begin
@@ -18,7 +18,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<boolean>[], size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<boolean>[], from_index: integer, to_index: integer);
 var
    temp: boolean;
 begin
@@ -27,7 +27,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<float>[], size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<float>[], from_index: integer, to_index: integer);
 var
    temp: float;
 begin
@@ -36,7 +36,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<double>[], size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<double>[], from_index: integer, to_index: integer);
 var
    temp: double;
 begin

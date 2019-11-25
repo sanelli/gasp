@@ -24,6 +24,9 @@ function native sqrt(value: long) : long;
 function native sqrt(value: float) : float;
 function native sqrt(value: double) : double;
 
+procedure native sqrt(input: array<float>[], output: array<float>[], size: integer);
+procedure native sqrt(input: array<double>[], output: array<double>[], size: integer);
+
 function native log(value: byte) : byte;
 function native log(value: short) : short;
 function native log(value: integer) : integer;

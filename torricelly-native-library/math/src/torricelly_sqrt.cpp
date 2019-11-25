@@ -58,4 +58,32 @@ extern "C" void sqrt_f(std::shared_ptr<gasp::torricelly::interpreter::torricelly
    context->push(result);
 }
 
+extern "C" void sqrt_af1xuaf1xui(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+{
+   auto size = context->pop().get_integer();
+   auto output_array = context->pop().get_array_pointer();
+   auto input_array = context->pop().get_array_pointer();
+
+   for(auto index = 0; index < size; ++index)
+   {
+      gasp::torricelly::interpreter::torricelly_activation_record_local_union u;
+      u._float = (float)std::sqrt(input_array->get(index)._float);
+      output_array->set(index, u);
+   }
+}
+
+extern "C" void sqrt_ad1xuad1xui(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+{
+   auto size = context->pop().get_integer();
+   auto output_array = context->pop().get_array_pointer();
+   auto input_array = context->pop().get_array_pointer();
+
+   for(auto index = 0; index < size; ++index)
+   {
+      gasp::torricelly::interpreter::torricelly_activation_record_local_union u;
+      u._double = (double)std::sqrt(input_array->get(index)._double);
+      output_array->set(index, u);
+   }
+}
+
 } // namespace gasp::torricelly::native::math
