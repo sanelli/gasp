@@ -93,14 +93,20 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get
    default:
    {
       stringstream stream;
+      stream << std::endl;
       for (int index = 0; index < matching_subs_with_cast.size(); ++index)
       {
-         stream << matching_subs_with_cast.at(0)->signature_as_string();
+         auto subroutine = matching_subs_with_cast.at(index);
+         auto module = subroutine->module().lock();
+         stream << "   " << (index + 1) << ". ";
+         stream << module->name() << "." << subroutine->signature_as_string();
          if (index != index < matching_subs_with_cast.size() - 1)
-            stream << "\n ";
+            stream << std::endl;
       }
       throw blaise_ast_error(identifier.line(), identifier.column(),
-                             sanelli::make_string("Multiple functions matching subroutine call ", identifier.value(), "(", stream.str(), ")"));
+                             sanelli::make_string("Multiple subroutines (", matching_subs_with_cast.size(),
+                                                  ") matching subroutine call \"", identifier.value(),
+                                                  "\":", stream.str()));
    }
    }
 }
@@ -140,7 +146,8 @@ unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutine(
 
 unsigned int gasp::blaise::ast::blaise_ast_module::count_subroutines() const { return _subroutines.size(); }
 std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get_subroutine(unsigned int index) const { return _subroutines.at(index); }
-void gasp::blaise::ast::blaise_ast_module::remove_last_subroutine() {
+void gasp::blaise::ast::blaise_ast_module::remove_last_subroutine()
+{
    _subroutines.pop_back();
 }
 std::shared_ptr<blaise_ast_module> gasp::blaise::ast::make_blaise_ast_module(const sanelli::token<gasp::blaise::blaise_token_type> &reference, const std::string &module_name, blaise_ast_module_type type)

@@ -169,7 +169,9 @@ std::string gasp::blaise::ast::to_string(std::shared_ptr<blaise_ast_type> type)
       {
          if (d > 0)
             output << ", ";
-         output << array_type->dimension(d);
+         auto dimension = array_type->dimension(d);
+         if(dimension > 0)
+            output << array_type->dimension(d);
       }
       output << "]";
       return output.str();

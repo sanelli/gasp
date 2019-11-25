@@ -54,8 +54,28 @@ bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const s
          auto param_array = blaise_ast_utility::as_array_type(param);
          auto _param_array = blaise_ast_utility::as_array_type(_param);
 
-         if ((param_array->is_unbounded() || _param_array->is_unbounded()) && param_array->dimensions() == _param_array->dimensions())
-            return true;
+         if(param_array->is_unbounded() && !_param_array->is_unbounded())
+            return false;
+
+         if ((param_array->is_unbounded() || _param_array->is_unbounded()) 
+            && param_array->dimensions() == _param_array->dimensions() 
+            && param_array->underlying_type()->equals(_param_array->underlying_type()))
+            continue;
+
+         if (!param_array->is_unbounded() && !_param_array->is_unbounded() 
+            && param_array->dimensions() == _param_array->dimensions()
+            && param_array->underlying_type()->equals(_param_array->underlying_type()))
+         {
+            auto matches = true;
+            for (auto d = 0; matches && (d < param_array->dimensions()); ++d)
+            {
+               matches = param_array->dimension(d) == _param_array->dimension(d);
+            }
+            if (matches)
+               continue;
+         }
+
+         return false;
       }
       else if (!ast::blaise_ast_utility::can_auto_cast(param, _parameters.at(index)->type()))
          return false;
