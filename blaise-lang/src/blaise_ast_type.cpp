@@ -1,10 +1,11 @@
 #include <memory>
 #include <map>
 #include <string>
-
-#include <gasp/blaise/ast.hpp>
+#include <algorithm>
 
 #include <sanelli/sanelli.hpp>
+
+#include <gasp/blaise/ast.hpp>
 
 using namespace sanelli;
 using namespace gasp;
@@ -67,29 +68,83 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sa
 }
 
 // ARRAY
-blaise_ast_array_type::blaise_ast_array_type(std::shared_ptr<blaise_ast_type> underlying_type, unsigned int size)
-    : blaise_ast_type(blaise_ast_type_type::ARRAY), _underlying_type(underlying_type), _size(size) {}
+blaise_ast_array_type::blaise_ast_array_type(std::shared_ptr<blaise_ast_type> underlying_type, std::vector<unsigned int> dimensions)
+    : blaise_ast_type(blaise_ast_type_type::ARRAY), _underlying_type(underlying_type), _dimensions(dimensions) {}
 blaise_ast_array_type::~blaise_ast_array_type() {}
 std::shared_ptr<blaise_ast_type> blaise_ast_array_type::underlying_type() const { return _underlying_type; }
-unsigned int blaise_ast_array_type::size() const { return _size; }
-bool blaise_ast_array_type::is_unbounded() const { return _size == 0; }
+unsigned int blaise_ast_array_type::dimensions() const { return _dimensions.size(); }
+unsigned int blaise_ast_array_type::dimension(unsigned int dim) const { return _dimensions.at(dim); }
+bool blaise_ast_array_type::is_unbounded() const
+{
+   return std::any_of(_dimensions.begin(), _dimensions.end(), [](unsigned int d) { return d == 0; });
+}
 
 inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other) const
 {
    if (type_type() != other->type_type())
       return false;
    auto array_other = ast::blaise_ast_utility::as_array_type(other);
-   return underlying_type() == array_other->underlying_type() && size() == array_other->size();
-};
+   if (underlying_type() != array_other->underlying_type())
+      return false;
+   if (dimensions() != array_other->dimensions())
+      return false;
+   for (auto d = 0u; d < dimensions(); ++d)
+      if (dimension(d) != array_other->dimension(d))
+         return false;
+   return true;
+}
 
 std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_array_type_from_token(
     const sanelli::token<gasp::blaise::blaise_token_type> &reference,
     std::shared_ptr<blaise_ast_type> underlying_type,
-    const int array_size, const bool accept_unbounded_array)
+    const std::vector<unsigned int> dimensions,
+    const bool accept_unbounded_array)
 {
-   if (array_size < 0 || (!accept_unbounded_array && array_size == 0))
-      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Array must have a size greater than 0."));
-   return memory::make_shared<blaise_ast_array_type>(underlying_type, static_cast<unsigned int>(array_size));
+   if (dimensions.size() <= 0)
+      throw blaise_ast_error(reference.line(), reference.column(), "Cannot create arrays with zero dimensions.");
+
+   auto dimension_equal_to_zero = [](auto d) { return d == 0; };
+   bool unbounded = std::any_of(dimensions.begin(), dimensions.end(), dimension_equal_to_zero);
+   if (!accept_unbounded_array && unbounded)
+      throw blaise_ast_error(reference.line(), reference.column(), "Unbounded array are not supported in this context.");
+
+   if (std::any_of(dimensions.begin(), dimensions.end(), [](auto d) { return d < 0; }))
+      throw blaise_ast_error(reference.line(), reference.column(), "Invalid array dimension.");
+
+   // If unbounded all dimensions must be zero
+   if (unbounded && !std::all_of(dimensions.begin(), dimensions.end(), dimension_equal_to_zero))
+      throw blaise_ast_error(reference.line(), reference.column(), "Unsupported partially unbounded array.");
+
+   return memory::make_shared<blaise_ast_array_type>(underlying_type, dimensions);
+}
+
+std::string gasp::blaise::ast::to_string(gasp::blaise::ast::blaise_ast_system_type type)
+{
+   switch (type)
+   {
+   case blaise_ast_system_type::BOOLEAN:
+      return "boolean";
+   case blaise_ast_system_type::CHAR:
+      return "char";
+   case blaise_ast_system_type::DOUBLE:
+      return "double";
+   case blaise_ast_system_type::FLOAT:
+      return "float";
+   case blaise_ast_system_type::BYTE:
+      return "byte";
+   case blaise_ast_system_type::SHORT:
+      return "short";
+   case blaise_ast_system_type::INTEGER:
+      return "integer";
+   case blaise_ast_system_type::LONG:
+      return "long";
+   case blaise_ast_system_type::STRING:
+      return "string";
+   case blaise_ast_system_type::VOID:
+      return "void";
+   default:
+      throw blaise_ast_error(0, 0, "Cannot convert blaise system type to string");
+   }
 }
 
 std::string gasp::blaise::ast::to_string(std::shared_ptr<blaise_ast_type> type)
@@ -101,31 +156,7 @@ std::string gasp::blaise::ast::to_string(std::shared_ptr<blaise_ast_type> type)
    case blaise_ast_type_type::PLAIN:
    {
       auto plain_type = blaise_ast_utility::as_plain_type(type);
-      switch (plain_type->system_type())
-      {
-      case blaise_ast_system_type::BOOLEAN:
-         return "boolean";
-      case blaise_ast_system_type::CHAR:
-         return "char";
-      case blaise_ast_system_type::DOUBLE:
-         return "double";
-      case blaise_ast_system_type::FLOAT:
-         return "float";
-      case blaise_ast_system_type::BYTE:
-         return "byte";
-      case blaise_ast_system_type::SHORT:
-         return "short";
-      case blaise_ast_system_type::INTEGER:
-         return "integer";
-      case blaise_ast_system_type::LONG:
-         return "long";
-      case blaise_ast_system_type::STRING:
-         return "string";
-      case blaise_ast_system_type::VOID:
-         return "void";
-      default:
-         throw blaise_ast_error(0, 0, "Cannot convert blaise system type to string");
-      }
+      return ast::to_string(plain_type->system_type());
    }
    break;
    case blaise_ast_type_type::ARRAY:
@@ -133,8 +164,14 @@ std::string gasp::blaise::ast::to_string(std::shared_ptr<blaise_ast_type> type)
       auto array_type = blaise_ast_utility::as_array_type(type);
       std::stringstream output;
       output << "array<" << to_string(array_type->underlying_type()) << ">";
-      if (!array_type->is_unbounded())
-         output << "[" << array_type->size() << "]";
+      output << "[";
+      for (auto d = 0u; d < array_type->dimensions(); ++d)
+      {
+         if (d > 0)
+            output << ", ";
+         output << array_type->dimension(d);
+      }
+      output << "]";
       return output.str();
    }
    break;

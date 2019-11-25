@@ -27,7 +27,6 @@ std::weak_ptr<blaise_ast_module> gasp::blaise::ast::blaise_ast_subroutine::modul
 
 bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_exactly(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const
 {
-
    if (_name != name)
       return false;
    if (_parameters.size() != param_types.size())
@@ -40,7 +39,6 @@ bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_exactly(const std
 
 bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const std::string name, const std::vector<std::shared_ptr<blaise_ast_type>> &param_types) const
 {
-
    if (_name != name)
       return false;
    if (_parameters.size() != param_types.size())
@@ -55,10 +53,9 @@ bool gasp::blaise::ast::blaise_ast_subroutine::signature_match_with_cast(const s
       {
          auto param_array = blaise_ast_utility::as_array_type(param);
          auto _param_array = blaise_ast_utility::as_array_type(_param);
-         if (!param_array->underlying_type()->equals(_param_array->underlying_type()))
-            return false;
-         if (param_array->size() != param_array->size() && !param_array->is_unbounded() && !_param_array->is_unbounded())
-            return false;
+
+         if ((param_array->is_unbounded() || _param_array->is_unbounded()) && param_array->dimensions() == _param_array->dimensions())
+            return true;
       }
       else if (!ast::blaise_ast_utility::can_auto_cast(param, _parameters.at(index)->type()))
          return false;

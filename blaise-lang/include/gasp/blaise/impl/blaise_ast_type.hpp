@@ -52,13 +52,14 @@ class blaise_ast_plain_type : public blaise_ast_type {
 
 class blaise_ast_array_type : public blaise_ast_type {
    std::shared_ptr<blaise_ast_type> _underlying_type;
-   unsigned int _size;
+   std::vector<unsigned int> _dimensions;
    protected:
-      blaise_ast_array_type(std::shared_ptr<blaise_ast_type> underlying_type, unsigned int size);
+      blaise_ast_array_type(std::shared_ptr<blaise_ast_type> underlying_type, std::vector<unsigned int> dimensions);
    public:
       ~blaise_ast_array_type() override;
       std::shared_ptr<blaise_ast_type> underlying_type() const;
-      unsigned int size() const;
+      unsigned int dimensions() const;
+      unsigned int dimension(unsigned int dim) const;
       bool is_unbounded() const;
       inline bool equals(std::shared_ptr<blaise_ast_type> other) const override;
 
@@ -70,8 +71,10 @@ std::shared_ptr<blaise_ast_type> make_plain_type(blaise_ast_system_type system);
 std::shared_ptr<blaise_ast_type> get_array_type_from_token(
    const sanelli::token<gasp::blaise::blaise_token_type>& reference, 
    std::shared_ptr<blaise_ast_type> underlying_type,
-   const int array_size, const bool accept_unbounded_array);
+   const std::vector<unsigned int> dimensions, 
+   const bool accept_unbounded_array);
 
 std::string to_string(std::shared_ptr<blaise_ast_type> type);
+std::string to_string(gasp::blaise::ast::blaise_ast_system_type type);
 
 }
