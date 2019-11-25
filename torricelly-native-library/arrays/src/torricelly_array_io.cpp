@@ -8,7 +8,7 @@ using namespace gasp::torricelly;
 namespace gasp::torricelly::native::io
 {
 
-extern "C" void print_aiuic(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void print_ai1uic(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    auto separator = context->pop().get_char();
    auto size = context->pop().get_integer();
@@ -23,7 +23,7 @@ extern "C" void print_aiuic(std::shared_ptr<gasp::torricelly::interpreter::torri
    }
 }
 
-extern "C" void print_aiubc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void print_ai1ubc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    auto separator = context->pop().get_char();
    auto size = context->pop().get_integer();
@@ -38,7 +38,7 @@ extern "C" void print_aiubc(std::shared_ptr<gasp::torricelly::interpreter::torri
    }
 }
 
-extern "C" void print_aiucc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void print_ai1ucc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    auto separator = context->pop().get_char();
    auto size = context->pop().get_integer();
@@ -53,7 +53,7 @@ extern "C" void print_aiucc(std::shared_ptr<gasp::torricelly::interpreter::torri
    }
 }
 
-extern "C" void print_aiufc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void print_ai1ufc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    auto separator = context->pop().get_char();
    auto size = context->pop().get_integer();
@@ -68,7 +68,7 @@ extern "C" void print_aiufc(std::shared_ptr<gasp::torricelly::interpreter::torri
    }
 }
 
-extern "C" void print_aiudc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
+extern "C" void print_ai1udc(std::shared_ptr<gasp::torricelly::interpreter::torricelly_native_context> context)
 {
    auto separator = context->pop().get_char();
    auto size = context->pop().get_integer();

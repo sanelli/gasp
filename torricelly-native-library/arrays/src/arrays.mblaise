@@ -1,6 +1,6 @@
 module arrays;
 
-procedure swap(a: array<integer>, size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<integer>[], size: integer, from_index: integer, to_index: integer);
 var
    temp: integer;
 begin
@@ -9,7 +9,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<char>, size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<char>[], size: integer, from_index: integer, to_index: integer);
 var
    temp: char;
 begin
@@ -18,7 +18,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<boolean>, size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<boolean>[], size: integer, from_index: integer, to_index: integer);
 var
    temp: boolean;
 begin
@@ -27,7 +27,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<float>, size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<float>[], size: integer, from_index: integer, to_index: integer);
 var
    temp: float;
 begin
@@ -36,7 +36,7 @@ begin
    a[to_index] := temp;
 end;
 
-procedure swap(a: array<double>, size: integer, from_index: integer, to_index: integer);
+procedure swap(a: array<double>[], size: integer, from_index: integer, to_index: integer);
 var
    temp: double;
 begin
@@ -45,7 +45,7 @@ begin
    a[to_index] := temp;
 end;
 
-function count(a: array<integer>, size: integer, value: integer) : integer;
+function count(a: array<integer>[], size: integer, value: integer) : integer;
 var index: integer;
 begin
    count := 0;
@@ -54,7 +54,7 @@ begin
    end;
 end;
 
-function count(a: array<boolean>, size: integer, value: boolean) : integer;
+function count(a: array<boolean>[], size: integer, value: boolean) : integer;
 var index: integer;
 begin
    count := 0;
@@ -63,7 +63,7 @@ begin
    end;
 end;
 
-function count(a: array<char>, size: integer, value: char) : integer;
+function count(a: array<char>[], size: integer, value: char) : integer;
 var index: integer;
 begin
    count := 0;
@@ -72,7 +72,7 @@ begin
    end;
 end;
 
-function count(a: array<float>, size: integer, value: float) : integer;
+function count(a: array<float>[], size: integer, value: float) : integer;
 var index: integer;
 begin
    count := 0;
@@ -81,7 +81,7 @@ begin
    end;
 end;
 
-function count(a: array<double>, size: integer, value: double) : integer;
+function count(a: array<double>[], size: integer, value: double) : integer;
 var index: integer;
 begin
    count := 0;
@@ -90,7 +90,7 @@ begin
    end;
 end;
 
-function indexof(a: array<integer>, size: integer, value: integer) : integer;
+function indexof(a: array<integer>[], size: integer, value: integer) : integer;
 var index: integer;
     found: boolean;
 begin
@@ -106,7 +106,7 @@ begin
    end;
 end;
 
-function indexof(a: array<boolean>, size: integer, value: boolean) : integer;
+function indexof(a: array<boolean>[], size: integer, value: boolean) : integer;
 var index: integer;
     found: boolean;
 begin
@@ -122,10 +122,10 @@ begin
    end;
 end;
 
-procedure native print(a: array<integer>, size: integer, separator: char);
-procedure native print(a: array<char>, size: integer, separator: char);
-procedure native print(a: array<boolean>, size: integer, separator: char);
-procedure native print(a: array<float>, size: integer, separator: char);
-procedure native print(a: array<double>, size: integer, separator: char);
+procedure native print(a: array<integer>[], size: integer, separator: char);
+procedure native print(a: array<char>[], size: integer, separator: char);
+procedure native print(a: array<boolean>[], size: integer, separator: char);
+procedure native print(a: array<float>[], size: integer, separator: char);
+procedure native print(a: array<double>[], size: integer, separator: char);
 
 end.
