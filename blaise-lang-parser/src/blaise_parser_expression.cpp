@@ -459,8 +459,6 @@ std::shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_new_expression(
 
       expressions.push_back(expression);
    } while (is_token_and_match(context, blaise_token_type::COMMA));
-   if (expressions.size() > 1)
-      throw_parse_error_with_details(context, reference.line(), reference.column(), "Ony single dimension array are supported.");
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    auto new_expression = ast::make_blaise_ast_expression_new(reference, type, expressions);
