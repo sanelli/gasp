@@ -408,9 +408,9 @@ var
    index: integer;
 begin
    for index from 0 to ({SIZE}-1) begin
-      numbers[index] := index;
+      numbers[index] := cast<{TYPE}>(index);
    end
-   sample := 0;
+   sample := cast<{TYPE}>(0);
    for index from 0 to ({SIZE}-1) begin
       sample := sample + numbers[index];
    end;
@@ -987,13 +987,23 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-cast-boolean-to-integer-1"] = {generate_cast_sample("boolean", "integer"), "true", "1"};
    _samples["expression-cast-boolean-to-integer-2"] = {generate_cast_sample("boolean", "integer"), "false", "0"};
 
+   _samples["expression-array-byte"] = {generate_array_load_and_store("byte", 10), "", "45"};
+   _samples["expression-array-short"] = {generate_array_load_and_store("short", 10), "", "45"};
    _samples["expression-array-integer"] = {generate_array_load_and_store("integer", 10), "", "45"};
+   _samples["expression-array-long"] = {generate_array_load_and_store("long", 10), "", "45"};
    _samples["expression-array-float"] = {generate_array_load_and_store("float", 10), "", "45.000000"};
    _samples["expression-array-double"] = {generate_array_load_and_store("double", 10), "", "45.000000"};
    _samples["expression-array-char"] = {generate_array_load_and_store_non_numeric("char", 66), "", "A"};
    _samples["expression-array-boolean"] = {generate_array_load_and_store_non_numeric("boolean", 10), "", "true"};
+
+   _samples["expression-array-allocate-byte-1"] = {generate_sample_allocate_array_with_math("byte"), "", "45"};
+   _samples["expression-array-allocate-byte-2"] = {generate_sample_allocate_array("byte", "1"), "", "1"};
+   _samples["expression-array-allocate-short-1"] = {generate_sample_allocate_array_with_math("short"), "", "45"};
+   _samples["expression-array-allocate-short-2"] = {generate_sample_allocate_array("short", "1"), "", "1"};
    _samples["expression-array-allocate-integer-1"] = {generate_sample_allocate_array_with_math("integer"), "", "45"};
    _samples["expression-array-allocate-integer-2"] = {generate_sample_allocate_array("integer", "1"), "", "1"};
+   _samples["expression-array-allocate-long-1"] = {generate_sample_allocate_array_with_math("long"), "", "45"};
+   _samples["expression-array-allocate-long-2"] = {generate_sample_allocate_array("long", "1"), "", "1"};
    _samples["expression-array-allocate-boolean"] = {generate_sample_allocate_array("boolean", "true"), "", "true"};
    _samples["expression-array-allocate-char"] = {generate_sample_allocate_array("char", "'X'"), "", "X"};
    _samples["expression-array-allocate-float-1"] = {generate_sample_allocate_array_with_math("float"), "", "45.000000"};
