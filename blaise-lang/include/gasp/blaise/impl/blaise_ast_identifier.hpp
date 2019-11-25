@@ -36,17 +36,18 @@ std::shared_ptr<blaise_ast_variable_identifier> make_blaise_ast_variable_identif
 
 class blaise_ast_array_identifier : public blaise_ast_identifier {
    std::shared_ptr<blaise_ast_generic_memory_location> _variable;
-   std::shared_ptr<blaise_ast_expression> _indexing_expression;
+   std::vector<std::shared_ptr<blaise_ast_expression>> _indexing;
     blaise_ast_array_identifier(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                                  std::shared_ptr<blaise_ast_generic_memory_location> variable,
-                                 std::shared_ptr<blaise_ast_expression> indexing_expression);
+                                 std::vector<std::shared_ptr<blaise_ast_expression>>& indexing);
 public:
    std::shared_ptr<blaise_ast_generic_memory_location> variable() const; 
-   std::shared_ptr<blaise_ast_expression> indexing_expression() const;
+   unsigned int count_indexes() const;
+   std::shared_ptr<blaise_ast_expression> indexing(unsigned int) const;
    friend sanelli::memory;
 };
 std::shared_ptr<blaise_ast_array_identifier> make_blaise_ast_array_identifier(const sanelli::token<gasp::blaise::blaise_token_type>& reference,
                                  std::shared_ptr<blaise_ast_generic_memory_location> variable,
-                                 std::shared_ptr<blaise_ast_expression> indexing_expression);
+                                 std::vector<std::shared_ptr<blaise_ast_expression>>& indexing);
 
 }

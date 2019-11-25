@@ -204,20 +204,21 @@ std::shared_ptr<blaise_ast_expression_memory_access> make_blaise_ast_expression_
 class blaise_ast_expression_array_access : public blaise_ast_expression_generic_memory_access
 {
    std::shared_ptr<blaise_ast_generic_memory_location> _array;
-   std::shared_ptr<blaise_ast_expression> _indexing;
+   std::vector<std::shared_ptr<blaise_ast_expression>> _indexing;
    blaise_ast_expression_array_access(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
                                       std::shared_ptr<blaise_ast_generic_memory_location> array,
-                                      std::shared_ptr<blaise_ast_expression> indexing);
+                                      std::vector<std::shared_ptr<blaise_ast_expression>>& indexing);
 
 public:
    std::shared_ptr<blaise_ast_generic_memory_location> array() const;
-   std::shared_ptr<blaise_ast_expression> indexing() const;
+   unsigned int count_indexes() const;
+   std::shared_ptr<blaise_ast_expression> indexing(unsigned int index) const;
    friend sanelli::memory;
 };
 std::shared_ptr<blaise_ast_expression_array_access> make_blaise_ast_expression_array_access(
     const sanelli::token<gasp::blaise::blaise_token_type> &reference,
     std::shared_ptr<blaise_ast_generic_memory_location> array,
-    std::shared_ptr<blaise_ast_expression> indexing);
+    std::vector<std::shared_ptr<blaise_ast_expression>>& indexing);
 
 //
 // EXPRESSION LITERAL VALUES
