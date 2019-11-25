@@ -48,7 +48,9 @@ void inline torricelly_instruction_interpreter::__execute_load_array(const torri
    std::vector<unsigned int> indexes;
    indexes.resize(dimensions.get_integer());
    for (auto index = dimensions.get_integer() - 1; index >= 0; --index)
+   {   
       indexes.at(index) = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER).get_integer();
+   }
 
    // Get the value from the array
    auto array_pointer = array_local.get_array_pointer();
