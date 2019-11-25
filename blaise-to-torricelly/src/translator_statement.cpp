@@ -195,15 +195,17 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       auto variable_index = variable_index_it->second;
 
       // Translate expression of the
-      auto indexing_expression_max_stack_size = 0U;
-      translate_expression(torricelly_module, torricelly_subroutine,
-                           module_variables_mapping, variables_mapping,
-                           array_identifier->indexing_expression(),
-                           indexing_expression_max_stack_size);
-      max_stack_size = std::max(max_stack_size, indexing_expression_max_stack_size);
+      for(auto indexing = 0; indexing < array_identifier->count_indexes(); ++indexing){
+         auto indexing_expression_max_stack_size = 0U;
+         translate_expression(torricelly_module, torricelly_subroutine,
+                              module_variables_mapping, variables_mapping,
+                              array_identifier->indexing(indexing),
+                              indexing_expression_max_stack_size);
+         max_stack_size = std::max(max_stack_size, indexing_expression_max_stack_size);
+      }
 
       // Push the size of the dimensions on the stack
-      auto dimensions = 1;
+      auto dimensions = array_identifier->count_indexes();
       auto size_value_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(1));
       auto load_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, size_value_variable_index, torricelly_inst_ref_type::SUBROUTINE);
       torricelly_subroutine->append_instruction(load_size_instruction);

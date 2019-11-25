@@ -290,13 +290,16 @@ void blaise_to_torricelly::translator::translate_array_access_expression(std::sh
       throw blaise_to_torricelly_error(expression->line(), expression->column(), sanelli::make_string("Cannot find variable '", array_variable->name(), "'."));
    auto variable_index = array_variable_index_it->second;
 
-   // Traslate indexing expression
-   auto expression_max_stack_size = 0U;
-   translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, expression->indexing(), expression_max_stack_size);
+   // Traslate indexing expressions
+   for(auto indexing = 0; indexing < expression->count_indexes(); ++indexing){
+       auto expression_max_stack_size = 0U;
+      translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, expression->indexing(indexing), expression_max_stack_size);
+      max_stack_size = std::max(expression_max_stack_size, max_stack_size);
+   }
 
    // Add the number of dimnsions
    // At present only one because blaise do not support multiple arrays
-   auto dimensions = 1;
+   auto dimensions = expression->count_indexes();
    auto size_value_variable_index = add_temporary(torricelly_module, torricelly_subroutine, variables_mapping, torricelly_value::make(1));
    auto load_size_instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_INTEGER, size_value_variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(load_size_instruction);
