@@ -233,9 +233,15 @@ std::shared_ptr<gasp::torricelly::torricelly_type> blaise_to_torricelly::transla
       SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Got underlying type " << std::endl);
       std::vector<unsigned int> dimensions;
       if (!array_type->is_unbounded())
-         dimensions.push_back(array_type->size());
+      {
+         for (auto d = 0; d < array_type->dimensions(); ++d)
+            dimensions.push_back(array_type->dimension(d));
+      }
       else
-         dimensions.push_back(torricelly_array_type::undefined_dimension());
+      {
+         for (auto d = 0; d < array_type->dimensions(); ++d)
+            dimensions.push_back(torricelly_array_type::undefined_dimension());
+      }
       SANELLI_DEBUG("blaise-to-torricelly", "[INSIDE] Created dimensions " << std::endl);
       auto torricelly_type = make_torricelly_array_type(underlying_type, dimensions);
       SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_type for ARRAY " << std::endl);
@@ -379,10 +385,16 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
       auto array_type = blaise::ast::blaise_ast_utility::as_array_type(type);
       std::stringstream result;
       result << "a" << get_mangled_type_name(array_type->underlying_type());
-      if (array_type->is_unbounded())
-         result << "u";
-      else
-         result << array_type->size();
+      result << array_type->dimensions();
+      for (auto d = 0; d < array_type->dimensions(); ++d)
+      {
+         if (d > 0)
+            result << "x";
+         if (array_type->is_unbounded())
+            result << "u";
+         else
+            result << array_type->dimension(d);
+      }
       return result.str();
    }
    break;
