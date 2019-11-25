@@ -115,11 +115,8 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_subroutine_call_
    match_token(context, blaise_token_type::RIGHT_PARENTHESES);
 
    auto subroutine = context.module()->get_subroutine(identifier_token, types);
-   // TODO: Lookup in referenced modules
    if (subroutine == nullptr)
-   {
       throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(), sanelli::make_string("Cannot find function '", identifier_token.value(), "(", types, ")'"));
-   }
 
    ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
 

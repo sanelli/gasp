@@ -20,10 +20,11 @@ void blaise_parser::parse(blaise_parser_context &context) const
    else if (is_token(context, blaise_token_type::MODULE))
       parse_module(context);
 
-   for(auto subroutine_index = 0U; subroutine_index < context.module()->count_subroutines(); ++subroutine_index) {
+   for (auto subroutine_index = 0U; subroutine_index < context.module()->count_subroutines(); ++subroutine_index)
+   {
       auto subroutine = context.module()->get_subroutine(subroutine_index);
-      if(!subroutine->defined())
-         throw_parse_error_with_details(context, sanelli::make_string("Subroutine with signature '", subroutine->signature_as_string(),"' declared but not defined."));
+      if (!subroutine->defined())
+         throw_parse_error_with_details(context, sanelli::make_string("Subroutine with signature '", subroutine->signature_as_string(), "' declared but not defined."));
    }
 
    // If more tokens are available at this stage then the code is malformed
@@ -151,15 +152,15 @@ void blaise_parser::parse_constant_declaration(blaise_parser_context &context)
    match_token(context, blaise_token_type::ASSIGNMENT);
 
    auto expression = parse_expression(context);
-   if(!ast::blaise_ast_utility::is_allowed_for_constant(expression))
-      throw_parse_error_with_details(context, expression->line(), expression->column(), 
-         "Cannot create a constant. Expression is not a literal.");
+   if (!ast::blaise_ast_utility::is_allowed_for_constant(expression))
+      throw_parse_error_with_details(context, expression->line(), expression->column(),
+                                     "Cannot create a constant. Expression is not a literal.");
 
    auto current_subroutine = context.current_subroutine();
    auto constant = current_subroutine->add_constant(identifier_token, identifier_token.value(), expression->result_type());
-   constant->literal_expression(expression);   
+   constant->literal_expression(expression);
 
-   match_token(context, blaise_token_type::SEMICOLON); 
+   match_token(context, blaise_token_type::SEMICOLON);
    SANELLI_DEBUG("blaise-parser", "[EXIT] blaise_parser::parse_constant_declaration" << std::endl);
 }
 
@@ -234,27 +235,55 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
    std::shared_ptr<ast::blaise_ast_type> variable_type = nullptr;
    if (type_token.type() == blaise_token_type::TYPE_ARRAY)
    {
+      std::vector<unsigned int> dimensions;
+
       match_token(context, blaise_token_type::LESS_THAN);
       auto underlying_type = parse_variable_type(context, true);
       match_token(context, blaise_token_type::GREAT_THAN);
-      auto array_size_length = 0;
-      if (is_token_and_match(context, blaise_token_type::LEFT_BRACKET))
+      match_token(context, blaise_token_type::LEFT_BRACKET);
+      auto lookup = context.peek_token();
+      switch (lookup.type())
       {
-         auto array_size_expression = parse_number(context);
-         if (!ast::blaise_ast_utility::is_integer(array_size_expression->result_type()))
-            throw_parse_error_with_details(context, "An integral value was expected as array size");
-         match_token(context, blaise_token_type::RIGHT_BRACKET);
-         auto array_size = std::static_pointer_cast<ast::blaise_ast_expression_integer_value>(array_size_expression);
-         array_size_length = array_size->value();
-      }
-      else
+      case blaise_token_type::RIGHT_BRACKET:
+         // Only one dimension unbounded
+         // Example: array<integer>[]
+         dimensions.push_back(0);
+         break;
+      case blaise_token_type::COMMA:
       {
-         SANELLI_DEBUG("blaise-parser", "[INSIDE] blaise_parser::parse_variable_type accept_unbounded_array = " << (accept_unbounded_array ? "TRUE" : "FALSE") << std::endl);
-         if (!accept_unbounded_array)
-            throw_parse_error_with_details(context, "Array size required");
+         // Sequence of unbounded dimensions
+         // Example: array<integer>[,,]
+         while (lookup.type() != blaise_token_type::RIGHT_BRACKET)
+         {
+            match_token(context, blaise_token_type::COMMA);
+            dimensions.push_back(0);
+            lookup = context.peek_token();
+         }
       }
+      break;
+      default:
+      {
+         // Sequence of numbers defining the dimensions
+         // Example: array<integer>[10,15,30];
+         while (lookup.type() != blaise_token_type::RIGHT_BRACKET)
+         {
+            auto dimension_expression = parse_number(context);
+            if (!ast::blaise_ast_utility::is_integer(dimension_expression->result_type()))
+               throw_parse_error_with_details(context, "An integer value is expected for array dimensions");
+            auto dimension_integer_expression = std::static_pointer_cast<ast::blaise_ast_expression_integer_value>(dimension_expression);
+            dimensions.push_back(dimension_integer_expression->value());
+            is_token_and_match(context, blaise_token_type::COMMA);
+            lookup = context.peek_token();
+         }
+      }
+      }
+      match_token(context, blaise_token_type::RIGHT_BRACKET);
 
-      variable_type = ast::get_array_type_from_token(type_token, underlying_type, array_size_length, accept_unbounded_array);
+      if (!accept_unbounded_array &&
+          std::any_of(dimensions.begin(), dimensions.end(), [](auto d) { return d == 0; }))
+         throw_parse_error_with_details(context, "Array dimensions are required in this context.");
+
+      variable_type = ast::get_array_type_from_token(type_token, underlying_type, dimensions, accept_unbounded_array);
    }
    else
    {

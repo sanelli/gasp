@@ -88,18 +88,8 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
          // Look up for the expression function
          auto subroutine = context.module()->get_subroutine(identifier_token, types);
          if (subroutine == nullptr)
-         {
-            std::stringstream types_rep;
-            for (auto index = 0; index < types.size(); ++index)
-            {
-               auto type = types.at(index);
-               if (index > 0)
-                  types_rep << ", ";
-               types_rep << to_string(type);
-            }
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
-                                           sanelli::make_string("Cannot find a function matching call for '", identifier_token.value(), "(", types_rep.str(), ")'"));
-         }
+                                           sanelli::make_string("Cannot find a function matching call for '", identifier_token.value(), "(", types, ")'"));
 
          ast::introduce_cast_if_required(identifier_token, subroutine, expressions);
 
