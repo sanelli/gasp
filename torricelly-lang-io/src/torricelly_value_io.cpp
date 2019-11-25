@@ -46,7 +46,7 @@ std::string gasp::torricelly::to_string(torricelly_value value)
       case torricelly_system_type_type::CHAR:
       {
          auto cvalue = value.get_char();
-         if (std::isprint(cvalue))
+         if (std::isprint(cvalue) && !std::isspace(cvalue))
             os << cvalue;
          else
          {
