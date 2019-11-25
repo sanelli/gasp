@@ -174,9 +174,31 @@ std::shared_ptr<ast::blaise_ast_statement> blaise_parser::parse_assignamet_state
 
    if (is_token_and_match(context, blaise_token_type::LEFT_BRACKET))
    { // Assignment to array
-      auto indexing_expression = parse_expression(context);
-      match_token(context, blaise_token_type::RIGHT_BRACKET);
-      variable_identifier = ast::make_blaise_ast_array_identifier(identifier, variable, indexing_expression);
+      std::vector<std::shared_ptr<ast::blaise_ast_expression>> indexing_expressions;
+      do {
+         auto index_token = context.peek_token();
+         auto indexing_expression = parse_expression(context);
+         auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
+
+         if (!indexing_expression->result_type()->equals(integer_type) && 
+               !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type))
+         {
+            throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
+                                          "Indexing expression must be an integer or a type that can be casted to an integer.");
+         }
+         indexing_expression = ast::introduce_cast_if_required(index_token, integer_type, indexing_expression);
+         indexing_expressions.push_back(indexing_expression);
+         is_token_and_match(context, blaise_token_type::COMMA);
+      } while(!is_token_and_match(context, blaise_token_type::RIGHT_BRACKET));
+     
+      auto array_type = ast::blaise_ast_utility::as_array_type(variable->type());
+      if(array_type->dimensions() != indexing_expressions.size())
+             throw_parse_error_with_details(context, identifier.line(), identifier.column(),
+                                             sanelli::make_string("Number of dimensions (",indexing_expressions.size(),") while accessing array \"",
+                                                            variable->name(),
+                                                            "\" does not match type number of dimensions (",array_type->dimensions(),")"));
+   
+      variable_identifier = ast::make_blaise_ast_array_identifier(identifier, variable, indexing_expressions);
    }
    else
    { // Standard variable identifier

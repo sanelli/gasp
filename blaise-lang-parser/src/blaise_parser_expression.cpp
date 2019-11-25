@@ -97,9 +97,6 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
       }
       else if (is_token_and_match(context, blaise_token_type::LEFT_BRACKET))
       { // Array access
-         auto indexing_expression = parse_expression(context);
-         match_token(context, blaise_token_type::RIGHT_BRACKET);
-
          auto memory_location = context.current_subroutine()->get_memory_location(identifier_token.value());
          if (memory_location == nullptr)
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
@@ -117,13 +114,30 @@ shared_ptr<ast::blaise_ast_expression> blaise_parser::parse_expression_term(blai
             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
                                            sanelli::make_string("Unexpected variable type '", memory_location->type(), "'."));
          }
-         auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
-         if (indexing_expression->result_type() != integer_type && !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type))
-         {
-            throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
-                                           sanelli::make_string("indexing expression must be an integer or a type that can be casted to an integer."));
-         }
-         term_expression = ast::make_blaise_ast_expression_array_access(identifier_token, memory_location, indexing_expression);
+         std::vector<std::shared_ptr<ast::blaise_ast_expression>> indexing_expressions;
+         do{
+            auto index_token = context.peek_token();
+            auto indexing_expression = parse_expression(context);
+            auto integer_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
+
+            if (!indexing_expression->result_type()->equals(integer_type) && 
+                !ast::blaise_ast_utility::can_auto_cast(indexing_expression->result_type(), integer_type))
+            {
+               throw_parse_error_with_details(context, indexing_expression->line(), indexing_expression->column(),
+                                             "Indexing expression must be an integer or a type that can be casted to an integer.");
+            }
+            indexing_expression = ast::introduce_cast_if_required(index_token, integer_type, indexing_expression);
+            indexing_expressions.push_back(indexing_expression);
+            is_token_and_match(context, blaise_token_type::COMMA);
+         } while(!is_token_and_match(context, blaise_token_type::RIGHT_BRACKET));
+
+         auto array_type = ast::blaise_ast_utility::as_array_type(memory_location->type());
+         if(array_type->dimensions() != indexing_expressions.size())
+             throw_parse_error_with_details(context, identifier_token.line(), identifier_token.column(),
+                                             sanelli::make_string("Number of dimensions (",indexing_expressions.size(),") while accessing array \"",
+                                                            memory_location->name(),
+                                                            "\" does not match type number of dimensions (",array_type->dimensions(),")"));
+         term_expression = ast::make_blaise_ast_expression_array_access(identifier_token, memory_location, indexing_expressions);
       }
       else // Variable access
       {
