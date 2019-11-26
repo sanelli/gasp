@@ -676,6 +676,30 @@ end.)__");
    return sample;
 }
 
+std::string generate_sample_allocate_bidimensional_array(const char *type, const char *value)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex value_regexp("\\{VALUE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+var v : array<{TYPE}>[,];
+    i ,j: integer;
+begin
+ v := new<array<{TYPE}>[]>(10,11);
+ for i from 0 to 9 
+   for j from 0 to 10 begin
+      v[i,j] := cast<{TYPE}>({VALUE});
+   end;
+ sample := v[9,10];
+ delete(v);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, value_regexp, value);
+
+   return sample;
+}
+
 std::string generate_sample_allocate_array_and_pass_as_parameter(const char *type)
 {
    std::regex type_regexp("\\{TYPE\\}");
@@ -1017,6 +1041,17 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-bidimensional-array-long"] = {generate_two_dimension_array_load_and_store("long", 5, 6), "", "20"};
    _samples["expression-bidimensional-array-float"] = {generate_two_dimension_array_load_and_store("float", 5, 6), "", "20.000000"};
    _samples["expression-bidimensional-array-double"] = {generate_two_dimension_array_load_and_store("double", 5, 6), "", "20.000000"};
+   _samples["expression-bidimensional-array-char"] = {generate_two_dimension_array_load_and_store("char", 14, 6), "", "A"};
+   _samples["expression-bidimensional-array-boolean"] = {generate_two_dimension_array_load_and_store("bool", 3, 4), "", "true"};
+
+   _samples["expression-bidimensional-array-allocate-byte"] = {generate_sample_allocate_bidimensional_array("byte", "77"), "", "77"};
+   _samples["expression-bidimensional-array-allocate-short"] = {generate_sample_allocate_bidimensional_array("short", "77"), "", "77"};
+   _samples["expression-bidimensional-array-allocate-integer"] = {generate_sample_allocate_bidimensional_array("integer", "77"), "", "77"};
+   _samples["expression-bidimensional-array-allocate-long"] = {generate_sample_allocate_bidimensional_array("long", "77"), "", "77"};
+   _samples["expression-bidimensional-array-allocate-float"] = {generate_sample_allocate_bidimensional_array("float", "77"), "", "77.000000"};
+   _samples["expression-bidimensional-array-allocate-double"] = {generate_sample_allocate_bidimensional_array("double", "77"), "", "77.000000"};
+   _samples["expression-bidimensional-array-allocate-boolean"] = {generate_sample_allocate_bidimensional_array("boolean", "true"), "", "true"};
+   _samples["expression-bidimensional-array-allocate-char"] = {generate_sample_allocate_bidimensional_array("char", "'X'"), "", "X"};
 
    _samples["expression-function-call-duplicate-byte"] = {generate_function_expression_sample("byte", "b"), "1", "2"};
    _samples["expression-function-call-duplicate-short"] = {generate_function_expression_sample("short", "s"), "1", "2"};
