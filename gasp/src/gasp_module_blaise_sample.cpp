@@ -472,6 +472,38 @@ end.)__");
    return sample;
 }
 
+std::string generate_three_dimension_array_load_and_store(const char *type, unsigned int size1, unsigned int size2, unsigned int size3)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size1_regexp("\\{SIZE_1\\}");
+   std::regex size2_regexp("\\{SIZE_2\\}");
+   std::regex size3_regexp("\\{SIZE_3\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+const
+  size1 := {SIZE_1};
+  size2 := {SIZE_2};
+  size3 := {SIZE_3};
+var
+   numbers: array<{TYPE}>[{SIZE_1},{SIZE_2},{SIZE_3}];
+   i, j, k: integer;
+begin
+   for i from 0 to (size1-1) 
+      for j from 0 to (size2-1) 
+         for k from 0 to (size3-1) begin
+            numbers[i,j,k] := cast<{TYPE}>(i * j * k);
+         end;
+   sample := numbers[size1-1, size2-1, size3-1];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size1_regexp, std::to_string(size1));
+   sample = std::regex_replace(sample, size2_regexp, std::to_string(size2));
+   sample = std::regex_replace(sample, size3_regexp, std::to_string(size3));
+
+   return sample;
+}
+
 std::string generate_array_passing_unbound(const char *type, unsigned int size)
 {
    std::regex type_regexp("\\{TYPE\\}");
@@ -1124,6 +1156,56 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-bidimensional-array-boolean-1"] = {generate_two_dimension_array_load_and_store("boolean", 3, 4), "", "true"};
    _samples["expression-bidimensional-array-boolean-2"] = {generate_two_dimension_array_load_and_store("boolean", 4, 3), "", "true"};
    
+
+   _samples["expression-tridimensional-array-byte-1"] = {generate_three_dimension_array_load_and_store("byte", 5, 3, 4), "", "24"};
+   _samples["expression-tridimensional-array-byte-2"] = {generate_three_dimension_array_load_and_store("byte", 5, 4, 3), "", "24"};
+   _samples["expression-tridimensional-array-byte-3"] = {generate_three_dimension_array_load_and_store("byte", 3, 5, 4), "", "24"};
+   _samples["expression-tridimensional-array-byte-4"] = {generate_three_dimension_array_load_and_store("byte", 3, 4, 5), "", "24"};
+   _samples["expression-tridimensional-array-byte-5"] = {generate_three_dimension_array_load_and_store("byte", 4, 5, 3), "", "24"};
+   _samples["expression-tridimensional-array-byte-6"] = {generate_three_dimension_array_load_and_store("byte", 4, 3, 5), "", "24"};
+   _samples["expression-tridimensional-array-short-1"] = {generate_three_dimension_array_load_and_store("short", 5, 3, 4), "", "24"};
+   _samples["expression-tridimensional-array-short-2"] = {generate_three_dimension_array_load_and_store("short", 5, 4, 3), "", "24"};
+   _samples["expression-tridimensional-array-short-3"] = {generate_three_dimension_array_load_and_store("short", 3, 5, 4), "", "24"};
+   _samples["expression-tridimensional-array-short-4"] = {generate_three_dimension_array_load_and_store("short", 3, 4, 5), "", "24"};
+   _samples["expression-tridimensional-array-short-5"] = {generate_three_dimension_array_load_and_store("short", 4, 5, 3), "", "24"};
+   _samples["expression-tridimensional-array-short-6"] = {generate_three_dimension_array_load_and_store("short", 4, 3, 5), "", "24"};
+   _samples["expression-tridimensional-array-integer-1"] = {generate_three_dimension_array_load_and_store("integer", 5, 3, 4), "", "24"};
+   _samples["expression-tridimensional-array-integer-2"] = {generate_three_dimension_array_load_and_store("integer", 5, 4, 3), "", "24"};
+   _samples["expression-tridimensional-array-integer-3"] = {generate_three_dimension_array_load_and_store("integer", 3, 5, 4), "", "24"};
+   _samples["expression-tridimensional-array-integer-4"] = {generate_three_dimension_array_load_and_store("integer", 3, 4, 5), "", "24"};
+   _samples["expression-tridimensional-array-integer-5"] = {generate_three_dimension_array_load_and_store("integer", 4, 5, 3), "", "24"};
+   _samples["expression-tridimensional-array-integer-6"] = {generate_three_dimension_array_load_and_store("integer", 4, 3, 5), "", "24"};
+   _samples["expression-tridimensional-array-long-1"] = {generate_three_dimension_array_load_and_store("long", 5, 3, 4), "", "24"};
+   _samples["expression-tridimensional-array-long-2"] = {generate_three_dimension_array_load_and_store("long", 5, 4, 3), "", "24"};
+   _samples["expression-tridimensional-array-long-3"] = {generate_three_dimension_array_load_and_store("long", 3, 5, 4), "", "24"};
+   _samples["expression-tridimensional-array-long-4"] = {generate_three_dimension_array_load_and_store("long", 3, 4, 5), "", "24"};
+   _samples["expression-tridimensional-array-long-5"] = {generate_three_dimension_array_load_and_store("long", 4, 5, 3), "", "24"};
+   _samples["expression-tridimensional-array-long-6"] = {generate_three_dimension_array_load_and_store("long", 4, 3, 5), "", "24"};
+   _samples["expression-tridimensional-array-float-1"] = {generate_three_dimension_array_load_and_store("float", 5, 3, 4), "", "24.000000"};
+   _samples["expression-tridimensional-array-float-2"] = {generate_three_dimension_array_load_and_store("float", 5, 4, 3), "", "24.000000"};
+   _samples["expression-tridimensional-array-float-3"] = {generate_three_dimension_array_load_and_store("float", 3, 5, 4), "", "24.000000"};
+   _samples["expression-tridimensional-array-float-4"] = {generate_three_dimension_array_load_and_store("float", 3, 4, 5), "", "24.000000"};
+   _samples["expression-tridimensional-array-float-5"] = {generate_three_dimension_array_load_and_store("float", 4, 5, 3), "", "24.000000"};
+   _samples["expression-tridimensional-array-float-6"] = {generate_three_dimension_array_load_and_store("float", 4, 3, 5), "", "24.000000"};
+   _samples["expression-tridimensional-array-double-1"] = {generate_three_dimension_array_load_and_store("double", 5, 3, 4), "", "24.000000"};
+   _samples["expression-tridimensional-array-double-2"] = {generate_three_dimension_array_load_and_store("double", 5, 4, 3), "", "24.000000"};
+   _samples["expression-tridimensional-array-double-3"] = {generate_three_dimension_array_load_and_store("double", 3, 5, 4), "", "24.000000"};
+   _samples["expression-tridimensional-array-double-4"] = {generate_three_dimension_array_load_and_store("double", 3, 4, 5), "", "24.000000"};
+   _samples["expression-tridimensional-array-double-5"] = {generate_three_dimension_array_load_and_store("double", 4, 5, 3), "", "24.000000"};
+   _samples["expression-tridimensional-array-double-6"] = {generate_three_dimension_array_load_and_store("double", 4, 3, 5), "", "24.000000"};
+   _samples["expression-tridimensional-array-char-1"] = {generate_three_dimension_array_load_and_store("char", 5, 3, 4), "", "\\u18"};
+   _samples["expression-tridimensional-array-char-2"] = {generate_three_dimension_array_load_and_store("char", 5, 4, 3), "", "\\u18"};
+   _samples["expression-tridimensional-array-char-3"] = {generate_three_dimension_array_load_and_store("char", 3, 5, 4), "", "\\u18"};
+   _samples["expression-tridimensional-array-char-4"] = {generate_three_dimension_array_load_and_store("char", 3, 4, 5), "", "\\u18"};
+   _samples["expression-tridimensional-array-char-5"] = {generate_three_dimension_array_load_and_store("char", 4, 5, 3), "", "\\u18"};
+   _samples["expression-tridimensional-array-char-6"] = {generate_three_dimension_array_load_and_store("char", 4, 3, 5), "", "\\u18"};
+   _samples["expression-tridimensional-array-boolean-1"] = {generate_three_dimension_array_load_and_store("boolean", 5, 3, 4), "", "true"};
+   _samples["expression-tridimensional-array-boolean-2"] = {generate_three_dimension_array_load_and_store("boolean", 5, 4, 3), "", "true"};
+   _samples["expression-tridimensional-array-boolean-3"] = {generate_three_dimension_array_load_and_store("boolean", 3, 5, 4), "", "true"};
+   _samples["expression-tridimensional-array-boolean-4"] = {generate_three_dimension_array_load_and_store("boolean", 3, 4, 5), "", "true"};
+   _samples["expression-tridimensional-array-boolean-5"] = {generate_three_dimension_array_load_and_store("boolean", 4, 5, 3), "", "true"};
+   _samples["expression-tridimensional-array-boolean-6"] = {generate_three_dimension_array_load_and_store("boolean", 4, 3, 5), "", "true"};
+
    _samples["expression-bidimensional-array-allocate-byte"] = {generate_sample_allocate_bidimensional_array("byte", "77"), "", "77"};
    _samples["expression-bidimensional-array-allocate-short"] = {generate_sample_allocate_bidimensional_array("short", "77"), "", "77"};
    _samples["expression-bidimensional-array-allocate-integer"] = {generate_sample_allocate_bidimensional_array("integer", "77"), "", "77"};
