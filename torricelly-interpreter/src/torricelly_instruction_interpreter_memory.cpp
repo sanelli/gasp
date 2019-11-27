@@ -45,10 +45,11 @@ void inline torricelly_instruction_interpreter::__execute_load_array(const torri
 
    // Load the indexes
    auto dimensions = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER);
+
    std::vector<unsigned int> indexes;
    indexes.resize(dimensions.get_integer());
    for (auto index = dimensions.get_integer() - 1; index >= 0; --index)
-   {   
+   {
       indexes.at(index) = pop_and_validate(activation_record, torricelly_activation_record_local_type::INTEGER).get_integer();
    }
 
@@ -373,7 +374,7 @@ void torricelly_instruction_interpreter::__execute_allocate_array(const torricel
 
    std::vector<unsigned int> dimensions;
    dimensions.resize(number_of_dimensions.get_integer());
-   for (auto dimension_index = 0; dimension_index < number_of_dimensions.get_integer(); ++dimension_index)
+   for (auto dimension_index = number_of_dimensions.get_integer()-1; dimension_index >=0 ; --dimension_index)
    {
       auto dimension = pop_and_validate(activation_record, gasp::torricelly::interpreter::torricelly_activation_record_local_type::INTEGER);
       dimensions.at(dimension_index) = (unsigned int)dimension.get_integer();

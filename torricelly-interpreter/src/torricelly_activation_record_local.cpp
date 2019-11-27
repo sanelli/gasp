@@ -211,7 +211,13 @@ unsigned int torricelly_activation_record_local_multidimensional_array::index(co
 {
    auto idx = indexes.at(0);
    for (auto i = 1; i < indexes.size(); ++i)
-      idx += _dimensions.at(i - 1) * indexes.at(i);
+   {
+      auto multiplier = 1;
+      for (auto d = i - 1; d >= 0; --d)
+         multiplier *= _dimensions.at(d);
+      idx += multiplier * indexes.at(i);
+   }
+
    return idx;
 }
 
