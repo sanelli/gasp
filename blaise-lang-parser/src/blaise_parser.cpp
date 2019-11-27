@@ -259,6 +259,7 @@ std::shared_ptr<ast::blaise_ast_type> blaise_parser::parse_variable_type(blaise_
             dimensions.push_back(0);
             lookup = context.peek_token();
          }
+         dimensions.push_back(0);
       }
       break;
       default:
