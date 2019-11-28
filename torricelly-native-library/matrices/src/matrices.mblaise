@@ -1,0 +1,78 @@
+module matrices;
+
+procedure native sqrt(matrix: array<float>[,], lines: integer, columns: integer);
+procedure native sqrt(matrix: array<double>[,], lines: integer, columns: integer);
+procedure native log10(matrix: array<float>[,], lines: integer, columns: integer);
+procedure native log10(matrix: array<double>[,], lines: integer, columns: integer);
+procedure native log2(matrix: array<float>[,], lines: integer, columns: integer);
+procedure native log2(matrix: array<double>[,], lines: integer, columns: integer);
+procedure native log(matrix: array<float>[,], lines: integer, columns: integer);
+procedure native log(matrix: array<double>[,], lines: integer, columns: integer);
+
+procedure fill(matrix: array<double>[,], lines: integer, columns: integer, value: double);
+var
+  i, j: integer;
+begin
+   for i from 0 to (lines-1)
+      for j from 0 to (columns-2) begin
+         matrix[i,j] := value;
+      end;
+end;
+
+procedure fill(matrix: array<float>[,], lines: integer, columns: integer, value: float);
+var
+  i, j: integer;
+begin
+   for i from 0 to (lines-1)
+      for j from 0 to (columns-2) begin
+         matrix[i,j] := value;
+      end;
+end;
+
+function trace(matrix: array<float>[,], n: integer) : float;
+var
+   i: integer;
+begin
+   trace := cast<float>(0);
+   for i from 0 to (n-1) begin
+      trace := trace + matrix[i,i];
+   end;
+end;
+
+function trace(matrix: array<double>[,], n: integer) : double;
+var
+   i: integer;
+begin
+   trace := cast<double>(0);
+   for i from 0 to (n-1) begin
+      trace := trace + matrix[i,i];
+   end;
+end;
+
+procedure transpose(matrix: array<float>[,], lines, columns: integer);
+var
+   i, j: integer;
+   temp: float;
+begin
+   for i from 0 to (lines-1) 
+      for j from 0 to (columns -1) begin
+         temp := matrix[i,j];
+         matrix[i,j] := matrix[j,i];
+         matrix[j,i] := temp;
+      end;
+end;
+
+procedure transpose(matrix: array<double>[,], lines, columns: integer);
+var
+   i, j: integer;
+   temp: double;
+begin
+   for i from 0 to (lines-1) 
+      for j from 0 to (columns -1) begin
+         temp := matrix[i,j];
+         matrix[i,j] := matrix[j,i];
+         matrix[j,i] := temp;
+      end;
+end;
+
+end.
