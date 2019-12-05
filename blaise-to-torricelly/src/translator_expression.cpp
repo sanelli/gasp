@@ -104,7 +104,8 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    break;
    case ast::blaise_ast_expression_type::LITERAL_STRING:
    {
-      throw blaise_to_torricelly_internal_error("LITERAL_STRING expression type is not supported yet.");
+      auto string_expression = ast::blaise_ast_expression_utility::as_string_literal(expression);
+      translate_literal_string_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, string_expression, max_stack_size);
    }
    break;
    case ast::blaise_ast_expression_type::TERNARY:
@@ -130,6 +131,19 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
    }
 
    SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_expression" << std::endl);
+}
+
+void blaise_to_torricelly::translator::translate_literal_string_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_string_value> expression, unsigned int &max_stack_size) const
+{
+   SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_string_expression" << std::endl);
+   auto variable_index = add_temporary(torricelly_module, torricelly_subroutine, 
+            variables_mapping, torricelly_value::make(torricelly_type_utility::as_array_type(translate_type(expression->result_type())), expression->value()));
+
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_ARRAY_CHAR, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   torricelly_subroutine->append_instruction(instruction);
+
+   max_stack_size = 1;
+   SANELLI_DEBUG("blaise-to-torricelly", "[EXIT] translate_literal_string_expression" << std::endl);
 }
 
 void blaise_to_torricelly::translator::translate_literal_byte_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_byte_value> expression, unsigned int &max_stack_size) const
@@ -291,8 +305,9 @@ void blaise_to_torricelly::translator::translate_array_access_expression(std::sh
    auto variable_index = array_variable_index_it->second;
 
    // Traslate indexing expressions
-   for(auto indexing = 0; indexing < expression->count_indexes(); ++indexing){
-       auto expression_max_stack_size = 0U;
+   for (auto indexing = 0; indexing < expression->count_indexes(); ++indexing)
+   {
+      auto expression_max_stack_size = 0U;
       translate_expression(torricelly_module, torricelly_subroutine, module_variables_mapping, variables_mapping, expression->indexing(indexing), expression_max_stack_size);
       max_stack_size = std::max(expression_max_stack_size, max_stack_size);
    }
@@ -935,8 +950,8 @@ void blaise_to_torricelly::translator::translate_new_expression(std::shared_ptr<
 
    // Create the ALLOCATE instruction
    auto allocate_instrution_code = compute_instruction_code(array_underlying_type,
-                                                            torricelly_inst_code::ALLOCATE_BYTE_ARRAY, torricelly_inst_code::ALLOCATE_SHORT_ARRAY, torricelly_inst_code::ALLOCATE_INT_ARRAY, torricelly_inst_code::ALLOCATE_LONG_ARRAY, 
-                                                            torricelly_inst_code::ALLOCATE_FLOAT_ARRAY, torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY, 
+                                                            torricelly_inst_code::ALLOCATE_BYTE_ARRAY, torricelly_inst_code::ALLOCATE_SHORT_ARRAY, torricelly_inst_code::ALLOCATE_INT_ARRAY, torricelly_inst_code::ALLOCATE_LONG_ARRAY,
+                                                            torricelly_inst_code::ALLOCATE_FLOAT_ARRAY, torricelly_inst_code::ALLOCATE_DOUBLE_ARRAY,
                                                             torricelly_inst_code::ALLOCATE_CHAR_ARRAY, torricelly_inst_code::ALLOCATE_BOOLEAN_ARRAY);
    auto allocate_instruction = torricelly_instruction::make(allocate_instrution_code);
    torricelly_subroutine->append_instruction(allocate_instruction);
