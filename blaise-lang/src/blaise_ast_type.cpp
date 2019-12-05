@@ -54,8 +54,6 @@ std::shared_ptr<blaise_ast_type> gasp::blaise::ast::get_type_from_token(const sa
       return make_plain_type(blaise_ast_system_type::LONG);
    case blaise_token_type::TYPE_CHAR:
       return make_plain_type(blaise_ast_system_type::CHAR);
-   case blaise_token_type::TYPE_STRING:
-      return make_plain_type(blaise_ast_system_type::STRING);
    case blaise_token_type::TYPE_FLOAT:
       return make_plain_type(blaise_ast_system_type::FLOAT);
    case blaise_token_type::TYPE_DOUBLE:
