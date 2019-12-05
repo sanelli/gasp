@@ -87,7 +87,7 @@ inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other
    if (dimensions() != array_other->dimensions())
       return false;
    for (auto d = 0u; d < dimensions(); ++d)
-      if (dimension(d) != array_other->dimension(d))
+      if (dimension(d) != array_other->dimension(d) && array_other->dimension(d) > 0)
          return false;
    return true;
 }
