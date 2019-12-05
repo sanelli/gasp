@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+#include <sanelli/sanelli.hpp>
+
 #include <gasp/blaise/tokenizer/tokenizer.hpp>
 #include <gasp/blaise/impl/blaise_ast_common.hpp>
 #include <gasp/blaise/impl/blaise_ast_type.hpp>
@@ -224,63 +226,65 @@ std::shared_ptr<blaise_ast_expression_array_access> make_blaise_ast_expression_a
 // EXPRESSION LITERAL VALUES
 //
 template <blaise_ast_expression_type TExpressionType,
-          blaise_ast_system_type TSystemType,
           typename TValue>
 class blaise_ast_expression_value : public blaise_ast_expression
 {
    TValue _value;
 
 public:
-   blaise_ast_expression_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, TValue value)
-       : blaise_ast_expression(reference, TExpressionType, make_plain_type(TSystemType)), _value(value) {}
+   blaise_ast_expression_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
+               std::shared_ptr<blaise_ast_type> type,
+               TValue value)
+       : blaise_ast_expression(reference, TExpressionType, type), _value(value) {}
 
    TValue value() { return _value; }
 };
 
-class blaise_ast_expression_byte_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BYTE, blaise_ast_system_type::BYTE, int8_t>
+class blaise_ast_expression_byte_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BYTE, int8_t>
 {
    friend sanelli::memory;
-   blaise_ast_expression_byte_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int8_t value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_byte_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int8_t value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::BYTE), value) {}
 };
-class blaise_ast_expression_short_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_SHORT, blaise_ast_system_type::SHORT, int16_t>
+class blaise_ast_expression_short_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_SHORT, int16_t>
 {
    friend sanelli::memory;
-   blaise_ast_expression_short_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int16_t value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_short_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int16_t value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::SHORT), value) {}
 };
-class blaise_ast_expression_integer_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_INTEGER, blaise_ast_system_type::INTEGER, int32_t>
+class blaise_ast_expression_integer_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_INTEGER, int32_t>
 {
    friend sanelli::memory;
-   blaise_ast_expression_integer_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int32_t value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_integer_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int32_t value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::LONG), value) {}
 };
-class blaise_ast_expression_long_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_LONG, blaise_ast_system_type::LONG, int64_t>
+class blaise_ast_expression_long_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_LONG, int64_t>
 {
    friend sanelli::memory;
-   blaise_ast_expression_long_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int64_t value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_long_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, int64_t value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::LONG), value) {}
 };
-class blaise_ast_expression_float_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_FLOAT, blaise_ast_system_type::FLOAT, float>
+class blaise_ast_expression_float_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_FLOAT, float>
 {
    friend sanelli::memory;
-   blaise_ast_expression_float_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, float value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_float_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, float value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::FLOAT), value) {}
 };
-class blaise_ast_expression_double_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_DOUBLE, blaise_ast_system_type::DOUBLE, double>
+class blaise_ast_expression_double_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_DOUBLE, double>
 {
    friend sanelli::memory;
-   blaise_ast_expression_double_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, double value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_double_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, double value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::DOUBLE), value) {}
 };
-class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, blaise_ast_system_type::CHAR, unsigned char>
+class blaise_ast_expression_char_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_CHAR, unsigned char>
 {
    friend sanelli::memory;
-   blaise_ast_expression_char_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, unsigned char value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_char_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, unsigned char value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::CHAR), value) {}
 };
-class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, blaise_ast_system_type::STRING, std::string>
+class blaise_ast_expression_string_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_STRING, std::string>
 {
    friend sanelli::memory;
-   blaise_ast_expression_string_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, std::string value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_string_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, std::string value) 
+      : blaise_ast_expression_value(reference, sanelli::memory::make_shared<blaise_ast_array_type>(make_plain_type(blaise_ast_system_type::CHAR), std::vector<unsigned int>{ 0 }), value) {}
 };
-class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BOOLEAN, blaise_ast_system_type::BOOLEAN, bool>
+class blaise_ast_expression_boolean_value : public blaise_ast_expression_value<blaise_ast_expression_type::LITERAL_BOOLEAN, bool>
 {
    friend sanelli::memory;
-   blaise_ast_expression_boolean_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, bool value) : blaise_ast_expression_value(reference, value) {}
+   blaise_ast_expression_boolean_value(const sanelli::token<gasp::blaise::blaise_token_type> &reference, bool value) : blaise_ast_expression_value(reference, make_plain_type(blaise_ast_system_type::CHAR), value) {}
 };
 
 } // namespace gasp::blaise::ast
