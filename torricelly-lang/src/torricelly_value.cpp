@@ -44,6 +44,14 @@ torricelly_value::torricelly_value(std::shared_ptr<torricelly_array_type> type, 
    }
 }
 
+torricelly_value::torricelly_value(std::shared_ptr<torricelly_array_type> type, const std::string &initial_value)
+{
+   memset(&_value, 0, sizeof(_value));
+   _array = std::make_shared<std::vector<torricelly_value>>();
+   for (const auto c : initial_value)
+      _array->push_back(torricelly_value::make(c));
+}
+
 torricelly_value::torricelly_value(const torricelly_value &other)
     : _type(other._type)
 {
@@ -259,6 +267,10 @@ torricelly_value torricelly_value::make(std::shared_ptr<torricelly_array_type> t
 {
    return torricelly_value(type, initial_value);
 }
+torricelly_value torricelly_value::make(std::shared_ptr<torricelly_array_type> type, const std::string &initial_value)
+{
+   return torricelly_value(type, initial_value);
+}
 
 torricelly_value torricelly_value::get_default_value(std::shared_ptr<torricelly_type> type)
 {
@@ -340,7 +352,7 @@ torricelly_value torricelly_value::get_value_from_string(const std::string &valu
       case torricelly_system_type_type::DOUBLE:
          return torricelly_value::make(stod(value));
       case torricelly_system_type_type::CHAR:
-         return torricelly_value::make((unsigned char) (value.length() > 0 ? value[0] : '\0'));
+         return torricelly_value::make((unsigned char)(value.length() > 0 ? value[0] : '\0'));
       case torricelly_system_type_type::BOOLEAN:
          return torricelly_value::make(value == "true");
       case torricelly_system_type_type::LITERAL_STRING:

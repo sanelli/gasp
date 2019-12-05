@@ -41,6 +41,7 @@ class torricelly_value
    std::shared_ptr<std::vector<torricelly_value>> _array;
    torricelly_value(torricelly_system_type_type system_type, const torricelly_value_union &value);
    torricelly_value(std::shared_ptr<torricelly_array_type> type, torricelly_value initial_value);
+   torricelly_value(std::shared_ptr<torricelly_array_type> type, const std::string& initial_value);
    void throw_if_is_not(std::shared_ptr<torricelly_type> check_type) const;
    void copy_value(const torricelly_value_union &value);
    void copy_array(std::shared_ptr<std::vector<torricelly_value>> array);
@@ -74,6 +75,7 @@ public:
    static torricelly_value make(double value);
    static torricelly_value make(std::string value);
    static torricelly_value make(std::shared_ptr<torricelly_array_type> type, torricelly_value initial_value);
+   static torricelly_value make(std::shared_ptr<torricelly_array_type> type, const std::string& initial_value);
 
    static torricelly_value get_default_value(std::shared_ptr<torricelly_type> type);
    static torricelly_value get_value_from_string(const std::string &value, std::shared_ptr<torricelly_type> type);
