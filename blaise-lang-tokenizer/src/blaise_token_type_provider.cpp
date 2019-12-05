@@ -44,7 +44,6 @@ blaise_token_type_provider::blaise_token_provider_constructor::blaise_token_prov
    add_token(blaise_token_type::TYPE_SHORT, "short", "TYPE_SHORT");
    add_token(blaise_token_type::TYPE_BYTE, "byte", "TYPE_BYTE");
    add_token(blaise_token_type::TYPE_CHAR, "char", "TYPE_CHAR");
-   add_token(blaise_token_type::TYPE_STRING, "string", "TYPE_STRING");
    add_token(blaise_token_type::TYPE_FLOAT, "float", "TYPE_FLOAT");
    add_token(blaise_token_type::TYPE_DOUBLE, "double", "TYPE_DOUBLE");
    add_token(blaise_token_type::TYPE_BOOLEAN, "boolean", "TYPE_BOOLEAN");

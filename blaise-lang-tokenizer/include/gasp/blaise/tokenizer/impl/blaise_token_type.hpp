@@ -40,7 +40,6 @@ enum class blaise_token_type : unsigned char
    // TYPES
    TYPE_INTEGER,
    TYPE_CHAR,
-   TYPE_STRING,
    TYPE_FLOAT,
    TYPE_DOUBLE,
    TYPE_BOOLEAN,

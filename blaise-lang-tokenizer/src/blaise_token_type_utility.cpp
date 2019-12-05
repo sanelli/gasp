@@ -12,7 +12,6 @@ bool blaise_token_type_utility::is_type(blaise_token_type token_type)
    case blaise_token_type::TYPE_INTEGER:
    case blaise_token_type::TYPE_LONG:
    case blaise_token_type::TYPE_CHAR:
-   case blaise_token_type::TYPE_STRING:
    case blaise_token_type::TYPE_FLOAT:
    case blaise_token_type::TYPE_DOUBLE:
    case blaise_token_type::TYPE_BOOLEAN:
