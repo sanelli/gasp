@@ -169,10 +169,18 @@ std::shared_ptr<gasp::torricelly::torricelly_subroutine> blaise_to_torricelly::t
          auto return_variable_index = return_variable_it->second;
 
          // LOAD_XXX [subroutine_name]
-         auto load_instruction_code = compute_instruction_code(subroutine->return_type(),
-                                                               torricelly_inst_code::LOAD_BYTE, torricelly_inst_code::LOAD_SHORT, torricelly_inst_code::LOAD_INTEGER, torricelly_inst_code::LOAD_LONG,
-                                                               torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
-                                                               torricelly_inst_code::LOAD_BOOLEAN);
+         torricelly_inst_code load_instruction_code;
+         if (!ast::blaise_ast_utility::is_array(subroutine->return_type()))
+         {
+            load_instruction_code = compute_instruction_code(subroutine->return_type(),
+                                                             torricelly_inst_code::LOAD_BYTE, torricelly_inst_code::LOAD_SHORT, torricelly_inst_code::LOAD_INTEGER, torricelly_inst_code::LOAD_LONG,
+                                                             torricelly_inst_code::LOAD_FLOAT, torricelly_inst_code::LOAD_DOUBLE, torricelly_inst_code::LOAD_CHAR,
+                                                             torricelly_inst_code::LOAD_BOOLEAN);
+         }
+         else
+         {
+            load_instruction_code = torricelly_inst_code::LOAD_ARRAY;
+         }
          auto load_instruction = torricelly_instruction::make(load_instruction_code, return_variable_index, torricelly_inst_ref_type::SUBROUTINE);
          torricelly_subroutine->append_instruction(load_instruction);
 
@@ -404,13 +412,7 @@ std::string blaise_to_torricelly::translator::get_mangled_type_name(std::shared_
 
 unsigned int blaise_to_torricelly::translator::add_temporary(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &variables_mapping, gasp::torricelly::torricelly_value initial_value) const
 {
-   if (!torricelly_type_utility::is_system_type(initial_value.type()))
-   {
-      auto message = sanelli::make_string("Unsupported type. Cannot create a new temporary of type ", to_string(initial_value.type()), ". Only system types are supported.");
-      throw blaise_to_torricelly_internal_error(message);
-   }
-   auto system_type = torricelly_type_utility::as_system_type(initial_value.type());
-   auto variable_index = torricelly_subroutine->add_local(make_torricelly_system_type(system_type->system_type()), initial_value);
+   auto variable_index = torricelly_subroutine->add_local(initial_value.type(), initial_value);
    variables_mapping[sanelli::make_string("^temp", variable_index)] = variable_index;
    return variable_index;
 }

@@ -136,10 +136,12 @@ void blaise_to_torricelly::translator::translate_expression(std::shared_ptr<gasp
 void blaise_to_torricelly::translator::translate_literal_string_expression(std::shared_ptr<gasp::torricelly::torricelly_module> torricelly_module, std::shared_ptr<gasp::torricelly::torricelly_subroutine> torricelly_subroutine, std::map<std::string, unsigned int> &module_variables_mapping, std::map<std::string, unsigned int> &variables_mapping, std::shared_ptr<gasp::blaise::ast::blaise_ast_expression_string_value> expression, unsigned int &max_stack_size) const
 {
    SANELLI_DEBUG("blaise-to-torricelly", "[ENTER] translate_literal_string_expression" << std::endl);
-   auto variable_index = add_temporary(torricelly_module, torricelly_subroutine, 
-            variables_mapping, torricelly_value::make(torricelly_type_utility::as_array_type(translate_type(expression->result_type())), expression->value()));
+   auto array_type = torricelly_type_utility::as_array_type(translate_type(expression->result_type()));
+   auto temporary_value = torricelly_value::make(array_type, expression->value());
+   auto variable_index = add_temporary(torricelly_module, torricelly_subroutine,
+                                       variables_mapping, temporary_value);
 
-   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_ARRAY_CHAR, variable_index, torricelly_inst_ref_type::SUBROUTINE);
+   auto instruction = torricelly_instruction::make(torricelly_inst_code::LOAD_ARRAY, variable_index, torricelly_inst_ref_type::SUBROUTINE);
    torricelly_subroutine->append_instruction(instruction);
 
    max_stack_size = 1;
@@ -500,6 +502,9 @@ torricelly::torricelly_inst_code blaise_to_torricelly::translator::compute_instr
    }
    case torricelly_type_type::STRUCTURED:
       throw blaise_to_torricelly_internal_error("Unsupported structured type.");
+      break;
+   case torricelly_type_type::ARRAY:
+      throw blaise_to_torricelly_internal_error("Unexpected array type when computing instruction code.");
       break;
    default:
       throw blaise_to_torricelly_internal_error("Unexpected or unknown type when computing instruction code.");
