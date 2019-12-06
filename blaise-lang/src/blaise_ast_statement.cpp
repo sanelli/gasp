@@ -68,11 +68,6 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       auto variable_identifier = std::static_pointer_cast<blaise_ast_variable_identifier>(identifier);
       variable = variable_identifier->variable();
       variable_real_type = variable->type();
-      if (variable->type()->type_type() == ast::blaise_ast_type_type::ARRAY) {
-         auto array_type = ast::blaise_ast_utility::as_array_type(variable->type());
-         if(!array_type->is_unbounded())
-            throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unsupported type: '", to_string(variable_real_type), "' Array with a defined dimensiosn cannot be used here."));
-      }
    }
    break;
    case blaise_ast_identifier_type::ARRAY:
@@ -99,15 +94,28 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Unexpected variable type"));
    }
 
-   if (expression->result_type() != variable_real_type && 
-      !ast::blaise_ast_utility::is_array(expression->result_type()) &&
-      !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable_real_type))
-      throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot cast '", to_string(expression->result_type()), "' into '", to_string(variable_real_type), "'."));
+   if (identifier->type() == blaise_ast_identifier_type::VARIABLE && ast::blaise_ast_utility::is_array(std::static_pointer_cast<blaise_ast_variable_identifier>(identifier)->variable()->type()) && ast::blaise_ast_utility::is_array(expression->result_type()))
+   {
+      auto target_type = ast::blaise_ast_utility::as_array_type(std::static_pointer_cast<blaise_ast_variable_identifier>(identifier)->variable()->type());
+      auto expression_type = ast::blaise_ast_utility::as_array_type(expression->result_type());
 
-   if (variable_real_type == nullptr)
-      throw blaise_ast_error(reference.line(), reference.column(), "Variable type or underlying type cannot be detected.");
+      auto valid_assign = target_type->equals(expression_type) || (target_type->dimensions() == expression_type->dimensions() && target_type->is_unbounded() && target_type->underlying_type()->equals(expression_type->underlying_type()));
 
-   expression = ast::introduce_cast_if_required(reference, variable_real_type, expression);
+      if (!valid_assign)
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot assign expression of type '", expression_type, "' to a bounded array '", variable->name(), "' of type '", target_type, "'."));
+   }
+   else
+   {
+      if (!expression->result_type()->equals(variable_real_type) &&
+          !ast::blaise_ast_utility::is_array(expression->result_type()) &&
+          !ast::blaise_ast_utility::can_auto_cast(expression->result_type(), variable_real_type))
+         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot cast '", to_string(expression->result_type()), "' into '", to_string(variable_real_type), "'."));
+
+      if (variable_real_type == nullptr)
+         throw blaise_ast_error(reference.line(), reference.column(), "Variable type or underlying type cannot be detected.");
+
+      expression = ast::introduce_cast_if_required(reference, variable_real_type, expression);
+   }
 
    return memory::make_shared<blaise_ast_statement_assignment>(reference, identifier, expression);
 }
@@ -259,17 +267,16 @@ std::shared_ptr<blaise_ast_statement_repeatuntil_loop> ast::make_blaise_ast_stat
 // DELETE
 
 blaise_ast_statement_delete::blaise_ast_statement_delete(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
-                                 std::shared_ptr<blaise_ast_identifier> identifier) 
-       : blaise_ast_statement(reference, blaise_ast_statement_type::DELETE),
-         _identifier(identifier)
-{}
+                                                         std::shared_ptr<blaise_ast_identifier> identifier)
+    : blaise_ast_statement(reference, blaise_ast_statement_type::DELETE),
+      _identifier(identifier)
+{
+}
 
 std::shared_ptr<blaise_ast_identifier> blaise_ast_statement_delete::identifier() const { return _identifier; }
 
 std::shared_ptr<blaise_ast_statement_delete> ast::make_delete_statement(const sanelli::token<gasp::blaise::blaise_token_type> &reference,
-                                                                 std::shared_ptr<blaise_ast_identifier> identifier) 
+                                                                        std::shared_ptr<blaise_ast_identifier> identifier)
 {
    return sanelli::memory::make_shared<blaise_ast_statement_delete>(reference, identifier);
 }
-
-

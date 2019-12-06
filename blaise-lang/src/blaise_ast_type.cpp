@@ -77,7 +77,7 @@ bool blaise_ast_array_type::is_unbounded() const
    return std::any_of(_dimensions.begin(), _dimensions.end(), [](unsigned int d) { return d == 0; });
 }
 
-inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other) const
+bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other) const
 {
    if (type_type() != other->type_type())
       return false;
@@ -87,7 +87,7 @@ inline bool blaise_ast_array_type::equals(std::shared_ptr<blaise_ast_type> other
    if (dimensions() != array_other->dimensions())
       return false;
    for (auto d = 0u; d < dimensions(); ++d)
-      if (dimension(d) != array_other->dimension(d) && array_other->dimension(d) > 0)
+      if (dimension(d) != array_other->dimension(d))
          return false;
    return true;
 }
