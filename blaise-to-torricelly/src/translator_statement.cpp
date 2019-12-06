@@ -163,9 +163,6 @@ void blaise_to_torricelly::translator::translate_assignment_statement(std::share
       else
       {
          auto array_type = ast::blaise_ast_utility::as_array_type(variable_type);
-         if (!array_type->is_unbounded())
-            throw blaise_to_torricelly_error(statement->line(), statement->column(), sanelli::make_string("Error while translating assignemt. Array '", variable_name, "' must be unbounded."));
-
          auto underlying_array_type = array_type->underlying_type();
 
          auto statement_expression_type = statement->expression()->result_type();
