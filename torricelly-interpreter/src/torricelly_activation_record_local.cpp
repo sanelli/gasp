@@ -774,12 +774,15 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
          }
          else
          {
-            sstream << "{";
+            auto underlying_type = array_pointer->underlying_type();
+            auto display_delimiters = underlying_type != torricelly_activation_record_local_array_underlying_type::CHAR || array_pointer->dimensions() > 1;
+            if (display_delimiters)
+               sstream << "{";
             for (auto index = 0; index < array_pointer->size(); ++index)
             {
-               if (index > 0)
+               if (index > 0 && display_delimiters)
                   sstream << ",";
-               switch (array_pointer->underlying_type())
+               switch (underlying_type)
                {
                case torricelly_activation_record_local_array_underlying_type::UNDEFINED:
                   sstream << "undefined";
@@ -796,11 +799,11 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
                case torricelly_activation_record_local_array_underlying_type::LONG:
                   sstream << array_pointer->get(index)._long;
                   break;
+               case torricelly_activation_record_local_array_underlying_type::BOOLEAN:
+                  sstream << (array_pointer->get(index)._boolean ? "true" : "false");
+                  break;
                case torricelly_activation_record_local_array_underlying_type::CHAR:
                   sstream << array_pointer->get(index)._char;
-                  break;
-               case torricelly_activation_record_local_array_underlying_type::BOOLEAN:
-                  sstream << array_pointer->get(index)._boolean;
                   break;
                case torricelly_activation_record_local_array_underlying_type::FLOAT:
                   sstream << array_pointer->get(index)._float;
@@ -812,16 +815,8 @@ std::string gasp::torricelly::interpreter::to_string(const torricelly_activation
                   throw torricelly_interpreter_error(sanelli::make_string("Unexpected type. Cannot convert value into string (type id is ", (int)array_pointer->underlying_type(), ")."));
                }
             }
-            sstream << "} (" << value.get_pointer() << ")"
-                    << " [" << to_string(torricelly_activation_record_local_underlying_type::ARRAY) << "<"
-                    << to_string(array_pointer->underlying_type()) << ">[";
-            for (auto dimension = 0; dimension < array_pointer->dimensions(); ++dimension)
-            {
-               if (dimension > 0)
-                  sstream << ",";
-               sstream << array_pointer->dimension(dimension);
-            }
-            sstream << "]]";
+            if (display_delimiters)
+               sstream << "}";
          }
       }
       break;
