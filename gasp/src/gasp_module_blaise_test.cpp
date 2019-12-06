@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <regex>
 #include <filesystem>
+#include <cstring>
 
 #include <sanelli/sanelli.hpp>
 
@@ -137,7 +138,7 @@ bool gasp_module_blaise_test::run_tests(std::string regular_expression) const
    std::regex matcher(regular_expression);
    for (const std::string &sample : samples)
    {
-      if(!std::regex_match(sample, matcher))
+      if (!std::regex_match(sample, matcher))
          continue;
 
       std::cout << std::right << std::setw(wsize) << (++index) << std::setw(0) << std::left
@@ -146,8 +147,8 @@ bool gasp_module_blaise_test::run_tests(std::string regular_expression) const
       auto result = run_test(sample, elapsed_time);
       if (result)
       {
-         std::cout << console_colour::green() << "[OK] " << console_colour::reset() 
-                   << console_colour::blue() << "[" << elapsed_time.count() << " ms]" << console_colour::reset() 
+         std::cout << console_colour::green() << "[OK] " << console_colour::reset()
+                   << console_colour::blue() << "[" << elapsed_time.count() << " ms]" << console_colour::reset()
                    << std::endl;
          ++success;
       }
@@ -167,8 +168,8 @@ bool gasp_module_blaise_test::run_tests(std::string regular_expression) const
    {
       std::cout << std::endl
                 << "Result:" << std::endl;
-      std::cout << (failure == 0 ? console_colour::bold_green() : console_colour::green()) << "   Success " << console_colour::reset() << console_colour::green() << ": "<< success << "/" << total << " (" << (success * 100.00f / total) << "%)" << console_colour::reset() << std::endl;
-      std::cout << (failure != 0 ? console_colour::bold_red() : console_colour::red()) << "   Failure " << console_colour::reset() <<  console_colour::red() << ": " << failure << "/" << total << " (" << (failure * 100.00f / total) << "%)" << console_colour::reset() << std::endl;
+      std::cout << (failure == 0 ? console_colour::bold_green() : console_colour::green()) << "   Success " << console_colour::reset() << console_colour::green() << ": " << success << "/" << total << " (" << (success * 100.00f / total) << "%)" << console_colour::reset() << std::endl;
+      std::cout << (failure != 0 ? console_colour::bold_red() : console_colour::red()) << "   Failure " << console_colour::reset() << console_colour::red() << ": " << failure << "/" << total << " (" << (failure * 100.00f / total) << "%)" << console_colour::reset() << std::endl;
    }
 
    return failure == 0;
@@ -208,7 +209,9 @@ bool gasp_module_blaise_test::run_test(std::string sample, std::chrono::millisec
       if (interpreter->status() == torricelly_interpreter_status::FINISHED)
       {
          auto return_value = interpreter->return_value();
-         return gasp::torricelly::interpreter::to_string(return_value) == _module_samples->get_output(sample);
+         auto result = gasp::torricelly::interpreter::to_string(return_value).c_str();
+         auto expected = _module_samples->get_output(sample).c_str();
+         return std::strcmp(result, expected) == 0;
       }
       else
       {
