@@ -196,9 +196,8 @@ end.)__");
    return sample;
 }
 
-std::string generate_literal_assignment_sample(const char *operator_type, const char *return_type, const char *literal)
+std::string generate_literal_assignment_sample(const char *return_type, const char *literal)
 {
-   std::regex operator_type_regexp("\\{OPERATOR_TYPE\\}");
    std::regex return_type_regexp("\\{RETURN_TYPE\\}");
    std::regex literal_regexp("\\{LITERAL\\}");
 
@@ -207,7 +206,6 @@ begin
    sample := {LITERAL};
 end.)__");
 
-   sample = std::regex_replace(sample, operator_type_regexp, operator_type);
    sample = std::regex_replace(sample, return_type_regexp, return_type);
    sample = std::regex_replace(sample, literal_regexp, literal);
 
@@ -1371,27 +1369,30 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-bidimensional-array-float-bound"] = {generate_two_dimension_array_bound_passing("float", 5,7), "", "24.000000"};
    _samples["expression-function-call-bidimensional-array-double-bound"] = {generate_two_dimension_array_bound_passing("double", 5,7), "", "24.000000"};
 
-   _samples["literal-byte-1"] = {generate_literal_assignment_sample("byte", "byte", "11b"), "", "11"};
-   _samples["literal-byte-2"] = {generate_literal_assignment_sample("byte", "byte", "11B"), "", "11"};
-   _samples["literal-short-1"] = {generate_literal_assignment_sample("short", "short", "11s"), "", "11"};
-   _samples["literal-short-2"] = {generate_literal_assignment_sample("short", "short", "11S"), "", "11"};
-   _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "integer", "0b11"), "", "3"};
-   _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "integer", "0o77"), "", "63"};
-   _samples["literal-integer-hexadecimal"] = {generate_literal_assignment_sample("integer", "integer", "0xFF"), "", "255"};
-   _samples["literal-integer-decimal"] = {generate_literal_assignment_sample("integer", "integer", "10"), "", "10"};
-   _samples["literal-long-1"] = {generate_literal_assignment_sample("long", "long", "11l"), "", "11"};
-   _samples["literal-long-2"] = {generate_literal_assignment_sample("long", "long", "11L"), "", "11"};
-   _samples["literal-char-1"] = {generate_literal_assignment_sample("char", "char", "'A'"), "", "A"};
-   _samples["literal-char-2"] = {generate_literal_assignment_sample("char", "char", "'\\n'"), "", "\\u0a"};
-   _samples["literal-char-3"] = {generate_literal_assignment_sample("char", "char", "'\\''"), "", "'"};
-   _samples["literal-char-4"] = {generate_literal_assignment_sample("char", "char", "'\\u41'"), "", "A"};
-   _samples["literal-boolean-true"] = {generate_literal_assignment_sample("boolean", "boolean", "true"), "", "true"};
-   _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "boolean", "false"), "", "false"};
-   _samples["literal-double-1"] = {generate_literal_assignment_sample("double", "double", "1.5"), "", "1.500000"};
-   _samples["literal-double-2"] = {generate_literal_assignment_sample("double", "double", "1.5d"), "", "1.500000"};
-   _samples["literal-double-2"] = {generate_literal_assignment_sample("double", "double", "1.5D"), "", "1.500000"};
-   _samples["literal-float"] = {generate_literal_assignment_sample("float", "float", "1.5f"), "", "1.500000"};
-   _samples["literal-float-2"] = {generate_literal_assignment_sample("float", "float", "1.5F"), "", "1.500000"};
+   _samples["literal-byte-1"] = {generate_literal_assignment_sample("byte", "11b"), "", "11"};
+   _samples["literal-byte-2"] = {generate_literal_assignment_sample("byte", "11B"), "", "11"};
+   _samples["literal-short-1"] = {generate_literal_assignment_sample("short", "11s"), "", "11"};
+   _samples["literal-short-2"] = {generate_literal_assignment_sample("short", "11S"), "", "11"};
+   _samples["literal-integer-binary"] = {generate_literal_assignment_sample("integer", "0b11"), "", "3"};
+   _samples["literal-integer-octal"] = {generate_literal_assignment_sample("integer", "0o77"), "", "63"};
+   _samples["literal-integer-hexadecimal"] = {generate_literal_assignment_sample("integer", "0xFF"), "", "255"};
+   _samples["literal-integer-decimal"] = {generate_literal_assignment_sample("integer", "10"), "", "10"};
+   _samples["literal-long-1"] = {generate_literal_assignment_sample("long", "11l"), "", "11"};
+   _samples["literal-long-2"] = {generate_literal_assignment_sample("long", "11L"), "", "11"};
+   _samples["literal-char-1"] = {generate_literal_assignment_sample("char", "'A'"), "", "A"};
+   _samples["literal-char-2"] = {generate_literal_assignment_sample("char", "'\\n'"), "", "\\u0a"};
+   _samples["literal-char-3"] = {generate_literal_assignment_sample("char", "'\\''"), "", "'"};
+   _samples["literal-char-4"] = {generate_literal_assignment_sample("char", "'\\u41'"), "", "A"};
+   _samples["literal-boolean-true"] = {generate_literal_assignment_sample("boolean", "true"), "", "true"};
+   _samples["literal-boolean-false"] = {generate_literal_assignment_sample("boolean", "false"), "", "false"};
+   _samples["literal-double-1"] = {generate_literal_assignment_sample("double", "1.5"), "", "1.500000"};
+   _samples["literal-double-2"] = {generate_literal_assignment_sample("double", "1.5d"), "", "1.500000"};
+   _samples["literal-double-2"] = {generate_literal_assignment_sample("double", "1.5D"), "", "1.500000"};
+   _samples["literal-float"] = {generate_literal_assignment_sample("float", "1.5f"), "", "1.500000"};
+   _samples["literal-float-2"] = {generate_literal_assignment_sample("float", "1.5F"), "", "1.500000"};
+   _samples["literal-string-1"] = {generate_literal_assignment_sample("array<char>[]", "\"Hello world\""), "", "Hello world\0"};
+   _samples["literal-string-2"] = {generate_literal_assignment_sample("array<char>[]", "\"Hello\\nworld\""), "", "Hello\nworld\0"};
+   _samples["literal-string-3"] = {generate_literal_assignment_sample("array<char>[]", "\"Hello\\\"world\""), "", "Hello\"world\0"};
 
    _samples["statement-empty"] = {sample_statement_empty, "", "0"};
    _samples["statement-if-then-true"] = {sample_statement_if_then, "true", "2"};
