@@ -444,6 +444,53 @@ end.)__");
    return sample;
 }
 
+std::string generate_array_assignemt(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+var
+   a1, a2: array<{TYPE}>[{SIZE}];
+   index: integer;
+begin
+   for index from 0 to ({SIZE}-1) begin
+      a1[index] := cast<{TYPE}>(index);
+   end
+   a2 := a1;
+   sample := a2[{SIZE}-1];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
+std::string generate_array_unbound_assignemt(const char *type, unsigned int size)
+{
+   std::regex type_regexp("\\{TYPE\\}");
+   std::regex size_regexp("\\{SIZE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+var
+   a1: array<{TYPE}>[{SIZE}];
+   a2: array<{TYPE}>[];
+   index: integer;
+begin
+   for index from 0 to ({SIZE}-1) begin
+      a1[index] := cast<{TYPE}>(index);
+   end
+   a2 := a1;
+   sample := a2[{SIZE}-1];
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, size_regexp, std::to_string(size));
+
+   return sample;
+}
+
 std::string generate_two_dimension_array_load_and_store(const char *type, unsigned int size1, unsigned int size2)
 {
    std::regex type_regexp("\\{TYPE\\}");
@@ -1114,6 +1161,24 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-cast-boolean-to-short-2"] = {generate_cast_sample("boolean", "short"), "false", "0"};
    _samples["expression-cast-boolean-to-integer-1"] = {generate_cast_sample("boolean", "integer"), "true", "1"};
    _samples["expression-cast-boolean-to-integer-2"] = {generate_cast_sample("boolean", "integer"), "false", "0"};
+
+   _samples["assignemt-array-byte"] = {generate_array_assignemt("byte", 10), "", "9"};
+   _samples["assignemt-array-short"] = {generate_array_assignemt("short", 10), "", "9"};
+   _samples["assignemt-array-integer"] = {generate_array_assignemt("integer", 10), "", "9"};
+   _samples["assignemt-array-long"] = {generate_array_assignemt("long", 10), "", "9"};
+   _samples["assignemt-array-float"] = {generate_array_assignemt("float", 10), "", "9.000000"};
+   _samples["assignemt-array-double"] = {generate_array_assignemt("double", 10), "", "9.000000"};
+   _samples["assignemt-array-char"] = {generate_array_assignemt("char", 66), "", "A"};
+   _samples["assignemt-array-boolean"] = {generate_array_assignemt("boolean", 10), "", "true"};
+
+   _samples["assignemt-array-unbound-byte"] = {generate_array_unbound_assignemt("byte", 10), "", "9"};
+   _samples["assignemt-array-unbound-short"] = {generate_array_unbound_assignemt("short", 10), "", "9"};
+   _samples["assignemt-array-unbound-integer"] = {generate_array_unbound_assignemt("integer", 10), "", "9"};
+   _samples["assignemt-array-unbound-long"] = {generate_array_unbound_assignemt("long", 10), "", "9"};
+   _samples["assignemt-array-unbound-float"] = {generate_array_unbound_assignemt("float", 10), "", "9.000000"};
+   _samples["assignemt-array-unbound-double"] = {generate_array_unbound_assignemt("double", 10), "", "9.000000"};
+   _samples["assignemt-array-unbound-char"] = {generate_array_unbound_assignemt("char", 66), "", "A"};
+   _samples["assignemt-array-unbound-boolean"] = {generate_array_unbound_assignemt("boolean", 10), "", "true"};
 
    _samples["expression-array-byte"] = {generate_array_load_and_store("byte", 10), "", "45"};
    _samples["expression-array-short"] = {generate_array_load_and_store("short", 10), "", "45"};
