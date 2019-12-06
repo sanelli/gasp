@@ -64,7 +64,7 @@ void blaise_parser::parse_program(blaise_parser_context &context)
    auto return_type = ast::make_plain_type(ast::blaise_ast_system_type::INTEGER);
    if (is_token_and_match(context, blaise_token_type::COLON))
    {
-      return_type = parse_variable_type(context, false);
+      return_type = parse_variable_type(context, true);
    }
 
    main_subroutine->return_type(return_type);

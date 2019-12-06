@@ -80,7 +80,7 @@ void inline blaise_parser::parse_subroutine_signature(blaise_parser_context &con
    if (expected_token_type == blaise_token_type::FUNCTION)
    {
       match_token(context, blaise_token_type::COLON);
-      auto return_type = parse_variable_type(context, false);
+      auto return_type = parse_variable_type(context, true);
       context.current_subroutine()->return_type(return_type);
 
       // By definition a function has a variable name with the name
