@@ -58,14 +58,14 @@ end;
 
 function strncmp(first, second: array<char>[], n:integer) : integer;
   var 
-     len_first, len_second, var len: integer;
+     len_first, len_second, len: integer;
      index: integer;
-     c_first, c_second: character;
+     c_first, c_second: char;
 begin
    len_first := strlen(first);
    len_second := strlen(second);
-   len := n < len_first then n else len_first;
-   len := n < len_second then n else len_second;
+   len := if n < len_first then n else len_first;
+   len := if n < len_second then n else len_second;
    strncmp := 0;
    index := 0;
    while strncmp == 0 and index < len begin
@@ -81,7 +81,7 @@ var len, len_second:integer;
 begin
    len := strlen(first);
    len_second := strlen(second);
-   len := len < len_second then len else len_second;
+   len := if len < len_second then len else len_second;
    strcmp := strncmp(first, second, len);
 end;
 
@@ -90,7 +90,7 @@ var index:integer;
 begin
    strchr := -1;
    while(str[index] <> '\u00' and strchr == -1) begin
-      if(str[index] == c)
+      if(str[index] == c) then
          strchr := index;
       index := index + 1;
    end;
@@ -99,10 +99,10 @@ end;
 function strrchr(str: array<char>[], c: char): integer;
 var index:integer;
 begin
-   strchr := -1;
+   strrchr := -1;
    while(str[index] <> '\u00') begin
-      if(str[index] == c)
-         strchr := index;
+      if(str[index] == c) then
+         strrchr := index;
       index := index + 1;
    end;
 end;
