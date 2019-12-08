@@ -92,19 +92,42 @@ std::shared_ptr<blaise_ast_subroutine> gasp::blaise::ast::blaise_ast_module::get
       return matching_subs_with_cast.at(0);
    default:
    {
-      stringstream stream;
-      stream << std::endl;
+      std::vector<shared_ptr<blaise_ast_subroutine>> matching_with_same_index;
+      short best_match_index = -1;
       for (int index = 0; index < matching_subs_with_cast.size(); ++index)
       {
          auto subroutine = matching_subs_with_cast.at(index);
+         auto match_index = 0;
+         for(auto param_index = 0UL; param_index < param_types.size(); ++param_index) { 
+            if(param_types.at(param_index)->equals(subroutine->get_parameter_type(param_index)))
+               ++match_index;
+         }
+         if(match_index > best_match_index)
+         {
+            best_match_index = match_index;
+            matching_with_same_index.clear();
+            matching_with_same_index.push_back(subroutine);
+         } else if(match_index == best_match_index) { 
+            matching_with_same_index.push_back(subroutine);
+         } 
+      }
+
+      if(matching_with_same_index.size() == 1) // Found the best match!
+         return matching_with_same_index.at(0);
+
+      stringstream stream;
+      stream << std::endl;
+      for (int index = 0; index < matching_with_same_index.size(); ++index)
+      {
+         auto subroutine = matching_with_same_index.at(index);
          auto module = subroutine->module().lock();
          stream << "   " << (index + 1) << ". ";
          stream << module->name() << "." << subroutine->signature_as_string();
-         if (index != index < matching_subs_with_cast.size() - 1)
+         if (index != index < matching_with_same_index.size() - 1)
             stream << std::endl;
       }
       throw blaise_ast_error(identifier.line(), identifier.column(),
-                             sanelli::make_string("Multiple subroutines (", matching_subs_with_cast.size(),
+                             sanelli::make_string("Multiple subroutines (", matching_with_same_index.size(),
                                                   ") matching subroutine call \"", identifier.value(),
                                                   "\":", stream.str()));
    }
