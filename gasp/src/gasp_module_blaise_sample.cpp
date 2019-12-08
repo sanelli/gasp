@@ -884,6 +884,46 @@ end.)__";
    return sample;
 }
 
+std::string genetare_string_test_from_string(const char* operation, const char* value, const char* type)
+{
+ std::regex type_regexp("\\{TYPE\\}");
+ std::regex operation_regexp("\\{OPERATION\\}");
+ std::regex value_regexp("\\{VALUE\\}");
+
+   std::string sample(R"__(program sample : {TYPE};
+use strings;
+begin
+   sample := {OPERATION}({VALUE});
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, operation_regexp, operation);
+   sample = std::regex_replace(sample, value_regexp, value);
+   
+   return sample;
+}
+
+std::string genetare_string_test_to_string(const char* value, const char* type)
+{
+ std::regex type_regexp("\\{TYPE\\}");
+ std::regex value_regexp("\\{VALUE\\}");
+
+   std::string sample(R"__(program sample : array<char>[];
+use strings;
+var
+   str: array<char>[128];
+   value: {TYPE};
+begin
+   value := cast<{TYPE}>({VALUE});
+   sample := to_string(str, value);
+end.)__");
+
+   sample = std::regex_replace(sample, type_regexp, type);
+   sample = std::regex_replace(sample, value_regexp, value);
+   
+   return sample;
+}
+
 gasp_module_blaise_sample::gasp_module_blaise_sample()
 {
    _samples["empty"] = {sample_empty, "", "0"};
@@ -1218,7 +1258,6 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-bidimensional-array-char-2"] = {generate_two_dimension_array_load_and_store("char", 6, 14), "", "A"};
    _samples["expression-bidimensional-array-boolean-1"] = {generate_two_dimension_array_load_and_store("boolean", 3, 4), "", "true"};
    _samples["expression-bidimensional-array-boolean-2"] = {generate_two_dimension_array_load_and_store("boolean", 4, 3), "", "true"};
-   
 
    _samples["expression-tridimensional-array-byte-1"] = {generate_three_dimension_array_load_and_store("byte", 5, 3, 4), "", "24"};
    _samples["expression-tridimensional-array-byte-2"] = {generate_three_dimension_array_load_and_store("byte", 5, 4, 3), "", "24"};
@@ -1309,26 +1348,7 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["expression-function-call-from-library-arrays-swap-1"] = {sample_call_from_library_arrays, "0", "1"};
    _samples["expression-function-call-from-library-arrays-swap-2"] = {sample_call_from_library_arrays, "1", "0"};
    _samples["expression-function-call-native-sqrt-byte"] = {generate_native_single_parameter_call("byte", "math", "sqrt"), "4", "2"};
-   _samples["expression-function-call-native-sqrt-short"] = {generate_native_single_parameter_call("short", "math", "sqrt"), "4", "2"};
-   _samples["expression-function-call-native-sqrt-integer"] = {generate_native_single_parameter_call("integer", "math", "sqrt"), "4", "2"};
-   _samples["expression-function-call-native-sqrt-long"] = {generate_native_single_parameter_call("long", "math", "sqrt"), "4", "2"};
-   _samples["expression-function-call-native-sqrt-float"] = {generate_native_single_parameter_call("float", "math", "sqrt"), "4", "2.000000"};
-   _samples["expression-function-call-native-sqrt-double"] = {generate_native_single_parameter_call("double", "math", "sqrt"), "4", "2.000000"};
-   _samples["expression-function-call-native-log10-byte"] = {generate_native_single_parameter_call("byte", "math", "log10"), "100", "2"};
-   _samples["expression-function-call-native-log10-short"] = {generate_native_single_parameter_call("short", "math", "log10"), "100", "2"};
-   _samples["expression-function-call-native-log10-integer"] = {generate_native_single_parameter_call("integer", "math", "log10"), "100", "2"};
-   _samples["expression-function-call-native-log10-long"] = {generate_native_single_parameter_call("long", "math", "log10"), "100", "2"};
-   _samples["expression-function-call-native-log10-float"] = {generate_native_single_parameter_call("float", "math", "log10"), "100", "2.000000"};
-   _samples["expression-function-call-native-log10-double"] = {generate_native_single_parameter_call("double", "math", "log10"), "100", "2.000000"};
-   _samples["expression-function-call-native-log2-byte"] = {generate_native_single_parameter_call("byte", "math", "log2"), "8", "3"};
-   _samples["expression-function-call-native-log2-short"] = {generate_native_single_parameter_call("short", "math", "log2"), "8", "3"};
-   _samples["expression-function-call-native-log2-integer"] = {generate_native_single_parameter_call("integer", "math", "log2"), "8", "3"};
-   _samples["expression-function-call-native-log2-long"] = {generate_native_single_parameter_call("long", "math", "log2"), "8", "3"};
-   _samples["expression-function-call-native-log2-float"] = {generate_native_single_parameter_call("float", "math", "log2"), "8", "3.000000"};
-   _samples["expression-function-call-native-log2-double"] = {generate_native_single_parameter_call("double", "math", "log2"), "8", "3.000000"};
-   _samples["expression-function-call-native-arrays-sqrt-float"] = {generate_native_array_call_to_module("float", "10", "sqrt"), "4", "2.000000"};
-   _samples["expression-function-call-native-arrays-sqrt-double"] = {generate_native_array_call_to_module("double", "10", "sqrt"), "4", "2.000000"};
-  
+
    _samples["expression-function-call-array-byte-unbound"] = {generate_array_passing_unbound("byte", 10), "", "45"};
    _samples["expression-function-call-array-short-unbound"] = {generate_array_passing_unbound("short", 101), "", "5050"};
    _samples["expression-function-call-array-integer-unbound"] = {generate_array_passing_unbound("integer", 101), "", "5050"};
@@ -1413,6 +1433,41 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["statement-repeat-until-2"] = {sample_statement_repeat_until, "100", "5050"};
    _samples["statement-repeat-until-3"] = {sample_statement_repeat_until, "0", "1"};
    _samples["statement-function"] = {sample_statement_function, "10", "0"};
+
+   _samples["library-math-sqrt-byte"] = {generate_native_single_parameter_call("byte", "math", "sqrt"), "4", "2"};
+   _samples["library-math-sqrt-short"] = {generate_native_single_parameter_call("short", "math", "sqrt"), "4", "2"};
+   _samples["library-math-sqrt-integer"] = {generate_native_single_parameter_call("integer", "math", "sqrt"), "4", "2"};
+   _samples["library-math-sqrt-long"] = {generate_native_single_parameter_call("long", "math", "sqrt"), "4", "2"};
+   _samples["library-math-sqrt-float"] = {generate_native_single_parameter_call("float", "math", "sqrt"), "4", "2.000000"};
+   _samples["library-math-sqrt-double"] = {generate_native_single_parameter_call("double", "math", "sqrt"), "4", "2.000000"};
+   _samples["library-math-log10-byte"] = {generate_native_single_parameter_call("byte", "math", "log10"), "100", "2"};
+   _samples["library-math-log10-short"] = {generate_native_single_parameter_call("short", "math", "log10"), "100", "2"};
+   _samples["library-math-log10-integer"] = {generate_native_single_parameter_call("integer", "math", "log10"), "100", "2"};
+   _samples["library-math-log10-long"] = {generate_native_single_parameter_call("long", "math", "log10"), "100", "2"};
+   _samples["library-math-log10-float"] = {generate_native_single_parameter_call("float", "math", "log10"), "100", "2.000000"};
+   _samples["library-math-log10-double"] = {generate_native_single_parameter_call("double", "math", "log10"), "100", "2.000000"};
+   _samples["library-math-log2-byte"] = {generate_native_single_parameter_call("byte", "math", "log2"), "8", "3"};
+   _samples["library-math-log2-short"] = {generate_native_single_parameter_call("short", "math", "log2"), "8", "3"};
+   _samples["library-math-log2-integer"] = {generate_native_single_parameter_call("integer", "math", "log2"), "8", "3"};
+   _samples["library-math-log2-long"] = {generate_native_single_parameter_call("long", "math", "log2"), "8", "3"};
+   _samples["library-math-log2-float"] = {generate_native_single_parameter_call("float", "math", "log2"), "8", "3.000000"};
+   _samples["library-math-log2-double"] = {generate_native_single_parameter_call("double", "math", "log2"), "8", "3.000000"};
+
+   _samples["library-arrays-sqrt-float"] = {generate_native_array_call_to_module("float", "10", "sqrt"), "4", "2.000000"};
+   _samples["library-arrays-sqrt-double"] = {generate_native_array_call_to_module("double", "10", "sqrt"), "4", "2.000000"};
+  
+   _samples["library-strings-from_string-byte"] = {genetare_string_test_from_string("str2byte","\"47\"", "byte"), "", "47"};
+   _samples["library-strings-from_string-short"] = {genetare_string_test_from_string("str2short","\"47\"", "short"), "", "47"};
+   _samples["library-strings-from_string-integer"] = {genetare_string_test_from_string("str2integer","\"47\"", "integer"), "", "47"};
+   _samples["library-strings-from_string-long"] = {genetare_string_test_from_string("str2long","\"47\"", "long"), "", "47"};
+   _samples["library-strings-from_string-float"] = {genetare_string_test_from_string("str2float","\"47\"", "float"), "", "47.000000"};
+   _samples["library-strings-from_string-double"] = {genetare_string_test_from_string("str2double","\"47\"", "double"), "", "47.000000"};
+   _samples["library-strings-to_string-byte"] = {genetare_string_test_to_string("47", "byte"), "", "47\0"};
+   _samples["library-strings-to_string-short"] = {genetare_string_test_to_string("47", "short"), "", "47\0"};
+   _samples["library-strings-to_string-integer"] = {genetare_string_test_to_string("47", "integer"), "", "47\0"};
+   _samples["library-strings-to_string-long"] = {genetare_string_test_to_string("47", "long"), "", "47\0"};
+   _samples["library-strings-to_string-float"] = {genetare_string_test_to_string("47", "float"), "", "47\0"};
+   _samples["library-strings-to_string-double"] = {genetare_string_test_to_string("47", "double"), "", "47\0"};
 
    _samples["algo-fibonacci-1"] = {sample_algorithm_fibonacci, "0", "1"};
    _samples["algo-fibonacci-2"] = {sample_algorithm_fibonacci, "15", "987"};
