@@ -1466,8 +1466,8 @@ gasp_module_blaise_sample::gasp_module_blaise_sample()
    _samples["library-strings-to_string-short"] = {genetare_string_test_to_string("47", "short"), "", "47\0"};
    _samples["library-strings-to_string-integer"] = {genetare_string_test_to_string("47", "integer"), "", "47\0"};
    _samples["library-strings-to_string-long"] = {genetare_string_test_to_string("47", "long"), "", "47\0"};
-   _samples["library-strings-to_string-float"] = {genetare_string_test_to_string("47", "float"), "", "47\0"};
-   _samples["library-strings-to_string-double"] = {genetare_string_test_to_string("47", "double"), "", "47\0"};
+   _samples["library-strings-to_string-float"] = {genetare_string_test_to_string("47", "float"), "", "47.000000\0"};
+   _samples["library-strings-to_string-double"] = {genetare_string_test_to_string("47", "double"), "", "47.000000\0"};
 
    _samples["algo-fibonacci-1"] = {sample_algorithm_fibonacci, "0", "1"};
    _samples["algo-fibonacci-2"] = {sample_algorithm_fibonacci, "15", "987"};
