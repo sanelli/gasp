@@ -51,7 +51,7 @@ torricelly_value::torricelly_value(std::shared_ptr<torricelly_array_type> type, 
    _array = std::make_shared<std::vector<torricelly_value>>();
    for (const char c : initial_value)
       _array->push_back(torricelly_value::make((unsigned char)c));
-   if (initial_value[initial_value.size() - 1] != '\0') // Always force this just in case
+   if (initial_value.size() == 0 || initial_value[initial_value.size() - 1] != '\0') // Always force this just in case
       _array->push_back(torricelly_value::make((unsigned char)'\0'));
 }
 
