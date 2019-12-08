@@ -1,0 +1,124 @@
+module strings;
+
+function strnull() : char;
+begin
+   strnull := '\u00';
+end;
+
+function strlen(str: array<char>[]) : integer;
+var
+   index : integer;
+begin
+   while (str[index] <> '\u00') begin
+     index := index + 1;
+   end;
+   strlen := index;
+end;
+
+function strncpy(first, second: array<char>[], n:integer) : array<char>[];
+var 
+   index : integer;
+begin
+  while(second[index] <> '\u00' and index < n) begin
+     first[index] := second[index];
+     index := index + 1;
+  end;
+  first[index] := '\u00';
+  strncpy := first;
+end; 
+
+function strcpy(first, second: array<char>[]) : array<char>[];
+var 
+   len : integer;
+begin
+  len := strlen(second);
+  strcpy := strncpy(first, second, len);
+end; 
+
+function strncat(first, second: array<char>[], n:integer) : array<char>[];
+var 
+   start, len, index : integer;
+begin
+  start := strlen(first);
+  len := strlen(second);
+  len := if n < len then n else len;
+  for index from 0 to (len-1) begin
+     first[start + index] := second[index];
+  end;
+  first[start + len] := '\u00';
+  strncat := first;
+end; 
+
+function strcat(first, second: array<char>[]) : array<char>[];
+var len : integer;
+begin
+  len := strlen(second);
+  strcat := strncat(first, second, len);
+end;
+
+function strncmp(first, second: array<char>[], n:integer) : integer;
+  var 
+     len_first, len_second, var len: integer;
+     index: integer;
+     c_first, c_second: character;
+begin
+   len_first := strlen(first);
+   len_second := strlen(second);
+   len := n < len_first then n else len_first;
+   len := n < len_second then n else len_second;
+   strncmp := 0;
+   index := 0;
+   while strncmp == 0 and index < len begin
+      c_first := first[index];
+      c_second := second[index];
+      if(c_first < c_second) then strncmp := -1;
+      if(c_first > c_second) then strncmp := 1;
+   end;
+end;
+
+function strcmp(first, second: array<char>[]) : integer;
+var len, len_second:integer;
+begin
+   len := strlen(first);
+   len_second := strlen(second);
+   len := len < len_second then len else len_second;
+   strcmp := strncmp(first, second, len);
+end;
+
+function strchr(str: array<char>[], c: char): integer;
+var index:integer;
+begin
+   strchr := -1;
+   while(str[index] <> '\u00' and strchr == -1) begin
+      if(str[index] == c)
+         strchr := index;
+      index := index + 1;
+   end;
+end;
+
+function strrchr(str: array<char>[], c: char): integer;
+var index:integer;
+begin
+   strchr := -1;
+   while(str[index] <> '\u00') begin
+      if(str[index] == c)
+         strchr := index;
+      index := index + 1;
+   end;
+end;
+
+function native str2byte(str: array<char>[]) : byte;
+function native str2short(str: array<char>[]) : short;
+function native str2integer(str: array<char>[]) : integer;
+function native str2long(str: array<char>[]) : long;
+function native str2float(str: array<char>[]) : float;
+function native str2double(str: array<char>[]) : double;
+
+function native to_string(str: array<char>[], value: byte) : array<char>[];
+function native to_string(str: array<char>[], value: short) : array<char>[];
+function native to_string(str: array<char>[], value: integer) : array<char>[];
+function native to_string(str: array<char>[], value: long) : array<char>[];
+function native to_string(str: array<char>[], value: float) : array<char>[];
+function native to_string(str: array<char>[], value: double) : array<char>[];
+
+end.

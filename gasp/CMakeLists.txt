@@ -20,6 +20,7 @@ add_dependencies(gasp gasp-torricelly-native-math)
 add_dependencies(gasp gasp-torricelly-native-random)
 add_dependencies(gasp gasp-torricelly-native-arrays)
 add_dependencies(gasp gasp-torricelly-native-matrices)
+add_dependencies(gasp gasp-torricelly-native-strings)
 
 target_include_directories(gasp PUBLIC include)
 
