@@ -102,7 +102,9 @@ shared_ptr<blaise_ast_statement> gasp::blaise::ast::make_assignement_statement(c
       auto valid_assign = target_type->equals(expression_type) || (target_type->dimensions() == expression_type->dimensions() && target_type->is_unbounded() && target_type->underlying_type()->equals(expression_type->underlying_type()));
 
       if (!valid_assign)
-         throw blaise_ast_error(reference.line(), reference.column(), sanelli::make_string("Cannot assign expression of type '", expression_type, "' to a bounded array '", variable->name(), "' of type '", target_type, "'."));
+         throw blaise_ast_error(reference.line(), reference.column(), 
+            sanelli::make_string("Cannot assign expression of type '", ast::to_string(expression_type), 
+            "' to a bounded array '", variable->name(), "' of type '", ast::to_string(target_type), "'."));
    }
    else
    {
