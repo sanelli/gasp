@@ -1,3 +1,6 @@
+# NOTE
+This is just a tool compiler. I am not plannin on working on this anymore. Planning on starting a new compiler project more structured. This was mostly a test to check a few ideas.
+
 # gasp
 A set of tools inside a single executable that allowd to compile high-level languages ([`Blaise`](blaise-lang/docs/README.md), [`brainfuck`](https://gist.github.com/roachhd/dce54bec8ba55fb17d3a)) into a low lever stack-based language ([`torricelly`](torricelly-lang/docs/README.md)) that can be interpreted. High-level languages can be interpreted (and debugged) on the fly.
 
